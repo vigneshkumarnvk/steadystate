@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Convert_Quote_to_Order</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Convert Quote to Order</masterLabel>
+    <openType>sidebar</openType>
+    <page>ConvertSalesQuoteToSalesOrder</page>
+    <protected>false</protected>
+</WebLink>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- T&amp;M --></label>
+        <name>TM__c</name>
+        <relationshipLabel><!-- T&amp;M Lines --></relationshipLabel>
+    </CustomFieldTranslation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Edit_CR_with_Status</fullName>
+    <active>false</active>
+    <description>Users cannot edit CR with the status of Closed.</description>
+    <errorConditionFormula>AND(
+  $User.Contract_Manager__c = false,
+ OR(
+ ISPICKVAL( Status__c , "Closed - Documentation Only"),
+ ISPICKVAL(Status__c, "Closed - No Action"),
+ISPICKVAL(Status__c, "Closed – Required Details Never Submitted")
+) 
+)</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to edit Contact Request Form.</errorMessage>
+</ValidationRule>

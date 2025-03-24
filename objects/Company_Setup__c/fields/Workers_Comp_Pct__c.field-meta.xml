@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Workers_Comp_Pct__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>ACV paid insurance provided to employees who suffer work-related injuries or illnesses. Specifically, this insurance helps pay for medical care, wages from lost work time and more.</inlineHelpText>
+    <label>Workers Comp. %</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

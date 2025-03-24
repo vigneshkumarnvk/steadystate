@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Material Count --></label>
+        <name>of_Material__c</name>
+    </CustomFieldTranslation>

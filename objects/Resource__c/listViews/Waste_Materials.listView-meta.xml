@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Waste_Materials</fullName>
+    <columns>NAME</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>Description__c</columns>
+    <columns>Start_Date__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Waste Disposal</value>
+    </filters>
+    <label>Waste Disposal Resources</label>
+</ListView>

@@ -1,0 +1,21 @@
+<!--
+ - Created by Steven on 7/23/2018.
+   Ticket# 13375
+ -->
+
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <apex:sectionHeader title="Sales Order - {!title}" subtitle="{!title}?"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel id="theInfoBox">
+                Are you sure want to continue?
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Yes" action="{!copyPWInfo}" reRender="thePageBlock" status="loadingstatus" />
+                <apex:commandButton value="Return to {!title}" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

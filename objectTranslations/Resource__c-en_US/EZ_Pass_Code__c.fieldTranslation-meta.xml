@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- EZ Pass Code --></label>
+        <name>EZ_Pass_Code__c</name>
+        <picklistValues>
+            <masterLabel>Automobile- 2 axles, 4 tires (up to 7,000 lbs)</masterLabel>
+            <translation><!-- Automobile- 2 axles, 4 tires (up to 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pick-Up Trucks- 2 axles, 4 tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Pick-Up Trucks- 2 axles, 4 tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pick-Up Trucks- 2 axles, 4 tires (up to 7,000 lbs)</masterLabel>
+            <translation><!-- Pick-Up Trucks- 2 axles, 4 tires (up to 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pick-Up Trucks- 2 axles, 6 tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Pick-Up Trucks- 2 axles, 6 tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pick-Up Trucks- 2 axles, 6 tires (up to 7,000 lbs)</masterLabel>
+            <translation><!-- Pick-Up Trucks- 2 axles, 6 tires (up to 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tractors- 5 axles (trailer &gt; or = to 48")</masterLabel>
+            <translation><!-- Tractors- 5 axles (trailer &gt; or = to 48&quot;) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trucks- 2 axles, 6 tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Trucks- 2 axles, 6 tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trucks- 3 axles, 8 or 10 tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Trucks- 3 axles, 8 or 10 tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trucks- 4 axles, 10 or more tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Trucks- 4 axles, 10 or more tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trucks- 5 axles, 12 or more  tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Trucks- 5 axles, 12 or more  tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vans- 2 axles, 4 tires (over 7,000 lbs)</masterLabel>
+            <translation><!-- Vans- 2 axles, 4 tires (over 7,000 lbs) --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

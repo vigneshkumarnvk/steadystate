@@ -1,0 +1,143 @@
+<apex:page standardController="Staging_Account__c" extensions="StagingAccountController" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="Sync Account"/>
+        
+        <apex:pageBlock >
+            <apex:pageMessages ></apex:pageMessages>
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Copy All Fields" action="{!copyAll}"/>
+                <apex:commandButton value="Save Salesforce Account" action="{!SyncAccount}"/>
+                <apex:commandButton value="Go To Account" action="{!GoToAccount}"/>
+                <apex:commandButton value="Close" action="{!Close}"/>
+            </apex:pageBlockButtons>
+
+
+            <apex:outputPanel >
+                <table style="border-spacing: 10px !important; border-collapse: separate; margin-left:auto;margin-right:auto;">
+                    <tr>
+                        <th></th>
+                        <th>Customer Updated Information</th>
+                        <th></th>
+                        <th>Salesforce Account Information</th>
+                    </tr>                    
+                    <tr>
+                        <td>Account Name</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Name}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyName}" rendered="{!StagingAccount.Name != Account.Name}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.Name}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>                        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Billing Street</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Billing_Street__c}" style="width:300px;height:50px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyBillingStreet}" rendered="{!StagingAccount.Billing_Street__c != Account.BillingStreet}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.BillingStreet}" style="width:300px;height:50px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Billing City</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Billing_City__c}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyBillingCity}" rendered="{!StagingAccount.Billing_City__c != Account.BillingCity}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.BillingCity}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Billing State</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Billing_State__c}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyBillingState}" rendered="{!StagingAccount.Billing_State__c != Account.BillingStateCode}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.BillingStateCode}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Billing Postal Code</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Billing_Postal_Code__c}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyBillingPostalCode}" rendered="{!StagingAccount.Billing_Postal_Code__c != Account.BillingPostalCode}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.BillingPostalCode}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Billing Country</td>
+                        <td>
+                            <apex:inputField value="{!StagingAccount.Billing_Country__c}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                        <td><apex:commandButton value=">>" action="{!copyBillingCountry}" rendered="{!StagingAccount.Billing_Country__c != Account.BillingCountryCode}"/></td>
+                        <td>
+                            <apex:inputField value="{!Account.BillingCountryCode}" style="width:300px;">
+                                <apex:actionSupport event="onchange" reRender="main"/>
+                            </apex:inputField>
+                        </td>
+                    </tr>                            
+                    <tr>
+                        <td>Customer Notes</td>
+                        <td colspan="3"><apex:inputTextarea value="{!StagingAccount.Notes__c}" disabled="true" style="width:100%;height:100px;"/></td>
+                    </tr>    
+                </table>
+            </apex:outputPanel>
+                       
+            <apex:outputPanel >
+                <apex:pageBlockSection columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Error Text</apex:outputLabel>
+                        <apex:outputField value="{!StagingAccount.Error_Text__c}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Is Synced</apex:outputLabel>
+                        <apex:outputField value="{!StagingAccount.Is_Synced__c}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Is Updated</apex:outputLabel>
+                        <apex:outputField value="{!StagingAccount.Is_Updated__c}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Updated By</apex:outputLabel>
+                        <apex:outputField value="{!StagingAccount.Last_Updated_By__r.Name}"/>
+                    </apex:pageBlockSectionItem>
+                    <!--
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Note Id</apex:outputLabel>
+                        <apex:inputField value="{!StagingAccount.Note_Id__c}"/>
+                    </apex:pageBlockSectionItem>
+                    -->
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoiceable__c</fullName>
+    <externalId>false</externalId>
+    <formula>(TEXT(Status__c) = 'Ready to Bill'  ||  TEXT(Status__c) = 'Partially Invoiced' ||  TEXT(Status__c) = 'Received By Billing' ||  TEXT(Status__c) = 'Confirmed') &amp;&amp;  (Total_Lines__c != Invoiced_Lines__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Invoiceable</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

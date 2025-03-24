@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Job_Hours__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Does not include: Bereavement, Jury Duty, Paid Time Off, Shop Time</inlineHelpText>
+    <label>Total Job Hours</label>
+    <summarizedField>Payroll_Line__c.Net_Hours__c</summarizedField>
+    <summaryFilterItems>
+        <field>Payroll_Line__c.Pay_Code__c</field>
+        <operation>notEqual</operation>
+        <value>Bereavement, Jury Duty, Paid Time Off, Shop Time</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Payroll_Line__c.Payroll__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

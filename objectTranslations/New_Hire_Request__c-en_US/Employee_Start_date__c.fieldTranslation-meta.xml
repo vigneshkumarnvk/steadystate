@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- This is NOT today&apos;s date, please use the date that this will take affect - -  2 Week Notice is requested!!!! --></help>
+        <label><!-- Employee Start Date --></label>
+        <name>Employee_Start_date__c</name>
+    </CustomFieldTranslation>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vendor_Labor</fullName>
+    <columns>NAME</columns>
+    <columns>First_Name__c</columns>
+    <columns>Last_Name__c</columns>
+    <columns>Job_Title__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Start_Date__c</columns>
+    <columns>Status__c</columns>
+    <columns>Employee_Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>FLSA__c</columns>
+    <columns>Pay_Rule__c</columns>
+    <columns>User__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Labor</value>
+    </filters>
+    <filters>
+        <field>Employee_Type__c</field>
+        <operation>equals</operation>
+        <value>Temp</value>
+    </filters>
+    <label>Vendor Labor</label>
+</ListView>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- ADP Code --></label>
+        <name>ADP_Code__c</name>
+        <picklistValues>
+            <masterLabel>Boom Pay</masterLabel>
+            <translation><!-- Boom Pay --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Per Diem Layover</masterLabel>
+            <translation><!-- Per Diem Layover --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spill Pay</masterLabel>
+            <translation><!-- Spill Pay --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Stand By</masterLabel>
+            <translation><!-- Stand By --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Truck Pay</masterLabel>
+            <translation><!-- Truck Pay --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

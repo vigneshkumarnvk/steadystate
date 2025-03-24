@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Date_of_Next_Step__c</fullName>
+    <description>https://acvenviro.lightning.force.com/lightning/r/Case/5008X00002KgKlgQAF/view</description>
+    <externalId>false</externalId>
+    <label>Date of Next Step</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Payroll</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Payrolls</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <layouts>
+        <layout>Payroll Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Create_Payroll --></label>
+        <name>Create_Payroll</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Export_Flat_Pay --></label>
+        <name>Export_Flat_Pay</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Export_Payroll --></label>
+        <name>Export_Payroll</name>
+    </webLinks>
+</CustomObjectTranslation>

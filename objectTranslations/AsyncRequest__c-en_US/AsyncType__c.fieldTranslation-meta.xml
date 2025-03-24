@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- AsyncType --></label>
+        <name>AsyncType__c</name>
+        <picklistValues>
+            <masterLabel>Add Surcharge Line to Sales Invoice</masterLabel>
+            <translation><!-- Add Surcharge Line to Sales Invoice --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Create Sales Invoice Lines</masterLabel>
+            <translation><!-- Create Sales Invoice Lines --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,102 @@
+<apex:page standardController="TM__c"
+           contentType="application/vnd.ms-excel#Intercompany_Cost_Accrual_{!startingDateValue}_{!endingDateValue}.xls"
+           extensions="InterCompanyCostTrackingController" sidebar="false"
+           showHeader="false" standardStylesheets="false" readOnly="true">
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePB">
+            <table width="100%" border="1" cellspacing="0" cellpadding="3" class="list">
+                <thead>
+                <tr class="headerRow">
+                    <th>Sales Order</th>
+                    <th>TM</th>
+                    <th>TM Status</th>
+                    <th>Service Center</th>
+                    <th>Resource Service Center</th>
+                    <th>Scheduled Date</th>
+                    <th>Category</th>
+                    <th>ID#(Employee ID/Fleet ID)</th>
+                    <th>Resource</th>
+                    <th>Description</th>
+                    <th>Qty.</th>
+                    <th>UOM</th>
+                    <th>Unit Cost</th>
+                    <th>Line Cost</th>
+                    <th>Manual Closed By</th>
+                    <th>Manual Closed At</th>
+                </tr>
+                </thead>
+                <apex:repeat value="{!interCoCostWrapList}" var="wraps">
+                    <apex:repeat value="{!wraps.tmLines}" var="tmLine">
+                        <tr class="dataRow itemRow">
+                            <td>{!tmLine.TM__r.Sales_Order__r.Name}</td>
+                            <td>{!tmLine.TM__r.Name}</td>
+                            <td>{!tmLine.TM__r.Status__c}</td>
+                            <td>
+                                <apex:outputText value="{!tmLine.TM__r.Service_Center__r.Name}" />
+                            </td>
+                            <td>{!tmLine.Service_Center__r.Name}</td>
+                            <td>
+                                <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                    <apex:param value="{!tmLine.TM__r.Scheduled_Date__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td>{!tmLine.Category__c}</td>
+                            <td>{!tmLine.Resource__r.Name}</td>
+                            <td>{!tmLine.Resource_Name__c}</td>
+                            <td>{!tmLine.Description__c}</td>
+                            <td>
+                                <apex:outputText value="{!tmLine.Cost_Qty__c}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}" />
+                                <apex:outputText value="{!tmLine.Billing_Worksheet_Line__r.Cost_Qty__c}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}" />
+                            </td>
+                            <td>
+                                {!tmLine.Billing_Worksheet_Line__r.Unit_of_Measure__r.Name}
+                            </td>
+                            <td>
+                                <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}">
+                                    <apex:param value="{!tmLine.Unit_Cost__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}">
+                                    <apex:param value="{!tmLine.Billing_Worksheet_Line__r.Unit_Cost__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td>
+                                <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}">
+                                    <apex:param value="{!tmLine.Line_Cost__c}" />
+                                </apex:outputText>
+                                <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}">
+                                    <apex:param value="{!tmLine.Billing_Worksheet_Line__r.Line_Cost__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td>{!tmLine.TM__r.Manual_Closed_By__r.Name}</td>
+                            <td>
+                                <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                    <apex:param value="{!tmLine.TM__r.Manual_Closed_At__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                </apex:repeat>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+
+        body {
+            font-size: 12px;
+        }
+
+        #popover-target label {
+            margin: 0 5px;
+            display: block;
+        }
+
+        #popover-target input {
+            margin-right: 5px;
+        }
+
+        #popover-target .disabled {
+            color: #ddd;
+        }
+
+    </style>
+</apex:page>

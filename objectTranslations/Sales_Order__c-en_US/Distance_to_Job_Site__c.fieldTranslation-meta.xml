@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Distance to Job Site --></label>
+        <name>Distance_to_Job_Site__c</name>
+        <picklistValues>
+            <masterLabel>Greater than 40 Miles</masterLabel>
+            <translation><!-- Greater than 40 Miles --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Less than 40 Miles</masterLabel>
+            <translation><!-- Less than 40 Miles --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_CC_Task_Fields</fullName>
+    <active>true</active>
+    <errorConditionFormula>And(
+OR( ISCHANGED(Subject), 
+ISCHANGED( ActivityDate ), 
+ISCHANGED( Frequency__c ), 
+ISCHANGED( ActivityDate ), 
+ISCHANGED(  Parameter__c  ), 
+ISCHANGED(   Service_Center__c   ), 
+ISCHANGED( Activity_Type__c )), 
+
+
+OR($Profile.Id != '00e1V000001GiyH'), 
+OR(  $Profile.Id != '00ef4000000Dizy'),
+
+  RecordTypeId = '0121V000001NN4p'
+)</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to edit this record.</errorMessage>
+</ValidationRule>

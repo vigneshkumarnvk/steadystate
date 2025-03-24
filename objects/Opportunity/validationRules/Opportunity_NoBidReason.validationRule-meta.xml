@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opportunity_NoBidReason</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+ ISPICKVAL( StageName , "No Bid"),
+
+ ISBLANK( No_Bid_Reason__c ))</errorConditionFormula>
+    <errorDisplayField>No_Bid_Reason__c</errorDisplayField>
+    <errorMessage>No Bid Reason cannot be blank when stage equals No Bid.</errorMessage>
+</ValidationRule>

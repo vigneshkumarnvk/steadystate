@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PostCodeError__c</fullName>
+    <externalId>false</externalId>
+    <formula>Site_Phone_No__c ==  Site_Postal_Code__c</formula>
+    <label>PostCodeError</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

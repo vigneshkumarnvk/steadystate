@@ -1,0 +1,14 @@
+<apex:page standardController="Staging_Contact__c" extensions="StagingContactController" recordSetVar="" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="Send Contact Update Request Emails"/>
+        
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Send" action="{!SendContactUpdateRequestEmails}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:outputText >Please note, the process will send emails in the background. You will get an email confirmation after the process finishes sending all emails.</apex:outputText>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

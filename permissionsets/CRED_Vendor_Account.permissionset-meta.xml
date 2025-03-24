@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this permission set to allow user to make edits on Vendor account</description>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Certified_States__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Special_Certificates__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CRED_Vendor Account</label>
+    <license>Salesforce</license>
+</PermissionSet>

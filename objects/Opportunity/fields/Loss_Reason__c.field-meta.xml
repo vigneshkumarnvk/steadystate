@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Loss_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Loss Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Competitor - Logistical Advantage</fullName>
+                <default>false</default>
+                <label>Competitor - Logistical Advantage</label>
+            </value>
+            <value>
+                <fullName>Competitor - Pricing</fullName>
+                <default>false</default>
+                <label>Competitor - Pricing</label>
+            </value>
+            <value>
+                <fullName>Competitor - Technical</fullName>
+                <default>false</default>
+                <label>Competitor - Technical</label>
+            </value>
+            <value>
+                <fullName>Competitor - Unknown</fullName>
+                <default>false</default>
+                <label>Competitor - Unknown</label>
+            </value>
+            <value>
+                <fullName>Expired - No Activity</fullName>
+                <default>false</default>
+                <label>Expired - No Activity</label>
+            </value>
+            <value>
+                <fullName>Subcontractor - Prime lost bid</fullName>
+                <default>false</default>
+                <label>Subcontractor - Prime lost bid</label>
+            </value>
+            <value>
+                <fullName>No Progress</fullName>
+                <default>false</default>
+                <label>No Progress</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

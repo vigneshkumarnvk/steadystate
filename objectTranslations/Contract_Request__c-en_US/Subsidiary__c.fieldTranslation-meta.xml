@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Subsidiary --></label>
+        <name>Subsidiary__c</name>
+        <picklistValues>
+            <masterLabel>1-REPUBLIC SERVICES</masterLabel>
+            <translation><!-- 1-REPUBLIC SERVICES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5-RS-ES Gulf Coast</masterLabel>
+            <translation><!-- 5-RS-ES Gulf Coast --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

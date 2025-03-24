@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MakeSureNameIsUnique</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(UPPER(VLOOKUP($ObjectType.Currency__c.Fields.Name, $ObjectType.Currency__c.Fields.Name, Name)) = UPPER(Name), OR(ISNEW(), ISCHANGED(Name)))</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>No. you entered already exists.</errorMessage>
+</ValidationRule>

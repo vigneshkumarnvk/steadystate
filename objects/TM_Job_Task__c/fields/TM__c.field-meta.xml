@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TM__c</fullName>
+    <externalId>false</externalId>
+    <label>TM</label>
+    <referenceTo>TM__c</referenceTo>
+    <relationshipLabel>T&amp;M Job Tasks</relationshipLabel>
+    <relationshipName>TM_Job_Tasks</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Blocked_Resource_Type_Resource__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(Resource_Type__c != NULL, Resource_Type__r.Blocked__c, IF(Resource__c != NULL, Resource__r.Blocked__c, FALSE))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Blocked Resource Type/Resource</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

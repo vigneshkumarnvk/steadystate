@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Billing_Rule_To_Display__c</fullName>
+    <externalId>false</externalId>
+    <label>Default_Billing_Rule_To_Display</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>PortalBasisAdv</fullName>
+                <default>false</default>
+                <label>PortalBasisAdv</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

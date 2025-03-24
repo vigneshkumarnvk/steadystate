@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC23_Purchase_Orders</fullName>
+    <columns>NAME</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>contains</operation>
+        <value>23</value>
+    </filters>
+    <label>SC23 Purchase Orders</label>
+</ListView>

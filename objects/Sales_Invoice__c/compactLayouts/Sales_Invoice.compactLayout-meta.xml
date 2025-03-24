@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales_Invoice</fullName>
+    <fields>Name</fields>
+    <fields>Bill_to_Customer__c</fields>
+    <fields>Invoice_Amt_Incl_Tax__c</fields>
+    <fields>Invoice_Total_Cost__c</fields>
+    <fields>Invoice_Profit__c</fields>
+    <fields>Invoice_Profit_prct__c</fields>
+    <fields>Balance__c</fields>
+    <fields>Surcharge_Pct__c</fields>
+    <fields>Surcharge_Amt_Incl_Tax__c</fields>
+    <fields>Sales_Order__c</fields>
+    <label>Sales Invoice</label>
+</CompactLayout>

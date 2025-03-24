@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Temp</fullName>
+    <columns>Service_Center__c</columns>
+    <columns>Non_Payroll_Labor_Resource__c</columns>
+    <columns>First_Name__c</columns>
+    <columns>Last_Name__c</columns>
+    <columns>NAME</columns>
+    <columns>Start_Date__c</columns>
+    <columns>Employee_Type__c</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>RSG_EIN__c</columns>
+    <columns>Exclude_from_I_C_Cost_Calculation__c</columns>
+    <columns>UPDATEDBY_USER.ALIAS</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Labor</value>
+    </filters>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <filters>
+        <field>Employee_Type__c</field>
+        <operation>equals</operation>
+        <value>Temp</value>
+    </filters>
+    <label>Temp Labor</label>
+</ListView>

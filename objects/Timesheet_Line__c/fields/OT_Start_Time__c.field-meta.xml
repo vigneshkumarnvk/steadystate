@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OT_Start_Time__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+or(
+AND(
+Start_Time__c &gt;= TIMEVALUE("18:00:00.000"),
+Start_Time__c &lt;= TIMEVALUE("23:59:59.000")
+),
+AND(
+Start_Time__c &gt;= TIMEVALUE("00:00:00.000"),
+Start_Time__c &lt;= TIMEVALUE("06:00:00.000")
+)
+)
+,
+true, /* Overtime */
+
+false
+
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>OT_Start_Time</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

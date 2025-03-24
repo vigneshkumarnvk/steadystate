@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Data Mapping of Sales Order Field Values to EQAI Field Values</description>
+    <label>Sales Order EQAI Mapping</label>
+    <pluralLabel>Sales Order EQAI Mapping</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

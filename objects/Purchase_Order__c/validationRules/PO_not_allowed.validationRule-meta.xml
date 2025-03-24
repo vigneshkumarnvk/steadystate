@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PO_not_allowed</fullName>
+    <active>true</active>
+    <errorConditionFormula>Buy_from_Vendor__r.Id = '001f400000HgYPq'  
+&amp;&amp; 
+ISNEW()
+&amp;&amp;
+Coupa_Id__c = NULL</errorConditionFormula>
+    <errorDisplayField>Buy_from_Vendor__c</errorDisplayField>
+    <errorMessage>PO's are not allowed for the selected vendor</errorMessage>
+</ValidationRule>

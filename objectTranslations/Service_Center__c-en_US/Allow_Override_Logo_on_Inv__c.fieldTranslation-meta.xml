@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Allow Override Logo on Inv. --></label>
+        <name>Allow_Override_Logo_on_Inv__c</name>
+    </CustomFieldTranslation>

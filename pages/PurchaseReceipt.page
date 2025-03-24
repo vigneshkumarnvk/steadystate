@@ -1,0 +1,152 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Purchase_Receipt__c" extensions="PurchaseReceiptController" sidebar="false" id="thePage">
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    
+    <script>  
+        function setFocusOnLoad() {}
+    
+    function confirmDelete(a)
+    {
+        a || (a=LC.getLabel("Global", "are_you_sure"));
+        return Modal.confirm(a);
+    }
+    
+    function validateFieldInList(fieldThatChanged){
+        var elemenetIdForField = fieldThatChanged.id;        
+        var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+        var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+        //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+        var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+        var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+        if (fieldName == 'theItem' || fieldName == 'theUOM' || fieldName == 'theItemLotTL' || fieldName == 'theNewLotTL' || fieldName == 'theUOMTL') {
+            var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+        } else {
+            var newFieldValue = document.getElementById(elemenetIdForField).value;
+        } 
+        validateField(fieldName, newFieldValue, lineNo);       
+    }    
+    </script>     
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Edit Receipt Lines" subtitle="{!Purchase_Receipt__c.Name}"/>
+    <apex:form id="theForm">                                  
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>                
+            </apex:pageBlockButtons>  
+            <apex:actionFunction name="validateField" action="{!validateField}" reRender="thePRLTable,theTLTable,theMessage,theMessage2" immediate="true" status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+            <apex:pageBlockSection title="General" collapsible="true" >
+                <apex:outputField value="{!PR.Type__c}" />
+                <apex:outputField value="{!PR.Document_Status__c}"/>
+                <apex:outputField id="BuyFromVendor" value="{!PR.Buy_from_Vendor__c}"/>
+                <apex:outputField value="{!PR.PO_Requestor__r.Name}" />
+                <apex:outputField value="{!PR.Service_Center__r.Name}" />
+                <apex:outputField value="{!PR.Inter_Company__c}" />
+                <apex:outputField value="{!PR.Expected_Receipt_Date__c}"/>
+                <apex:outputField value="{!PR.Delivery_Contact_Name__c}" />
+                <apex:outputField value="{!PR.Contact_Phone_No__c}" />
+                <apex:inputField value="{!PR.Actual_Receipt_Date__c}"  rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!PR.Actual_Receipt_Date__c}"  rendered="{!Posted}"/>
+                <apex:outputField value="{!PR.Shipping_Street__c}"/>
+                <apex:outputLabel ></apex:outputLabel>
+                <apex:outputField value="{!PR.Shipping_City__c}"/>
+                <apex:outputLabel ></apex:outputLabel>
+                <apex:outputField value="{!PR.Shipping_State__c}"/>
+                <apex:outputLabel ></apex:outputLabel>
+                <apex:outputField value="{!PR.Shipping_Postal_Code__c}"/>
+                <apex:outputLabel ></apex:outputLabel>
+                <apex:outputField value="{!PR.Shipping_Country__c}"/>
+                
+                                <!--empty slot-->
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+
+                <!--Sync'd-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Receipt__c.Fields.Sync_d__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PR.Sync_d__c}" rendered="{!IntegrationAdministrator == true}"/>
+                        <apex:outputField value="{!PR.Sync_d__c}" rendered="{!IntegrationAdministrator != true}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection> 
+            <apex:pageMessages id="theMessage2"></apex:pageMessages>
+            <apex:pageBlockSection id="theSection" columns="1" title="Lines" collapsible="true" >  
+                <apex:pageBlockTable id="thePRLTable" value="{!PRLList}" var="line" rendered="{!NOT(ISNULL(PRLList))}">
+                    <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                        <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted}" action="{!deleteLine}" reRender="thePRLTable,SLTotal">
+                            <apex:param id="objectType" name="objectType" value="PurchaseReceiptLine"/>
+                            <apex:param id="lineNo" name="lineNo" value="{!line.Line_No__c}"/>
+                        </apex:commandButton>
+                    </apex:column>
+
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Item__c.Label}" >
+                        <apex:outputField id="theItem" value="{!line.Item__c}" style="width:50px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Vendor_SKU__c.Label}">
+                        <apex:outputField value="{!line.Vendor_SKU__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Vendor_Description__c.Label}">
+                        <apex:outputField value="{!line.Vendor_Description__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Unit_of_Measure__c.Label}">
+                        <apex:outputField id="theUOM" value="{!line.Unit_of_Measure__c}" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Quantity__c.Label}">
+                        <apex:inputField id="theQuantity" value="{!line.Quantity__c}" onchange="validateFieldInList(this)" rendered="{!NOT(Posted)}" style="width:50px" styleClass="Quantity input-numeric" />
+                        <apex:outputField value="{!line.Quantity__c}"  rendered="{!Posted}" style="width:50px" styleClass="Quantity input-numeric" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Service_Center__c.Label}">
+                        <apex:outputField value="{!line.Service_Center__r.Name}" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Direct_G_L_Account__c.Label}">
+                        <apex:outputField value="{!line.Direct_G_L_Account__c}" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.G_L_Account__c.Label}">
+                        <apex:outputField value="{!line.G_L_Account__c}" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Note__c.Label}">
+                        <apex:outputField value="{!line.Note__c}" style="width:80px"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Unit_Cost__c.Label}">
+                        <apex:outputText id="theUnitCost" value="{0, number, ###,##0.00}" styleClass="output-numeric" style="width:50px">
+                            <apex:param value="{!line.Unit_Cost__c}"/>
+                        </apex:outputText>
+                    </apex:column>     
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Line_Cost__c.Label}">
+                        <apex:outputText id="theLineCost" value="{0, number,###,##0.00}" styleClass="output-numeric" style="width:50px">
+                            <apex:param value="{!line.Line_Cost__c}"/>
+                        </apex:outputText>
+                    </apex:column>   
+                    <apex:column headerValue="{!$ObjectType.Purch_Rcpt_Line__c.fields.Line_No__c.Label}" >                   
+                        <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                    </apex:column>                    
+                </apex:pageBlockTable> 
+            </apex:pageBlockSection> 
+            <div style="float:right;width:600px;font-size:150%;" id="PRLTotal">          
+                <apex:pageBlockSection id="PRLTotal" columns="3">
+                    <apex:outputText />
+                    <apex:outputText />
+                    <apex:outputText label="Total: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!PRLtotal}"/>
+                    </apex:outputText>                 
+                </apex:pageBlockSection>
+            </div>
+            <br/>
+            <br/>
+            <!--<apex:pageBlockSection title="Return Order" collapsible="true" >
+                <apex:outputField value="{!PR.Return_Order__c}"/>
+            </apex:pageBlockSection> -->             
+            <apex:pageBlockSection title="Note" collapsible="true" >
+                <apex:inputField value="{!PR.Note__c}" style="width:100%; height: 60px"/>
+            </apex:pageBlockSection>  
+        </apex:pageBlock>          
+    </apex:form>  
+</apex:page>

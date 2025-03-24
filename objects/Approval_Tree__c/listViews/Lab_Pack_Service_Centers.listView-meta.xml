@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lab_Pack_Service_Centers</fullName>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Type__c</columns>
+    <columns>Level__c</columns>
+    <columns>Approval_Margin_Pct__c</columns>
+    <columns>Approver__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>70,72,73,74,75,77</value>
+    </filters>
+    <filters>
+        <field>Document_Type__c</field>
+        <operation>equals</operation>
+        <value>Sales_Quote</value>
+    </filters>
+    <label>Lab Pack Service Centers</label>
+</ListView>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Location --></label>
+        <name>Location__c</name>
+        <picklistValues>
+            <masterLabel>Baltimore</masterLabel>
+            <translation><!-- Baltimore --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Baltimore Ops</masterLabel>
+            <translation><!-- Baltimore Ops --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Brooklyn</masterLabel>
+            <translation><!-- Brooklyn --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Clayton Ops</masterLabel>
+            <translation><!-- Clayton Ops --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Norfolk</masterLabel>
+            <translation><!-- Norfolk --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Northboro</masterLabel>
+            <translation><!-- Northboro --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Northern PA</masterLabel>
+            <translation><!-- Northern PA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pennsylvania</masterLabel>
+            <translation><!-- Pennsylvania --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quantico</masterLabel>
+            <translation><!-- Quantico --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rahway</masterLabel>
+            <translation><!-- Rahway --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Refurbished</masterLabel>
+            <translation><!-- Refurbished --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TSDF- Lewisberry</masterLabel>
+            <translation><!-- TSDF- Lewisberry --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Transportation (CVI)</masterLabel>
+            <translation><!-- Transportation (CVI) --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Activity_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Activity Reason</label>
+    <required>false</required>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Account is with Legal</fullName>
+                <default>false</default>
+                <label>Account is with Legal</label>
+            </value>
+            <value>
+                <fullName>Bank and Trade References Submitted</fullName>
+                <default>false</default>
+                <label>Bank and Trade References Submitted</label>
+            </value>
+            <value>
+                <fullName>Collection - Follow up with Customer</fullName>
+                <default>false</default>
+                <label>Collection - Follow up with Customer</label>
+            </value>
+            <value>
+                <fullName>Collection - Internal Support request</fullName>
+                <default>false</default>
+                <label>Collection - Internal Support request</label>
+            </value>
+            <value>
+                <fullName>Collection - Receipt Confirmation</fullName>
+                <default>false</default>
+                <label>Collection - Receipt Confirmation</label>
+            </value>
+            <value>
+                <fullName>Credit Application Approved</fullName>
+                <default>false</default>
+                <label>Credit Application Approved</label>
+            </value>
+            <value>
+                <fullName>Credit Application Denied/Incomplete</fullName>
+                <default>false</default>
+                <label>Credit Application Denied/Incomplete</label>
+            </value>
+            <value>
+                <fullName>Credit Check for Service</fullName>
+                <default>false</default>
+                <label>Credit Check for Service</label>
+            </value>
+            <value>
+                <fullName>Customer Statement Sent</fullName>
+                <default>false</default>
+                <label>Customer Statement Sent</label>
+            </value>
+            <value>
+                <fullName>D&amp;B Report Initiated</fullName>
+                <default>false</default>
+                <label>D&amp;B Report Initiated</label>
+            </value>
+            <value>
+                <fullName>Demand Letter for Payment Sent</fullName>
+                <default>false</default>
+                <label>Demand Letter for Payment Sent</label>
+            </value>
+            <value>
+                <fullName>General Error</fullName>
+                <default>false</default>
+                <label>General Error</label>
+            </value>
+            <value>
+                <fullName>Incorrect Price</fullName>
+                <default>false</default>
+                <label>Incorrect Price</label>
+            </value>
+            <value>
+                <fullName>Issue- Billing</fullName>
+                <default>false</default>
+                <label>Issue- Billing</label>
+            </value>
+            <value>
+                <fullName>Missing Documents</fullName>
+                <default>false</default>
+                <label>Missing Documents</label>
+            </value>
+            <value>
+                <fullName>New Customer Account Created</fullName>
+                <default>false</default>
+                <label>New Customer Account Created</label>
+            </value>
+            <value>
+                <fullName>Payment Commitment</fullName>
+                <default>false</default>
+                <label>Payment Commitment</label>
+            </value>
+            <value>
+                <fullName>Postal Mail</fullName>
+                <default>false</default>
+                <label>Postal Mail</label>
+            </value>
+            <value>
+                <fullName>Processed Credit Card Payment</fullName>
+                <default>false</default>
+                <label>Processed Credit Card Payment</label>
+            </value>
+            <value>
+                <fullName>Vendor Form Submitted</fullName>
+                <default>false</default>
+                <label>Vendor Form Submitted</label>
+            </value>
+            <value>
+                <fullName>Issue- Collection</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Issue- Collection</label>
+            </value>
+            <value>
+                <fullName>Missing BOL</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Missing BOL</label>
+            </value>
+            <value>
+                <fullName>Missing Manifest</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Missing Manifest</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

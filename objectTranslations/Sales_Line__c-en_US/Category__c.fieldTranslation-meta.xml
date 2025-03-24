@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Category --></label>
+        <name>Category__c</name>
+        <picklistValues>
+            <masterLabel>Bundled</masterLabel>
+            <translation><!-- Bundled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cost Plus Materials, Equipment and Services</masterLabel>
+            <translation><!-- Cost Plus Materials, Equipment and Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Equipment</masterLabel>
+            <translation><!-- Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Labor</masterLabel>
+            <translation><!-- Labor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lump Sum</masterLabel>
+            <translation><!-- Lump Sum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Materials</masterLabel>
+            <translation><!-- Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Misc. Charges And Taxes</masterLabel>
+            <translation><!-- Misc. Charges And Taxes --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Transportation, Demurrage and Fees</masterLabel>
+            <translation><!-- Transportation, Demurrage and Fees --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Waste Disposal</masterLabel>
+            <translation><!-- Waste Disposal --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

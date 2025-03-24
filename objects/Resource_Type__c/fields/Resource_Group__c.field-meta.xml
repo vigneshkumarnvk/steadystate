@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resource_Group__c</fullName>
+    <externalId>false</externalId>
+    <label>Resource Group</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Absorbent Materials</fullName>
+                <default>false</default>
+                <label>Absorbent Materials</label>
+            </value>
+            <value>
+                <fullName>Degreasers &amp; Neutralizing Agents</fullName>
+                <default>false</default>
+                <label>Degreasers &amp; Neutralizing Agents</label>
+            </value>
+            <value>
+                <fullName>DOT Shipping Containers</fullName>
+                <default>false</default>
+                <label>DOT Shipping Containers</label>
+            </value>
+            <value>
+                <fullName>Field Analytical</fullName>
+                <default>false</default>
+                <label>Field Analytical</label>
+            </value>
+            <value>
+                <fullName>Field Personnel</fullName>
+                <default>false</default>
+                <label>Field Personnel</label>
+            </value>
+            <value>
+                <fullName>Hand Tool/Construction Accessories</fullName>
+                <default>false</default>
+                <label>Hand Tool/Construction Accessories</label>
+            </value>
+            <value>
+                <fullName>Health &amp; Safety</fullName>
+                <default>false</default>
+                <label>Health &amp; Safety</label>
+            </value>
+            <value>
+                <fullName>Heavy Duty Trucks</fullName>
+                <default>false</default>
+                <label>Heavy Duty Trucks</label>
+            </value>
+            <value>
+                <fullName>Hoses/Pipe</fullName>
+                <default>false</default>
+                <label>Hoses/Pipe</label>
+            </value>
+            <value>
+                <fullName>Light Duty Truck/Response Equipment</fullName>
+                <default>false</default>
+                <label>Light Duty Truck/Response Equipment</label>
+            </value>
+            <value>
+                <fullName>Marine Equipment</fullName>
+                <default>false</default>
+                <label>Marine Equipment</label>
+            </value>
+            <value>
+                <fullName>Miscellaneous</fullName>
+                <default>false</default>
+                <label>Miscellaneous</label>
+            </value>
+            <value>
+                <fullName>Per Diem</fullName>
+                <default>false</default>
+                <label>Per Diem</label>
+            </value>
+            <value>
+                <fullName>Power Tools</fullName>
+                <default>false</default>
+                <label>Power Tools</label>
+            </value>
+            <value>
+                <fullName>Pressure Washing Equipment</fullName>
+                <default>false</default>
+                <label>Pressure Washing Equipment</label>
+            </value>
+            <value>
+                <fullName>Pumping</fullName>
+                <default>false</default>
+                <label>Pumping</label>
+            </value>
+            <value>
+                <fullName>Sampling And Lab Supplies</fullName>
+                <default>false</default>
+                <label>Sampling And Lab Supplies</label>
+            </value>
+            <value>
+                <fullName>Site Support</fullName>
+                <default>false</default>
+                <label>Site Support</label>
+            </value>
+            <value>
+                <fullName>Specialty Equipment</fullName>
+                <default>false</default>
+                <label>Specialty Equipment</label>
+            </value>
+            <value>
+                <fullName>Yellow Iron</fullName>
+                <default>false</default>
+                <label>Yellow Iron</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

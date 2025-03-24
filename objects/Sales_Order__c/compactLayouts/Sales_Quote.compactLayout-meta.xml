@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales_Quote</fullName>
+    <fields>Name</fields>
+    <fields>Bill_to_Customer_No__c</fields>
+    <fields>Order_Total_Amount_Incl_Tax__c</fields>
+    <fields>Order_Total_Cost__c</fields>
+    <fields>Total_Margin_Pct__c</fields>
+    <fields>Total_Profit__c</fields>
+    <fields>Total_Profit_Pct__c</fields>
+    <label>Sales Quote</label>
+</CompactLayout>

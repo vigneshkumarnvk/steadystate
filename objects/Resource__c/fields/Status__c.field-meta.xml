@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Inactive</fullName>
+                <default>false</default>
+                <label>Inactive</label>
+            </value>
+            <value>
+                <fullName>Available</fullName>
+                <default>false</default>
+                <label>Available</label>
+            </value>
+            <value>
+                <fullName>Out of Service</fullName>
+                <default>false</default>
+                <label>OOS-On Lot</label>
+            </value>
+            <value>
+                <fullName>OOS-Pending</fullName>
+                <default>false</default>
+                <label>OOS-Pending Sale</label>
+            </value>
+            <value>
+                <fullName>Gone</fullName>
+                <default>false</default>
+                <label>Gone</label>
+            </value>
+            <value>
+                <fullName>Junked</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Junked</label>
+            </value>
+            <value>
+                <fullName>OOS-Under Repair</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>OOS-Under Repair</label>
+            </value>
+            <value>
+                <fullName>Retired</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Retired</label>
+            </value>
+            <value>
+                <fullName>Returned</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Returned</label>
+            </value>
+            <value>
+                <fullName>Sold</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Sold</label>
+            </value>
+            <value>
+                <fullName>Stolen</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Stolen</label>
+            </value>
+            <value>
+                <fullName>Under Repair</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Under Repair</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

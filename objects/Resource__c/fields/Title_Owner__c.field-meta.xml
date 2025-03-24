@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Title_Owner__c</fullName>
+    <externalId>false</externalId>
+    <label>Title Owner</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ACV Environmental Srvcs Inc.</fullName>
+                <default>false</default>
+                <label>ACV Environmental Srvcs Inc.</label>
+            </value>
+            <value>
+                <fullName>Allstate Power Vac</fullName>
+                <default>false</default>
+                <label>Allstate Power Vac</label>
+            </value>
+            <value>
+                <fullName>Clean Venture Inc</fullName>
+                <default>false</default>
+                <label>Clean Venture Inc</label>
+            </value>
+            <value>
+                <fullName>Cycle Chem</fullName>
+                <default>false</default>
+                <label>Cycle Chem</label>
+            </value>
+            <value>
+                <fullName>ECOFLO Holdings</fullName>
+                <default>false</default>
+                <label>ECOFLO Holdings</label>
+            </value>
+            <value>
+                <fullName>ECOFLO Inc.</fullName>
+                <default>false</default>
+                <label>ECOFLO Inc.</label>
+            </value>
+            <value>
+                <fullName>ECOFLO Logistics</fullName>
+                <default>false</default>
+                <label>ECOFLO Logistics</label>
+            </value>
+            <value>
+                <fullName>Envirotech</fullName>
+                <default>false</default>
+                <label>Envirotech</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

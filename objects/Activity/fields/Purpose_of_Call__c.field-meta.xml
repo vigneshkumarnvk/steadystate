@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Purpose_of_Call__c</fullName>
+    <externalId>false</externalId>
+    <label>Purpose of Call</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Cold Call</fullName>
+                <default>false</default>
+                <label>Cold Call</label>
+            </value>
+            <value>
+                <fullName>General Check In</fullName>
+                <default>false</default>
+                <label>General Check In</label>
+            </value>
+            <value>
+                <fullName>Issue - Billing</fullName>
+                <default>false</default>
+                <label>Issue - Billing</label>
+            </value>
+            <value>
+                <fullName>Issue - Collections</fullName>
+                <default>false</default>
+                <label>Issue - Collections</label>
+            </value>
+            <value>
+                <fullName>Issue - Service</fullName>
+                <default>false</default>
+                <label>Issue - Service</label>
+            </value>
+            <value>
+                <fullName>Work on opportunity</fullName>
+                <default>false</default>
+                <label>Work on opportunity</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

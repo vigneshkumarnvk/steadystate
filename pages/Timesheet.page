@@ -1,0 +1,553 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Timesheet__c" extensions="TimesheetController" id="thePage" sidebar="false">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <script>
+        $(document).ready(function () {
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        var focuselmnt;
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theResourceOff' || fieldName == 'theParentLine' || fieldName == 'theSalesOrder' || fieldName == 'theSalesOrderSC' ||
+                fieldName == 'theTM' || fieldName == 'theTML' || fieldName == 'theTimeCode' || fieldName == 'theWorkAsJobPosition' ||
+                fieldName == 'theLineServiceCenter') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+
+            validateField(fieldName, newFieldValue, lineNo);
+        }
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function insertColon(ctrl, evt) {
+            var anc = ctrl;
+            //if(ctrl.value.length == 2 && evt.keyCode != 8) {
+            //    ctrl.value = ctrl.value + ':';
+            //}
+
+            if (ctrl.value.length == 3 && ctrl.value.indexOf(':') < 0) {
+                ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+            }
+        }
+    
+    	function setWidth() {
+            $(".tslWrap").css("max-width", (screen.width - 100));
+        }
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Timesheet" subtitle="{!Timesheet__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Quick Save" action="{!quicksave}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Approve and Save" action="{!saveNapprove}" reRender="theForm" status="loadingstatus" />
+                <apex:commandButton value="Refresh" action="{!refreshTimesheet}" status="loadingstatus" />
+                <apex:commandButton value="Approve" action="{!release}" reRender="theForm" status="loadingstatus" />
+                <apex:commandButton value="Reopen" action="{!reopen}" reRender="theForm" status="loadingstatus" />
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+            
+            <apex:actionFunction name="validateField" action="{!validateField}"
+                                 oncomplete="document.getElementById(focuselmnt).focus();"
+                                 reRender="theTSLTable,TSTotal,theMessage,theMessage2" immediate="true"
+                                 status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+
+            <apex:pageBlockSection title="General" collapsible="true" id="thePageBlockSection">
+                <apex:outputField value="{!TS.Employee_No__c	}" />
+                <apex:outputField value="{!TS.Resource__c}" />
+                <apex:outputField value="{!TS.Resource_Name__c}" />
+                <apex:outputField value="{!TS.Service_Center__c}" />
+                <apex:outputField value="{!TS.Starting_Date__c}" />
+                <apex:outputField value="{!TS.Ending_Date__c}" />
+                <apex:outputField value="{!TS.Week_No__c}" />
+                <apex:outputField value="{!TS.Status__c}" />
+                <apex:outputField value="{!TS.System_Created_Entry__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Totals" collapsible="true" id="thePageTotalBlockSection">
+                <!-- L1 -->
+                <apex:outputField value="{!TS.Total_Hours_Submitted__c}" />
+                <apex:outputField value="{!TS.Total_Regular_Hours__c}" />
+                <!-- L1 -->
+
+                <!-- L2 -->
+                <apex:outputField value="{!TS.Total_Regular_Job_Hours__c}" />
+                <apex:outputField value="{!TS.Total_OT_Hours__c}" />
+                <!-- L2 -->
+
+                <apex:outputField value="{!TS.Total_Prevailing_Wage_Job_Hrs__c}" />
+                <apex:outputField value="{!TS.Total_DT_Hours__c}" />
+                <!--<apex:outputField value="{!TS.Total_Travel_Time__c}" />-->
+                <!--<apex:outputField value="{!TS.Total_Non_PTO_Hours__c}" />-->
+
+                <apex:outputField value="{!TS.Total_Travel_Time__c}" />
+                <apex:outputField value="{!TS.Total_Lunch_Hours__c}" />
+
+                <apex:outputField value="{!TS.Total_Shop_Time_Hours__c}" />
+                <apex:outputText value="" />
+
+                <apex:outputField value="{!TS.Total_PTO_Hours__c}" />
+                <apex:outputText value="" />
+                <!-- Ticket#13409 ---->
+                <apex:outputField value="{!TS.Total_Other_Hours__c}" />
+                <!-- Ticket#13409 ---->
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theSection" columns="1" title="Lines" collapsible="true">
+                <apex:pageMessages id="theMessage2"></apex:pageMessages>
+                <apex:outputPanel styleClass="tslWrap" layout="block" style="overflow: scroll;">
+                    <apex:pageBlockTable id="theTSLTable" value="{!TSLList}" var="line"
+                                         rendered="{!NOT(ISNULL(TSLList))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false}" rendered="{!AND((line.System_Created_Entry__c == false), (TS.Status__c == 'Open'))}"
+                                                action="{!deleteLine}" reRender="theTSLTable,TSTotal">
+                                <apex:param id="objectType" name="objectType" value="TimesheetLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                            </apex:commandButton>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Time_Type__c.Label}">
+                            <apex:inputField id="theTimeType"
+                                             value="{!line.Time_Type__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:120px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Time_Type__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}" />
+                        </apex:column>
+
+                        <apex:column headerValue="Time/Rate Code">
+                            <apex:inputField id="theTimeCode"
+                                             value="{!line.Time_Type_Code__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:90px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Time_Type_Code__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}" />
+                        </apex:column>
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Time_Code__c.Label}">-->
+                            <!--<apex:inputField id="theTimeCode" rendered="{!NOT(line.System_Created_Entry__c)}" style="width:75px;"-->
+                                             <!--onchange="validateFieldInList(this);" value="{!line.Time_Code__c}" styleClass="input-description"/>-->
+                            <!--<apex:outputField value="{!line.Time_Code__c}" rendered="{!line.System_Created_Entry__c}" />-->
+                        <!--</apex:column>-->
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Rate_Type__c.Label}">-->
+                            <!--<apex:inputField id="theRateType" onchange="validateFieldInList(this);" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--style="width:75px;" value="{!line.Rate_Type__c}" styleClass="input-description"/>-->
+                            <!--<apex:outputField value="{!line.Rate_Type__c}" />-->
+                        <!--</apex:column>-->
+
+                        <apex:column headerValue="Service Center">
+                            <apex:inputField id="theSalesOrderSC"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onChange="validateFieldInList(this);"
+                                             value="{!line.Sales_Order_Service_Center__c}"
+                                             style="width: 75px"
+                                             styleClass="input-description" />
+                            <apex:outputField value="{!line.Sales_Order_Service_Center__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}" />
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Sales_Order__c.Label}">
+                            <apex:outputPanel rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}">
+                                <c:TypeaheadComponent componentId="{!$Component.theTSLTable}:theSalesOrder"
+                                                      styleClass="input-lookup" style="width: 80px" minSearchLength="1"
+                                                      allowtoBlank="true"
+                                                      filterClause="Service_Center__c=\'{!line.Sales_Order_Service_Center__c}\'"
+                                                      sObjectType="Timesheet_Line__c"
+                                                      sObject="{!line}"
+                                                      sObjectField="Sales_Order__c"
+                                                      onchange="validateFieldInList(this);" />
+
+                                <!--<c:CustomLookup componentId="{!$Component.theTSLTable}:theSalesOrder"-->
+                                                <!--styleClass="input-lookup"-->
+                                                <!--style="width: 100px"-->
+                                                <!--filterClause="Service_Center__c=\'{!line.Sales_Order_Service_Center__c}\'"-->
+                                                <!--minSearchLength="1"-->
+                                                <!--stealFocus="true"-->
+                                                <!--sObjectType="Timesheet_Line__c"-->
+                                                <!--sObject="{!line}"-->
+                                                <!--sObjectField="Sales_Order__c"-->
+                                                <!--onchange="validateFieldInList(this);"-->
+
+                                                <!--allowtoBlank="true"-->
+                                                <!--LookupObject="Sales_Order__c"-->
+                                                <!--LinkFieldName="Name"-->
+                                                <!--FieldSetName="SalesOrderFieldSet"-->
+                                                <!--RunValidation="True"-->
+                                                <!--LookupType="ID"-->
+                                                <!--ValidateFunction="validateField"-->
+
+                                                <!--FilterName1="Service_Center__c"-->
+                                                <!--FilterNameValue1="{!line.Sales_Order_Service_Center__c}"-->
+                                                <!--FilterOperation1="Service_Center__c"-->
+                                                <!--FilterOperationValue1="="-->
+                                                <!--FilterType1="Service_Center__c"-->
+                                                <!--FilterTypeValue1="String"-->
+
+                                                <!--fltr1="true"-->
+                                                <!--fltr2="true"-->
+                                                <!--fltr3="true"-->
+                                                <!--fltr4="true"-->
+                                                <!--fltr5="true"-->
+                                                <!--fltr6="true"-->
+                                                <!--fltr7="true"-->
+
+                                                <!--/>-->
+                            </apex:outputPanel>
+                            <!--<apex:inputField id="theSalesOrder"-->
+                                             <!--rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"-->
+                                             <!--onchange="validateFieldInList(this);" style="width:75px;" value="{!line.Sales_Order__c}" styleClass="input-description"/>-->
+                            <div style="width:140px;">
+                            <apex:outputField value="{!line.Sales_Order_D365_Project_Id__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"
+                                              style="width:75px;"/>
+                            </div>
+                        </apex:column>
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Prevailing_Wage_Job__c.Label}">-->
+                            <!--<apex:inputField id="thePrevailingWageJob" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--onchange="validateFieldInList(this);" value="{!line.Prevailing_Wage_Job__c}" styleClass="input-description"/>-->
+                            <!--<apex:outputField value="{!line.Prevailing_Wage_Job__c}" rendered="{!line.System_Created_Entry__c}" />-->
+                        <!--</apex:column>-->
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Certified_PW_Job__c.Label}">-->
+                            <!--<apex:inputField id="theCertifiedPWJob" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--onchange="validateFieldInList(this);" value="{!line.Certified_PW_Job__c}" styleClass="input-description" />-->
+                            <!--<apex:outputField value="{!line.Certified_PW_Job__c}" rendered="{!line.System_Created_Entry__c}" />-->
+                        <!--</apex:column>-->
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Customer_Name__c.Label}">-->
+                            <!--<apex:outputField value="{!line.Customer_Name__c}" />-->
+                        <!--</apex:column>-->
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Sales_Order_Description__c.Label}">-->
+                            <!--<apex:inputField id="theSalesOrderDescription" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--onchange="validateFieldInList(this);" style="width:75px;" value="{!line.Sales_Order_Description__c}" styleClass="input-description"/>-->
+                            <!--<apex:outputField value="{!line.Sales_Order_Description__c}" rendered="{!line.System_Created_Entry__c}" />-->
+                        <!--</apex:column>-->
+
+                        <!--
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Sales_Order_Service_Center__c.Label}">
+                            <!--<apex:inputField id="theSalesOrderSC" onchange="validateFieldInList(this);" style="width:75px;" value="{!line.Sales_Order_Service_Center__c}" styleClass="input-description"/>-->
+                            <!--<apex:outputField value="{!line.Sales_Order_Service_Center__c}" />-->
+                        <!--</apex:column>-->
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.TM__c.Label}">
+                            <apex:outputPanel rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}">
+                                <c:CustomLookup componentId="{!$Component.theTSLTable}:theTM"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                filterClause="Sales_Order__c=\'{!line.Sales_Order__c}\'"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="Timesheet_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="TM__c"
+                                                onchange="validateFieldInList(this);"
+
+                                                allowtoBlank="true"
+                                                LookupObject="TM__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="TMFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="Sales_Order__c"
+                                                FilterNameValue1="{!line.Sales_Order__c}"
+                                                FilterOperation1="Sales_Order__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Sales_Order__c"
+                                                FilterTypeValue1="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+
+                                />
+                            </apex:outputPanel>
+
+                            <!--<apex:inputField id="theTM"-->
+                                             <!--rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"-->
+                                             <!--style="width:75px;"  onchange="validateFieldInList(this);" value="{!line.TM__c}" styleClass="input-description"/>-->
+                                             <div style="width:85px;">
+                            <apex:outputField value="{!line.TM__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                                            </div>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.T_M_Line__c.Label}">
+                            <apex:outputPanel rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}">
+                                <c:CustomLookup componentId="{!$Component.theTSLTable}:theTML"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                filterClause="TM__c=\'{!line.TM__c}\' AND Category__c='Labor'"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="Timesheet_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="T_M_Line__c"
+                                                onchange="validateFieldInList(this);"
+                                                allowtoBlank="true"
+
+                                                LookupObject="TM_Line__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="TMLineFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="TM__c"
+                                                FilterNameValue1="{!line.TM__c}"
+                                                FilterOperation1="TM__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="TM__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Category__c"
+                                                FilterNameValue2="Labor"
+                                                FilterOperation2="Category__c"
+                                                FilterOperationValue2="="
+                                                FilterType2="Category__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Resource__c"
+                                                FilterNameValue3="{!line.Resource__c}"
+                                                FilterOperation3="Resource__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Resource__c"
+                                                FilterTypeValue3="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+
+                                />
+                            </apex:outputPanel>
+                            <!--
+                            <apex:inputField id="theTML"
+                                             value="{!line.T_M_Line__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:75px;"
+                                             styleClass="input-description"/>
+                            -->
+                        <div style="width:75px;">
+                            <apex:outputField value="{!line.T_M_Line__c}" />
+                        </div>
+                            <!--
+                            <apex:outputField value="{!line.T_M_Line__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                                              -->
+                        </apex:column>
+
+                        <!--<apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Work_as_Job_Position__c.Label}">-->
+                            <!--<apex:inputField id="theWorkAsJobPosition"  onchange="validateFieldInList(this);" style="width:75px;" value="{!line.Work_as_Job_Position__c}" styleClass="input-description"/>-->
+                        <!--</apex:column>-->
+                        <apex:column headerValue="Date">
+                            <apex:inputField id="theScheduledDate" onchange="validateFieldInList(this);"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             style="width:75px;" value="{!line.Scheduled_Date__c}" styleClass="input-description"/>
+                            <apex:outputField value="{!line.Scheduled_Date__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Week_Day__c.Label}">
+                            <apex:outputField style="width:75px;" value="{!line.Week_Day__c}" rendered="{!line.System_Created_Entry__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Start_Time__c.Label}">
+                            <apex:inputField id="theStartTime"
+                                             value="{!line.Start_Time__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onChange="validateFieldInList(this)"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             style="width:50px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Start_Time__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.End_Time__c.Label}">
+                            <apex:inputField id="theEndTime"
+                                             value="{!line.End_Time__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onChange="validateFieldInList(this)"
+                                             onKeyUp="insertColon(this, event);"
+                                             onKeyPress="return isNumber(event)"
+                                             style="width:50px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.End_Time__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Total_Hours__c.Label}">
+                            <!--<apex:inputField id="theTotalHours" onchange="validateFieldInList(this);" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--style="width:75px;" value="{!line.Total_Hours__c}" styleClass="input-description"/>-->
+                            <apex:outputField value="{!line.Total_Hours__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Lunch_Start_Time__c.Label}">
+                            <apex:inputField id="theLunchStartTime"
+                                             value="{!line.Lunch_Start_Time__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onKeyUp="insertColon(this, event);"
+                                             onKeyPress="return isNumber(event)"
+                                             onChange="validateFieldInList(this)"
+                                             style="width:50px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Lunch_Start_Time__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Lunch_End_Time__c.Label}">
+                            <apex:inputField id="theLunchEndTime"
+                                             value="{!line.Lunch_End_Time__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onKeyUp="insertColon(this, event);"
+                                             onKeyPress="return isNumber(event)"
+                                             onChange="validateFieldInList(this)"
+                                             style="width:50px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Lunch_End_Time__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Lunch_Hours__c.Label}">
+                            <!--<apex:inputField id="theLunchHours" onchange="validateFieldInList(this);" rendered="{!NOT(line.System_Created_Entry__c)}"-->
+                                             <!--style="width:75px;" value="{!line.Lunch_Hours__c}" styleClass="input-description"/>-->
+                            <apex:outputField value="{!line.Lunch_Hours__c}" rendered="{!line.System_Created_Entry__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Net_Hours__c.Label}">
+                            <apex:inputField id="theNetHours"
+                                             value="{!line.Net_Hours__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:75px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Net_Hours__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.Rate__c.Label}">
+                            <apex:inputField id="theRate"
+                                             value="{!line.Rate__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:75px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Rate__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Timesheet_Line__c.fields.PW_Job_Type_Code__c.Label}">
+                            <apex:inputField id="thePWJobTypeCode"
+                                             value="{!line.PW_Job_Type_Code__c}"
+                                             rendered="{!AND(NOT(line.System_Created_Entry__c), TS.Status__c == 'Open')}"
+                                             onchange="validateFieldInList(this);"
+                                             style="width:75px;"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.PW_Job_Type_Code__c}"
+                                              rendered="{!OR(line.System_Created_Entry__c, TS.Status__c != 'Open')}" />
+                        </apex:column>
+                        <apex:column headerValue="SCE">
+                            <apex:outputField value="{!line.System_Created_Entry__c}" />
+                        </apex:column>
+                        <apex:column headerValue="PR">
+                            <apex:outputField value="{!line.Pay_Rule__c}" />
+                        </apex:column>
+                        <apex:column headerValue="PR Line">
+                            <apex:outputField value="{!line.Pay_Rule_Line__c}" />
+                        </apex:column>
+                        <apex:column headerValue="Resource Type">
+                            <apex:outputField value="{!line.Work_as_Resource_Type__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="OT Daily">
+                            <apex:outputField value="{!line.Calculate_OT_Daily__c}" />
+                        </apex:column>
+                        <apex:column headerValue="After # Hrs ">
+                            <apex:outputField value="{!line.Daily_OT_After_Number_of_Hrs__c}" />
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <!-- Ticket#23713
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" oncomplete="setWidth();" action="{!insertLine}" reRender="theSection,theMessage" rendered="{!TS.Status__c == 'Open'}">
+                    <apex:param id="ObjectType" name="ObjectType" value="TimesheetLine"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+            -->
+            <!--
+            <div style="float:right;width:600px;font-size:150%;">
+                <apex:pageBlockSection id="TSTotal" columns="3">
+                    <apex:outputText style="white-space: nowrap;" label="Total Hours: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!totalHours}"/>
+                    </apex:outputText>
+                    <apex:outputText style="white-space: nowrap;" label="Total Lunch: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!totalLunch}"/>
+                    </apex:outputText>
+                    <apex:outputText style="white-space: nowrap;" label="Total Net: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!totalNet}"/>
+                    </apex:outputText>
+                </apex:pageBlockSection>
+            </div>
+            -->
+            <br/>
+            <br/>
+            <script>
+                $(".tslWrap").css("max-width", (screen.width - 100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

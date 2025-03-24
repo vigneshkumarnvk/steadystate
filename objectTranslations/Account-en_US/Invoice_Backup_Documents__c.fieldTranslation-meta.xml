@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Invoice Backup Documents --></label>
+        <name>Invoice_Backup_Documents__c</name>
+        <picklistValues>
+            <masterLabel>Certified Payroll</masterLabel>
+            <translation><!-- Certified Payroll --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Customer Specific Documentation</masterLabel>
+            <translation><!-- Customer Specific Documentation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Disposal Manifest/Weight Ticket</masterLabel>
+            <translation><!-- Disposal Manifest/Weight Ticket --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Invoice</masterLabel>
+            <translation><!-- Invoice --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mark-Up Vendor Invoice/Receipt</masterLabel>
+            <translation><!-- Mark-Up Vendor Invoice/Receipt --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spill Report w/ Pictures</masterLabel>
+            <translation><!-- Spill Report w/ Pictures --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T&amp;M</masterLabel>
+            <translation><!-- T&amp;M --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

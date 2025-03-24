@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Lunch --></label>
+        <name>Lunch__c</name>
+        <picklistValues>
+            <masterLabel>1 Hour</masterLabel>
+            <translation><!-- 1 Hour --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1/2 Hour</masterLabel>
+            <translation><!-- 1/2 Hour --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

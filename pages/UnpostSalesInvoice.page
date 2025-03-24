@@ -1,0 +1,23 @@
+<!--job task-->
+<!--<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceController">-->
+<apex:page standardController="Sales_Invoice__c" extensions="UnpostSalesInvoiceController">
+<!--job task-->
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Unpost {!docType}" subtitle="{!Sales_Invoice__c.Name}?"/>
+    <apex:form id="theForm">
+
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages />
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:repeat value="{!messages}" var="message">
+                    <apex:outputText value="{!message}" id="theValue"/><br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" reRender="thePageBlock" value="Unpost {!docType}" action="{!unpostSalesInvoice}" rendered="{!posted}"/>
+                <apex:commandButton value="Return to {!docType}" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

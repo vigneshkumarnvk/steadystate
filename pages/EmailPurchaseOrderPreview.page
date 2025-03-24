@@ -1,0 +1,56 @@
+<!--
+ - Created by Steven on 3/13/2018.
+ -->
+<apex:page standardController="Purchase_Order__c" extensions="PurchaseOrderEmailing" >
+
+    <apex:sectionHeader title="Email Purchase Order" subtitle="{!title}?"/>
+    <apex:form ><br/><br/>
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:outputPanel rendered="{!showEmail}">
+                <apex:outputLabel value="Internal Only" /> <br />
+                <apex:inputCheckbox value="{!isTest}" />
+                <br/><br/>
+
+                <apex:outputLabel value="From" for="From" />: <br />
+                <apex:outputText value="{!$User.Email}" />
+                <br/><br/>
+
+                <apex:outputLabel value="To" for="To"/>: <br/>
+                <!--apex:inputTextarea value="{!theToAddresses}" id="to" rows="1" cols="150" /-->
+                <apex:inputText value="{!theToAddresses}" id="to" style="width:835px;" disabled="true"/>
+                <br/><br/>
+
+                <apex:outputLabel value="CC" for="cc"/>: <br/>
+                <apex:inputTextarea value="{!theCcAddresses}" id="cc" rows="1" cols="150" />
+                <br/><br/>
+
+                <apex:outputLabel value="Subject" for="Subject"/>: <br/>
+                <apex:inputTextarea value="{!theSubject}" id="Subject" rows="2" cols="150"/>
+                <br/><br/>
+
+                <apex:outputLabel value="Body" for="Body"/>: <br/>
+                <apex:inputTextarea value="{!theBody}" id="Body" rows="5" cols="150"/>
+                <br/><br/>
+
+                <apex:outputText value="Please select a file to attach"/><br/><br/>
+                <apex:outputLabel value="File" for="file"/>
+                <apex:inputFile value="{!file.body}" filename="{!file.Name}" id="file"/>
+                <br/><br/>
+
+                <apex:outputLabel value="PDF" for="PDF"/>: <br/>
+                <iframe src="/apex/PurchaseOrderPDF?id={!thePO.Id}" height="800px" width="800px" />
+                <br/><br/>
+            </apex:outputPanel>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Send Email" action="{!EmailPO}" />
+                <!-- reRender="thePageBlock" status="loadingstatus" rendered="{!showEmail}" -->
+                <apex:commandButton value="Return to Purchase Order" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

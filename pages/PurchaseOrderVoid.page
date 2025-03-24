@@ -1,0 +1,13 @@
+<apex:page standardController="Purchase_Order__c" extensions="PurchOrderController" showHeader="true" sidebar="true" lightningStylesheets="true">
+    <apex:form >
+        <apex:pageMessages />
+        <apex:sectionHeader title="Void Purchase Order" subtitle="{!thePO.Name}"/>
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Void" action="{!voidPO}"/>
+                <apex:commandButton value="Cancel" action="{!cancelVoid}"/>
+            </apex:pageBlockButtons>
+            <p align="center"><apex:outputText value="Are you sure to void this purchase order?"/></p>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

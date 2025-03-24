@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Staging_Account__c</fullName>
+    <externalId>false</externalId>
+    <label>Staging Account</label>
+    <referenceTo>Staging_Account__c</referenceTo>
+    <relationshipLabel>Staging Account Login Activities</relationshipLabel>
+    <relationshipName>Staging_Account_Login_Activities</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

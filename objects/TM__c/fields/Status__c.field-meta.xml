@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>true</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open</fullName>
+                <default>false</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Scheduled</fullName>
+                <default>false</default>
+                <label>Scheduled</label>
+            </value>
+            <value>
+                <fullName>Mobile Review</fullName>
+                <default>false</default>
+                <label>Mobile Review</label>
+            </value>
+            <value>
+                <fullName>Confirmed</fullName>
+                <default>false</default>
+                <label>Confirmed</label>
+            </value>
+            <value>
+                <fullName>Fully Invoiced</fullName>
+                <default>false</default>
+                <label>Fully Invoiced</label>
+            </value>
+            <value>
+                <fullName>Closed</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+            <value>
+                <fullName>Void</fullName>
+                <default>false</default>
+                <label>Void</label>
+            </value>
+            <value>
+                <fullName>Sent to EQAI</fullName>
+                <default>false</default>
+                <label>Sent to EQAI</label>
+            </value>
+            <value>
+                <fullName>Emergency</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Emergency</label>
+            </value>
+            <value>
+                <fullName>Partially Invoiced</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Partially Invoiced</label>
+            </value>
+            <value>
+                <fullName>Pro forma Review</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pro forma Review</label>
+            </value>
+            <value>
+                <fullName>Ready to Bill</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Ready to Bill</label>
+            </value>
+            <value>
+                <fullName>Received By Billing</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Received By Billing</label>
+            </value>
+            <value>
+                <fullName>Received By Dispatch</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Received By Dispatch</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

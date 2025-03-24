@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Account_Change</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISCHANGED(AccountId),
+    RecordType.Name= 'Contacts',
+    NOT(ISBLANK(AccountId))
+)</errorConditionFormula>
+    <errorMessage>You must create a new contact to change the account.</errorMessage>
+</ValidationRule>

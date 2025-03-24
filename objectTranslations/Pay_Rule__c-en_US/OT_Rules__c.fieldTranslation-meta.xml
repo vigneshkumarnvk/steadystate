@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- OT Calculation Rules --></label>
+        <name>OT_Rules__c</name>
+        <picklistValues>
+            <masterLabel>Over 40 hrs Per Week</masterLabel>
+            <translation><!-- Over 40 hrs Per Week --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Over 8 hrs Per Day</masterLabel>
+            <translation><!-- Over 8 hrs Per Day --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

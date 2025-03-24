@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Blocked_for_Export__c</fullName>
+    <externalId>false</externalId>
+    <formula>OR( Pay_Rule__r.Blocked__c == TRUE , Blocked__c == TRUE)</formula>
+    <label>Blocked for Export</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Unit Wt./Vol --></label>
+        <name>Unit_Weight_Vol__c</name>
+        <relationshipLabel><!-- Sales Lines (Unit Wt./Vol) --></relationshipLabel>
+    </CustomFieldTranslation>

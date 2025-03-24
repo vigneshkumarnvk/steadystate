@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SitePhone_Field_Length</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT(ISCLONE()),
+NOT( Expired__c ),
+LEN( Site_Phone_No__c ) &gt; 10
+)</errorConditionFormula>
+    <errorMessage>Site Phone No is too long. (max length = 10)  Please edit the Site Phone No and Save.</errorMessage>
+</ValidationRule>

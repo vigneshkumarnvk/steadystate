@@ -1,0 +1,47 @@
+<!--
+    Ticket#21357
+        block record posting for invoice with blocked/inactive contact.
+-->
+<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Post {!docType}" subtitle="{!title}?"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel rendered="{!NOT(posted) && isApproved == true && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}" >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/><br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!!isApproved && SI.Credit_Memo__c == false && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}">
+                This {!docType} is not Approved. The Post function has been disabled.
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!SI.Contact__r.Blocked__c == true && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}">
+                Contact has been blocked/inactive. The Post function has been disabled.
+            </apex:outputPanel>
+
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rerender="thePageBlock" value="Post {!docType}" action="{!postSI}" rendered="{!NOT(posted) && isApproved == true && SI.Credit_Memo__c != true && SI.Contact__r.Blocked__c != true && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}"/>
+                <apex:commandButton status="loadingstatus" rerender="thePageBlock" value="Post {!docType}" action="{!postSI}" rendered="{!NOT(posted) && SI.Credit_Memo__c == true && SI.Contact__r.Blocked__c != true && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}"/>
+                <apex:commandButton value="Return to {!docType}" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" rendered="{!NOT(SI.Credit_Memo__c) && isApproved == true && SI.Contact__r.Blocked__c != true && SI.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}">
+                <apex:outputField value="{!SI.Invoice_Amt_Incl_Tax__c}" />
+                <apex:inputField value="{!SI.Posting_Date__c}" rendered="{!NOT(posted)}"/>
+                <apex:outputField value="{!SI.Posting_Date__c}" rendered="{!posted}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" rendered="{!SI.Credit_Memo__c}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Cr. Memo Amount</apex:outputLabel>
+                    <apex:outputpanel >
+                        <apex:outputField value="{!SI.Invoice_Amt_Incl_Tax__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!SI.Posting_Date__c}" rendered="{!NOT(posted)}"/>
+                <apex:outputField value="{!SI.Posting_Date__c}" rendered="{!posted}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

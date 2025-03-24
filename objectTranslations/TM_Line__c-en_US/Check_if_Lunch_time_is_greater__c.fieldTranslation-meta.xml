@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Check if Lunch time is greater --></label>
+        <name>Check_if_Lunch_time_is_greater__c</name>
+    </CustomFieldTranslation>

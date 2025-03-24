@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Cost Method --></label>
+        <name>Cost_Method__c</name>
+        <picklistValues>
+            <masterLabel>Container</masterLabel>
+            <translation><!-- Container --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unit Wt/Vol</masterLabel>
+            <translation><!-- Unit Wt/Vol --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

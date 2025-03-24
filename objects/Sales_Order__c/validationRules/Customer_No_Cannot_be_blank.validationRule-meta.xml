@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Customer_No_Cannot_be_blank</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISBLANK(Bill_to_Customer_No__r.AccountNumber)</errorConditionFormula>
+    <errorMessage>Customer does not have a account number.</errorMessage>
+</ValidationRule>

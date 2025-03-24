@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC__c</fullName>
+    <description>Status equal Schedule, Confirm, Mobile Review, Received By Billing and Ready to Bill</description>
+    <externalId>false</externalId>
+    <formula>ISPICKVAL(Status__c, 'Confirmed')
+
+||
+
+ISPICKVAL(Status__c, 'Scheduled')
+
+||
+
+ISPICKVAL(Status__c, 'Mobile Review')
+||
+
+ISPICKVAL(Status__c, 'Received By Billing')
+||
+
+ISPICKVAL(Status__c, 'Ready to Bill')</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>SC</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

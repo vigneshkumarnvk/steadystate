@@ -1,0 +1,67 @@
+<apex:page id="ExportWorkdayDataAsCSV" contentType="application/vnd.ms-excel#{!fileName}.xls" controller="PayrollController" sidebar="false"
+    showHeader="false" standardStylesheets="false" readOnly="true">
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePB">
+            <table width="100%" border="1" cellspacing="0" cellpadding="3" class="list">
+                <thead>
+                <tr class="headerRow">
+                    <th>Employee Id</th>
+                    <th>Employee Name</th>
+                    <th>Amount</th>
+                    <th>Pay Code</th>
+                    <th>Payment Date</th>
+                    <th>Period End Date</th>
+                    <th>Sales Order</th>
+                </tr>
+                </thead>
+                <apex:repeat value="{!selectedPRLineList}" var="line">
+                    <tr class="dataRow itemRow">
+                        <td>{!line.Resource__r.RSG_EIN__c}</td>
+                        <td>{!line.Resource__r.Description__c}</td>
+                        <td>{!IF(line.Pay_Code__c == 'PDL', line.Pay_Rate__c * -1, line.Pay_Rate__c)}</td>
+                        <td>
+                            <!-- Adding Workday Pay Code Conversions -->
+                            {!IF(line.Pay_Code__c == 'PDL', "MEALPERDIEM",
+                            	IF(line.Pay_Code__c == 'SPA', "SPILL",
+                            		IF(line.Pay_Code__c == 'BP', "BOOM", line.Pay_Code__c)))}
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, MM/d/yyyy}">
+                                <apex:param value="{!line.Timesheet_Line__r.Scheduled_Date__c}" />
+                            </apex:outputText>
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, MM/d/yyyy}">
+                                <apex:param value="{!line.Payroll__r.End_Date__c}" />
+                            </apex:outputText>
+                        </td>
+                        <td>
+                            {!IF(line.Sales_Order__c != null, "Job Number: " + line.Sales_Order__r.Name, '')}
+                            <!-- Job Number: {!line.Sales_Order__r.Name} -->
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+
+        body {
+            font-size: 12px;
+        }
+
+        #popover-target label {
+            margin: 0 5px;
+            display: block;
+        }
+
+        #popover-target input {
+            margin-right: 5px;
+        }
+
+        #popover-target .disabled {
+            color: #ddd;
+        }
+
+    </style>
+</apex:page>

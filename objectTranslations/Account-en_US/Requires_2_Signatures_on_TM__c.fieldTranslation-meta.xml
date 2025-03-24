@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Requires 2 Signatures on T&amp;M --></label>
+        <name>Requires_2_Signatures_on_TM__c</name>
+    </CustomFieldTranslation>

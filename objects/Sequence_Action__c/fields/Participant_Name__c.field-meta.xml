@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Participant_Name__c</fullName>
+    <externalId>false</externalId>
+    <formula>Contact_Id__r.FirstName &amp;" "&amp; Contact_Id__r.LastName &amp;  Lead_Id__r.FirstName  &amp;" "&amp; Lead_Id__r.LastName</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Participant Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

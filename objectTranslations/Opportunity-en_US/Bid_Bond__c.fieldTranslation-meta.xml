@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Bid Bond --></label>
+        <name>Bid_Bond__c</name>
+        <picklistValues>
+            <masterLabel>$20,000</masterLabel>
+            <translation><!-- $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>.</masterLabel>
+            <translation><!-- . --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>0</masterLabel>
+            <translation><!-- 0 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation><!-- 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>1%</masterLabel>
+            <translation><!-- 1% --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10%</masterLabel>
+            <translation><!-- 10% --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10% (also L&amp;M bond, performance bond, &amp; DRS guarantee bond)</masterLabel>
+            <translation><!-- 10% (also L&amp;M bond, performance bond, &amp; DRS guarantee bond) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10% Bid Bond + P&amp;P</masterLabel>
+            <translation><!-- 10% Bid Bond + P&amp;P --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10% NTE $20,000</masterLabel>
+            <translation><!-- 10% NTE $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10% NTE $20K Bid Bond + Performance Bond</masterLabel>
+            <translation><!-- 10% NTE $20K Bid Bond + Performance Bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10% of the bid, to a maximum of $20,000</masterLabel>
+            <translation><!-- 10% of the bid, to a maximum of $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10%, NTE $20,000</masterLabel>
+            <translation><!-- 10%, NTE $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10%, max $20,000</masterLabel>
+            <translation><!-- 10%, max $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10000</masterLabel>
+            <translation><!-- 10000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20 percent</masterLabel>
+            <translation><!-- 20 percent --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20,000</masterLabel>
+            <translation><!-- 20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20000</masterLabel>
+            <translation><!-- 20000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5%</masterLabel>
+            <translation><!-- 5% --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5% Bid Bond + labor and materials/payment bond</masterLabel>
+            <translation><!-- 5% Bid Bond + labor and materials/payment bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5% of Value</masterLabel>
+            <translation><!-- 5% of Value --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5% of the Bid</masterLabel>
+            <translation><!-- 5% of the Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>50% Performance Bond</masterLabel>
+            <translation><!-- 50% Performance Bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BID</masterLabel>
+            <translation><!-- BID --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bid Gaurantee</masterLabel>
+            <translation><!-- Bid Gaurantee --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>N/A</masterLabel>
+            <translation><!-- N/A --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NA</masterLabel>
+            <translation><!-- NA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NONE</masterLabel>
+            <translation><!-- NONE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation><!-- No --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not needed</masterLabel>
+            <translation><!-- Not needed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not required</masterLabel>
+            <translation><!-- Not required --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Only if over $35K</masterLabel>
+            <translation><!-- Only if over $35K --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>P&amp;P Bonds Required</masterLabel>
+            <translation><!-- P&amp;P Bonds Required --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Performance Bond</masterLabel>
+            <translation><!-- Performance Bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Performance Bond of $500K Annually</masterLabel>
+            <translation><!-- Performance Bond of $500K Annually --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Required but not providing</masterLabel>
+            <translation><!-- Required but not providing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SEE RFP</masterLabel>
+            <translation><!-- SEE RFP --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>See bid.</masterLabel>
+            <translation><!-- See bid. --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TBD</masterLabel>
+            <translation><!-- TBD --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation><!-- Yes --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes - 5%</masterLabel>
+            <translation><!-- Yes - 5% --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>bid bond, certified check or cashier's check in the amount of 10% of the bid, to a maximum of $20,000</masterLabel>
+            <translation><!-- bid bond, certified check or cashier&apos;s check in the amount of 10% of the bid, to a maximum of $20,000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>no bid bond;  $25k P/P Bond</masterLabel>
+            <translation><!-- no bid bond;  $25k P/P Bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>unknown go to portal</masterLabel>
+            <translation><!-- unknown go to portal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>unknown?</masterLabel>
+            <translation><!-- unknown? --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>yes 10%/ $20k</masterLabel>
+            <translation><!-- yes 10%/ $20k --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>yes if over $150K</masterLabel>
+            <translation><!-- yes if over $150K --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Material_Type_Category__c</fullName>
+    <externalId>false</externalId>
+    <label>Material Type Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Absorbent Materials</fullName>
+                <default>false</default>
+                <label>Absorbent Materials</label>
+            </value>
+            <value>
+                <fullName>Degreasers &amp; Neutralizing Agents</fullName>
+                <default>false</default>
+                <label>Degreasers &amp; Neutralizing Agents</label>
+            </value>
+            <value>
+                <fullName>DOT Shipping Containers</fullName>
+                <default>false</default>
+                <label>DOT Shipping Containers</label>
+            </value>
+            <value>
+                <fullName>Hand Tool/Construction Accessories</fullName>
+                <default>false</default>
+                <label>Hand Tool/Construction Accessories</label>
+            </value>
+            <value>
+                <fullName>Health &amp; Safety</fullName>
+                <default>false</default>
+                <label>Health &amp; Safety</label>
+            </value>
+            <value>
+                <fullName>Hoses/Pipe</fullName>
+                <default>false</default>
+                <label>Hoses/Pipe</label>
+            </value>
+            <value>
+                <fullName>Marine Equipment</fullName>
+                <default>false</default>
+                <label>Marine Equipment</label>
+            </value>
+            <value>
+                <fullName>Miscellaneous</fullName>
+                <default>false</default>
+                <label>Miscellaneous</label>
+            </value>
+            <value>
+                <fullName>Sampling And Lab Supplies</fullName>
+                <default>false</default>
+                <label>Sampling And Lab Supplies</label>
+            </value>
+            <value>
+                <fullName>Specialty Equipment</fullName>
+                <default>false</default>
+                <label>Specialty Equipment</label>
+            </value>
+            <value>
+                <fullName>Absorbent</fullName>
+                <default>false</default>
+                <label>Absorbent</label>
+            </value>
+            <value>
+                <fullName>Absorbent Boom</fullName>
+                <default>false</default>
+                <label>Absorbent Boom</label>
+            </value>
+            <value>
+                <fullName>Air Bottles</fullName>
+                <default>false</default>
+                <label>Air Bottles</label>
+            </value>
+            <value>
+                <fullName>Bio Haz</fullName>
+                <default>false</default>
+                <label>Bio Haz</label>
+            </value>
+            <value>
+                <fullName>Bio Haz Liner</fullName>
+                <default>false</default>
+                <label>Bio Haz Liner</label>
+            </value>
+            <value>
+                <fullName>Blaster Materials</fullName>
+                <default>false</default>
+                <label>Blaster Materials</label>
+            </value>
+            <value>
+                <fullName>CUYD Box</fullName>
+                <default>false</default>
+                <label>CUYD Box</label>
+            </value>
+            <value>
+                <fullName>Degreaser/Disinfectant</fullName>
+                <default>false</default>
+                <label>Degreaser/Disinfectant</label>
+            </value>
+            <value>
+                <fullName>Draeger Materials</fullName>
+                <default>false</default>
+                <label>Draeger Materials</label>
+            </value>
+            <value>
+                <fullName>Drum Accessories</fullName>
+                <default>false</default>
+                <label>Drum Accessories</label>
+            </value>
+            <value>
+                <fullName>Dry Ice</fullName>
+                <default>false</default>
+                <label>Dry Ice</label>
+            </value>
+            <value>
+                <fullName>Dump Trailer Liner</fullName>
+                <default>false</default>
+                <label>Dump Trailer Liner</label>
+            </value>
+            <value>
+                <fullName>Dump Truck Tarp</fullName>
+                <default>false</default>
+                <label>Dump Truck Tarp</label>
+            </value>
+            <value>
+                <fullName>FBIN Liner</fullName>
+                <default>false</default>
+                <label>FBIN Liner</label>
+            </value>
+            <value>
+                <fullName>Field Testing Materials</fullName>
+                <default>false</default>
+                <label>Field Testing Materials</label>
+            </value>
+            <value>
+                <fullName>Fill</fullName>
+                <default>false</default>
+                <label>Fill</label>
+            </value>
+            <value>
+                <fullName>Filter Liner</fullName>
+                <default>false</default>
+                <label>Filter Liner</label>
+            </value>
+            <value>
+                <fullName>Filter Media</fullName>
+                <default>false</default>
+                <label>Filter Media</label>
+            </value>
+            <value>
+                <fullName>Filtration Media</fullName>
+                <default>false</default>
+                <label>Filtration Media</label>
+            </value>
+            <value>
+                <fullName>Hand Tools</fullName>
+                <default>false</default>
+                <label>Hand Tools</label>
+            </value>
+            <value>
+                <fullName>HEPA Filter</fullName>
+                <default>false</default>
+                <label>HEPA Filter</label>
+            </value>
+            <value>
+                <fullName>Marine</fullName>
+                <default>false</default>
+                <label>Marine</label>
+            </value>
+            <value>
+                <fullName>Marine PPE</fullName>
+                <default>false</default>
+                <label>Marine PPE</label>
+            </value>
+            <value>
+                <fullName>Mercury Filter</fullName>
+                <default>false</default>
+                <label>Mercury Filter</label>
+            </value>
+            <value>
+                <fullName>Neutralizer</fullName>
+                <default>false</default>
+                <label>Neutralizer</label>
+            </value>
+            <value>
+                <fullName>Pipe</fullName>
+                <default>false</default>
+                <label>Pipe</label>
+            </value>
+            <value>
+                <fullName>Pipe Fitiings</fullName>
+                <default>false</default>
+                <label>Pipe Fitiings</label>
+            </value>
+            <value>
+                <fullName>PPE</fullName>
+                <default>false</default>
+                <label>PPE</label>
+            </value>
+            <value>
+                <fullName>Pump Hose</fullName>
+                <default>false</default>
+                <label>Pump Hose</label>
+            </value>
+            <value>
+                <fullName>Rags</fullName>
+                <default>false</default>
+                <label>Rags</label>
+            </value>
+            <value>
+                <fullName>Respirator</fullName>
+                <default>false</default>
+                <label>Respirator</label>
+            </value>
+            <value>
+                <fullName>Respirator Materials</fullName>
+                <default>false</default>
+                <label>Respirator Materials</label>
+            </value>
+            <value>
+                <fullName>Rolloff Materials</fullName>
+                <default>false</default>
+                <label>Rolloff Materials</label>
+            </value>
+            <value>
+                <fullName>Rope</fullName>
+                <default>false</default>
+                <label>Rope</label>
+            </value>
+            <value>
+                <fullName>Sampling Materials</fullName>
+                <default>false</default>
+                <label>Sampling Materials</label>
+            </value>
+            <value>
+                <fullName>Saw Blades</fullName>
+                <default>false</default>
+                <label>Saw Blades</label>
+            </value>
+            <value>
+                <fullName>Tape</fullName>
+                <default>false</default>
+                <label>Tape</label>
+            </value>
+            <value>
+                <fullName>Tolls</fullName>
+                <default>false</default>
+                <label>Tolls</label>
+            </value>
+            <value>
+                <fullName>Vacbox Liner</fullName>
+                <default>false</default>
+                <label>Vacbox Liner</label>
+            </value>
+            <value>
+                <fullName>Vactor Hose</fullName>
+                <default>false</default>
+                <label>Vactor Hose</label>
+            </value>
+            <value>
+                <fullName>Waste Disposal</fullName>
+                <default>false</default>
+                <label>Waste Disposal</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

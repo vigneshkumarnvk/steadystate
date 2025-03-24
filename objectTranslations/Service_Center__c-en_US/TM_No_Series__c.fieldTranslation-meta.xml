@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- T&amp;M No. Series --></label>
+        <name>TM_No_Series__c</name>
+        <relationshipLabel><!-- Service Centers(TM Numbering Series) --></relationshipLabel>
+    </CustomFieldTranslation>

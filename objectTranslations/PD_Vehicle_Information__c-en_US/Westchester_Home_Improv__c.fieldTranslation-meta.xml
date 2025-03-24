@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Westchester Home Improv --></label>
+        <name>Westchester_Home_Improv__c</name>
+    </CustomFieldTranslation>

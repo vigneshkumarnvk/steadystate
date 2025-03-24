@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Inactive_Customer</fullName>
+    <active>false</active>
+    <errorConditionFormula>TEXT( Bill_to_Customer__r.Customer_Status__c ) ="Inactive"</errorConditionFormula>
+    <errorMessage>Customer is Inactive</errorMessage>
+</ValidationRule>

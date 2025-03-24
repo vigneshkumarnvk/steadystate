@@ -1,0 +1,781 @@
+<!-- <apex:page language="{!$CurrentPage.parameters.lang}" standardController="TM__c" extensions="TMController" id="thePage" sidebar="false"> -->
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="TM__c" id="thePage" sidebar="false">
+    <!--
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"  />
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js">
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js">
+    </script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <head>
+        <style>
+
+            .tmLineWrap input[type="text"], .slds-scope input[type="text"] {
+                max-width: 100px;
+            }
+
+            body td.actionColumn:before, .slds-scope td.actionColumn:before {
+                display:none;
+            }
+
+            body .list .actionColumn, .slds-scope .list .actionColumn {
+                padding-left: 0px;
+            }
+
+            .tmLineWrap{
+                overflow:scroll;
+            }
+        </style>
+    </head>
+    <script>
+        $(document).ready(function() {
+            $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").sortable().on("sortstart", function(event, ui) {
+            }).on("sortstop", function(event, ui) {
+            }).on("sortchange", function(event, ui) {
+            }).on("sortupdate", function(event, ui) {
+                var elements = $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").find('tr').find('td').find('input');
+                var j = 0;
+                for (var i = 0; i < elements.length; i++) {
+                    if (elements[i].id.indexOf(":theLineNo") > 0) {
+                        j++;
+                        elements[i].value = j * 10;
+                    }
+                }
+            });
+
+            $("input").keypress(function(event){
+                if(event.keyCode == 13){
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            //$(".tmLineWrap").css("max-width", (screen.width-100));
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a=LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        function confirmCopyTime() {
+            var result = confirm("Are you sure to copy times to other T&M labor lines?");
+            if (!result) {
+                return false;
+            }
+
+            return true;
+        }
+
+        var focuselmnt;
+        function validateFieldInList(fieldThatChanged){
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt=elemenetIdForField.replace('theItem','theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theJobPosition' || fieldName == 'theItem' || fieldName == 'theUOM' || fieldName == 'thePromotionDiscount' || fieldName == 'theBroker' || fieldName == 'theMResource' ||
+                    fieldName == 'theLResource' || fieldName == 'theEResource' || fieldName == 'theSResource' || fieldName == 'theFResource' || fieldName == 'theWResource' ||
+                    fieldName == 'theDResource' || fieldName == 'theLUOM' || fieldName == 'theMUOM'|| fieldName == 'theEUOM' || fieldName == 'theSUOM'
+                    || fieldName == 'theFUOM' || fieldName == 'theWUOM' || fieldName == 'theDUOM' || fieldName == 'theLumpUOM' || fieldName == 'theMiscUOM' ||
+                    fieldName == 'theEquipment') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+
+            setFocusElement(fieldName, elemenetIdForField);
+            validateField(fieldName, newFieldValue, lineNo);
+            //alert (fieldName +"/" + newFieldValue + "/" + lineNo);
+        }
+
+        function setFocusElement(fieldName, elemenetIdForField) {
+            switch (fieldName) {
+                case "theJobPosition":
+                    focuselmnt = elemenetIdForField.replace('theJobPosition', 'theLResource');
+                    break;
+                case "theLResource":
+                    focuselmnt = elemenetIdForField.replace('theLResource', 'theDescription');
+                    break;
+                case "theDescription":
+                    focuselmnt = elemenetIdForField.replace('theDescription', 'theSiteStartTime');
+                    break;
+                case "theSiteStartTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteStartTime', 'theSiteEndTime');
+                    break;
+                case "theSiteEndTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteEndTime', 'theJobEndTime');
+                    break;
+                //Equipment Lines
+                case "theEquipment":
+                    focuselmnt = elemenetIdForField.replace('theEquipment', 'theEResource');
+                    break;
+                case "theEResource":
+                    focuselmnt = elemenetIdForField.replace('theEResource', 'theESiteStartTime');
+                    break;
+                // Material
+                case "theMResource":
+                    focuselmnt = elemenetIdForField.replace('theMResource', 'theMQuantity');
+                    break;
+                case "theMQuantity":
+                    focuselmnt = elemenetIdForField.replace('theMQuantity', 'theMUOM');
+                    break;
+        }
+        }
+
+        function setFocus() {
+            document.getElementById(focuselmnt).focus();
+        }
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function insertColon(ctrl, evt) {
+            var anc = ctrl;
+            //if(ctrl.value.length == 2 && evt.keyCode != 8) {
+            //    ctrl.value = ctrl.value + ':';
+            //}
+
+            if(ctrl.value.length == 3 && ctrl.value.indexOf(':') < 0) {
+                ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+            }
+        }
+
+        function setWidth() {
+            $(".tmLineWrap").css("max-width", (screen.width - 100));
+        }
+    
+        function validateStartTime(ctrl) {
+            validateStartTime();
+        }
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="T&M" subtitle="{!TM__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Quick Save" action="{!quicksave}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+            
+            <apex:actionFunction name="validateStartTime" action="{!validateStartTime}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateField" action="{!validateField}" oncomplete="setWidth();setFocus();"
+                                 reRender="thePageBlock,theLaborSection,theMaterialsSection,theEquipmentSection,theSubcontractorsSection, theFieldRemediationSection, theWasteDisposalSection, theDemurrageSection, theLumpSumSection, theMiscSection, theMessage,theMessage2"
+                                 immediate="true" status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+
+            <apex:pageBlockSection title="TM Information" collapsible="true" id="thePageBlockSection">
+                <apex:outputField value="{!TM.Name}" />
+                <apex:outputField value="{!TM.Status__c}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Customer Information" collapsible="true" id="thePageBlockSection-CI">
+                <apex:outputField value="{!TM.Bill_to_Customer__c}" />
+                <apex:inputField onchange="validateStartTime(this);" value="{!TM.Start_Time__c}" onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theLaborSection" columns="1" title="Labor Lines" collapsible="true">
+                <apex:pageMessages id="theMessage"></apex:pageMessages>
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLLaborTable" value="{!TMLListLabor}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListLabor))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                oncomplete="setWidth();" action="{!deleteLine}"
+                                                reRender="theTMLLaborTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Labor"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource_Type__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theJobPosition"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theLResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    FilterName3="Resource_Type__c"
+                                                    FilterNameValue3="{!line.Resource_Type__c}"
+                                                    FilterOperation3="Resource_Type__c"
+                                                    FilterOperationValue3="="
+                                                    FilterType3="Resource_Type__c"
+                                                    FilterTypeValue3="String"
+
+                                                    FilterName5="Status__c"
+                                                    FilterNameValue5="Active"
+                                                    FilterOperation5="Status__c"
+                                                    FilterOperationValue5="="
+                                                    FilterType5="Status__c"
+                                                    FilterTypeValue5="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_Start_Time__c.Label}">
+                            <apex:inputField id="theSiteStartTime" onchange="validateFieldInList(this);"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_End_Time__c.Label}">
+                            <apex:inputField id="theSiteEndTime" onchange="validateFieldInList(this);"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();"
+                                    reRender="theLaborSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Labor"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection id="theEquipmentSection" columns="1" title="Equipment Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLEquipmentTable" value="{!TMLListEquipment}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListEquipment))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteLine}" reRender="theTMLEquipmentTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Equipment"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource_Type__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theEquipment"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    allowtoBlank="true"
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Equipment"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theEResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Equipment\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Equipment"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    FilterName3="Resource_Type__c"
+                                                    FilterNameValue3="{!line.Resource_Type__c}"
+                                                    FilterOperation3="Resource_Type__c"
+                                                    FilterOperationValue3="="
+                                                    FilterType3="Resource_Type__c"
+                                                    FilterTypeValue3="String"
+
+                                                    FilterName5="Status__c"
+                                                    FilterNameValue5="Available"
+                                                    FilterOperation5="Status__c"
+                                                    FilterOperationValue5="="
+                                                    FilterType5="Status__c"
+                                                    FilterTypeValue5="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theEQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();"
+                                    reRender="theEquipmentSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Equipment"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection id="theMaterialsSection" columns="1" title="Materials Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLMaterialsTable" value="{!TMLListMaterials}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListMaterials))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteLine}" reRender="theTMLMaterialsTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Materials"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMaterialsTable}:theMResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Materials\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Materials"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theMQuantity" onchange="validateFieldInList(this);"
+                                             value="{!line.Quantity__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theMaterialsSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Materials"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection id="theSubcontractorsSection" columns="1" title="Subcontractors Lines"
+                                   collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLSubcontractorsTable" value="{!TMLListSubcontractors}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListSubcontractors))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteLine}" reRender="theTMLSubcontractorsTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Subcontractors"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLSubcontractorsTable}:theSResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Subcontractors\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Subcontractors"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}"
+                                    reRender="theSubcontractorsSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Subcontractors"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection id="theWasteDisposalSection" columns="1" title="Waste Disposal Lines"
+                                   collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLWasteDisposalTable" value="{!TMLListWasteDisposal}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListWasteDisposal))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteLine}" reRender="theTMLWasteDisposalTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Waste Disposal"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}"
+                                    reRender="theWasteDisposalSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Waste Disposal"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!TM.Status__c != 'Open' && TM.Status__c != 'Scheduled' && TM.Status__c != 'Confirmed'}"
+                    id="theDemurrageSection" columns="1" title="Demurrage Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block" >
+                    <apex:pageBlockTable id="theTMLDemurrageTable" value="{!TMLListDemurrage}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListDemurrage))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteLine}" reRender="theTMLDemurrageTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Demurrage"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Resource__c.Label}" >
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLDemurrageTable}:theDResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Demurrage\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Demurrage"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}" >
+                            <apex:inputField id="theDDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}" >
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel rendered="{!TM.Status__c != 'Open' && TM.Status__c != 'Scheduled' && TM.Status__c != 'Confirmed'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theDemurrageSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Demurrage"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+            <script>
+                $(".tmLineWrap").css("max-width", (screen.width-100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+    -->
+</apex:page>

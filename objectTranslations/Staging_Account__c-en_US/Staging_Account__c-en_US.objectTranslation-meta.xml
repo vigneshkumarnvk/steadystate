@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Staging Account</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Staging Accounts</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <layouts>
+        <layout>Staging Account Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Import_Accounts --></label>
+        <name>Import_Accounts</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_Account_Update_Request_Emails --></label>
+        <name>Send_Account_Update_Request_Emails</name>
+    </webLinks>
+</CustomObjectTranslation>

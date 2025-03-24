@@ -1,0 +1,141 @@
+<apex:page id="AdminSetup" controller="AdminSetupController" lightningStylesheets="true" showHeader="true" sideBar="true">
+    <style>
+        .table-1 {
+            width: 100%;
+        }
+
+        .table-1 thead > tr > th {
+            font-weight: bold;
+            padding: 6px;
+        }
+
+        .table-1 tbody > tr > td {
+            padding: 6px;
+        }
+    </style>
+
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+
+        <!--action functions-->
+        <apex:actionFunction name="jsScheduleTMSignatureProcess" action="{!scheduleTMSignatureProcess}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleRollupCustomerRevenue" action="{!scheduleRollupCustomerRevenue}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleRollupAR" action="{!scheduleRollupAR}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleCoupaSalesOrderLookupValue" action="{!scheduleCoupaSalesOrderLookupValue}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleCoupaPurchOrderPull" action="{!scheduleCoupaPurchOrderPull}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleCoupaEquipmentAssetLookupValue" action="{!scheduleCoupaEquipmentAssetLookupValue}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleKronosTimeClock" action="{!scheduleKronosTimeClockBatch}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsScheduleKronosTimeClockMonday" action="{!scheduleKronosTimeClockBatchMonday}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsExecuteKronosTimeClockBatch" action="{!executeKronosTimeClockBatch}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsExecuteWorkOrderQuoteBatch" action="{!executeWorkOrderQuoteBatch}" reRender="messages" status="loadingstatus"/>
+        <apex:actionFunction name="jsExecuteContractBillingProjectBatch" action="{!executeContractBillingProjectBatch}" reRender="messages" status="loadingstatus"/>
+
+        
+        <!--action functions-->
+
+
+        <apex:pageMessages id="messages"/>
+        <apex:page id="thePage">
+            <apex:pageBlock id="thePageBlock" title="Schedule Jobs">
+                <table class="table-1">
+                    <thead>
+                        <tr>
+                            <th style="width:10%;"></th>
+                            <th style="width:20%;">Apex Class</th>
+                            <th style="width:15%;">Frequency</th>
+                            <th style="width:55%;">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--TMSignatureProcess-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleTMSignatureProcess();" onComplete="x"/></td>
+                            <td>TMSignatureProcessSchedulable</td>
+                            <td>Hourly</td>
+                            <td>Process pending signatures submitted by customer from site and create tasks if signature requests past due 48 hours.</td>
+                        </tr>
+
+                        <!--rollup customer AR-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleRollupCustomerRevenue();" onComplete="x"/></td>
+                            <td>RollupCustomerRevenueScheduable</td>
+                            <td>Daily 21:00</td>
+                            <td>Roll up customer revenue from customer ledger entries.</td>
+                        </tr>
+
+                        <!--rollup Corporate AR-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleRollupAR();" onComplete="x"/></td>
+                            <td>RollupARScheduable</td>
+                            <td>Daily 22:00</td>
+                            <td>Roll up corporate revenue from customer accounts.</td>
+                        </tr>
+
+                        <!--CoupaSalesOrderLookupValueSchedule-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleCoupaSalesOrderLookupValue();" onComplete="x"/></td>
+                            <td>CoupaSalesOrderLookupValueSchedule</td>
+                            <td>Hourly</td>
+                            <td>Push sales orders to Coupa.</td>
+                        </tr>
+
+                        <!--CoupaPurchOrderPullSchedule-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleRollupAR();" onComplete="x"/></td>
+                            <td>CoupaPurchOrderPullSchedule</td>
+                            <td>Hourly</td>
+                            <td>Pull purchase orders from Coupa to Salesforce.</td>
+                        </tr>
+
+                        <!--scheduleCoupaEquipmentAssetLookupValue-->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleRollupAR();" onComplete="x"/></td>
+                            <td>CoupaEquipmentAssetLookupValueSchedule</td>
+                            <td>Hourly</td>
+                            <td>Push equipments to Coupa.</td>
+                        </tr>
+
+                        <!-- scheduleKronosTimeClockBatch -->
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleKronosTimeClock();" onComplete="x"/></td>
+                            <td>KronosTimeClockSchedule</td>
+                            <td>Daily 2:00</td>
+                            <td>Generate Kronos Time Clock Entries.</td>
+                        </tr>
+
+                        <!-- scheduleKronosTimeClockBatchMonday 
+                        <tr>
+                            <td><apex:commandButton value="Schedule" onClick="jsScheduleKronosTimeClockMonday();" onComplete="x"/></td>
+                            <td>KronosTimeClockSchedule</td>
+                            <td>Monday 10:00</td>
+                            <td>Generate Kronos Time Clock Entries.</td>
+                        </tr>
+                        -->
+
+                        <tr>
+                            <td><apex:commandButton value="Execute" onClick="jsExecuteKronosTimeClockBatch();" onComplete="x"/></td>
+                            <td>Manually Execute Kronos Time Clock Batch</td>
+                            <td></td>
+                            <td>Generate Kronos Time Clock Entries In Salesforce for Integration routine.</td>
+                        </tr>
+
+                        <tr>
+                            <td><apex:commandButton value="Execute" onClick="jsExecuteWorkOrderQuoteBatch();" onComplete="x"/></td>
+                            <td>Manually Execute Work Order Quote Creation Batch </td>
+                            <td></td>
+                            <td>Creates Work Order Quotes in EQAI for all Open Sales Orders.</td>
+                        </tr>
+
+                        <tr>
+                            <td><apex:commandButton value="Execute" onClick="jsExecuteContractBillingProjectBatch();" onComplete="x"/></td>
+                            <td>Manually Execute Contract Billing Project Creation Batch</td>
+                            <td></td>
+                            <td>Creates Contract Billing Project in EQAI for all Open Contracts.</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </apex:pageBlock>
+        </apex:page>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Initial Entry Global Dim. 2 --></label>
+        <name>Initial_Entry_Global_Dim_2__c</name>
+    </CustomFieldTranslation>

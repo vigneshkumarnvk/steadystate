@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RetainageEqualsYes</fullName>
+    <active>true</active>
+    <description>Retainage % and Withheld Until fields cannot be blank when Retainage value is 'Yes'</description>
+    <errorConditionFormula>AND( TEXT(RetainageText__c) = 'Yes',
+ $Profile.Id  != '2F00ef4000000Dizy',
+ ISBLANK(Retainage__c ))
+
+
+||
+
+AND( TEXT(RetainageText__c) = 'Yes',
+ $Profile.Id  != '2F00ef4000000Dizy',
+ISBLANK(TEXT( Withheld_Until__c )))</errorConditionFormula>
+    <errorDisplayField>Retainage__c</errorDisplayField>
+    <errorMessage>Retainage % and Withheld Until fields cannot be blank when Retainage value is 'Yes'.</errorMessage>
+</ValidationRule>

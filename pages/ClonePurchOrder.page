@@ -1,0 +1,16 @@
+<apex:page standardController="Purchase_Order__c" extensions="PurchOrderController">
+    <apex:sectionHeader title="Clone Purchase Order" subtitle="{!title}?"/>    
+    <apex:form id="theForm">    
+        <c:LoadingStatus />                    
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>        
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Clone Purchase Order" action="{!clonePO}" reRender="thePageBlock" status="loadingstatus"/>   
+                <apex:commandButton value="Return to Purchase Order" action="{!returnBack}"/>                 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>  
+</apex:page>

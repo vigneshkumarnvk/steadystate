@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Reversed by CM No. --></label>
+        <name>Reversed_by_CM_No__c</name>
+        <relationshipLabel><!-- Sales Invoices (Reversed by CM No.) --></relationshipLabel>
+    </CustomFieldTranslation>

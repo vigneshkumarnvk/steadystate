@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EZ_Pass_Code__c</fullName>
+    <externalId>false</externalId>
+    <label>EZ Pass Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>72</fullName>
+                <default>false</default>
+                <label>Automobile- 2 axles, 4 tires (up to 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>200</fullName>
+                <default>false</default>
+                <label>Pick-Up Trucks- 2 axles, 4 tires (up to 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>201</fullName>
+                <default>false</default>
+                <label>Pick-Up Trucks- 2 axles, 6 tires (up to 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>202</fullName>
+                <default>false</default>
+                <label>Pick-Up Trucks- 2 axles, 4 tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>203</fullName>
+                <default>false</default>
+                <label>Pick-Up Trucks- 2 axles, 6 tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>266</fullName>
+                <default>false</default>
+                <label>Vans- 2 axles, 4 tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>523</fullName>
+                <default>false</default>
+                <label>Trucks- 2 axles, 6 tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>527</fullName>
+                <default>false</default>
+                <label>Trucks- 3 axles, 8 or 10 tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>531</fullName>
+                <default>false</default>
+                <label>Trucks- 4 axles, 10 or more tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>535</fullName>
+                <default>false</default>
+                <label>Trucks- 5 axles, 12 or more  tires (over 7,000 lbs)</label>
+            </value>
+            <value>
+                <fullName>727</fullName>
+                <default>false</default>
+                <label>Tractors- 5 axles (trailer &gt; or = to 48")</label>
+            </value>
+            <value>
+                <fullName>207</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>207</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

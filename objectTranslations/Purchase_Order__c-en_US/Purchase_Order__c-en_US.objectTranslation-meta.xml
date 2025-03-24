@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Purchase Order</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Purchase Orders</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <layouts>
+        <layout>Purchase Order Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Details --></label>
+            <section>Details</section>
+        </sections>
+        <sections>
+            <label><!-- General --></label>
+            <section>General</section>
+        </sections>
+        <sections>
+            <label><!-- Shipping Address --></label>
+            <section>Shipping Address</section>
+        </sections>
+        <sections>
+            <label><!-- Total --></label>
+            <section>Total</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- PO&apos;s are not allowed for the selected vendor --></errorMessage>
+        <name>Blocked_account</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Note field cannot be blank! --></errorMessage>
+        <name>NoteFieldIsRequired</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- PO&apos;s are not allowed for the selected vendor --></errorMessage>
+        <name>PO_not_allowed</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Deep_Clone --></label>
+        <name>Deep_Clone</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Edit --></label>
+        <name>Edit</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Email_PO_Document --></label>
+        <name>Email_PO_Document</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Post_Receipt --></label>
+        <name>Post_Receipt</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Print_Purchase_Order --></label>
+        <name>Print_Purchase_Order</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Submit_for_Approval --></label>
+        <name>Submit_for_Approval</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- VoidPurchaseOrder --></label>
+        <name>VoidPurchaseOrder</name>
+    </webLinks>
+</CustomObjectTranslation>

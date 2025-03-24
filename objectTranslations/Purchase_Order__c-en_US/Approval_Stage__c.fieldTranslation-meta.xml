@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Approval Stage --></label>
+        <name>Approval_Stage__c</name>
+        <picklistValues>
+            <masterLabel>Approved</masterLabel>
+            <translation><!-- Approved --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 1</masterLabel>
+            <translation><!-- Level 1 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 10</masterLabel>
+            <translation><!-- Level 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 2</masterLabel>
+            <translation><!-- Level 2 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 3</masterLabel>
+            <translation><!-- Level 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 4</masterLabel>
+            <translation><!-- Level 4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 5</masterLabel>
+            <translation><!-- Level 5 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 6</masterLabel>
+            <translation><!-- Level 6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 7</masterLabel>
+            <translation><!-- Level 7 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 8</masterLabel>
+            <translation><!-- Level 8 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Level 9</masterLabel>
+            <translation><!-- Level 9 --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

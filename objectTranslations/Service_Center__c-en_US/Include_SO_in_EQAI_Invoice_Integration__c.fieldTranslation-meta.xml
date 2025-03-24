@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Include SO in EQAI Invoice Integration --></label>
+        <name>Include_SO_in_EQAI_Invoice_Integration__c</name>
+    </CustomFieldTranslation>

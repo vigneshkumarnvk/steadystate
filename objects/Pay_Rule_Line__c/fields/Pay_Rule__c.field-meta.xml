@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pay_Rule__c</fullName>
+    <externalId>false</externalId>
+    <label>Pay Rule</label>
+    <referenceTo>Pay_Rule__c</referenceTo>
+    <relationshipLabel>Pay Rule Lines</relationshipLabel>
+    <relationshipName>Pay_Rule_Lines</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

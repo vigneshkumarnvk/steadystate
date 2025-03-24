@@ -1,0 +1,12 @@
+<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceUnitCostUpdateController" showHeader="true" sidebar="true" lightningStylesheets="true" recordSetVar="">
+    <apex:form >
+        <apex:sectionHeader title="Sales Invoice Unit Cost Update"/>    
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Update" onclick="return confirm('Do you want to run Sales Invoice Unit Cost Update now?');" action="{!UpdateUnitCost}"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:outputLabel >Note: you will recieve an email from Salesforce after the update routine completes.</apex:outputLabel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

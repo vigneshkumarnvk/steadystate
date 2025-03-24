@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales_Order__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Sales Order</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Selected Sales Order is not a Prevailing Wage Sales Order!</errorMessage>
+        <filterItems>
+            <field>Sales_Order__c.Prevailing_Wage_Job__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Sales_Order__c</referenceTo>
+    <relationshipLabel>Prevailing Wage Setups</relationshipLabel>
+    <relationshipName>Prevailing_Wage_Setups</relationshipName>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,1205 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" controller="TMBillingPDFController" id="thePage">
+    <html>
+    <head>
+        <style>
+            html * {
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            @page {
+                margin-top: 3cm;
+                margin-bottom: 1.5cm;
+                margin-left: 20px;
+                margin-right: 20px;
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+
+            .counterReset {
+                -fs-page-sequence: start;
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            div.header {
+                position: running(header);
+                padding: 0px;
+                width: 300%;
+                display: inline-block;
+                opacity: 0.7;
+
+            }
+
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+
+            .pageNumber{
+                text-align:right;
+            }
+
+            .title{
+                font-size:14px;
+                font-weight:bold;
+                text-align: center;
+            }
+
+            .w100{
+                width:100%;
+            }
+
+            .w30 {
+                width: 35%;
+            }
+
+            .w50{
+                width:50%;
+            }
+
+            .tblOuterBorder{
+                border:1px solid black;
+            }
+
+            .tblInsideGeneral tbody tr td:nth-child(2){
+                font-weight:bold;
+            }
+
+            body{
+                font-size:12px;
+            }
+
+            .b{
+                font-weight:bold;
+            }
+
+            .alignRight{
+                text-align:right;
+            }
+
+            .alignCenter{
+                text-align:center;
+            }
+
+            .alignLeft{
+                text-align:left;
+            }
+
+            .bottomBorder{
+                border-bottom: 1px solid black;
+            }
+
+
+            .tblInnerBorders {
+                border-collapse: collapse;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+            }
+            .tblInnerBorders td, .tblInnerBorders th {
+                border: 1px solid black;
+                padding: 2px 3px;
+            }
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+
+            .tblHeading{
+                padding:4px 2px;
+            }
+
+            .mt10 {
+                margin-top:10px;
+            }
+
+            .p4 {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+
+            .divWrap{
+                page-break-before: always;
+                counter-reset: page;
+            }
+            .divWrap:first-child{
+                page-break-before: auto !important;
+            }
+
+            .sfdc_richtext img {
+                width:150px !important;
+            }
+
+        </style>
+
+
+    </head>
+    <body>
+    <apex:variable value="0" var="tmCount"/>
+    <apex:repeat value="{!TMBillingWrappers}" var="billingWrapper">
+        <apex:variable var="tmCount" value="{!VALUE(tmCount) + 1}"/>
+        <div class="divWrap counterReset" style="{!IF(VALUE(tmCount) > 1, 'page-break-before: always;', '')}">
+
+            <apex:variable value="0" var="taskCount"/>
+            <apex:repeat value="{!billingWrapper.BillingTaskWrappers}" var="taskWrapper">
+                <apex:variable var="taskCount" value="{!VALUE(taskCount) + 1}"/>
+                <!--header begin-->
+                <div style="{!IF(VALUE(taskCount) > 1, 'page-break-before: always;', '')}">
+                    <table class="w100">
+                        <tr>
+                            <td width="50%" style="padding-right: 20px;vertical-align: top;">
+                                <!--left column-->
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w30 b p4" style="vertical-align: top;">
+                                            DATE
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                                <apex:param value="{!billingWrapper.TM.Scheduled_Date__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b p4" style="vertical-align: top;">
+                                            CUSTOMER NAME
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            {!billingWrapper.TM.Bill_To_Customer__r.Name}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b p4" style="vertical-align: top;">
+                                            CUSTOMER PO #
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            {!billingWrapper.TM.Customer_PO_No__c}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b p4" rowspan="2" style="vertical-align: top;">
+                                            BILLING ADDRESS
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            <div>{!billingWrapper.TM.Sales_Order__r.Street__c}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bottomBorder p4">
+                                            <div>{!billingWrapper.TM.Sales_Order__r.City__c}, {!billingWrapper.TM.Sales_Order__r.State__c} {!billingWrapper.TM.Sales_Order__r.Postal_Code__c}  </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="50%" style="padding-left: 20px;vertical-align: top;">
+                                <!--right column-->
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w30 b p4" style="vertical-align: top;">
+                                            SALES ORDER #
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            {!billingWrapper.TM.Sales_Order__r.Name}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b p4" style="vertical-align: top;">
+                                            CONTACT NAME
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            {!billingWrapper.TM.Site_Contact_2__r.Name}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="b p4" rowspan="2" style="vertical-align: top;">
+                                            SITE LOCATION
+                                        </td>
+                                        <td class="bottomBorder p4">
+                                            <div>{!billingWrapper.TM.Site_Street__c}</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bottomBorder p4">
+                                            <div>{!billingWrapper.TM.Site_City__c}, {!billingWrapper.TM.Site_State__c} {!billingWrapper.TM.Site_Postal_Code__c}  </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="mt10">
+                    <table class="w100 tblOuterBorder tblGeneral">
+                        <tr>
+                            <td class="b">
+                                Scope of Work
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w100">
+                                <div style="margin: 5px,5px,5px,5px; overflow-wrap: break-word; word-wrap: break-word;">
+                                    <apex:outputField value="{!billingWrapper.TM.Site_Scope__c}"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!--
+                    Ticket#21540 - add Service Center logo override ability
+                -->
+                <div class="header mt10">
+                    <table class="w100">
+                        <tr>
+                            <td id="logo" width="30%" class="alignLeft">
+                                <!--
+                                <apex:outputField value="{!CompanySetup.Company_Logo__c}" rendered="{!billingWrapper.TM.Service_Center__r.Logo__c == null}"/>
+                                <apex:outputField value="{!billingWrapper.TM.Service_Center__r.Logo__c}" rendered="{!billingWrapper.TM.Service_Center__r.Logo__c != null}"/>
+                                -->
+                                <!-- Ticket#23989
+                                <apex:outputField value="{!CompanySetup.Company_Logo__c}" rendered="{!billingWrapper.companySetupLogo != null}" />
+                                <apex:outputField value="{!billingWrapper.serviceCenterSetupLog.Logo__c}" rendered="{!billingWrapper.serviceCenterSetupLog != null}" />
+                                <apex:outputField value="{!billingWrapper.contractSetupLogo.Logo__c}" rendered="{!billingWrapper.contractSetupLogo != null}" />
+                                -->
+                                <img src="{!billingWrapper.LogoUrl}" />
+                                <!-- Ticket#23989 -->
+                            </td>
+                            <td width="40%" class="alignCenter">
+                                <div class="title">
+                                    Billing T&amp;M
+                                </div>
+                            </td>
+                            <td width="30%" class="pageNumber alignRight">
+                                <div class="p4">T&amp;M # <span class="bottomBorder">{!billingWrapper.TM.Name}</span></div>
+                                <div class="p4">
+                                    Page <span class="pagenumber"/> of <span class="pagecount"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <!--header end-->
+
+                <!--job task begin-->
+                <div class="mt10">
+                    <div>
+                        <table class="w100 tblGeneral mt10">
+                            <tr>
+                                <td class="b">
+                                    Task {!taskWrapper.JobTask.Task_No__c} - {!taskWrapper.JobTask.Name}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Labor Begin -->
+                    <div style="{!if(taskWrapper.LaborLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divLabor" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                LABOR
+                            </div>
+                            <table id="tblLabor" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    UOM
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                    End Time
+                                </th>
+                                <th>
+                                    Lunch
+                                </th>
+                                <th>
+                                    Total Hrs
+                                </th>
+                                <th>
+                                    Reg Hrs
+                                </th>
+                                <th>
+                                    OT Hrs
+                                </th>
+                                <th>
+                                    DT Hrs
+                                </th>
+                                <th>
+                                    Reg Rate
+                                </th>
+                                <th>
+                                    OT Rate
+                                </th>
+                                <th>
+                                    DT Rate
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.LaborLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <td>
+                                            {!lineWrapper.TMLine.Resource_Name__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Resource_Type__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputField value="{!lineWrapper.TMLine.Billing_Start_Time__c}"/>
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputField value="{!lineWrapper.TMLine.Billing_End_Time__c}"/>
+                                        </td>
+                                        <td class="alignCenter">
+                                            <!-- <apex:outputField value="{!lineWrapper.TMLine.Lunch__c}" rendered="{!lineWrapper.TMLine.Include_Lunch_Y_N__c != true}" /> -->
+                                            <!-- Ticket#19875 -->
+                                            <apex:outputText value="Yes" rendered="{!lineWrapper.TMLine.Include_Lunch_Y_N__c != true && lineWrapper.TMLine.Lunch_Start_Time__c != null && lineWrapper.TMLine.Lunch_End_Time__c != null}" />
+                                            <apex:outputText value="" rendered="{!lineWrapper.TMLine.Include_Lunch_Y_N__c == true || lineWrapper.TMLine.Lunch_Start_Time__c == null || lineWrapper.TMLine.Lunch_End_Time__c == null}" />
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Hour__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Regular_Hours__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Overtime_Hours__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Premium_Hours__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <!--ticket 21572-->
+                                                <!--<apex:param value="{!IF(AND(lineWrapper.TMLine.Regular_Hours__c != 0,lineWrapper.TMLine.Regular_Hours__c != null), lineWrapper.TMLine.Regular_Rate__c, 0)}"/>-->
+                                                <apex:param value="{!IF(AND(lineWrapper.TMLine.Regular_Hours__c != 0,lineWrapper.TMLine.Regular_Hours__c != null, lineWrapper.TMLine.Bill_as_Lump_Sum__c != true), lineWrapper.TMLine.Regular_Rate__c, 0)}"/>
+                                                <!--ticket 21572-->
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <!--ticket 21572-->
+                                                <!--<apex:param value="{!IF(AND(lineWrapper.TMLine.Overtime_Hours__c != 0,lineWrapper.TMLine.Overtime_Hours__c != null), lineWrapper.TMLine.Overtime_Rate__c, 0)}"/>-->
+                                                <apex:param value="{!IF(AND(lineWrapper.TMLine.Overtime_Hours__c != 0,lineWrapper.TMLine.Overtime_Hours__c != null, lineWrapper.TMLine.Bill_as_Lump_Sum__c != true), lineWrapper.TMLine.Overtime_Rate__c, 0)}"/>
+                                                <!--ticket 21572-->
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <!--ticket 21572-->
+                                                <!--<apex:param value="{!IF(AND(lineWrapper.TMLine.Premium_Hours__c != null, lineWrapper.TMLine.Premium_Hours__c != 0), lineWrapper.TMLine.Premium_Rate__c, 0)}"/>-->
+                                                <apex:param value="{!IF(AND(lineWrapper.TMLine.Premium_Hours__c != null, lineWrapper.TMLine.Premium_Hours__c != 0, lineWrapper.TMLine.Bill_as_Lump_Sum__c != true), lineWrapper.TMLine.Premium_Rate__c, 0)}"/>
+                                                <!--ticket 21572-->
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="13" class="alignRight">
+                                        Labor Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LaborLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="13" class="alignRight">
+                                        Labor Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LaborLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="13" class="alignRight">
+                                        Labor Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LaborLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Labor End -->
+
+                    <!-- Equipment Begin -->
+                    <div style="{!if(taskWrapper.EquipmentLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divEquipment" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                EQUIPMENT
+                            </div>
+                            <table id="tblEquipment" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Item ID
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                    End Time
+                                </th>
+                                <th style="display: {!IF(billingWrapper.TM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 'block','none')}">
+                                    Lunch
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.EquipmentLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Resource__r.Name}
+                                        </td>
+                                        <td>
+                                            <apex:outputField value="{!lineWrapper.TMLine.Billing_Start_Time__c}"/>
+                                        </td>
+                                        <td>
+                                            <apex:outputField value="{!lineWrapper.TMLine.Billing_End_Time__c}"/>
+                                        </td>
+                                        <td style="display: {!IF(billingWrapper.TM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 'block','none')}">
+                                            <apex:outputField value="{!lineWrapper.TMLine.Lunch__c}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{0, Number, ##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Quantity__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}"/>
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="{!IF(billingWrapper.TM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 8, 7)}" class="alignRight">
+                                        Equipment Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.EquipmentLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="{!IF(billingWrapper.TM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 8, 7)}" class="alignRight">
+                                        Equipment Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.EquipmentLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="{!IF(billingWrapper.TM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 8, 7)}" class="alignRight">
+                                        Equipment Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.EquipmentLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Equipment End -->
+
+                    <!-- Materials Begin -->
+                    <div style="{!if(taskWrapper.MaterialLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divMaterials" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                MATERIALS
+                            </div>
+                            <table id="tblMaterials" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.MaterialLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Quantity__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Materials Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MaterialLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Materials Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MaterialLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Materials Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MaterialLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Materials End -->
+
+                    <!-- Subcontractors Begin -->
+                    <div style="{!if(taskWrapper.SubcontractorLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divSubContractors" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                COST PLUS MATERIALS, EQUIPMENT, AND SERVICES
+                            </div>
+                            <table id="tblSubContractors" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.SubcontractorLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <!--<td>
+
+                                        </td>-->
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Qty_to_Display__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price_to_Invoice__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Cost Plus Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.SubcontractorLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Cost Plus Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.SubcontractorLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Cost Plus Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.SubcontractorLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Subcontractors End -->
+
+                    <!-- Waste Disposal Begin-->
+                    <div style="{!if(taskWrapper.WasteDisposalLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divWasteDisposal" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                WASTE DISPOSAL
+                            </div>
+                            <table id="tblWasteDisposal" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Unit
+                                </th>
+                                <th class="alignCenter">
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    Facility Name
+                                </th>
+                                <th class="alignCenter">
+                                    BOL/Manifest
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.WasteDisposalLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <!--<td>
+
+                                        </td>-->
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Qty_to_Display__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Facility__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.BOL_Manifest__c}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}"/>
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="6" class="alignRight">
+                                        Waste Disposal Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.WasteDisposalLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="alignRight">
+                                        Waste Disposal Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.WasteDisposalLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="alignRight">
+                                        Waste Disposal Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.WasteDisposalLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Waste Disposal End-->
+
+                    <!-- Transportation and Demurrage Begin -->
+                    <div style="{!if(taskWrapper.DemurrageLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divDemurrage" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                TRANSPORTATION, DEMURRAGE AND FEES
+                            </div>
+                            <table id="tblDemurrage" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.DemurrageLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <!--<td>
+
+                                        </td>-->
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Qty_to_Display__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Resource_Type__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $###,###,##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Transportation, Demurrage and Fees Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.DemurrageLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Transportation, Demurrage and Fees Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.DemurrageLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Transportation, Demurrage and Fees Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.DemurrageLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Transportation and Demurrage End -->
+
+                    <!-- Lump Sum Begin -->
+                    <div style="{!if(taskWrapper.LumpSumLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divLumpSum" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                BUNDLED LINES
+                            </div>
+                            <table id="tblLumpSum" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    Unit
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.LumpSumLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Qty_to_Display__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Bundled Lines Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LumpSumLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Bundled Lines Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LumpSumLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Bundled Lines Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.LumpSumLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Lump Sum End -->
+
+                    <!-- Misc. Charges and Taxes Begin -->
+                    <div style="{!if(taskWrapper.MiscChargeLineSection.TMLineWrappers.size>0, '', 'display:none;')}">
+                        <br/>
+                        <div id="divMisc" class="tblOuterBorder">
+                            <div class="b bottomBorder tblHeading">
+                                MISC. CHARGES &amp; TAXES
+                            </div>
+                            <table id="tblMisc" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Qty.
+                                </th>
+                                <th class="alignCenter">
+                                    Unit
+                                </th>
+                                <th class="alignRight">
+                                    Unit Price
+                                </th>
+                                <th class="alignRight">
+                                    Amount
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!taskWrapper.MiscChargeLineSection.TMLineWrappers}" var="lineWrapper">
+                                    <tr>
+                                        <td>
+                                            {!lineWrapper.TMLine.Description__c}
+                                        </td>
+                                        <td>
+                                            {!lineWrapper.TMLine.Qty_to_Display__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Unit_Price__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                        <td  class="alignRight">
+                                            <apex:outputText value="{0, Number, $##0.00}">
+                                                <apex:param value="{!lineWrapper.TMLine.Line_Amount__c}" />
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Misc. Charges and Taxes Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MiscChargeLineSection.Subtotal}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Misc. Charges and Taxes Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MiscChargeLineSection.Tax}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="alignRight">
+                                        Misc. Charges and Taxes Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $##0.00}">
+                                            <apex:param value="{!taskWrapper.MiscChargeLineSection.Total}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Misc. Charges and Taxes End -->
+
+                    <!--
+                    <apex:outputPanel rendered="{!billingWrapper.BillingTaskWrappers.size > 1}">
+                        <br/>
+                        <div class="tblOuterBorder" style="page-break-inside: avoid;">
+                            <div class="b bottomBorder tblHeading">
+                                TASK TOTALS
+                            </div>
+                            <table class="tblInnerBorders w100">
+                                <tbody>
+                                <tr>
+                                    <td style="width:70%" class="alignRight">
+                                        Sub Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!taskWrapper.Subtotal}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="alignRight">
+                                        Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!taskWrapper.Tax}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="alignRight">
+                                        Total:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!taskWrapper.Total}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </apex:outputPanel>
+                    -->
+                </div>
+            </apex:repeat>
+        </div>
+
+        <br/>
+        <div class="tblOuterBorder" style="page-break-inside: avoid;">
+            <table class="tblInnerBorders w100">
+                <tbody>
+                <tr>
+                    <td style="width:70%" class="alignRight">
+                        T&amp;M Sub Total:
+                    </td>
+                    <td class="alignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!billingWrapper.Subtotal}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="alignRight">
+                        T&amp;M Sales Tax:
+                    </td>
+                    <td class="alignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!billingWrapper.Tax}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="alignRight">
+                        T&amp;M Grand Total:
+                    </td>
+                    <td class="alignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!billingWrapper.Total}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </apex:repeat>
+    </body>
+    </html>
+</apex:page>

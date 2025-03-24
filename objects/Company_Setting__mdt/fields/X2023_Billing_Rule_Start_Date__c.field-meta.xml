@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X2023_Billing_Rule_Start_Date__c</fullName>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>2023_Billing_Rule_Start_Date</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>

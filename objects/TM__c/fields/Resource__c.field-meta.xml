@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resource__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Roll up field - Labor line count</inlineHelpText>
+    <label>Labor Resource Count</label>
+    <summaryFilterItems>
+        <field>TM_Line__c.Category__c</field>
+        <operation>equals</operation>
+        <value>Labor</value>
+    </summaryFilterItems>
+    <summaryForeignKey>TM_Line__c.TM__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

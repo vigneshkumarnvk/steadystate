@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>From_Sales_Quote__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>From Sales Quote</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Sales_Order__c.Service_Center__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Service_Center__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Sales_Order__c.Bill_to_Customer_No__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Bill_to_Customer__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Sales_Order__c.Document_Type__c</field>
+            <operation>equals</operation>
+            <value>Sales Quote</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Sales_Order__c</referenceTo>
+    <relationshipLabel>T&amp;Ms (From Sales Quote)</relationshipLabel>
+    <relationshipName>T_Ms</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

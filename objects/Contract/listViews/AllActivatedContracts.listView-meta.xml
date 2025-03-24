@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AllActivatedContracts</fullName>
+    <columns>Notification_Sent__c</columns>
+    <columns>Payment_Term__c</columns>
+    <columns>CONTRACT.CREATED_DATE</columns>
+    <columns>CONTRACT.NAME</columns>
+    <columns>CONTRACT.CONTRACT_NUMBER</columns>
+    <columns>SALES.ACCOUNT.NAME</columns>
+    <columns>CONTRACT.START_DATE</columns>
+    <columns>CONTRACT.END_DATE</columns>
+    <columns>GSA__c</columns>
+    <columns>CONTRACT.STATUS</columns>
+    <columns>Override_Remittance_on_Invoice__c</columns>
+    <columns>Remittance_Name__c</columns>
+    <columns>Logo__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CONTRACT.STATUS</field>
+        <operation>equals</operation>
+        <value>Activated</value>
+    </filters>
+    <label>All Activated Contracts</label>
+</ListView>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Service Center</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Service Centers</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- ServiceCenterFieldSet --></label>
+        <name>ServiceCenterFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Service Center Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Quote Printing Customization --></label>
+            <section>Quote Printing Customization</section>
+        </sections>
+        <sections>
+            <label><!-- Remittance Information --></label>
+            <section>Remittance Information</section>
+        </sections>
+        <sections>
+            <label><!-- Setup --></label>
+            <section>Setup</section>
+        </sections>
+    </layouts>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Same__c</fullName>
+    <externalId>false</externalId>
+    <formula>Unit_Price__c &gt; Line_Amount__c &amp;&amp; Text(Category__c) == 'Labor' &amp;&amp; Line_Amount__c &gt; 0 &amp;&amp; Unit_of_Measure__r.Name = 'DAY' &amp;&amp; Quantity__c &gt;=1</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Same</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

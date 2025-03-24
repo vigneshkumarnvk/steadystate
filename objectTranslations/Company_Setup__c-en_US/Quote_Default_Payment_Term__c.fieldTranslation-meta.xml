@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Quote Default Payment Term --></label>
+        <name>Quote_Default_Payment_Term__c</name>
+        <relationshipLabel><!-- Company Setup --></relationshipLabel>
+    </CustomFieldTranslation>

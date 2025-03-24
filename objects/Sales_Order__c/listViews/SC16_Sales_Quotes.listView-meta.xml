@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC16_Sales_Quotes</fullName>
+    <columns>NAME</columns>
+    <columns>Bill_to_Customer_No__c</columns>
+    <columns>Site_Scope__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Sales_Order_Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>16</value>
+    </filters>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Sales_Order__c.Sales_Quote</value>
+    </filters>
+    <label>SC16 Sales Quotes</label>
+</ListView>

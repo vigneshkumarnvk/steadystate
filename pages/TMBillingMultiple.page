@@ -1,0 +1,1180 @@
+<!-- <apex:page language="{!$CurrentPage.parameters.lang}" action="{!PrintBillingTM}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardController="TM__c" extensions="TMController" id="thePage"> -->
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardController="TM__c" id="thePage">
+    <!--
+    <html>
+        <head>
+            <style>
+                html * {
+                  font-size: 9pt;
+                  font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                }
+                
+                @page {
+                    margin-top: 2cm;
+                    margin-bottom: 2cm;                
+                    @top-left {
+                    content: element(header);
+                  }
+                    @bottom-center {
+                    content: element(footer);
+                  }
+                }
+                
+                .counterReset {
+                    -fs-page-sequence: start;
+                }
+                
+                .pagenumber:before {
+                  content: counter(page);
+                }
+                
+                .pagecount:before {
+                  content: counter(pages);
+                }
+                
+                div.header {
+                  position: running(header);
+                  padding: 0px;
+                  width: 300%;
+                  display: inline-block;
+                  opacity: 0.7;
+                  
+                }
+                
+                div.footer {
+                  position: running(footer);
+                  display: block;
+                }
+                
+                .pageNumber{
+                    text-align:right;
+                }
+                
+                .title{
+                    font-size:14px;
+                    font-weight:bold;
+                    text-align: center;
+                }
+                
+                .w100{
+                    width:100%;
+                }
+                
+                .w50{
+                    width:50%;
+                }
+                
+                .tblOuterBorder{
+                    border:1px solid black;
+                }
+                
+                .tblInsideGeneral tbody tr td:nth-child(2){
+                    font-weight:bold;
+                }
+                
+                body{
+                    font-size:12px;
+                }
+                
+                .b{
+                    font-weight:bold;
+                }
+                
+                .alignRight{
+                    text-align:right;
+                }
+                
+                .alignCenter{
+                    text-align:center;
+                }
+                
+                .alignLeft{
+                    text-align:left;
+                }
+                
+                .bottomBorder{
+                    border-bottom: 1px solid black;
+                }
+                
+                
+                .tblInnerBorders {
+                    border-collapse: collapse;
+                }
+                
+                .tblInnerBorders th {
+                    background-color: #D3D3D3;
+                }
+                .tblInnerBorders td, .tblInnerBorders th {
+                    border: 1px solid black;
+                    padding: 2px 3px;
+                }
+                .tblInnerBorders tr:first-child th {
+                    border-top: 0;
+                }
+                .tblInnerBorders tr:last-child td {
+                    border-bottom: 0;
+                }
+                .tblInnerBorders tr td:first-child,
+                .tblInnerBorders tr th:first-child {
+                    border-left: 0;
+                }
+                .tblInnerBorders tr td:last-child,
+                .tblInnerBorders tr th:last-child {
+                    border-right: 0;
+                }
+                
+                .tblHeading{
+                    padding:4px 2px;
+                }
+                
+                .mt10 {
+                    margin-top:10px;
+                }
+                
+                .divWrap{
+                    page-break-before: always;
+                    counter-reset: page;
+                }
+                .divWrap:first-child{
+                    page-break-before: auto !important;
+                }
+            </style>
+            
+
+        </head>
+        <body>
+            <apex:repeat value="{!theReadyTobillTMList}" var="theWrap">
+                <div class="divWrap counterReset">
+                    <div class="header mt10">
+                        <table class="w100">
+                            <tr>
+                                <td>
+                                    Billing T&amp;M &nbsp;&nbsp;&nbsp;&nbsp;{!theWrap.theTM.Name}
+                                </td>
+                                <td class="pageNumber">
+                                    Page <span class="pagenumber"/> of <span class="pagecount"/>
+                                </td>
+                            </tr>           
+                        </table>
+                        <div class="title">
+                            Billing T&amp;M
+                        </div>
+                    </div>
+                    <div class="mt10">
+                        <table class="w100 tblOuterBorder tblGeneral">
+                            <tr>
+                                <td class="w50">
+                                    <table width="100%" class="tblInsideGeneral">
+                                        <tr>
+                                            <td class="w50">
+                                                TM No.
+                                            </td>
+                                            <td class="w50 b">
+                                                {!theWrap.theTM.Name}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="w50">
+                                    <table width="100%" class="tblInsideGeneral">
+                                        <tr>
+                                            <td class="w50">
+                                                TM Status
+                                            </td>
+                                            <td class="w50 b">
+                                                {!theWrap.theTM.Status__c}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <div>
+                            <table class="w100 tblOuterBorder tblGeneral">
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Customer
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Bill_To_Customer__r.Name}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Contract Name
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Contract__r.Name}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Customer Account No.
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Bill_To_Customer__r.AccountNumber}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Account Executive
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Bill_To_Customer__r.Account_Executive__r.Name}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br/>
+                        <div>
+                            <table class="w100 tblOuterBorder tblGeneral">
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Sales Order
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Sales_Order__r.Name}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Scheduled Date
+                                                </td>
+                                                <td class="w50 b">
+                                                    <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                                        <apex:param value="{!theWrap.theTM.Scheduled_Date__c}" />
+                                                    </apex:outputText>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Project Manager
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Project_Coordinator__r.Name}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Day of Job
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Day_of_Job__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br/>
+                        <div>
+                            <table class="w100 tblOuterBorder tblGeneral">
+                                <tr>
+                                    <td colspan="2">
+                                        Site Information
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site Name
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_Name__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site Contact
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_Contact__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site Address
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_Street__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site Phone
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_Phone_No__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    
+                                                </td>
+                                                <td class="w50 b">
+                                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site Email Address
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_Email_Address__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    Site City/State/Zip
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Site_City__c}/{!theWrap.theTM.Site_State__c}/{!theWrap.theTM.Site_Postal_Code__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="w50">
+                                        <table width="100%" class="tblInsideGeneral">
+                                            <tr>
+                                                <td class="w50">
+                                                    PO/Reference Number
+                                                </td>
+                                                <td class="w50 b">
+                                                    {!theWrap.theTM.Customer_PO_No__c}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br/>
+                        <div>
+                            <table class="w100 tblOuterBorder tblGeneral">
+                                <tr>
+                                    <td class="b">
+                                        Scope of Work
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w100">
+                                        <div style="margin: 5px,5px,5px,5px; overflow-wrap: break-word; word-wrap: break-word;">
+                                            <apex:outputField value="{!theWrap.theTM.Site_Scope__c}"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div style="{!if(theWrap.theTMLListLabor.size>0, '', 'display:none;')}">
+                        <br/>
+                            <div id="divLabor" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    LABOR
+                                </div>
+                                <table id="tblLabor" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Item/Job
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Type
+                                        </th>
+                                        <th>
+                                            UOM
+                                        </th>
+                                        <th>
+                                            Start Time
+                                        </th>
+                                        <th>
+                                            End Time
+                                        </th>
+                                        <th>
+                                            Lunch
+                                        </th>
+                                        <th>
+                                            Total Hrs
+                                        </th>
+                                        <th>
+                                            Reg Hrs
+                                        </th>
+                                        <th>
+                                            OT Hrs
+                                        </th>
+                                        <th>
+                                            DT Hrs
+                                        </th>
+                                        <th>
+                                            Reg Rate
+                                        </th>
+                                        <th>
+                                            OT Rate
+                                        </th>
+                                        <th>
+                                            DT Rate
+                                        </th>
+                                        <th>
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListLabor}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Resource__r.Name}
+                                                </td>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Resource_Type__r.Name}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputField value="{!tml.Billing_Start_Time__c}"/>
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputField value="{!tml.Billing_End_Time__c}"/>
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputField value="{!tml.Lunch__c}" rendered="{!tml.Include_Lunch_Y_N__c != true}" />
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Hour__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Regular_Hours__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Overtime_Hours__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Premium_Hours__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputText value="{0, Number, ##0.00}">
+                                                        <apex:param value="{!IF(AND(tml.Regular_Hours__c != 0,tml.Regular_Hours__c != null), tml.Regular_Rate__c, 0)}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputText value="{0, Number, ##0.00}">
+                                                        <apex:param value="{!IF(AND(tml.Overtime_Hours__c != 0,tml.Overtime_Hours__c != null), tml.Overtime_Rate__c, 0)}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputText value="{0, Number, ##0.00}">
+                                                        <apex:param value="{!IF(AND(tml.Premium_Hours__c != null, tml.Premium_Hours__c != 0), tml.Premium_Rate__c, 0)}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td  class="alignRight">
+                                                    <apex:outputText value="{0, Number, ##0.00}">
+                                                        <apex:param value="{!tml.Line_Amount__c}" />
+                                                    </apex:outputText>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="14" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalLabor}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="14" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalLabor}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="14" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalLabor}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="{!if(theWrap.theTMLListEquipment.size>0, '', 'display:none;')}">
+                            <br/>
+                            <div id="divEquipment" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    EQUIPMENT
+                                </div>
+                                <table id="tblEquipment" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Item/Job
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Type
+                                        </th>
+                                        <th>
+                                            Start Time
+                                        </th>
+                                        <th>
+                                            End Time
+                                        </th>
+                                        <th style="display: {!IF(theWrap.theTM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 'block','none')}">
+                                            Lunch
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                        UOM
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListEquipment}" var="tml">
+                                            <tr>
+                                                <td>
+                                                {!tml.Resource__r.Name}
+                                                </td>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Resource_Type__r.Name}
+                                                </td>
+                                                <td>
+                                                <apex:outputField value="{!tml.Billing_Start_Time__c}"/>
+                                                </td>
+                                                <td>
+                                                <apex:outputField value="{!tml.Billing_End_Time__c}"/>
+                                                </td>
+                                                <td style="display: {!IF(theWrap.theTM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 'block','none')}">
+                                                    <apex:outputField value="{!tml.Lunch__c}" />
+                                                </td>
+                                                <td>
+                                                    {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="{!IF(theWrap.theTM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 9, 8)}" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalEquipment}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="{!IF(theWrap.theTM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 9, 8)}" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalEquipment}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="{!IF(theWrap.theTM.Contract__r.Allow_Lunch_Time_on_Equipment__c == true, 9, 8)}" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalEquipment}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="{!if(theWrap.theTMLListMaterials.size>0, '', 'display:none;')}">
+                            <br/>        
+                            <div id="divMaterials" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    MATERIALS
+                                </div>
+                                <table id="tblMaterials" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Item/Job
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            UOM
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListMaterials}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Resource__r.Name}
+                                                </td>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Quantity__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalMaterials}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalMaterials}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalMaterials}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="{!if(theWrap.theTMLListSubcontractors.size>0, '', 'display:none;')}">
+                            <br/>
+                            <div id="divSubContractors" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    COST PLUS MATERIALS, EQUIPMENT, AND SERVICES
+                                </div>
+                                <table id="tblSubContractors" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            Unit
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListSubcontractors}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price_to_Invoice__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalSubcontractors}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalSubcontractors}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalSubcontractors}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div style="{!if(theWrap.theTMLListWasteDisposal.size>0, '', 'display:none;')}">
+                            <br/>        
+                            <div id="divWasteDisposal" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    WASTE DISPOSAL
+                                </div>
+                                <table id="tblWasteDisposal" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Unit
+                                        </th>
+                                        <th class="alignCenter">
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            Facility Name
+                                        </th>
+                                        <th class="alignCenter">
+                                            BOL/Manifest
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListWasteDisposal}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignCenter">
+                                                {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Facility__r.Name}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.BOL_Manifest__c}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="6" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalWasteDisposal}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalWasteDisposal}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalWasteDisposal}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div style="{!if(theWrap.theTMLListDemurrage.size>0, '', 'display:none;')}">
+                            <br/>
+                            <div id="divDemurrage" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    TRANSPORTATION, DEMURRAGE AND FEES
+                                </div>
+                                <table id="tblDemurrage" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            Unit
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListDemurrage}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Resource_Type__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalDemurrage}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalDemurrage}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalDemurrage}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="{!if(theWrap.theTMLListLumpSum.size>0, '', 'display:none;')}">
+                            <br/>
+                            <div id="divLumpSum" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    LUMP SUM / BUNDLE LINES
+                                </div>
+                                <table id="tblLumpSum" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            Unit
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListLumpSum}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalLumpSum}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalLumpSum}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalLumpSum}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div style="{!if(theWrap.theTMLListMisc.size>0, '', 'display:none;')}">
+                            <br/>
+                            <div id="divMisc" class="tblOuterBorder">
+                                <div class="b bottomBorder tblHeading">
+                                    MISC. CHARGES &amp; TAXES
+                                </div>
+                                <table id="tblMisc" class="tblInnerBorders w100">
+                                    <thead>
+                                        <th>
+                                            Type
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                        <th>
+                                            Qty.
+                                        </th>
+                                        <th class="alignCenter">
+                                            Unit
+                                        </th>
+                                        <th class="alignRight">
+                                            Unit Price
+                                        </th>
+                                        <th class="alignRight">
+                                            Amount
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!theWrap.theTMLListMisc}" var="tml">
+                                            <tr>
+                                                <td>
+                                                    {!tml.Job_Type__r.Name}
+                                                </td>
+                                                <td>
+                                                    {!tml.Description__c}
+                                                </td>
+                                                <td>
+                                                    {!tml.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!tml.Unit_of_Measure__r.Name}
+                                                </td>
+                                                <td class="alignRight">
+                                                    {!tml.Unit_Price__c}
+                                                </td>
+                                                <td  class="alignRight">
+                                                    {!tml.Line_Amount__c}
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Sub Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLSubtotalMisc}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Sales Tax:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTaxTotalMisc}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight">
+                                                Total:
+                                            </td>
+                                            <td class="alignRight">
+                                                {!theWrap.TMLTotalMisc}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <div id="divORder" class="tblOuterBorder">
+                            <table id="tblOrder" class="tblInnerBorders w100">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:70%" class="alignRight">
+                                            Order Sub Total:
+                                        </td>
+                                        <td class="alignRight">
+                                            {!theWrap.TMLSubtotal}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="alignRight">
+                                            Order Tax:
+                                        </td>
+                                        <td class="alignRight">
+                                            {!theWrap.TMLTaxTotal}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="alignRight">
+                                            Order Grand Total:
+                                        </td>
+                                        <td class="alignRight">
+                                            {!theWrap.TMLTotal}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+                 
+            </apex:repeat>
+        </body>
+    </html>
+    -->
+</apex:page>

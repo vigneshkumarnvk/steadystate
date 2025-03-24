@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoice_Submission_Channels__c</fullName>
+    <externalId>false</externalId>
+    <label>Invoice Submission Channels</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>EMAIL</fullName>
+                <default>false</default>
+                <label>Email</label>
+            </value>
+            <value>
+                <fullName>INVOICE_PORTAL</fullName>
+                <default>false</default>
+                <label>Invoice Portal</label>
+            </value>
+            <value>
+                <fullName>HARD_COPY_SUBMITTAL</fullName>
+                <default>false</default>
+                <label>Hard Copy Submittal</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

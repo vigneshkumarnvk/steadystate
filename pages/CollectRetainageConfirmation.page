@@ -1,0 +1,23 @@
+<apex:page id="CollectRetainageConfirmation" standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Post {!docType}" subtitle="{!title}?"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/><br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rerender="thePageBlock" value="Create Retainage Invoice" action="{!createRetainageInvoice}" rendered="{!RetainageAmount > 0}"/>
+                <apex:commandButton value="Return to {!docType}" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:outputField value="{!SI.Retainage_Pct__c}" />
+                <apex:outputField value="{!SI.Retainage_Amount__c}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Center__c</fullName>
+    <externalId>false</externalId>
+    <label>Service Center</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Aston PA, SC33</fullName>
+                <default>false</default>
+                <label>Aston PA, SC33</label>
+            </value>
+            <value>
+                <fullName>Baltimore MD, SC04</fullName>
+                <default>false</default>
+                <label>Baltimore MD, SC04</label>
+            </value>
+            <value>
+                <fullName>Bridgeport CT, SC21</fullName>
+                <default>false</default>
+                <label>Bridgeport CT, SC21</label>
+            </value>
+            <value>
+                <fullName>Brooklyn NY, SC32</fullName>
+                <default>false</default>
+                <label>Brooklyn NY, SC32</label>
+            </value>
+            <value>
+                <fullName>Chicago IL, SC22</fullName>
+                <default>false</default>
+                <label>Chicago IL, SC22</label>
+            </value>
+            <value>
+                <fullName>Clayton, NJ SC02</fullName>
+                <default>false</default>
+                <label>Clayton, NJ SC02</label>
+            </value>
+            <value>
+                <fullName>Elizabeth - TSDF</fullName>
+                <default>false</default>
+                <label>Elizabeth - TSDF</label>
+            </value>
+            <value>
+                <fullName>Harrisburg, PA SC25</fullName>
+                <default>false</default>
+                <label>Harrisburg, PA SC25</label>
+            </value>
+            <value>
+                <fullName>Hartford CT, SC19</fullName>
+                <default>false</default>
+                <label>Hartford CT, SC19</label>
+            </value>
+            <value>
+                <fullName> Hydro, IN SC40</fullName>
+                <default>false</default>
+                <label> Hydro, IN SC40</label>
+            </value>
+            <value>
+                <fullName>Hydro, PA  SC41</fullName>
+                <default>false</default>
+                <label>Hydro, PA  SC41</label>
+            </value>
+            <value>
+                <fullName>Lewisberry - TSDF</fullName>
+                <default>false</default>
+                <label>Lewisberry - TSDF</label>
+            </value>
+            <value>
+                <fullName>Long Island, NY SC62</fullName>
+                <default>false</default>
+                <label>Long Island, NY SC62</label>
+            </value>
+            <value>
+                <fullName>Metro LP, NJ SC73</fullName>
+                <default>false</default>
+                <label>Metro LP, NJ SC73</label>
+            </value>
+            <value>
+                <fullName>Mid Atlantic LP, SC74</fullName>
+                <default>false</default>
+                <label>Mid Atlantic LP, SC74</label>
+            </value>
+            <value>
+                <fullName>Nashua NH, SC20</fullName>
+                <default>false</default>
+                <label>Nashua NH, SC20</label>
+            </value>
+            <value>
+                <fullName>New England LP, SC77</fullName>
+                <default>false</default>
+                <label>New England LP, SC77</label>
+            </value>
+            <value>
+                <fullName>New Windsor, NY SC17</fullName>
+                <default>false</default>
+                <label>New Windsor, NY SC17</label>
+            </value>
+            <value>
+                <fullName>Norfolk MA, SC07</fullName>
+                <default>false</default>
+                <label>Norfolk MA, SC07</label>
+            </value>
+            <value>
+                <fullName>Pulaski PA, SC24</fullName>
+                <default>false</default>
+                <label>Pulaski PA, SC24</label>
+            </value>
+            <value>
+                <fullName>Rahway NJ, SC31</fullName>
+                <default>false</default>
+                <label>Rahway NJ, SC31</label>
+            </value>
+            <value>
+                <fullName>S. NJ LP, SC72</fullName>
+                <default>false</default>
+                <label>S. NJ LP, SC72</label>
+            </value>
+            <value>
+                <fullName>Skowhegan ME, SC16</fullName>
+                <default>false</default>
+                <label>Skowhegan ME, SC16</label>
+            </value>
+            <value>
+                <fullName>SC09 Lewisberry, PA TSDF</fullName>
+                <default>false</default>
+                <label>SC09 Lewisberry, PA TSDF</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

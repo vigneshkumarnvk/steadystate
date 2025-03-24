@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <doesSendEmailToMembers>true</doesSendEmailToMembers>
+    <name>Purchasing Department</name>
+    <queueMembers>
+        
+    </queueMembers>
+    <queueSobject>
+        <sobjectType>Vendor_Request__c</sobjectType>
+    </queueSobject>
+</Queue>

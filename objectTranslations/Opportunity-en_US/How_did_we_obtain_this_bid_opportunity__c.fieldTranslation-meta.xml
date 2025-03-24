@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- How did we obtain this bid opportunity? --></label>
+        <name>How_did_we_obtain_this_bid_opportunity__c</name>
+        <picklistValues>
+            <masterLabel>AE/PC found opportunity</masterLabel>
+            <translation><!-- AE/PC found opportunity --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bid Subscription</masterLabel>
+            <translation><!-- Bid Subscription --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sent from customer direct to AE/PC</masterLabel>
+            <translation><!-- Sent from customer direct to AE/PC --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

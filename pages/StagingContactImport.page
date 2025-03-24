@@ -1,0 +1,39 @@
+<apex:page standardController="Staging_Contact__c" extensions="StagingContactController" recordSetVar="" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="Import Salesforce Contacts"/>
+        <apex:pageMessages />        
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Import" action="{!ImportContacts}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection columns="1" title="New Process Parameters">
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:inputCheckbox value="{!ResetLoginExpirationDate}"/>
+                    <apex:outputLabel >Reset expiration date - if checked, system will reset the login expiration date for the expired logins, but not including ones that are disabled.</apex:outputLabel>
+                </apex:pageBlockSectionItem>
+                -->
+                <apex:pageBlockSectionItem >
+                    <apex:inputCheckbox value="{!ResetUpdateRequestEmailSentFlag}"/>                
+                    <apex:outputLabel >Start a new process <ul><li>If checked, system will process all billing contacts.</li><li>If not checked, system will only process the new billing contacts that are created after the last import.</li></ul></apex:outputLabel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Please note">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputLabel >
+                        <ul>
+                            <li>The import process runs in the background. You will receive an email confirmation after the import process completes importing the contacts.</li>
+                            <li>The import process prepares the staging contacts and the portal logins. It will NOT send the emails. </li>
+                            <li>You will send the emails using the Send Contact Update Request Emails button from a staging contact list view after the import process is completed.</li>
+                        </ul>
+                    </apex:outputLabel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

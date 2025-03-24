@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Posted_Sales_Invoices</fullName>
+    <columns>No__c</columns>
+    <columns>Bill_to_Customer__c</columns>
+    <columns>Sales_Order__c</columns>
+    <columns>Invoice_Date__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Invoice_Amount__c</columns>
+    <columns>Invoice_Amt_Incl_Tax__c</columns>
+    <columns>Sync_d__c</columns>
+    <columns>Amount_Paid__c</columns>
+    <columns>Payment_Status__c</columns>
+    <columns>Date_of_Last_Payment__c</columns>
+    <columns>Approved_Profit_Margin__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>equals</operation>
+        <value>Posted</value>
+    </filters>
+    <label>_Posted Sales Invoices</label>
+</ListView>

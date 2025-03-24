@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Frequency__c</fullName>
+    <externalId>false</externalId>
+    <label>Frequency</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Annually</fullName>
+                <default>false</default>
+                <label>Annually</label>
+            </value>
+            <value>
+                <fullName>Bi-annually</fullName>
+                <default>false</default>
+                <label>Bi-annually</label>
+            </value>
+            <value>
+                <fullName>10 Years</fullName>
+                <default>false</default>
+                <label>10 Years</label>
+            </value>
+            <value>
+                <fullName>3 Years</fullName>
+                <default>false</default>
+                <label>3 Years</label>
+            </value>
+            <value>
+                <fullName>5 Years</fullName>
+                <default>false</default>
+                <label>5 Years</label>
+            </value>
+            <value>
+                <fullName>2 Years</fullName>
+                <default>false</default>
+                <label>2 Years</label>
+            </value>
+            <value>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+                <label>Monthly</label>
+            </value>
+            <value>
+                <fullName>Quarterly</fullName>
+                <default>false</default>
+                <label>Quarterly</label>
+            </value>
+            <value>
+                <fullName>Semi-Annually</fullName>
+                <default>false</default>
+                <label>Semi-Annually</label>
+            </value>
+            <value>
+                <fullName>Weekly</fullName>
+                <default>false</default>
+                <label>Weekly</label>
+            </value>
+            <value>
+                <fullName>Biennially</fullName>
+                <default>false</default>
+                <label>Biennially</label>
+            </value>
+            <value>
+                <fullName>Bimonthly</fullName>
+                <default>false</default>
+                <label>Bimonthly</label>
+            </value>
+            <value>
+                <fullName>Frequency</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Frequency</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

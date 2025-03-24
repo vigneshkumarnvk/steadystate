@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Copy_of_SC23_T_M_by_status</fullName>
+    <columns>Sales_Order__c</columns>
+    <columns>No__c</columns>
+    <columns>Customer__c</columns>
+    <columns>Status__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Scheduled_Date__c</columns>
+    <columns>Amount_Incl_Tax__c</columns>
+    <columns>Contract__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>20</value>
+    </filters>
+    <label>Copy of SC23 T&amp;M by status</label>
+</ListView>

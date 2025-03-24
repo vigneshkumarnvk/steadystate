@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Cost Type --></label>
+        <name>Cost_Type__c</name>
+        <picklistValues>
+            <masterLabel>AD-AP1 : ACCIDENT PURCHASES</masterLabel>
+            <translation><!-- AD-AP1 : ACCIDENT PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CP-AP1 : CAPITAL PURCHASES</masterLabel>
+            <translation><!-- CP-AP1 : CAPITAL PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DN-AP1 : NEGLECT PURCHASES</masterLabel>
+            <translation><!-- DN-AP1 : NEGLECT PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FU-EL1 : FUEL PURCHASES</masterLabel>
+            <translation><!-- FU-EL1 : FUEL PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PM-AP1 : PM PURCHASES</masterLabel>
+            <translation><!-- PM-AP1 : PM PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PT-001 : PARTS PURCHASE</masterLabel>
+            <translation><!-- PT-001 : PARTS PURCHASE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RG-000 : AP - REGISTRATION</masterLabel>
+            <translation><!-- RG-000 : AP - REGISTRATION --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RP-AP1 : REPAIR PURCHASES</masterLabel>
+            <translation><!-- RP-AP1 : REPAIR PURCHASES --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TI-RES : TIRE PURCHASES</masterLabel>
+            <translation><!-- TI-RES : TIRE PURCHASES --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

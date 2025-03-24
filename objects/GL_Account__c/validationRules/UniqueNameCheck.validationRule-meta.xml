@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UniqueNameCheck</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(VLOOKUP($ObjectType.GL_Account__c.Fields.Name, $ObjectType.GL_Account__c.Fields.Name, Name) = Name, OR(ISNEW(), ISCHANGED(Name)))</errorConditionFormula>
+    <errorMessage>GL Account No. must be unique!</errorMessage>
+</ValidationRule>

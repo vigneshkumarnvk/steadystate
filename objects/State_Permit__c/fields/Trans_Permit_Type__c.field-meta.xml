@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trans_Permit_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Trans Permit Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Vehicle Specific</fullName>
+                <default>false</default>
+                <label>Vehicle Specific</label>
+            </value>
+            <value>
+                <fullName>General (Non-Vehicle Specific)</fullName>
+                <default>false</default>
+                <label>General (Non-Vehicle Specific)</label>
+            </value>
+            <value>
+                <fullName>Company-Wide</fullName>
+                <default>false</default>
+                <label>Company-Wide</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

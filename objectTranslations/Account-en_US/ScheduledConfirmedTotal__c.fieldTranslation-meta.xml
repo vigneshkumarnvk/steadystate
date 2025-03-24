@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- Sum of uninvoiced T&amp;M Total Amount Includ Tax. --></help>
+        <label><!-- Unbilled Total --></label>
+        <name>ScheduledConfirmedTotal__c</name>
+    </CustomFieldTranslation>

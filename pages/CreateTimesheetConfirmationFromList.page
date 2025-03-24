@@ -1,0 +1,84 @@
+<apex:page standardController="Timesheet__c" recordSetVar="" extensions="TimesheetController">
+    <head>
+        <script>
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Create Timesheets" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>                
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection id="thePageBlockSection" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Service Center:</apex:outputPanel>
+                    <apex:inputField label="Service Center:" value="{!theUser.Service_Center__c}">
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week Start Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekStartingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekStartingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:inputField id="theResource" value="{!theTS.Resource__c}"/>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week End Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekEndingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekEndingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:inputField id="theWeekNo" value="{!theTS.Week_No__c}">
+                    <apex:actionSupport event="onchange" action="{!validateWeekNo}"
+                                        reRender="thePageBlockSection" status="loadingstatus"/>
+                </apex:inputField>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theOpenTMSection" collapsible="true" title="Open/Scheduled/Mobile Review T&M">
+                <apex:pageBlockTable id="theOpenTMTable" value="{!theTMNotReadyList}" var="tm">
+                    <apex:column headerValue="{!$ObjectType.TM__c.fields.Name.Label}">
+                        <apex:outputLink value="/{!tm.Id}">{!tm.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.TM__c.fields.Sales_Order__c.Label}">
+                        <apex:outputField value="{!tm.Sales_Order__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.TM__c.fields.Scheduled_Date__c.Label}">
+                        <apex:outputField value="{!tm.Scheduled_Date__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.TM__c.fields.Status__c.Label}">
+                        <apex:outputField value="{!tm.Status__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <!--<apex:pageBlockSection id="theEmployeeSection" collapsible="true" title="Employees without Employee No.">-->
+                <!--<apex:pageBlockTable id="theEmployeeTable" value="{!theResNotReadyList}" var="emp">-->
+                    <!--<apex:column headerValue="{!$ObjectType.Resource__c.fields.Name.Label}">-->
+                        <!--<apex:outputLink value="/{!emp.Id}">{!emp.Name}</apex:outputLink>-->
+                    <!--</apex:column>-->
+                    <!--<apex:column headerValue="Name">-->
+                        <!--<apex:outputField value="{!emp.Description__c}" />-->
+                    <!--</apex:column>-->
+                <!--</apex:pageBlockTable>-->
+            <!--</apex:pageBlockSection>-->
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Check T&M" action="{!listTMNotReadyForTimesheet}" status="loadingstatus" reRender="theOpenTMSection" />
+                <!--<apex:commandButton value="Check Employee" action="{!listLaborResNotReadyForTimesheet}" status="loadingstatus" reRender="theEmployeeSection" />-->
+                <apex:commandButton value="Create Timesheets" action="{!CreateTimesheet}" reRender="thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!returnToTimesheetList}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IT_Support</fullName>
+    <fields>CaseNumber</fields>
+    <fields>CreatedDate</fields>
+    <fields>ContactId</fields>
+    <fields>ContactPhone</fields>
+    <fields>ContactEmail</fields>
+    <fields>Category__c</fields>
+    <fields>Status</fields>
+    <fields>IT_Support_Tier__c</fields>
+    <label>IT Support</label>
+</CompactLayout>

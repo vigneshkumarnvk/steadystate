@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC23_Open_Pending_Partially_Received</fullName>
+    <columns>CREATED_DATE</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Order_Cost_Incl_Tax__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>equals</operation>
+        <value>Open,Pending Approval,Approved,Partially Received</value>
+    </filters>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>23</value>
+    </filters>
+    <label>SC23 Open, Pending, Partially Received</label>
+</ListView>

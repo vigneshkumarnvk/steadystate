@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payroll_Tax_Pct__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>ACV’s portion of taxes paid as required by the Federal Unemployment Tax Act (FUTA), any State Unemployment Tax Acts (SUTA), Social Security (FICA), Medicare (MICA) and any other employer paid Local and State taxes. Tax rates vary by entity and location.</inlineHelpText>
+    <label>Payroll Tax %</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

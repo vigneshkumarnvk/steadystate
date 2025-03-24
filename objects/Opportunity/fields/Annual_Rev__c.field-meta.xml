@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Annual_Rev__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>When you enter a monetary amount you can use the shortcuts k, m, or b to indicate thousands, millions, or billions. For example, when you enter 50k it appears as 50,000</inlineHelpText>
+    <label>Annual Rev</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

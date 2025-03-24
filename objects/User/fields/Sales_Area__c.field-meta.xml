@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales_Area__c</fullName>
+    <externalId>false</externalId>
+    <label>Sales Area</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>A30 - Gulf</fullName>
+                <default>false</default>
+                <label>A30 - Gulf</label>
+            </value>
+            <value>
+                <fullName>A31 - Atlantic</fullName>
+                <default>false</default>
+                <label>A31 - Atlantic</label>
+            </value>
+            <value>
+                <fullName>A32 - Central</fullName>
+                <default>false</default>
+                <label>A32 - Central</label>
+            </value>
+            <value>
+                <fullName>A33 - Pacific</fullName>
+                <default>false</default>
+                <label>A33 - Pacific</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

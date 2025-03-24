@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Sales_Ordes</fullName>
+    <columns>NAME</columns>
+    <columns>Bill_to_Customer_No__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Billing_Type__c</columns>
+    <columns>Job_Description__c</columns>
+    <columns>Sales_Order_Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Mine</filterScope>
+    <label>_My Sales Orders</label>
+</ListView>

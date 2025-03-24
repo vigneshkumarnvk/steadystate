@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MARCUS_BUSINESS_MACHINES_INC_Vendor</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Item__c</columns>
+    <columns>Vendor_Description__c</columns>
+    <columns>Unit_of_Measure__c</columns>
+    <columns>Default_Direct_G_L_Account__c</columns>
+    <columns>Default_Indirect_G_L_Account__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>equals</operation>
+        <value>MARCUS BUSINESS MACHINES INC (Vendor)</value>
+    </filters>
+    <label>MARCUS BUSINESS MACHINES INC (Vendor)</label>
+</ListView>

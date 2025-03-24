@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Job_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Line of Business</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Backhauls</fullName>
+                <default>false</default>
+                <label>Backhauls</label>
+            </value>
+            <value>
+                <fullName>Dewatering &amp; Treatment</fullName>
+                <default>false</default>
+                <label>Dewatering &amp; Treatment</label>
+            </value>
+            <value>
+                <fullName>Disposal - Haz Bulk</fullName>
+                <default>false</default>
+                <label>Disposal - Haz Bulk</label>
+            </value>
+            <value>
+                <fullName>Disposal - Haz Drum</fullName>
+                <default>false</default>
+                <label>Disposal - Haz Drum</label>
+            </value>
+            <value>
+                <fullName>Disposal - NonHaz Bulk</fullName>
+                <default>false</default>
+                <label>Disposal - NonHaz Bulk</label>
+            </value>
+            <value>
+                <fullName>Disposal - NonHaz Drum</fullName>
+                <default>false</default>
+                <label>Disposal - NonHaz Drum</label>
+            </value>
+            <value>
+                <fullName>Emergency Response</fullName>
+                <default>false</default>
+                <label>Emergency Response</label>
+            </value>
+            <value>
+                <fullName>ES Drum Management (LTL)</fullName>
+                <default>false</default>
+                <label>ES Drum Management (LTL)</label>
+            </value>
+            <value>
+                <fullName>ES Industrial Well</fullName>
+                <default>false</default>
+                <label>ES Industrial Well</label>
+            </value>
+            <value>
+                <fullName>ES Landfill</fullName>
+                <default>false</default>
+                <label>ES Landfill</label>
+            </value>
+            <value>
+                <fullName>ES Recycle</fullName>
+                <default>false</default>
+                <label>ES Recycle</label>
+            </value>
+            <value>
+                <fullName>ES Retail</fullName>
+                <default>false</default>
+                <label>ES Retail</label>
+            </value>
+            <value>
+                <fullName>ES Thermal Reclamation</fullName>
+                <default>false</default>
+                <label>ES Thermal Reclamation</label>
+            </value>
+            <value>
+                <fullName>ES Wastewater</fullName>
+                <default>false</default>
+                <label>ES Wastewater</label>
+            </value>
+            <value>
+                <fullName>Field Services</fullName>
+                <default>false</default>
+                <label>Field Services</label>
+            </value>
+            <value>
+                <fullName>Household Hazardous Waste</fullName>
+                <default>false</default>
+                <label>Household Hazardous Waste</label>
+            </value>
+            <value>
+                <fullName>Hydroexcavation</fullName>
+                <default>false</default>
+                <label>Hydroexcavation</label>
+            </value>
+            <value>
+                <fullName>Industrial Cleaning</fullName>
+                <default>false</default>
+                <label>Industrial Cleaning</label>
+            </value>
+            <value>
+                <fullName>Industrial - Nested</fullName>
+                <default>false</default>
+                <label>Industrial - Nested</label>
+            </value>
+            <value>
+                <fullName>Industrial - Shutdown/Turnaround</fullName>
+                <default>false</default>
+                <label>Industrial - Shutdown/Turnaround</label>
+            </value>
+            <value>
+                <fullName>Lab Pack</fullName>
+                <default>false</default>
+                <label>Lab Pack</label>
+            </value>
+            <value>
+                <fullName>Major Event</fullName>
+                <default>false</default>
+                <label>Major Event</label>
+            </value>
+            <value>
+                <fullName>Marine Services</fullName>
+                <default>false</default>
+                <label>Marine Services</label>
+            </value>
+            <value>
+                <fullName>Onsite Services</fullName>
+                <default>false</default>
+                <label>Onsite Services</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Product Sales</fullName>
+                <default>false</default>
+                <label>Product Sales</label>
+            </value>
+            <value>
+                <fullName>Rent Revenue</fullName>
+                <default>false</default>
+                <label>Rent Revenue</label>
+            </value>
+            <value>
+                <fullName>Retail Petroleum Service</fullName>
+                <default>false</default>
+                <label>Retail Petroleum Service</label>
+            </value>
+            <value>
+                <fullName>Soil Remediation</fullName>
+                <default>false</default>
+                <label>Soil Remediation</label>
+            </value>
+            <value>
+                <fullName>Solid Waste</fullName>
+                <default>false</default>
+                <label>Solid Waste</label>
+            </value>
+            <value>
+                <fullName>Stand-by ER Agreement</fullName>
+                <default>false</default>
+                <label>Stand-by ER Agreement</label>
+            </value>
+            <value>
+                <fullName>T&amp;D</fullName>
+                <default>false</default>
+                <label>T&amp;D</label>
+            </value>
+            <value>
+                <fullName>T&amp;D - Nested</fullName>
+                <default>false</default>
+                <label>T&amp;D - Nested</label>
+            </value>
+            <value>
+                <fullName>Tank Cleaning</fullName>
+                <default>false</default>
+                <label>Tank Cleaning</label>
+            </value>
+            <value>
+                <fullName>Tank Removal</fullName>
+                <default>false</default>
+                <label>Tank Removal</label>
+            </value>
+            <value>
+                <fullName>Total Waste Management</fullName>
+                <default>false</default>
+                <label>Total Waste Management</label>
+            </value>
+            <value>
+                <fullName>Training; Safety Services</fullName>
+                <default>false</default>
+                <label>Training; Safety Services</label>
+            </value>
+            <value>
+                <fullName>Transportation</fullName>
+                <default>false</default>
+                <label>Transportation</label>
+            </value>
+            <value>
+                <fullName>TSDF / 10 Day</fullName>
+                <default>false</default>
+                <label>TSDF / 10 Day</label>
+            </value>
+            <value>
+                <fullName>Virus Decon</fullName>
+                <default>false</default>
+                <label>Virus Decon</label>
+            </value>
+            <value>
+                <fullName>Waste Minimization</fullName>
+                <default>false</default>
+                <label>Waste Minimization</label>
+            </value>
+            <value>
+                <fullName>Decontamination</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Decontamination</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

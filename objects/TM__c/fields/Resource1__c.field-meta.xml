@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resource1__c</fullName>
+    <externalId>false</externalId>
+    <label>Resource1</label>
+    <summaryFilterItems>
+        <field>TM_Line__c.Resource_Name__c</field>
+        <operation>equals</operation>
+        <value>Ned Willard</value>
+    </summaryFilterItems>
+    <summaryForeignKey>TM_Line__c.TM__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

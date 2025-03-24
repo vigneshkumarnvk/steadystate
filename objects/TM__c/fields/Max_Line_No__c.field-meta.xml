@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Max_Line_No__c</fullName>
+    <externalId>false</externalId>
+    <label>Max Line No</label>
+    <summarizedField>TM_Line__c.Line_No__c</summarizedField>
+    <summaryForeignKey>TM_Line__c.TM__c</summaryForeignKey>
+    <summaryOperation>max</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

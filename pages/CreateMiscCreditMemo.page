@@ -1,0 +1,124 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <apex:sectionHeader title="Create Misc. Credit Memo"/>
+    <script>
+        $ = jQuery.noConflict();
+
+        function validateAppliedToInvoiceNoCall(field){
+            var fieldId = field.id;
+            var appliedToDocId = document.getElementById(fieldId + "_lkid").value;
+            validateAppliedToDocId(appliedToDocId);
+        }
+    </script>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:actionFunction name="validateAppliedToDocId" action="{!validateAppliesToDoc}"
+                                 reRender="theMessage,thePageBlock"
+                                 immediate="false">
+                <apex:param value="" name="appliedToDocId"/>
+            </apex:actionFunction>
+           
+            <!-- added isServCenterChecked == false additional filter based on 63070 -->
+            
+            <apex:outputPanel rendered="{!isApproved == true && isServCenterChecked == false}">
+               Are you sure to create Misc. Credit Memo?<br/><br/>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isApproved != true}">
+                <p>This {!salesOrder.Document_Type__c} is not approved. The Create Credit Memo function is disabled!</p>
+            </apex:outputPanel>
+            <apex:pageBlockSection columns="1" rendered="{!isApproved == true && isServCenterChecked == false}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Credit Memo Reason Code: "/>
+                    <apex:selectList value="{!selectedCrMemoReasonCode}" multiSelect="false" size="1">
+                        <apex:selectOptions value="{!crMemoReasonCodeOptions}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Credit Memo Note: "/>
+                    <apex:inputTextarea value="{!creditMemoNote}" style="width:30%; height: 100px"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Applies-to Invoice" />
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                                <c:CustomLookup componentId="theAppliedToDocNo"
+                                                styleClass="input-lookup" style="width: 150px; height:18px;" useSOSL="false"
+                                                minSearchLength="1"
+                                                filterClause="Bill_to_Customer__c = \'{!theSO.Bill_to_Customer_No__c}\' AND Payment_Status__c != \'Fully Paid\' AND Document_Status__c = \'Posted\'
+                                                     AND Credit_Memo__c=false AND Customer_Ledger_Entry__c != null"
+                                                sObjectType="Sales_Invoice__c"
+                                                sObject="{!appliedToInvoice}"
+                                                sObjectField="Name"
+                                                onchange="validateAppliedToInvoiceNoCall(this);"
+                                                SObjectTypeSearch="Sales_Invoice__c"
+                                                allowtoBlank="true"
+                                                LookupObject="Sales_Invoice__c"
+                                                LinkFieldName="Id"
+                                                FieldSetName="SalesInvoiceFieldSet"
+                                                RunValidation="True"
+                                                LookupType="Id"
+
+                                                ValidateFunction="validateAppliedToInvoiceNoCall"
+                                                FilterName1="Bill_to_Customer__c"
+                                                FilterNameValue1="{!theSO.Bill_to_Customer_No__c}"
+                                                FilterOperation1="Bill_to_Customer__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Bill_to_Customer__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Payment_Status__c"
+                                                FilterNameValue2="Fully Paid"
+                                                FilterOperation2="Payment_Status__c"
+                                                FilterOperationValue2="!="
+                                                FilterType2="Payment_Status__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Document_Status__c"
+                                                FilterNameValue3="Posted"
+                                                FilterOperation3="Document_Status__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Document_Status__c"
+                                                FilterTypeValue3="String"
+
+                                                FilterName4="Credit_Memo__c"
+                                                FilterNameValue4="false"
+                                                FilterOperation4="Credit_Memo__c"
+                                                FilterOperationValue4="="
+                                                FilterType4="Credit_Memo__c"
+                                                FilterTypeValue4="Boolean"
+
+                                                FilterName5="Customer_Ledger_Entry__c"
+                                                FilterNameValue5="{!null}"
+                                                FilterOperation5="Customer_Ledger_Entry__c"
+                                                FilterOperationValue5="!="
+                                                FilterType5="Customer_Ledger_Entry__c"
+                                                FilterTypeValue5="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:panelGrid>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Create Misc. Credit Memo" action="{!CreateMiscCreditMemo}"
+                                    reRender="thePageBlock" status="loadingstatus" rendered="{!isApproved == true && isServCenterChecked == false }" />
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

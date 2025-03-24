@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Labpack_Layout</fullName>
+    <fields>CaseNumber</fields>
+    <fields>CreatedDate</fields>
+    <fields>ContactId</fields>
+    <fields>ContactPhone</fields>
+    <fields>ContactEmail</fields>
+    <fields>Labpack_Assigned__c</fields>
+    <label>Labpack Layout</label>
+</CompactLayout>

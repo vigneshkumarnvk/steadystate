@@ -1,0 +1,875 @@
+<apex:page showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf"
+           standardController="Sales_Invoice__c" extensions="SalesInvoiceController" standardStylesheets="false">
+    <head>
+        <style type="text/css" media="print">
+            body, table, div {
+            	font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+            
+            @page {
+                margin-top: 10.1cm;
+                margin-bottom: 3cm;                
+                @top-left {
+                	content: element(header);
+                }
+                @bottom-center {
+                	content: element(footer);
+                }
+            }
+            
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+            div.header{
+                position: running(header);
+                display: block;
+            }
+            
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+            
+            .ml5{
+            	margin-left:5px;
+            }
+            
+            .ml10{
+            	margin-left:10px;
+            }
+            
+            .ml15{
+            	margin-left:15px;
+            }
+            
+            .ml20{
+            	margin-left:20px;
+            }
+            
+            .ml25{
+            	margin-left:25px;
+            }
+            
+            .ml30 {
+                margin-left: 30px;
+            }
+            
+            .ml35 {
+                margin-left: 35px;
+            }
+            
+            .ml40 {
+                margin-left: 40px;
+            }
+            
+            .ml45 {
+                margin-left: 45px;
+            }
+            
+            .ml50 {
+                margin-left: 50px;
+            }
+            
+            .ml55 {
+                margin-left: 55px;
+            }
+            
+            .ml60 {
+                margin-left: 60px;
+            }
+
+            .mr5{
+            	margin-right:5px;
+            }
+            
+            .mr10{
+            	margin-right:10px;
+            }
+            
+            .mr15{
+            	margin-right:15px;
+            }
+            
+            .mr20{
+            	margin-right:20px;
+            }
+            
+            .mr25{
+            	margin-right:25px;
+            }
+            
+            .mt5{
+            	margin-top:5px;
+            }
+            
+            .mt10{
+            	margin-top:10px;
+            }
+            
+            .mt15{
+            	margin-top:15px;
+            }
+            
+            .mt20{
+            	margin-top:20px;
+            }
+            
+            .mt25{
+            	margin-top:25px;
+            }
+            
+            .mt30{
+            	margin-top:30px;
+            }
+            
+            .mt50 {
+                margin-top: 50px;
+            }
+
+            .w100{
+            	width:100%;
+            }
+            
+            .w50{
+            	width:50%;
+            }
+            
+            .noBorder{
+            	border:none;
+            }
+            
+            .b{
+            	font-weight: bold;
+            }
+            
+            .n{
+            	font-weight:normal;
+            }
+
+            .i{
+            	font-style:italic;
+            }
+            
+            .u{
+            	text-decoration:underline;
+            }
+            
+            .border1{
+            	border:1px solid black;
+            }
+            
+            .alignCenter{
+            	text-align:center;
+            }
+            
+            .alignLeft{
+            	text-align:left;
+            }
+            
+            .alignRight{
+            	text-align:right;
+            }
+            
+            .valignTop{
+            	vertical-align:top;
+            }
+            
+            .valignBottom{
+            	vertical-align:bottom;
+            }
+            
+            .fs6{
+            	font-size:6pt;
+            }
+            
+            .fs7{
+            	font-size:7pt;
+            }
+            
+            .fs8{
+            	font-size:8pt;
+            }
+            
+            .fs9{
+            	font-size:9pt;
+            }
+            
+            .fs10{
+            	font-size:10pt;
+            }
+            
+            .fs11{
+            	font-size:11pt;
+            }
+            
+            .fs12{
+            	font-size:12pt;
+            }
+            
+            .fs14{
+            	font-size:14pt;
+            }
+            
+            .fs16{
+            	font-size:16pt;
+            }
+            
+            .tblInnerBorders {
+            	border: 1px solid black;
+            	border-collapse: collapse;
+            }
+            
+            .tblInnerBorders th {
+            	background-color: #D3D3D3;
+            }
+            .tblInnerBorders td, .tblInnerBorders th {
+                border: 1px solid black;
+            }
+            .tblInnerBorders tr:first-child th {
+            	border-top: 0;
+            }
+            .tblInnerBorders tr:last-child td {
+            	border-bottom: 0;
+            }
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+            	border-left: 0;
+            }
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+            	border-right: 0;
+            }
+            
+            .pb5{
+            	padding-bottom:5px;
+            }
+            
+            .pb10{
+            	padding-bottom:10px;
+            }
+            
+            .divWrap{
+                page-break-before: always;
+                counter-reset: page;
+            }
+            .divWrap:first-child{
+            	page-break-before: auto !important;
+            }
+            .sfdc_richtext img {width: 121px; height: 55px;}
+
+           .watermark {
+               background-image: url("{!URLFOR($Resource.draftWaterMark)}");
+               background-repeat: no-repeat;
+               background-position: center center;
+               overflow: auto;
+            }
+
+        </style>
+    </head>
+    <!-----Header Start----->
+    <div class="header">
+    <div class="divWrap counterReset {!IF(!isApproved && docType == 'Sales Invoice', 'watermark', '')}">
+        <div class="mt10">
+                <div>
+                    <table class="w100" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="65%"	class="fs7 b">
+                                <div>
+                                    <table class="w100" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                        <td class="valignTop alignLeft" style="width:20px;padding-top:40px;padding-left:0px;">
+                                                    <div>
+                                                <apex:outputPanel rendered="{!useCompanyLogo == true}">
+                                                    <apex:outputField value="{!CompanySetup.Company_Logo__c}" />
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!useSCLogo == true}">
+                                                    <apex:outputField value="{!SI.Service_Center__r.Logo__c}" />
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!useContractLogo == true}">
+                                                    <apex:outputField value="{!SI.Contract__r.Logo__c}" />
+                                                </apex:outputPanel>
+                                                    <div class="ml20">
+                                                    {!CompanySetup.Home_Page__c}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td width="75%" style="padding-top:50px;">
+                                                <table class="w100" cellspacing="2" cellpadding="0">
+<!--                                                <apex:outputPanel rendered="{!isApproved || docType != 'Sales Invoice'}">-->
+                                                    <tr>
+                                                        <td width="65%" class="pb5 alignCenter border1">
+                                                            <div class="w100">
+                                                                <div class="ff">
+                                                                    PLEASE REMIT PAYMENT IN FULL TO:
+                                                                </div>
+                                                                <div class="mt5">
+                                                                {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', remName)}
+<!--                                                                {!remName}-->
+                                                                </div>
+                                                                <div class="mt5">
+                                                                {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', remAdd1)}
+<!--                                                                {!remAdd1}-->
+                                                                </div>
+                                                                <div class="mt5">
+                                                                {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', remAdd2)}
+<!--                                                                {!remAdd2}-->
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td width="35%" class="pb5 alignCenter border1">
+                                                            <div class="w100 ">
+                                                                <div>
+                                                                    FOR ANY INFO
+                                                                </div>
+                                                                <div>
+                                                                    PERTAINING TO THIS
+                                                                </div>
+                                                                <div>
+                                                                    INVOICE DIAL
+                                                                </div>
+                                                                <div class="mt15">
+                                                                    
+                                                                </div>
+                                                                <div>
+                                                                {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', remPhone)}
+<!--                                                                {!remPhone}-->
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" class="border1 pb10">
+                                                            <table class="w100" cellpadding="0">
+                                                                <tr>
+                                                                    <td width="50%">
+                                                                        EFT to:
+                                                                        {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', eftBank)}
+<!--                                                                        {!eftBank}-->
+                                                                    </td>
+                                                                    <td width="50%">
+                                                                        CHECKING ACCOUNT:
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="50%">
+                                                                    {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', eft1)}
+<!--                                                                    {!eft1}-->
+                                                                    </td>
+                                                                    <td width="50%">
+                                                                    {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', chk1)}
+<!--                                                                    {!chk1}-->
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="50%">
+                                                                    {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', eft2)}
+<!--                                                                    {!eft2}-->
+                                                                    </td>
+                                                                    <td width="50%">
+                                                                    {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', chk2)}
+<!--                                                                    {!chk2}-->
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+<!--                                                </apex:outputPanel>-->
+                                                </table>  
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </div>
+                                <div>
+                                <div class="b fs10">
+                                    SOLD TO:
+                                </div>
+                                <div class="n fs9 mt10 ml60">
+                                        <div>
+                                            {!SI.Contact__r.Name}
+                                        </div>
+                                        <div>
+                                        {!SI.Bill_to_Customer__r.Name}
+                                        </div>
+                                        <div>
+                                        {!SI.Street__c}
+                                        </div>
+                                        <div>
+                                        {!SI.City__c}, {!SI.State__c} {!SI.Postal_Code__c}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td width="35%" class="b valignTop">
+                                <div class="fs16">
+                                {!IF(!isApproved && docType == 'Sales Invoice', 'Draft', documentType)}
+                                    <sup><span class="fs10">NO.: </span></sup><span
+                                            class="fs9 ml5">{!SI.Name}</span>
+                                </div>
+                            <!--<div class="fs9 alignRight">-->
+                                <!--Page <span class="pagenumber"/> of <span class="pagecount"/>-->
+                            <!--</div>-->
+                            <div class="mt20 fs10">
+                                {!documentDate}:&nbsp;
+                                <apex:outputText value="{0,date,M/d/yyyy}" >
+                                    <apex:param value="{!IF(SI.Credit_Memo__c == true, SI.Posting_Date__c, SI.Invoice_Date__c)}"/>
+                                </apex:outputText>
+                                </div>
+                            <div class="fs10">
+                                Last Service Date:&nbsp;
+                                <apex:outputText value="{0,date,M/d/yyyy}" >
+                                    <apex:param value="{!lastServiceDate}"/>
+                                </apex:outputText>
+                            </div>
+                            <div class="b fs10" style="margin-top:100px;">
+                                    JOB LOCATION
+                                </div>
+                            <div class="n mt10 fs9">
+                                <div>
+                                {!SI.Site_Name__c}
+                                </div>
+                                <div>
+                                {!SI.Site_Street__c}
+                                </div>
+                                <div>
+                                {!SI.Site_City__c}, {!SI.Site_State__c} {!SI.Site_Postal_Code__c}
+                                </div>
+                            </div>
+                            </td>
+                        </tr> 
+                    </table>
+                </div>
+            </div>
+            
+        <div class="mt5 content">
+                <table class="w100" cellspacing="0" cellpadding="0">
+                    <tr>
+                    <td class="fs10 b">
+                        <div>
+                            Job Description: {!SI.Sales_Order__r.CMR_Description__c}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="w100 mt5 fs9 b" style="border:0.5px solid black;" cellspacing="0" cellpadding="2">
+                    <tr>
+                    <td width="25%" class="border1 valignTop">
+                            <div>
+                            SALES ORDER NO.
+                            </div>
+                        <div class="">
+                            {!SI.Sales_Order__r.Name}
+                            </div>
+                        </td>
+                    <td width="15%" class="border1 valignTop">
+                            <div>
+                            CUSTOMER NO.
+                            </div>
+                        <div class="">
+                            {!SI.Bill_to_Customer__r.AccountNumber}
+                            </div>
+                        </td>
+                    <td width="22%" class="border1 valignTop">
+                            <div>
+                            PURCHASE ORDER NO.
+                            </div>
+                        <div class="">
+                            <apex:outputText value="{0}" rendered="{!ISBLANK(SI.Corrected_Customer_PO_No__c)}"> <!-- 14507 -->
+                                <apex:param value="{!SI.Customer_PO_No__c}"/>
+                            </apex:outputText>
+                            <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(SI.Corrected_Customer_PO_No__c))}">
+                                <apex:param value="{!SI.Corrected_Customer_PO_No__c}"/>
+                            </apex:outputText>
+                            </div>
+                        </td>
+                    <td width="13%" class="border1 valignTop">
+                            <div>
+                                TERMS
+                            </div>
+                            <div class="mt5">
+                            &nbsp;{!SI.Payment_Term__r.Name}
+                            </div>
+                        </td>
+                    <td width="25%" class="border1 valignTop">
+                            <div>
+                                PAYMENT DUE DATE
+                            </div>
+                            <div class="mt5">
+                            &nbsp;
+                            <apex:outputText value="{0,date,M/d/yyyy}" >
+                                <apex:param value="{!SI.Due_Date__c}"/>
+                            </apex:outputText>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+        </div> 
+        </div>
+        <!----------------Repeat Header Start------------------->
+        <div class="w100">
+            <apex:outputPanel rendered="{!selectedInvoicetype =='TM Detail' || selectedInvoicetype =='TM Lump Sum'}">
+                <!--<table class="w100 fs9 mt10" cellspacing="0" cellpadding="3">-->
+                <table class="fs9 w100" cellspacing="0" cellpadding="2">
+                    <thead>
+                        <tr>
+                            <th width="15%" class="alignLeft">
+                                Date
+                            </th>
+                            <th width="30%" class="alignLeft">
+                                Description
+                            </th>
+                            <th width="15%" class="alignLeft">
+                                Manifest
+                            </th>
+                            <th width="10%" class="alignLeft">
+                                Billing
+                                <div>
+                                    QTY
+                                </div>
+                            </th>
+                            <th width="10%" class="alignLeft">
+                                Billing
+                                <div>
+                                    UOM
+                                </div>
+                            </th>
+                            <th width="10%" class="alignRight">
+                                Rate
+                            </th>
+                            <th width="10%" class="alignRight">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>                  
+                </table>
+            </apex:outputPanel>
+                
+            <!--<apex:outputPanel rendered="{!selectedInvoicetype =='TM Lump Sum'}">-->
+                <!--<table class="w100 fs9 mt10" cellspacing="0" cellpadding="3">-->
+                    <!--<thead>-->
+                        <!--<tr>-->
+                        <!--<th width="25%" class="alignLeft">-->
+                                <!--Date-->
+                            <!--</th>-->
+                        <!--<th width="30%" class="alignLeft">-->
+                            <!--Description-->
+                        <!--</th>-->
+                        <!--<th width="10%" class="alignLeft">-->
+                            <!--Billing-->
+                            <!--<div>-->
+                                <!--QTY-->
+                           <!--</div>-->
+                        <!--</th>-->
+                        <!--<th width="10%" class="alignLeft">-->
+                            <!--Billing-->
+                            <!--<div>-->
+                                <!--UOM-->
+                            <!--</div>-->
+                        <!--</th>-->
+                        <!--<th width="10%" class="alignRight">-->
+                            <!--Rate-->
+                        <!--</th>-->
+                        <!--<th width="15%" class="alignRight">-->
+                            <!--Amount-->
+                        <!--</th>-->
+                    <!--</tr>-->
+                    <!--</thead>-->
+                <!--</table>-->
+            <!--</apex:outputPanel>-->
+
+            <apex:outputPanel rendered="{!selectedInvoicetype =='TM by Date by Category'}">
+                <table class="w100 fs9 mt10">
+                    <thead>
+                    <tr>
+                        <th width="45%" class="alignLeft">
+                                Description
+                            </th>
+                        <th width="15%" class="alignLeft">
+                                Manifest
+                            </th>
+                        <th width="10%" class="alignLeft">
+                                Billing
+                                <div>
+                                    QTY
+                                </div>
+                            </th>
+                        <th width="10%" class="alignLeft">
+                                Billing
+                                <div>
+                                    UOM
+                                </div>
+                            </th>
+                        <th width="10%" class="alignRight">
+                                Rate
+                            </th>
+                        <th width="10%" class="alignRight">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </apex:outputPanel>           
+        </div>          
+        
+        <!----------------Repeat Header End--------------------->        
+        
+        </div>                     
+        <!-----Header End----->
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="alignCenter i b mt20 fs10">
+                {!IF(!isApproved && docType == 'Sales Invoice', 'THIS IS A DRAFT DOCUMENT!', 'THANK YOU FOR THE OPPORTUNITY TO SERVE YOU.')}
+            </div>
+            <div class="fs6 mt10">
+                INTEREST CHARGES OF 1.5% PER MONTH (18% PER YEAR) WILL ACCRUE ON ALL PAST DUE AMOUNTS, ON UNPAID
+                AMOUNTS, INTEREST AND ALL EXPENSES OF
+                COLLECTIONS INCLUDING A REASONABLE ATTORNEY FEE IN AN AMOUNT OF 20% WILL BE CHARGED.
+            </div>
+            <div class="fs8 alignRight b">
+                Page <span class="pagenumber"/> of <span class="pagecount"/>
+            </div>
+        </div>
+        
+        <!----Content----->
+        
+    <div class="content {!IF(!isApproved && docType == 'Sales Invoice', 'watermark', '')}">
+        <div>         
+            <apex:outputPanel rendered="{!selectedInvoicetype =='TM Detail' || selectedInvoicetype =='TM Lump Sum'}">
+                <table class="w100 fs9" cellspacing="0" cellpadding="2">
+                    <tbody>
+                        <apex:repeat value="{!WrapSIL}" var="line" >
+                            <apex:repeat value="{!line.theSILLines}" var="rec">
+                                <tr>
+                                    <td width="15%" class="alignLeft">
+                                        <apex:outputText value="{0,date,M/d/yyyy}" >
+                                            <apex:param value="{!rec.Scheduled_Date__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td width="30%" style="overflow: hidden">
+                                        {!rec.Description__c}
+                                    </td> 
+                                    <td width="15%" style="overflow: hidden">
+                                        {!rec.BOL_Manifest__c}
+                                    </td>
+                                    <td width="10%" class="alignCenter">
+                                        {!rec.Qty_to_Display__c}
+                                    </td>
+                                    <td width="10%" class="alignLeft">
+                                        {!rec.Unit_of_Measure__r.Name}
+                                    </td>
+                                    <td  width="10%" class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!rec.Unit_Price__c}"/>  
+                                        </apex:outputText>
+                                    </td>
+                                    <td  width="10%" class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!rec.Line_Amount__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </apex:outputPanel>
+            
+            <!--<apex:outputPanel rendered="{!selectedInvoicetype =='TM Lump Sum'}">-->
+                <!--<table class="w100 fs9 mt10" cellspacing="0" cellpadding="3">-->
+                    <!--<tbody>-->
+                    <!--<apex:repeat value="{!WrapSILForLumpFormat}" var="line" >-->
+                        <!--<apex:repeat value="{!line.theSILLines}" var="rec">-->
+                    <!--<tr>-->
+                                <!--<td width="25%" class="alignLeft">-->
+                                    <!--<apex:outputText value="{0,date,M/d/yyyy}" >-->
+                                        <!--<apex:param value="{!SI.Invoice_Date__c}"/>-->
+                                <!--</apex:outputText>-->
+                                    <!-- - -->
+                                    <!--<apex:outputText value="{0,date,M/d/yyyy}" >-->
+                                        <!--<apex:param value="{!lastServiceDate}"/>-->
+                                <!--</apex:outputText>-->
+                            <!--</td>-->
+                                <!--<td width="30%" class="alignLeft">-->
+                                    <!--{!rec.Description__c}-->
+                            <!--</td>-->
+                                <!--<td width="10%" class="alignLeft">-->
+                                    <!--{!rec.Quantity__c}-->
+                                <!--</td>-->
+                                <!--<td width="10%" class="alignLeft">-->
+                                    <!--{!rec.Unit_of_Measure__r.Name}-->
+                                <!--</td>-->
+                                <!--<td  width="10%" class="alignRight">-->
+                                <!--<apex:outputText value="{0, Number, $#,##0.00}" >-->
+                                        <!--<apex:param value="{!rec.Unit_Price__c}"/>-->
+                                <!--</apex:outputText>-->
+                                <!--</td>-->
+                                <!--<td  width="15%"  class="alignRight">-->
+                                <!--<apex:outputText value="{0, Number, $#,##0.00}" >-->
+                                        <!--<apex:param value="{!rec.Line_Amount__c}"/>-->
+                                <!--</apex:outputText>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                        <!--</apex:repeat>-->
+                    <!--</apex:repeat>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+            <!--</apex:outputPanel>-->
+
+            <apex:repeat value="{!WrapSILByCategory}" var="line" rendered="{!selectedInvoicetype =='TM Summary'}">
+                <table class="w100 fs10" cellspacing="0" cellpadding="3">
+                    <tr>
+                        <td width="55%" class="b">
+                            {!CASE(line.Category,
+                                    'Demurrage', 'Transportation, Demurrage and Fees',
+                                    line.Category)}
+                        </td>
+                        <td class="alignRight">
+                            <apex:outputText value="{0, Number, $#,##0.00}" >
+                                <apex:param value="{!line.CategoryAmtTotal}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </table>
+            </apex:repeat>
+            
+
+            <apex:outputPanel rendered="{!selectedInvoicetype =='TM by Date by Category'}">
+                <table class="w100 fs9">
+                    <tbody>
+                    <apex:repeat value="{!WrapSILByCategoryAndDate}" var="line" >
+                            <tr>
+                                <td colspan="4" class="b">
+                                    {!CASE(line.Category,
+                                    'Demurrage', 'Transportation, Demurrage and Fees',
+                                    line.Category)} -
+                                    <apex:outputText value="{0, date, full}">
+                                        <apex:param value="{!line.ScheduleDate}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <apex:repeat value="{!line.theSILLines}" var="line">
+                                <tr>
+                                    <td width="45%" class="alignLeft">
+                                        {!line.Description__c}
+                                    </td>
+                                    <td width="15%" class="alignLeft">
+                                        {!line.BOL_Manifest__c}
+                                    </td>
+                                    <td width="10%" class="alignCenter">
+                                        {!line.Qty_to_Display__c}
+                                    </td>
+                                    <td width="10%" class="alignLeft">
+                                        {!line.Unit_of_Measure__r.Name}
+                                    </td>
+                                    <td  width="10%" class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!line.Unit_Price__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td  width="10%" class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!line.Line_Amount__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </apex:repeat>
+                    </tbody>
+
+                </table>
+            </apex:outputPanel>
+
+
+            <div class="mt50">
+                <table class="w100 fs9" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;page-break-before:auto;">
+                    <tr>
+                        <td colspan="2" style="height:20px;"></td>
+                    </tr>
+                    <tr>
+                        <td class="valignBottom" width="67%">
+                            <div style="border: black solid 1px; margin: 2px; max-width: 400px;">
+                                Note: <br />
+                                <apex:outputText value="{!SUBSTITUTE(JSENCODE(SI.Invoice_Note__c),'\n','<br/>')}" escape="false"/> <!-- Ticket#13734 -->
+                            </div>
+                            <apex:outputPanel rendered="{!SI.Misc_Invoice__c!=true}">
+                            TM No.: {!TMNames}
+                            </apex:outputPanel>
+                        </td>
+                        <td width="33%">
+                            <table class="w100" cellspacing="0" cellpadding="2">
+                                <tr>
+                                    <td>
+                                        Net Invoice:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!SILSubtotal}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Sales Tax:
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                                            <apex:param value="{!SILTaxTotal}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="{!SI.Surcharge_Type__c}:" rendered="{!SurchargeAmount != 0}" />
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!SurchargeAmount != 0}">
+                                            <apex:param value="{!SurchargeAmount}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="Amount Due:" rendered="{!RetainageAmount == 0}" />
+                                        <apex:outputText value="Invoice Total:" rendered="{!RetainageAmount != 0}" />
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!SILTotal}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="Retainage Amount" rendered="{!RetainageAmount != 0}" />
+                                        <apex:outputText value="({0, Number,##0.00}%):" rendered="{!RetainageAmount != 0}">
+                                            <apex:param value="{!SI.Retainage_Pct__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!RetainageAmount != 0}">
+                                            <apex:param value="{!RetainageAmount}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="Amount Due:" rendered="{!RetainageAmount != 0}" />
+                                    </td>
+                                    <td class="alignRight">
+                                        <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!RetainageAmount != 0}">
+                                            <apex:param value="{!SILTotal - RetainageAmount }"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</apex:page>

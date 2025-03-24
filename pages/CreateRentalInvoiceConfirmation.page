@@ -1,0 +1,35 @@
+<apex:page standardController="Rental_Order__c" recordSetVar="" extensions="RentalOrderController">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Create Rental Invoices" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>                
+            </apex:outputPanel>
+            <apex:outputPanel >
+                Are you sure to create rental invoices for the period ended: 
+                <apex:inputText style="margin-left:5px;" value="{!lastDateOfLastMonthValue}" id="lastMonthDate">
+                </apex:inputText>?
+                
+                <!--<apex:outputText value="{0, date, M/d/yyyy}"><apex:param value="{!lastDateOfLastMonth}"/></apex:outputText>-->
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Create Rental Invoices" action="{!CreateInvoice}" reRender="thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+
+        $(document).ready(function () {
+            $("[id$='lastMonthDate']").datepicker({});
+        });
+    </script>
+</apex:page>

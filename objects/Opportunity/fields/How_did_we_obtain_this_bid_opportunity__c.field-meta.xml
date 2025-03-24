@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>How_did_we_obtain_this_bid_opportunity__c</fullName>
+    <externalId>false</externalId>
+    <label>How did we obtain this bid opportunity?</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Sent from customer direct to AE/PC</fullName>
+                <default>false</default>
+                <label>Sent from customer direct to AE/PC</label>
+            </value>
+            <value>
+                <fullName>AE/PC found opportunity</fullName>
+                <default>false</default>
+                <label>AE/PC found opportunity</label>
+            </value>
+            <value>
+                <fullName>Bid Subscription</fullName>
+                <default>false</default>
+                <label>Bid Subscription</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

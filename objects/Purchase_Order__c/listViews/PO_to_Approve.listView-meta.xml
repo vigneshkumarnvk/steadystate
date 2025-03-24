@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PO_to_Approve</fullName>
+    <columns>CREATED_DATE</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Order_Cost_Incl_Tax__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Pending_Approval_From__c</field>
+        <operation>equals</operation>
+        <value>Andrew Shackett</value>
+    </filters>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Approved,Rejected,Partially Received,Fully Received,Voided</value>
+    </filters>
+    <label>_PO's Pending My Approval</label>
+    <sharedTo>
+        <group>Andy</group>
+    </sharedTo>
+</ListView>

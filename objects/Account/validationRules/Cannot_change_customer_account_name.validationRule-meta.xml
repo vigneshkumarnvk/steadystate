@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_change_customer_account_name</fullName>
+    <active>true</active>
+    <description>Only System Administrator Profile can edit Account Name field for Customer Account Record type.</description>
+    <errorConditionFormula>AND(ISCHANGED( Name ),$Profile.Name != 'System Administrator',
+ RecordTypeId = '012f4000000MDXd'
+
+
+
+)</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>You do not have sufficient privileges to edit this field.</errorMessage>
+</ValidationRule>

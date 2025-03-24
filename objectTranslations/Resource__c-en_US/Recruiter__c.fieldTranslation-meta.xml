@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Recruiter --></label>
+        <name>Recruiter__c</name>
+        <picklistValues>
+            <masterLabel>ECOFLO</masterLabel>
+            <translation><!-- ECOFLO --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Eliry Rodriguez</masterLabel>
+            <translation><!-- Eliry Rodriguez --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Katie Yutes</masterLabel>
+            <translation><!-- Katie Yutes --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kelly Johnson</masterLabel>
+            <translation><!-- Kelly Johnson --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kerrie Hamilton</masterLabel>
+            <translation><!-- Kerrie Hamilton --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mike Gaudin</masterLabel>
+            <translation><!-- Mike Gaudin --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Miriame Clemente</masterLabel>
+            <translation><!-- Miriame Clemente --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Noah Scudere-Weiss</masterLabel>
+            <translation><!-- Noah Scudere-Weiss --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Referral</masterLabel>
+            <translation><!-- Referral --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rehire</masterLabel>
+            <translation><!-- Rehire --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tomas Quinones</masterLabel>
+            <translation><!-- Tomas Quinones --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

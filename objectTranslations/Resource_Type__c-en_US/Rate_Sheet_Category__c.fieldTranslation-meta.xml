@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Rate Sheet Category --></label>
+        <name>Rate_Sheet_Category__c</name>
+        <picklistValues>
+            <masterLabel>After Cooler</masterLabel>
+            <translation><!-- After Cooler --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Berm</masterLabel>
+            <translation><!-- Berm --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Blaster</masterLabel>
+            <translation><!-- Blaster --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Blaster Accessories</masterLabel>
+            <translation><!-- Blaster Accessories --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Boat</masterLabel>
+            <translation><!-- Boat --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bobcat</masterLabel>
+            <translation><!-- Bobcat --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bobcat/Skid Steer</masterLabel>
+            <translation><!-- Bobcat/Skid Steer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bobcat/Skid Steer Attachment</masterLabel>
+            <translation><!-- Bobcat/Skid Steer Attachment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CSE</masterLabel>
+            <translation><!-- CSE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CSE Safety</masterLabel>
+            <translation><!-- CSE Safety --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Compressor</masterLabel>
+            <translation><!-- Compressor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Containment Boom</masterLabel>
+            <translation><!-- Containment Boom --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cusco/Guzzler</masterLabel>
+            <translation><!-- Cusco/Guzzler --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dewatering Box</masterLabel>
+            <translation><!-- Dewatering Box --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dozer</masterLabel>
+            <translation><!-- Dozer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Draeger Equipment</masterLabel>
+            <translation><!-- Draeger Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Drum Accessories</masterLabel>
+            <translation><!-- Drum Accessories --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Drum Loader</masterLabel>
+            <translation><!-- Drum Loader --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dry Ice Blaster</masterLabel>
+            <translation><!-- Dry Ice Blaster --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dump Truck</masterLabel>
+            <translation><!-- Dump Truck --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dust Mask</masterLabel>
+            <translation><!-- Dust Mask --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Electric Tools</masterLabel>
+            <translation><!-- Electric Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Excavator</masterLabel>
+            <translation><!-- Excavator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Excavator Attachment</masterLabel>
+            <translation><!-- Excavator Attachment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Sampling Equipment</masterLabel>
+            <translation><!-- Field Sampling Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Testing Equipment</masterLabel>
+            <translation><!-- Field Testing Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Filtration System</masterLabel>
+            <translation><!-- Filtration System --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fork Lift</masterLabel>
+            <translation><!-- Fork Lift --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Forklift Attachment</masterLabel>
+            <translation><!-- Forklift Attachment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Frac Tank</masterLabel>
+            <translation><!-- Frac Tank --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Generator</masterLabel>
+            <translation><!-- Generator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HEPA Vac</masterLabel>
+            <translation><!-- HEPA Vac --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hand Tools</masterLabel>
+            <translation><!-- Hand Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hose</masterLabel>
+            <translation><!-- Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydrovac/Rodder</masterLabel>
+            <translation><!-- Hydrovac/Rodder --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Intermodal</masterLabel>
+            <translation><!-- Intermodal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Labor</masterLabel>
+            <translation><!-- Labor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Loader</masterLabel>
+            <translation><!-- Loader --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Loader Attachments</masterLabel>
+            <translation><!-- Loader Attachments --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine</masterLabel>
+            <translation><!-- Marine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine PPE</masterLabel>
+            <translation><!-- Marine PPE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mercury Vacuum</masterLabel>
+            <translation><!-- Mercury Vacuum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Meter</masterLabel>
+            <translation><!-- Meter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mini Excavator</masterLabel>
+            <translation><!-- Mini Excavator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mini Excavator Attachment</masterLabel>
+            <translation><!-- Mini Excavator Attachment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pallet Jack</masterLabel>
+            <translation><!-- Pallet Jack --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pneumatic Tools</masterLabel>
+            <translation><!-- Pneumatic Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Power Tools</masterLabel>
+            <translation><!-- Power Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pressure Washer</masterLabel>
+            <translation><!-- Pressure Washer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pump</masterLabel>
+            <translation><!-- Pump --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pump Hose</masterLabel>
+            <translation><!-- Pump Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Respirator</masterLabel>
+            <translation><!-- Respirator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rolloff Container</masterLabel>
+            <translation><!-- Rolloff Container --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rolloff Truck</masterLabel>
+            <translation><!-- Rolloff Truck --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sampling Equipment</masterLabel>
+            <translation><!-- Sampling Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sand Blaster</masterLabel>
+            <translation><!-- Sand Blaster --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Saw</masterLabel>
+            <translation><!-- Saw --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sea Container</masterLabel>
+            <translation><!-- Sea Container --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Site Support</masterLabel>
+            <translation><!-- Site Support --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Skimmers</masterLabel>
+            <translation><!-- Skimmers --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Supplied Air</masterLabel>
+            <translation><!-- Supplied Air --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tank</masterLabel>
+            <translation><!-- Tank --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tractor</masterLabel>
+            <translation><!-- Tractor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trailer</masterLabel>
+            <translation><!-- Trailer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Transporter</masterLabel>
+            <translation><!-- Transporter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vac Box</masterLabel>
+            <translation><!-- Vac Box --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vac Hose</masterLabel>
+            <translation><!-- Vac Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vactor Hose</masterLabel>
+            <translation><!-- Vactor Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacuum Trailer</masterLabel>
+            <translation><!-- Vacuum Trailer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacuum Truck</masterLabel>
+            <translation><!-- Vacuum Truck --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vehicle</masterLabel>
+            <translation><!-- Vehicle --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yellow Iron</masterLabel>
+            <translation><!-- Yellow Iron --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

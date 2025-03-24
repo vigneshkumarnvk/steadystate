@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Description_Field_Length</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISCLONE()), 
+    NOT( Sales_Order__r.Expired__c ),  
+       AND(
+            NOT(ISPICKVAL(Category__c, "Labor")),  
+            LEN(Description__c) &gt; 100
+        )
+)</errorConditionFormula>
+    <errorMessage>Description value is too long (max length = 100). Please edit the Description and Save.</errorMessage>
+</ValidationRule>

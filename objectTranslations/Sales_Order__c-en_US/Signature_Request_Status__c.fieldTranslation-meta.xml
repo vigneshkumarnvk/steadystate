@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Signature Request Status --></label>
+        <name>Signature_Request_Status__c</name>
+        <picklistValues>
+            <masterLabel>Customer Accepted</masterLabel>
+            <translation><!-- Customer Accepted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fail to Respond</masterLabel>
+            <translation><!-- Fail to Respond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Acceptance</masterLabel>
+            <translation><!-- Pending Acceptance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rejected</masterLabel>
+            <translation><!-- Rejected --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

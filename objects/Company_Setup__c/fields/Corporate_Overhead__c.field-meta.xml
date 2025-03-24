@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Corporate_Overhead__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Corporate overhead is indirect expenses related to running the business. Specifically for ACV Enviro, this includes Indirect labor, SG&amp;A labor, rent &amp; utilities.</inlineHelpText>
+    <label>Corporate Overhead</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

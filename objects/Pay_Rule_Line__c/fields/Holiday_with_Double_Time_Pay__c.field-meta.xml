@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Holiday_with_Double_Time_Pay__c</fullName>
+    <externalId>false</externalId>
+    <label>Holiday with Double Time Pay</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Holiday_List</valueSetName>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

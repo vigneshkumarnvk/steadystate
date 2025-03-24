@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Use Pay Rule Line Detail for Hour Calc. --></label>
+        <name>Use_Pay_Rule_Line_Detail_for_Hour_Calc__c</name>
+    </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- GL Batch --></label>
+        <name>GL_Batch__c</name>
+        <relationshipLabel><!-- GL Entries --></relationshipLabel>
+    </CustomFieldTranslation>

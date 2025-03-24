@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cost_Plus_Resources</fullName>
+    <columns>NAME</columns>
+    <columns>Category__c</columns>
+    <columns>Description__c</columns>
+    <columns>CSID__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Subcontractors</value>
+    </filters>
+    <label>Cost Plus Resources</label>
+</ListView>

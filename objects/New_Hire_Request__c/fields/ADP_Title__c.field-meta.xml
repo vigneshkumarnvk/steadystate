@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ADP_Title__c</fullName>
+    <externalId>false</externalId>
+    <label>ADP Title</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Title_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Chemist I</fullName>
+                <default>false</default>
+                <label>Chemist I</label>
+            </value>
+            <value>
+                <fullName>Chemist - Waste Specialist</fullName>
+                <default>false</default>
+                <label>Chemist - Waste Specialist</label>
+            </value>
+            <value>
+                <fullName>Confined Space Rescue Technician</fullName>
+                <default>false</default>
+                <label>Confined Space Rescue Technician</label>
+            </value>
+            <value>
+                <fullName>Depack Chemist</fullName>
+                <default>false</default>
+                <label>Depack Chemist</label>
+            </value>
+            <value>
+                <fullName>Driver</fullName>
+                <default>false</default>
+                <label>Driver</label>
+            </value>
+            <value>
+                <fullName>Driver/Operator</fullName>
+                <default>false</default>
+                <label>Driver/Operator</label>
+            </value>
+            <value>
+                <fullName>Driver/Operator A Dry</fullName>
+                <default>false</default>
+                <label>Driver/Operator A Dry</label>
+            </value>
+            <value>
+                <fullName>Driver/Operator A Wet</fullName>
+                <default>false</default>
+                <label>Driver/Operator A Wet</label>
+            </value>
+            <value>
+                <fullName>Driver Operator - B Dry</fullName>
+                <default>false</default>
+                <label>Driver Operator - B Dry</label>
+            </value>
+            <value>
+                <fullName>Field Service Project Mgmt.</fullName>
+                <default>false</default>
+                <label>Field Service Project Mgmt.</label>
+            </value>
+            <value>
+                <fullName>Field Service Sales Specialist</fullName>
+                <default>false</default>
+                <label>Field Service Sales Specialist</label>
+            </value>
+            <value>
+                <fullName>Field Services Foreman</fullName>
+                <default>false</default>
+                <label>Field Services Foreman</label>
+            </value>
+            <value>
+                <fullName>Field Services Technician</fullName>
+                <default>false</default>
+                <label>Field Services Technician</label>
+            </value>
+            <value>
+                <fullName>Household Waste Days</fullName>
+                <default>false</default>
+                <label>Household Waste Days</label>
+            </value>
+            <value>
+                <fullName>Hydrovac Driver/Operator</fullName>
+                <default>false</default>
+                <label>Hydrovac Driver/Operator</label>
+            </value>
+            <value>
+                <fullName>Laborer</fullName>
+                <default>false</default>
+                <label>Laborer</label>
+            </value>
+            <value>
+                <fullName>Plant Technician</fullName>
+                <default>false</default>
+                <label>Plant Technician</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <valueName>Field Service Sales Specialist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <valueName>Chemist I</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <valueName>Chemist - Waste Specialist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <valueName>Depack Chemist</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Driver</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Driver/Operator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Driver/Operator A Dry</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Driver/Operator A Wet</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Driver Operator - B Dry</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <valueName>Hydrovac Driver/Operator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Field Technician</controllingFieldValue>
+            <valueName>Field Services Technician</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Field Technician</controllingFieldValue>
+            <valueName>Household Waste Days</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Field Technician</controllingFieldValue>
+            <valueName>Laborer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Field Technician</controllingFieldValue>
+            <valueName>Plant Technician</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <valueName>Field Service Project Mgmt.</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <valueName>Field Services Foreman</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

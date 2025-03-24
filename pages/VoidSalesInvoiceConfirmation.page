@@ -1,0 +1,27 @@
+<!--job task-->
+<!--
+<apex:page id="VoidSalesInvoiceConfirmation" standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+-->
+<apex:page id="VoidSalesInvoiceConfirmation" standardController="Sales_Invoice__c" extensions="VoidSalesInvoiceController">
+<!--job task-->
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Void {!docType}" subtitle="{!Sales_Invoice__c.Name}?"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages />
+            <apex:outputPanel rendered="{!salesInvoice.Approval_Status__c != 'Pending_Approval'}">
+                Please review important messages below before you continue:<br/><br/>
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/><br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!salesInvoice.Approval_Status__c == 'Pending_Approval'}">
+                <apex:outputText value="You cannot void a Billing Package that are pending for Approval. Recall the approval request and try it again!" />
+            </apex:outputPanel>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" reRender="thePageBlock" value="Void Billing Package" action="{!voidSalesInvoice}" rendered="{!NOT(posted) && (salesInvoice.Approval_Status__c != 'Pending_Approval')}"/>
+                <apex:commandButton value="Return to Billing Package" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

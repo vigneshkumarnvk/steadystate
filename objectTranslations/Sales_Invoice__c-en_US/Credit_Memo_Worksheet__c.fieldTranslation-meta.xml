@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Credit Memo Worksheet --></label>
+        <name>Credit_Memo_Worksheet__c</name>
+        <relationshipLabel><!-- Sales Invoices (Credit Memo Worksheet) --></relationshipLabel>
+    </CustomFieldTranslation>

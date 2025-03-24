@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bundle_Line__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Bundle Line</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>$Source.Sales_Invoice__c</field>
+            <operation>equals</operation>
+            <valueField>Sales_Invoice_Line__c.Sales_Invoice__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Sales_Invoice_Line__c</referenceTo>
+    <relationshipLabel>Sales Invoice Lines</relationshipLabel>
+    <relationshipName>Bundle_Lines</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

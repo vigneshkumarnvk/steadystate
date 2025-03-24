@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Title_Field_Limited_to_20_Characters</fullName>
+    <active>true</active>
+    <description>US137743</description>
+    <errorConditionFormula>LEN(Title) &gt; 20</errorConditionFormula>
+    <errorDisplayField>Title</errorDisplayField>
+    <errorMessage>You have entered a title more than 20 characters. Please limit the title field to 20 characters or less.</errorMessage>
+</ValidationRule>

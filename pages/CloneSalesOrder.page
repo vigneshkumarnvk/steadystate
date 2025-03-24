@@ -1,0 +1,199 @@
+<!--
+    Ticket#19962
+        - add condition show/hide lookup field "Bill-to Customer"
+            - if Convert Type = Quote allow Prospect customer to be show in the lookup.
+-->
+<apex:page standardController="Sales_Order__c" extensions="CloneSalesOrderController" lightningStylesheets="true">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+        <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+        <script>
+            function validateBillToCustCall(field){
+                var fieldId = field.id;
+                var billToCustId = document.getElementById(fieldId + "_lkid").value;
+                validateBillToCust(billToCustId);
+            }
+
+            function setSelectedSCCall(field) {
+                var fieldId = field.id;
+                var e = document.getElementById(fieldId);
+                var selectedValue = e.options[e.selectedIndex].value;
+                setSelectedSC(selectedValue);
+            }
+        </script>
+    </head>
+    <apex:sectionHeader title="Clone Sales Quote or Order" subtitle="Sales Quote or Order?"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:actionFunction name="validateBillToCust" action="{!validateBillToCust}" reRender="thePageBlock"
+                             immediate="true">
+            <apex:param value="" name="billToCustId"/>
+        </apex:actionFunction>
+        <apex:actionFunction name="setSelectedSC" action="{!populatedSelectedServiceCenterId}" reRender="serviceCenterBox">
+            <apex:param value="" name="selectedSCId" />
+        </apex:actionFunction>
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:pageMessages id="theMessage" escape="false"></apex:pageMessages>
+            </apex:outputPanel>
+
+            <!--ticket 21113-->
+            <apex:pageMessage summary="Customer has not signed the quote." severity="warning" strength="3" rendered="{!quoteSigned != true}"/>
+            <!--ticket 21113-->
+
+            <apex:pageBlockSection columns="1" rendered="{!DATEVALUE(theSO.CreatedDate) >= DATE(2021,2,1)}">
+                <apex:pageBlockSectionItem >
+                Clone to Create: &nbsp;&nbsp;&nbsp;
+                    <apex:selectList size="1" value="{!selConvertTo}">
+                        <apex:actionSupport event="onchange" reRender="thePageBlock"/>
+                        <apex:selectOptions value="{!lstConvertTo}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="serviceCenterBox">
+                Clone to Service Center: &nbsp;&nbsp;&nbsp;
+                    <apex:selectList id="serviceCenterList" size="1" value="{!selServiceCenter}" onChange="setSelectedSCCall(this)">
+                    <apex:selectOptions value="{!lstServiceCenter}"/>
+                </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="billToCustomerBox" rendered="{!selConvertTo != 'Quote'}">
+                    <apex:outputLabel >Bill To Customer</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                            <c:CustomLookup componentId="theBillToCustomer"
+                                            style="width: 200px"
+                                            useSOSL="false"
+                                            filterClause="Type = \'Customer\' AND Customer_Status__c = \'Active\' AND Subsidiary_Company__c = \'{!theSO.Subsidiary_Company__c}\'"
+                                            minSearchLength="2"
+                                            sObjectType="Account"
+                                            sObject="{!billToCust}"
+                                            sObjectField="Name"
+                                            SObjectTypeSearch="Account"
+                                            secondaryDisplayField="AccountNumber"
+                                            onchange="validateBillToCustCall(this);"
+                                            LookupObject="Account"
+                                            LinkFieldName="Id"
+                                            FieldSetName="AccountFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateBillToCustCall(this)"
+
+                                            FilterName1="Subsidiary_Company__c"
+                                            FilterNameValue1="{!theSO.Subsidiary_Company__c}"
+                                            FilterOperation1="Subsidiary_Company__c"
+                                            FilterOperationValue1="="
+                                            FilterType1="Subsidiary_Company__c"
+                                            FilterTypeValue1="String"
+
+                                            FilterName2="Type"
+                                            FilterNameValue2="Customer"
+                                            FilterOperation2="Type"
+                                            FilterOperationValue2="="
+                                            FilterType2="Type"
+                                            FilterTypeValue2="String"
+
+                                            FilterName3="Customer_Status__c"
+                                            FilterNameValue3="Active"
+                                            FilterOperation3="Customer_Status__c"
+                                            FilterOperationValue3="="
+                                            FilterType3="Customer_Status__c"
+                                            FilterTypeValue3="String"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="billToCustomerBoxQuote" rendered="{!selConvertTo = 'Quote'}">
+                    <apex:outputLabel >Bill To Customer</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                            <c:CustomLookup componentId="theBillToCustomer"
+                                            style="width: 200px"
+                                            useSOSL="false"
+                                            filterClause="(Type = \'Customer\' OR Type = \'Prospect\') AND Customer_Status__c = \'Active\' AND Subsidiary_Company__c = \'{!theSO.Subsidiary_Company__c}\'"
+                                            minSearchLength="2"
+                                            sObjectType="Account"
+                                            sObject="{!billToCust}"
+                                            sObjectField="Name"
+                                            SObjectTypeSearch="Account"
+                                            secondaryDisplayField="AccountNumber"
+                                            onchange="validateBillToCustCall(this);"
+                                            LookupObject="Account"
+                                            LinkFieldName="Id"
+                                            FieldSetName="AccountFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateBillToCustCall(this)"
+
+                                            FilterName1="Subsidiary_Company__c"
+                                            FilterNameValue1="{!theSO.Subsidiary_Company__c}"
+                                            FilterOperation1="Subsidiary_Company__c"
+                                            FilterOperationValue1="="
+                                            FilterType1="Subsidiary_Company__c"
+                                            FilterTypeValue1="String"
+
+                                            FilterName2="Customer_Status__c"
+                                            FilterNameValue2="Active"
+                                            FilterOperation2="Customer_Status__c"
+                                            FilterOperationValue2="="
+                                            FilterType2="Customer_Status__c"
+                                            FilterTypeValue2="String"
+
+                                            FilterName1Special="CovertToDocumentType"
+                                            FilterNameValue1Special="Quote"
+                                            FilterOperation1Special="CovertToDocumentType"
+                                            FilterOperationValue1Special="="
+                                            FilterType1Special="CovertToDocumentType"
+                                            FilterTypeValue1Special="String"
+
+                                            calledFrom="CloneSalesOrder"
+                                            calledFor="BillToLookup"
+                                            isSpecialScenario="true"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputPanel>
+
+                </apex:pageBlockSectionItem>
+                <!--job task-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Job Description"/>
+                    <apex:inputText value="{!JobDescription}" style="width:500px;"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!selConvertTo == 'Order'}">
+                    <apex:outputLabel value="Customer PO No." />
+                    <apex:inputText value="{!poNumber}" style="width:500px;" />
+                </apex:pageBlockSectionItem>
+                <!--job task-->
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" rendered="{!DATEVALUE(theSO.CreatedDate) < DATE(2021,2,1)}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Cloning is disabled on this record due to incompatible data resulting from recent system improvements. Please create a new {!theSO.Document_Type__c}." />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Clone" action="{!cloneSO}" rendered="{!DATEVALUE(theSO.CreatedDate) >= DATE(2021,2,1)}" reRender="thePageBlock" status="loadingstatus" />
+                <apex:commandButton value="Return" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>  
+</apex:page>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Credit_Memos</fullName>
+    <columns>No__c</columns>
+    <columns>Sales_Order__c</columns>
+    <columns>Invoice_Date__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Customer_PO_No__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Invoice_Amt_Incl_Tax__c</columns>
+    <columns>Bill_to_Customer__c</columns>
+    <columns>Misc_Invoice__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>NAME</field>
+        <operation>contains</operation>
+        <value>cr</value>
+    </filters>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>equals</operation>
+        <value>Posted</value>
+    </filters>
+    <filters>
+        <field>Credit_Memo_Reason_Code__c</field>
+        <operation>equals</operation>
+        <value>Credit and Rebill</value>
+    </filters>
+    <label>Posted Credit Memos</label>
+</ListView>

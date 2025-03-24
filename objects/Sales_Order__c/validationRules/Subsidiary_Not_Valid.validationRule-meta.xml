@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Subsidiary_Not_Valid</fullName>
+    <active>false</active>
+    <errorConditionFormula>Bill_to_Customer_No__r.Subsidiary_Company__c   &lt;&gt; "1-REPUBLIC SERVICES"</errorConditionFormula>
+    <errorMessage>You can only create a Sales Order for a Republic Services Subsidiary</errorMessage>
+</ValidationRule>

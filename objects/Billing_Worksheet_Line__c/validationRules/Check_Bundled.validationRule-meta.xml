@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Bundled</fullName>
+    <active>true</active>
+    <errorConditionFormula>Bill_as_Lump_Sum__c == TRUE &amp;&amp; Bundle_Line__c == NULL &amp;&amp; DATEVALUE(CreatedDate) &gt;= DATE(2023, 12, 01)</errorConditionFormula>
+    <errorMessage>Bundled must not be checked when Bundle Line is blank.</errorMessage>
+</ValidationRule>

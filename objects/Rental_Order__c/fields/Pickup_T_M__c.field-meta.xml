@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pickup_T_M__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Pickup T&amp;M</label>
+    <referenceTo>TM__c</referenceTo>
+    <relationshipLabel>Rental Orders (Pickup T&amp;M)</relationshipLabel>
+    <relationshipName>Rental_Orders1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,63 @@
+<apex:page controller="EmployeeUtilizationController" renderAs="pdf" applyBodyTag="false" readOnly="true" showHeader="false" sidebar="false" docType="html-5.0" applyHtmlTag="false">
+	<html lang="en-us" dir="ltr">
+    <head>
+            <style>            
+                @page {
+                	size:A4 landscape;
+                	margin-top: 5%;
+                	margin-left: 5%;
+                }
+   
+            </style>
+    </head>    
+    <body>
+    <apex:dataTable value="{!TMLaborLinesPDF}" var="line" id="theTable" rowClasses="odd,even" styleClass="tableClass" border="1" cellpadding="10px;" >
+        <apex:column >
+            <apex:facet name="header">No.</apex:facet>
+            <apex:outputText value="{!line.ResourceNo}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Service Center</apex:facet>
+            <apex:outputText value="{!line.ServiceCenter}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Employee Name</apex:facet>
+            <apex:outputText value="{!line.Description}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Resource Type</apex:facet>
+            <apex:outputText value="{!line.ResourceType}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Assigned SC Hours</apex:facet>
+            <apex:outputText value="{!line.SC_Hours}"/>
+        </apex:column>        
+
+
+        <apex:column >
+            <apex:facet name="header">I/C Hours</apex:facet>
+            <apex:outputText value="{!line.IC_Hours}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Job Total Hours</apex:facet>
+            <apex:outputText value="{!line.Total_Hours}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">% Utilization</apex:facet>
+            <!--<apex:outputText value="{!line.Utilization}"/>-->
+            <apex:outputText value="{0, number, 0.0%}">
+                <apex:param value="{!line.Utilization}" />
+            </apex:outputText>
+        </apex:column>        
+        
+        
+    </apex:dataTable>    
+    </body>
+    </html>
+</apex:page>

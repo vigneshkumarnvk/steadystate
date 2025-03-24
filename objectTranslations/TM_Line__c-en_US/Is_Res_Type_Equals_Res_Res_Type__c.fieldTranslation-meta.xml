@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Is Res Type Equals Res Res Type --></label>
+        <name>Is_Res_Type_Equals_Res_Res_Type__c</name>
+    </CustomFieldTranslation>

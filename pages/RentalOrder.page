@@ -1,0 +1,48 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Rental_Order__c" extensions="RentalOrderController" id="thePage" sidebar="false">
+    <head>
+        <script>
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Return Order" subtitle="{!Rental_Order__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Quick Save" action="{!quicksave}" rerender="theForm" status="loadingstatus"/>                
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>                
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection title="General" collapsible="true" id="thePageBlockSection">
+                <apex:inputField value="{!RO.Bill_to_Customer__c}"/>
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!RO.Resource__c}"/>
+                <apex:inputField value="{!RO.Drop_Off_Date__c}"/>
+                <apex:inputField value="{!RO.Sales_Order__c}"/>
+                <apex:inputField value="{!RO.Pick_Up_Date__c}"/>
+                <apex:inputField value="{!RO.Pickup_T_M__c}"/>
+                <apex:inputField value="{!RO.Drop_Off_T_M__c}"/>
+                <apex:inputField value="{!RO.Pickup_T_M_Line__c}"/>
+                <apex:inputField value="{!RO.Drop_Off_T_M_Line__c}"/>
+                <apex:inputField value="{!RO.Billing_Type__c}"/>
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!RO.Billing_Amount__c}"/>
+                <apex:pageBlockSectionItem />
+                <apex:inputField value="{!RO.Invoice_Start_Date__c}"/>
+                <apex:inputField value="{!RO.Last_Invoice_Date__c}"/>
+                <apex:inputField value="{!RO.Invoice_End_Date__c}"/>
+                <apex:inputField value="{!RO.Last_Invoice_No__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Description" collapsible="true">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Rental_Order__c.Fields.Description__c.Label}</apex:outputLabel>
+                    <apex:outputpanel >
+                            <apex:inputField value="{!RO.Description__c}"
+                                             style="width:100%; height: 60px"/>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

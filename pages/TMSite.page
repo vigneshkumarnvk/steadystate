@@ -1,0 +1,23 @@
+<apex:page showHeader="false" standardStylesheets="false">
+    <apex:slds />
+    <apex:includeLightning />
+
+    <div id="container" style="width:100 vw;height:100vh"/>
+
+    <script>
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var params = { "token": urlParams.get('token') };
+
+        $Lightning.use("c:TMSiteApp", function() {
+            //Write a function that creates the component on the page
+            $Lightning.createComponent("c:TMSignature",
+                params,
+                "container",
+                function(cmp) {
+
+                }
+            );
+        });
+    </script>
+</apex:page>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Software --></label>
+        <name>Software__c</name>
+        <picklistValues>
+            <masterLabel>Email ($20/mo)</masterLabel>
+            <translation><!-- Email ($20/mo) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Enviroware</masterLabel>
+            <translation><!-- Enviroware --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NAV (Limited access)</masterLabel>
+            <translation><!-- NAV (Limited access) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchase Orders (Coupa)</masterLabel>
+            <translation><!-- Purchase Orders (Coupa) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Salesforce</masterLabel>
+            <translation><!-- Salesforce --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Samsara</masterLabel>
+            <translation><!-- Samsara --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

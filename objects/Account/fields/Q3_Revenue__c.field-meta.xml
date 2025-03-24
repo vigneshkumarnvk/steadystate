@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Q3_Revenue__c</fullName>
+    <externalId>false</externalId>
+    <label>Q3 Revenue</label>
+    <summarizedField>Customer_Revenue__c.Amount__c</summarizedField>
+    <summaryFilterItems>
+        <field>Customer_Revenue__c.Fiscal_Period__c</field>
+        <operation>equals</operation>
+        <value>7, 8, 9</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Customer_Revenue__c.Fiscal_Year__c</field>
+        <operation>equals</operation>
+        <value>2024</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Customer_Revenue__c.Customer__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

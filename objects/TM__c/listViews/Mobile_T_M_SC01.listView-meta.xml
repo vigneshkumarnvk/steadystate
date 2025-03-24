@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mobile_T_M_SC01</fullName>
+    <columns>No__c</columns>
+    <columns>Status__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Sales_Order__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Scheduled_Date__c</columns>
+    <columns>Account_Executive__c</columns>
+    <columns>Project_Coordinator__c</columns>
+    <columns>Amount__c</columns>
+    <columns>Amount_Incl_Tax__c</columns>
+    <columns>Contract__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Field_TM_PDF_Saved__c</columns>
+    <columns>Field_TM_PDF_Sent__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Mobile_TM__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>01</value>
+    </filters>
+    <label>Mobile-T&amp;M SC01</label>
+</ListView>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- EQAI Work Order Type --></label>
+        <name>EQAI_Work_Order_Type__c</name>
+        <picklistValues>
+            <masterLabel>Brokered Trans/3rd Party Disposal</masterLabel>
+            <translation><!-- Brokered Trans/3rd Party Disposal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Emergency Response</masterLabel>
+            <translation><!-- Emergency Response --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HHW Services</masterLabel>
+            <translation><!-- HHW Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Industrial Services</masterLabel>
+            <translation><!-- Industrial Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LTL</masterLabel>
+            <translation><!-- LTL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lab Packs</masterLabel>
+            <translation><!-- Lab Packs --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine Services</masterLabel>
+            <translation><!-- Marine Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Services</masterLabel>
+            <translation><!-- Other Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Remediation Project Management</masterLabel>
+            <translation><!-- Remediation Project Management --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Self Waste Transportation and Disposal</masterLabel>
+            <translation><!-- Self Waste Transportation and Disposal --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

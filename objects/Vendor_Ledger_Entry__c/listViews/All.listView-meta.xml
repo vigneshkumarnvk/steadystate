@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Vendor__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Amount__c</columns>
+    <columns>Amount_LCY__c</columns>
+    <columns>Open__c</columns>
+    <columns>Subsidiary_Company__c</columns>
+    <columns>NAV_Vendor_No__c</columns>
+    <columns>Posting_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Subsidiary_Company__c</field>
+        <operation>contains</operation>
+        <value>1-</value>
+    </filters>
+    <label>All</label>
+</ListView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ReportField__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND(GVWNumber__c   &gt;= 55000,RecordType.Name = 'Equipment', ISBLANK(End_Date__c  ) )
+
+||
+
+AND(GVWNumber__c   &gt;= 55000,RecordType.Name = 'Equipment',  End_Date__c &gt;= DATE(2019, 01, 01))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>ReportField</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

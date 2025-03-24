@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Drop Off T&amp;M Line --></label>
+        <name>Drop_Off_T_M_Line__c</name>
+        <relationshipLabel><!-- Rental Orders --></relationshipLabel>
+    </CustomFieldTranslation>

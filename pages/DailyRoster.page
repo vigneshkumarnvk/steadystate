@@ -1,0 +1,415 @@
+<apex:page standardController="TM__c" extensions="TMController" action="{!selectTmList}" id="thePage" sidebar="false"
+           lightningStyleSheets="true">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+        <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+        <script>
+
+            function showDropDown(tmId) {
+                //debugger;
+                $('.dropdown-content').hide();
+                $('#myDropdown' + tmId).show();
+                //document.getElementById("myDropdown" + tmId).classList.toggle("show");
+            }
+
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function (event) {
+                if (!event.target.matches('.dropbtn')) {
+                    $('.dropdown-content').hide();
+                    /*var dropdowns = document.getElementsByClassName("dropdown-content");
+                  var i;
+                  for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                      openDropdown.classList.remove('show');
+                    }
+                  }*/
+                }
+            }
+
+            /*function validateServiceCenterInList(fieldThatChanged){
+                var elemenetIdForField = fieldThatChanged.id;
+                focuselmnt=elemenetIdForField.replace('theItem','theQuantity');
+                var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+                var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+                //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+                var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+                var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+                if (fieldName == 'theServiceCenter') {
+                    var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+                } else {
+                    var newFieldValue = document.getElementById(elemenetIdForField).value;
+                }
+
+                validateServiceCenterInWrapList(fieldName, newFieldValue, lineNo);
+                //alert (fieldName +"/" + newFieldValue + "/" + lineNo);
+            }*/
+
+            function filter(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(charCode == 13){
+                    selectTmList();
+                    return false;
+                }
+                return true;
+            }
+
+            function setFocusToFilter() {
+                $("[id$='txtFilter']").focus();
+            }
+
+            function printFieldTM(ids) {
+                if(ids != '' && ids != undefined) {
+                    //job task <<
+                    //window.open('/apex/TMFieldMutiplePDF?selectedTMIds=' + ids, '_blank');
+                    window.open('/apex/NewFieldTMPDF?ids=' + ids + '&download=true', '_blank');
+                    //job task >>
+                }
+            }
+
+            function printFieldTM2(ids) {
+                if(ids != '' && ids != undefined) {
+                    //job task <<
+                    //window.open('/apex/TMFieldMultiplePDF2?selectedTMIds=' + ids, '_blank');
+                    window.open('/apex/NewFieldTMPDF?ids=' + ids + '&download=true', '_blank');
+                    //job task >>
+                }
+            }
+
+            function printRoster(scheduleDate, SCId, tmIds) {
+                if(scheduleDate != '' && scheduleDate != undefined && tmIds !== '' && tmIds !== undefined) {
+                    window.open('/apex/DailyRosterPDF?scheduledDate=' + scheduleDate + '&SCId=' + SCId + '&selectedTMIds=' + tmIds, '_blank');
+                }
+            }
+
+            function openEditTmLines(scheduleDate, tmRecId) {
+                //window.open('/apex/EditTMLines?Category=Labor&Id=' + tmRecId + '&scheduledDate=' + scheduleDate, '_blank');
+                window.open('/apex/TM?Category=Labor&Id=' + tmRecId + '&scheduledDate=' + scheduleDate, '_blank');
+            }
+
+            function selectAllTMs(ctrl) {
+                selectAllTMs();
+            }
+
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+
+            function insertColon(ctrl, evt) {
+                var anc = ctrl;
+                //if(ctrl.value.length == 2 && evt.keyCode != 8) {
+                //    ctrl.value = ctrl.value + ':';
+                //}
+
+                if (ctrl.value.length == 3 && ctrl.value.indexOf(':') < 0) {
+                    ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+                }
+            }
+
+            function renderDate() {
+                $("[id$='scheduledDate']").datepicker({});
+            }
+
+        </script>
+
+        <Style>
+            .fixedCol {
+                white-space: nowrap !important;
+                text-overflow: ellipsis;
+                max-width: 130px;
+                overflow: hidden;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .alignCenter{
+                text-align: center;
+            }
+        </Style>
+    </head>
+    <c:LoadingStatus />
+    <apex:form id="theForm">
+        <apex:pageMessages id="theMsg"/>
+        <apex:pageBlock id="thePageBlock">
+            <apex:actionFunction name="selectTmList" oncomplete="setFocusToFilter();" action="{!selectTmList}" reRender="thePageBlock,theResourceTable,LineInfo,pgStat"
+                                 immediate="false" status="loadingstatus">
+            </apex:actionFunction>
+
+            <apex:actionFunction name="selectAllTMs" action="{!selectAllTMs}" reRender="thePageBlock, theResourceTable"
+                                 immediate="false" status="loadingstatus"/>
+
+            <apex:pageBlockSection id="pbsection1" columns="6" title="" collapsible="false">
+            </apex:pageBlockSection>
+
+            <table width="100%" style="margin-bottom:!0px;">
+                <tr>
+                    <td width="35%">
+                        <apex:commandButton action="{!setPreviousDate}" value="<< Prev" status="loadingstatus" />
+                        <apex:inputText style="margin-left:5px;" value="{!scheduledDateValue}" id="scheduledDate">
+                            <apex:actionSupport event="onchange" action="{!selectTmList}"
+                                                reRender="thePageBlock,theTMTable,PaginationStat" status="loadingstatus"/>
+                        </apex:inputText>
+                        <apex:commandButton action="{!setNextDate}" value="Next >>" status="loadingstatus"/>
+                    </td>
+                    <td  width="15%">
+                        <span class="b">Company:</span> {!theSC.Subsidiary_Company__r.Name}
+                    </td>
+                    <td  width="15%" style="white-space:nowrap;">
+                        <span class="b">Service Center: </span>
+                        <apex:inputField label="Service Center:" value="{!theUser.Service_Center__c}" >
+                            <apex:actionSupport event="onchange" action="{!selectTmList}"
+                                                reRender="thePageBlock,theTMTable,PaginationStat" status="loadingstatus"/>
+                        </apex:inputField>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <table width="100%" style="margin-bottom:!0px;">
+                <tr>
+                    <td>
+                        <b>Field to Filter : </b>
+                        <apex:selectList style="height:32px;" size="1" value="{!selFilterField}">
+                            <apex:selectOptions value="{!lstFilterField}"/>
+                        </apex:selectList>
+                    </td>
+                    <td>
+                        <apex:selectList style="height:32px;" size="1" value="{!selFilterOp}">
+                            <apex:selectOptions value="{!lstFilterOperator}"/>
+                        </apex:selectList>
+                        <apex:inputText onkeypress="return filter();" id="txtFilter" value="{!filterInput}"/>
+                    </td>
+                    <td>
+                        <apex:commandButton value="Filter" action="{!selectTmList}" rerender="thePageBlock,theTMTable,PaginationStat"
+                                            status="loadingstatus">
+                            <apex:param id="theSearch" name="theSearch" value="Item"/>
+                        </apex:commandButton>
+                        <apex:outputPanel id="PaginationStat">
+                            Showing {!getStartIndex} to {!getEndIndex } of {!getTotalRecords}&nbsp;&nbsp;
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:commandButton action="{!firstpage}" disabled="{!hasPreviouspage}" value="|<< First"/>
+                        <apex:commandButton action="{!previouspage}" disabled="{!hasPreviouspage}"
+                                            value="<< Previous"/>
+                        <apex:commandButton action="{!nextpage}" disabled="{!hasNextpage}" value="Next >>"/>
+                        <apex:commandButton action="{!lastpage}" disabled="{!hasNextpage}" value="Last >>|"/>
+                    </td>
+                    <td>
+                        <apex:commandButton action="{!PrintFieldTM}" oncomplete="printRoster('{!scheduledDateValue}', '{!theUser.Service_Center__c}', '{!selectedTMsIds}');" value="Print Roster" reRender="theForm,thePageBlock,theMsg" status="loadingstatus"/>
+                    </td>
+                    <td>
+                        <apex:commandButton action="{!PrintFieldTM}" oncomplete="printFieldTM2('{!selectedTMsIds}');" value="Print Field T&M" reRender="theForm,thePageBlock,theMsg" status="loadingstatus"/>
+                    </td>
+                    <td>
+                        <apex:commandButton action="{!cloneAndSchedule}" value="Clone and Schedule" reRender="theForm,thePageBlock,theMsg" status="loadingstatus"/>
+                    </td>
+
+                </tr>
+            </table>
+
+            <apex:pageBlockButtons id="theButton">
+                <apex:commandButton value="Save" action="{!saveRoster}" status="loadingstatus" oncomplete="renderDate();" rerender="thePageBlock"/>
+            </apex:pageBlockButtons>
+
+            <table class="list" id="theTMTable" width="100%" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr class="">
+                    <th style="text-align:left;">
+                        <apex:inputCheckbox onchange="selectAllTMs(this);"  value="{!selectAll}"/>
+                    </th>
+                    <th style="text-align:left;"></th>
+                    <th>
+                        <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                            <apex:param name="orderBy" value="Name" />
+                            <apex:outputLabel value="{!$ObjectType.TM__c.fields.Name.Label}" />
+                            <apex:outputPanel layout="none" rendered="{!sortBy == 'Name'}">
+                                <apex:image value="/img/colTitle_uparrow.gif"
+                                            rendered="{!sortDirection=='ASC'}"/>
+                                <apex:image value="/img/colTitle_downarrow.gif"
+                                            rendered="{!sortDirection=='DESC'}"/>
+                            </apex:outputPanel>
+                        </apex:commandLink>
+                    </th>
+                    <th>
+                        <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                            <apex:param name="orderBy" value="Bill_to_Customer__c" />
+                            <apex:outputLabel value="{!$ObjectType.TM__c.fields.Bill_to_Customer__c.Label}" />
+                            <apex:outputPanel layout="none" rendered="{!sortBy == 'Bill_to_Customer__c'}">
+                                <apex:image value="/img/colTitle_uparrow.gif"
+                                            rendered="{!sortDirection=='ASC'}"/>
+                                <apex:image value="/img/colTitle_downarrow.gif"
+                                            rendered="{!sortDirection=='DESC'}"/>
+                            </apex:outputPanel>
+                        </apex:commandLink>
+                    </th>
+                    <th>
+                        <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                            <apex:param name="orderBy" value="Sales_Order__c" />
+                            <apex:outputLabel value="{!$ObjectType.TM__c.fields.Sales_Order__c.Label}" />
+                            <apex:outputPanel layout="none" rendered="{!sortBy == 'Sales_Order__c'}">
+                                <apex:image value="/img/colTitle_uparrow.gif"
+                                            rendered="{!sortDirection=='ASC'}"/>
+                                <apex:image value="/img/colTitle_downarrow.gif"
+                                            rendered="{!sortDirection=='DESC'}"/>
+                            </apex:outputPanel>
+                        </apex:commandLink>
+                    </th>
+                    <th>
+                        SC
+                    </th>
+                    <th>
+                        {!$ObjectType.TM__c.fields.Site_Name__c.Label}
+                    </th>
+                    <th>
+                        {!$ObjectType.TM__c.fields.Site_Street__c.Label}
+                    </th>
+                    <th>
+                        {!$ObjectType.TM__c.fields.Site_City__c.Label}
+                    </th>
+                    <th>
+                        {!$ObjectType.TM__c.fields.Site_State__c.Label}
+                    </th>
+                    <th>
+                        Labor
+                    </th>
+                    <th>
+                        Equipment
+                    </th>
+                    <th>
+                        Start Time
+                    </th>
+                    <!-- Ticket#23051 -->
+                    <th>
+                        <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                            <apex:param name="orderBy" value="Status" />
+                            <apex:outputLabel value="{!$ObjectType.TM__c.fields.Status__c.Label}" />
+                            <apex:outputPanel layout="none" rendered="{!sortBy == 'Status'}">
+                                <apex:image value="/img/colTitle_uparrow.gif"
+                                            rendered="{!sortDirection=='ASC'}"/>
+                                <apex:image value="/img/colTitle_downarrow.gif"
+                                            rendered="{!sortDirection=='DESC'}"/>
+                            </apex:outputPanel>
+                        </apex:commandLink>
+
+                    </th>
+                    <th>
+                        <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                            <apex:param name="orderBy" value="PM" />
+                            <apex:outputLabel value="PM" />
+                            <apex:outputPanel layout="none" rendered="{!sortBy == 'PM'}">
+                                <apex:image value="/img/colTitle_uparrow.gif"
+                                            rendered="{!sortDirection=='ASC'}"/>
+                                <apex:image value="/img/colTitle_downarrow.gif"
+                                            rendered="{!sortDirection=='DESC'}"/>
+                            </apex:outputPanel>
+                        </apex:commandLink>
+                    </th>
+                    <!-- Ticket#23051 -->
+                    <th>
+                        PM Reviewed
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:repeat value="{!theTMWrapList}" var="line">
+                    <tr class="dataRow">
+                        <td style="text-align:left;">
+                            <apex:inputCheckbox value="{!line.isSelected}"/>
+                        </td>
+                        <td>
+                            <!--job task-->
+                            <!--
+                            <apex:commandButton value="Edit" action="{!editTM}" oncomplete="openEditTmLines('{!scheduledDateValue}', '{!selectedId}');" status="loadingstatus">
+                                <apex:param name="tmRecId" value="{!line.theTM.Id}"/>
+                            </apex:commandButton>
+                            -->
+                            <apex:outputLink value="{!URLFOR($Action.TM__c.Edit, line.theTM.Id)}">Edit
+                            </apex:outputLink>
+                            <!--job task-->
+                        </td>
+                        <td>
+                            <apex:outputLink value="{!URLFOR($Action.TM__c.View, line.theTM.Id)}">{!line.theTM.Name}</apex:outputLink>
+                        </td>
+                        <td>
+                            <apex:outputField id="theCustomer" value="{!line.theTM.Bill_to_Customer__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theSalesOrder" value="{!line.theTM.Sales_Order__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theServiceCenter" value="{!line.theTM.Service_Center__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theSiteName" value="{!line.theTM.Site_Name__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theSiteStreet" value="{!line.theTM.Site_Street__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theSiteCity" value="{!line.theTM.Site_City__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theSiteState" value="{!line.theTM.Site_State__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputPanel >
+                                <apex:dataTable value="{!line.labor}" var="v">
+                                    <apex:column >{!v}</apex:column>
+                                </apex:dataTable>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <apex:outputPanel >
+                                <apex:dataTable value="{!line.equipment}" var="v">
+                                    <apex:column >{!v}</apex:column>
+                                </apex:dataTable>
+                            </apex:outputPanel>
+                        </td>
+                        <td>
+                            <apex:inputField onkeyup="insertColon(this, event);" onkeypress="return isNumber(event);" id="theStartingTime" value="{!line.theTM.Start_Time__c}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="theStatus" value="{!line.theTM.Status__c}" />
+                        </td>
+                        <td>
+                            <apex:outputField id="theProjCoordinator" value="{!line.theTM.Project_Coordinator__r.Name}"/>
+                        </td>
+                        <td>
+                            <apex:outputField id="pmReviewed" value="{!line.theTM.Project_Manager_Reviewed__c}" />
+                        </td>
+                    </tr>
+                </apex:repeat>
+                </tbody>
+            </table>
+
+            <apex:pageBlockSection title="{!selectedItem}" id="abcd">
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+        $(document).ready(function () {
+            $("[id$='scheduledDate']").datepicker({});
+
+            $("[id$='scheduledDate']").on("keypress", function () {
+                $("[id$='scheduledDate']").datepicker("hide");
+                if (event.keyCode == 13) {
+                    refreshTMList();
+                    $(this).blur();
+                    return false;
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">new MenuButton('Actions', false);</script>
+</apex:page>

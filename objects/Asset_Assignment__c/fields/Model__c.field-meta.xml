@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Model__c</fullName>
+    <externalId>false</externalId>
+    <label>Model</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>10NS</fullName>
+                <default>false</default>
+                <label>10NS</label>
+            </value>
+            <value>
+                <fullName>3020</fullName>
+                <default>false</default>
+                <label>3020</label>
+            </value>
+            <value>
+                <fullName>7259</fullName>
+                <default>false</default>
+                <label>7259</label>
+            </value>
+            <value>
+                <fullName>790</fullName>
+                <default>false</default>
+                <label>790</label>
+            </value>
+            <value>
+                <fullName>9020</fullName>
+                <default>false</default>
+                <label>9020</label>
+            </value>
+            <value>
+                <fullName>Compute Stick</fullName>
+                <default>false</default>
+                <label>Compute Stick</label>
+            </value>
+            <value>
+                <fullName>CRADLEPOINT - AER1600LP4</fullName>
+                <default>false</default>
+                <label>Cradlepoint - AER1600LP4</label>
+            </value>
+            <value>
+                <fullName>Cradlepoint CBA850</fullName>
+                <default>false</default>
+                <label>Cradlepoint CBA850</label>
+            </value>
+            <value>
+                <fullName>Cradlepoint E330</fullName>
+                <default>false</default>
+                <label>Cradlepoint E330</label>
+            </value>
+            <value>
+                <fullName>CRADLEPOINT - MC400-1200M-B</fullName>
+                <default>false</default>
+                <label>Cradlepoint - MC400-1200M-B</label>
+            </value>
+            <value>
+                <fullName>CRADLEPOINT MC400LP6</fullName>
+                <default>false</default>
+                <label>Cradlepoint MC400LP6</label>
+            </value>
+            <value>
+                <fullName>CRADLEPOINT - MC400LPE</fullName>
+                <default>false</default>
+                <label>Cradlepoint - MC400LPE</label>
+            </value>
+            <value>
+                <fullName>Desktop</fullName>
+                <default>false</default>
+                <label>Desktop</label>
+            </value>
+            <value>
+                <fullName>Fortigate 100D</fullName>
+                <default>false</default>
+                <label>Fortigate 100D</label>
+            </value>
+            <value>
+                <fullName>FortiGate 100E</fullName>
+                <default>false</default>
+                <label>FortiGate 100E</label>
+            </value>
+            <value>
+                <fullName>FortiGate 300D</fullName>
+                <default>false</default>
+                <label>FortiGate 300D</label>
+            </value>
+            <value>
+                <fullName>FortiGate 60D</fullName>
+                <default>false</default>
+                <label>FortiGate 60D</label>
+            </value>
+            <value>
+                <fullName>FortiGate 60E</fullName>
+                <default>false</default>
+                <label>FortiGate 60E</label>
+            </value>
+            <value>
+                <fullName>FortiGate 60E-POE</fullName>
+                <default>false</default>
+                <label>FortiGate 60E-POE</label>
+            </value>
+            <value>
+                <fullName>FortiGate 60F</fullName>
+                <default>false</default>
+                <label>FortiGate 60F</label>
+            </value>
+            <value>
+                <fullName>FortiGate 80E</fullName>
+                <default>false</default>
+                <label>FortiGate 80E</label>
+            </value>
+            <value>
+                <fullName>FortiGate 80E-POE</fullName>
+                <default>false</default>
+                <label>FortiGate 80E-POE</label>
+            </value>
+            <value>
+                <fullName>FortiGate 90D</fullName>
+                <default>false</default>
+                <label>FortiGate 90D</label>
+            </value>
+            <value>
+                <fullName>FortiGate 90D-POE</fullName>
+                <default>false</default>
+                <label>FortiGate 90D-POE</label>
+            </value>
+            <value>
+                <fullName>Fortinet AP</fullName>
+                <default>false</default>
+                <label>Fortinet AP</label>
+            </value>
+            <value>
+                <fullName>Gram</fullName>
+                <default>false</default>
+                <label>Gram</label>
+            </value>
+            <value>
+                <fullName>iPad</fullName>
+                <default>false</default>
+                <label>iPad</label>
+            </value>
+            <value>
+                <fullName>iPad (5th generation)</fullName>
+                <default>false</default>
+                <label>iPad (5th generation)</label>
+            </value>
+            <value>
+                <fullName>iPad (6th Generation)</fullName>
+                <default>false</default>
+                <label>iPad (6th Generation)</label>
+            </value>
+            <value>
+                <fullName>iPad (8th Generation)</fullName>
+                <default>false</default>
+                <label>iPad (8th Generation)</label>
+            </value>
+            <value>
+                <fullName>iPad 32GB</fullName>
+                <default>false</default>
+                <label>iPad 32GB</label>
+            </value>
+            <value>
+                <fullName>iPad 5th Generation</fullName>
+                <default>false</default>
+                <label>iPad 5th Generation</label>
+            </value>
+            <value>
+                <fullName>iPad 6th Generation</fullName>
+                <default>false</default>
+                <label>iPad 6th Generation</label>
+            </value>
+            <value>
+                <fullName>IPAD 7TH GEN 32GB GRAY VZ</fullName>
+                <default>false</default>
+                <label>iPad 7TH GEN 32GB GRAY VZ</label>
+            </value>
+            <value>
+                <fullName>iPad 7th Generation</fullName>
+                <default>false</default>
+                <label>iPad 7th Generation</label>
+            </value>
+            <value>
+                <fullName>iPad 8th Generation</fullName>
+                <default>false</default>
+                <label>iPad 8th Generation</label>
+            </value>
+            <value>
+                <fullName>IPAD 9.7 32GB SPACE GRAY VZ</fullName>
+                <default>false</default>
+                <label>iPad 9.7 32GB SPACE GRAY VZ</label>
+            </value>
+            <value>
+                <fullName>IPAD NON VERIZON</fullName>
+                <default>false</default>
+                <label>iPad NON VERIZON</label>
+            </value>
+            <value>
+                <fullName>IPAD PRO 11 INCH 256GB SGRAY VZ</fullName>
+                <default>false</default>
+                <label>iPad PRO 11 INCH 256GB SGRAY VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE 11 BLACK 64GB SO</fullName>
+                <default>false</default>
+                <label>iPhone 11 BLACK 64GB SO</label>
+            </value>
+            <value>
+                <fullName>IPHONE 11 PRO MAX GRAY 512GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 11 PRO MAX GRAY 512GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE 11 PRO MAX GRAY 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 11 PRO MAX GRAY 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>iPhone 11 RED 128GB</fullName>
+                <default>false</default>
+                <label>iPhone 11 RED 128GB</label>
+            </value>
+            <value>
+                <fullName>iPhone 12 Pro Max 256GB</fullName>
+                <default>false</default>
+                <label>iPhone 12 Pro Max 256GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 12 PRO MAX GRAY 256GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 12 PRO MAX GRAY 256GB VZ</label>
+            </value>
+            <value>
+                <fullName>iPhone 13 Pro Max 128GB</fullName>
+                <default>false</default>
+                <label>iPhone 13 Pro Max 128GB</label>
+            </value>
+            <value>
+                <fullName>iPhone 14</fullName>
+                <default>false</default>
+                <label>iPhone 14</label>
+            </value>
+            <value>
+                <fullName>IPHONE 5S SPACE GRAY 16GB</fullName>
+                <default>false</default>
+                <label>iPhone 5S SPACE GRAY 16GB</label>
+            </value>
+            <value>
+                <fullName>iPhone 6 16GB</fullName>
+                <default>false</default>
+                <label>iPhone 6 16GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 6 64GB SPACE GRAY</fullName>
+                <default>false</default>
+                <label>iPhone 6 64GB SPACE GRAY</label>
+            </value>
+            <value>
+                <fullName>iPhone 6s</fullName>
+                <default>false</default>
+                <label>iPhone 6s</label>
+            </value>
+            <value>
+                <fullName>IPHONE 6S 128GB SPACE GRAY</fullName>
+                <default>false</default>
+                <label>iPhone 6S 128GB SPACE GRAY</label>
+            </value>
+            <value>
+                <fullName>IPHONE 6S 16GB SPACE GRAY</fullName>
+                <default>false</default>
+                <label>iPhone 6S 16GB SPACE GRAY</label>
+            </value>
+            <value>
+                <fullName>iPhone 6S 32GB</fullName>
+                <default>false</default>
+                <label>iPhone 6S 32GB</label>
+            </value>
+            <value>
+                <fullName>iPhone 6S Plus 32GB</fullName>
+                <default>false</default>
+                <label>iPhone 6S Plus 32GB</label>
+            </value>
+            <value>
+                <fullName>iPhone 7 32GB</fullName>
+                <default>false</default>
+                <label>iPhone 7 32GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 7 BLACK 128GB</fullName>
+                <default>false</default>
+                <label>iPhone 7 BLACK 128GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 7 BLACK 32GB</fullName>
+                <default>false</default>
+                <label>iPhone 7 BLACK 32GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 7 PLUS BLACK 32GB</fullName>
+                <default>false</default>
+                <label>iPhone 7 PLUS BLACK 32GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE 8 PLUS SP GRAY 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 8 PLUS SP GRAY 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE 8 SILVER 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 8 SILVER 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE 8 SPACE GRAY 128GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 8 SPACE GRAY 128GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE 8 SPACE GRAY 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone 8 SPACE GRAY 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>iPhone SE</fullName>
+                <default>false</default>
+                <label>iPhone SE</label>
+            </value>
+            <value>
+                <fullName>iPhone SE(2nd Generation)</fullName>
+                <default>false</default>
+                <label>iPhone SE(2nd Generation)</label>
+            </value>
+            <value>
+                <fullName>iPhone SE 32GB</fullName>
+                <default>false</default>
+                <label>iPhone SE 32GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE SE SILVER 64GB</fullName>
+                <default>false</default>
+                <label>iPhone SE SILVER 64GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE SE SPACE GRAY 16GB</fullName>
+                <default>false</default>
+                <label>iPhone SE SPACE GRAY 16GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE SE SPACE GRAY 32GB</fullName>
+                <default>false</default>
+                <label>iPhone SE SPACE GRAY 32GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE SE SPACE GRAY 64GB</fullName>
+                <default>false</default>
+                <label>iPhone SE SPACE GRAY 64GB</label>
+            </value>
+            <value>
+                <fullName>iPhone XR 64GB</fullName>
+                <default>false</default>
+                <label>iPhone XR 64GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE XR BLACK 64GB</fullName>
+                <default>false</default>
+                <label>iPhone XR BLACK 64GB</label>
+            </value>
+            <value>
+                <fullName>iPhone XS Max 64GB</fullName>
+                <default>false</default>
+                <label>iPhone XS Max 64GB</label>
+            </value>
+            <value>
+                <fullName>IPHONE XS MAX SPACE GRY 256GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone XS MAX SPACE GRY 256GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE XS MAX SPACE GRY 512GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone XS MAX SPACE GRY 512GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE X SPACE GRAY 256GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone X SPACE GRAY 256GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE X SPACE GRAY 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone X SPACE GRAY 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>IPHONE XS SPACE GRAY 64GB VZ</fullName>
+                <default>false</default>
+                <label>iPhone XS SPACE GRAY 64GB VZ</label>
+            </value>
+            <value>
+                <fullName>JETPACK 4G LTE MHS MIFI 7730L</fullName>
+                <default>false</default>
+                <label>JETPACK 4G LTE MHS MIFI 7730L</label>
+            </value>
+            <value>
+                <fullName>Latitude E5550</fullName>
+                <default>false</default>
+                <label>Latitude E5550</label>
+            </value>
+            <value>
+                <fullName>LG 49" UltraWide Monitor</fullName>
+                <default>false</default>
+                <label>LG 49" UltraWide Monitor</label>
+            </value>
+            <value>
+                <fullName>LG Gram 17Z90N-N</fullName>
+                <default>false</default>
+                <label>LG Gram 17Z90N-N</label>
+            </value>
+            <value>
+                <fullName>M70a</fullName>
+                <default>false</default>
+                <label>M70a</label>
+            </value>
+            <value>
+                <fullName>M710q</fullName>
+                <default>false</default>
+                <label>M710q</label>
+            </value>
+            <value>
+                <fullName>M73</fullName>
+                <default>false</default>
+                <label>M73</label>
+            </value>
+            <value>
+                <fullName>M73 Series</fullName>
+                <default>false</default>
+                <label>M73 Series</label>
+            </value>
+            <value>
+                <fullName>M80q</fullName>
+                <default>false</default>
+                <label>M80q</label>
+            </value>
+            <value>
+                <fullName>M90z</fullName>
+                <default>false</default>
+                <label>M90z</label>
+            </value>
+            <value>
+                <fullName>M910z</fullName>
+                <default>false</default>
+                <label>M910z</label>
+            </value>
+            <value>
+                <fullName>M920q</fullName>
+                <default>false</default>
+                <label>M920q</label>
+            </value>
+            <value>
+                <fullName>M93p</fullName>
+                <default>false</default>
+                <label>M93p</label>
+            </value>
+            <value>
+                <fullName>Optiplex 3020</fullName>
+                <default>false</default>
+                <label>Optiplex 3020</label>
+            </value>
+            <value>
+                <fullName>Optiplex 7010</fullName>
+                <default>false</default>
+                <label>Optiplex 7010</label>
+            </value>
+            <value>
+                <fullName>PowerEdge R730</fullName>
+                <default>false</default>
+                <label>PowerEdge R730</label>
+            </value>
+            <value>
+                <fullName>ProLiant DL360 Gen9</fullName>
+                <default>false</default>
+                <label>ProLiant DL360 Gen9</label>
+            </value>
+            <value>
+                <fullName>PROLIANT ML110 GEN 10</fullName>
+                <default>false</default>
+                <label>PROLIANT ML110 GEN 10</label>
+            </value>
+            <value>
+                <fullName>SAMSUNG GALAXY TAB E 32GB</fullName>
+                <default>false</default>
+                <label>SAMSUNG GALAXY TAB E 32GB</label>
+            </value>
+            <value>
+                <fullName>Samsung Tab A</fullName>
+                <default>false</default>
+                <label>Samsung Tab A</label>
+            </value>
+            <value>
+                <fullName>SE</fullName>
+                <default>false</default>
+                <label>SE</label>
+            </value>
+            <value>
+                <fullName>SoundStationIP 6000</fullName>
+                <default>false</default>
+                <label>SoundStationIP 6000</label>
+            </value>
+            <value>
+                <fullName>SoundStationIP 7000</fullName>
+                <default>false</default>
+                <label>SoundStationIP 7000</label>
+            </value>
+            <value>
+                <fullName>STK2M3W64CC</fullName>
+                <default>false</default>
+                <label>STK2M3W64CC</label>
+            </value>
+            <value>
+                <fullName>T14s</fullName>
+                <default>false</default>
+                <label>T14s</label>
+            </value>
+            <value>
+                <fullName>T15</fullName>
+                <default>false</default>
+                <label>T15</label>
+            </value>
+            <value>
+                <fullName>T430s</fullName>
+                <default>false</default>
+                <label>T430s</label>
+            </value>
+            <value>
+                <fullName>T440p</fullName>
+                <default>false</default>
+                <label>T440p</label>
+            </value>
+            <value>
+                <fullName>T460s</fullName>
+                <default>false</default>
+                <label>T460s</label>
+            </value>
+            <value>
+                <fullName>T460s Ultrabook</fullName>
+                <default>false</default>
+                <label>T460s Ultrabook</label>
+            </value>
+            <value>
+                <fullName>T470s</fullName>
+                <default>false</default>
+                <label>T470s</label>
+            </value>
+            <value>
+                <fullName>T480s</fullName>
+                <default>false</default>
+                <label>T480s</label>
+            </value>
+            <value>
+                <fullName>T490s</fullName>
+                <default>false</default>
+                <label>T490s</label>
+            </value>
+            <value>
+                <fullName>ThinkCentre M920Q</fullName>
+                <default>false</default>
+                <label>ThinkCentre M920Q</label>
+            </value>
+            <value>
+                <fullName>Thinkpad T14S</fullName>
+                <default>false</default>
+                <label>Thinkpad T14S</label>
+            </value>
+            <value>
+                <fullName>Toughbook CF-54</fullName>
+                <default>false</default>
+                <label>Toughbook CF-54</label>
+            </value>
+            <value>
+                <fullName>VERIZON ELLIPSIS JETPACK MHS900L</fullName>
+                <default>false</default>
+                <label>VERIZON ELLIPSIS JETPACK MHS900L</label>
+            </value>
+            <value>
+                <fullName>VERIZON JETPACK MIFI 8800L</fullName>
+                <default>false</default>
+                <label>VERIZON JETPACK MIFI 8800L</label>
+            </value>
+            <value>
+                <fullName>Vostro 200</fullName>
+                <default>false</default>
+                <label>Vostro 200</label>
+            </value>
+            <value>
+                <fullName>VVX 311</fullName>
+                <default>false</default>
+                <label>VVX 311</label>
+            </value>
+            <value>
+                <fullName>VVX 411</fullName>
+                <default>false</default>
+                <label>VVX 411</label>
+            </value>
+            <value>
+                <fullName>VZ Jetpack 4G MHS 291L</fullName>
+                <default>false</default>
+                <label>VZ Jetpack 4G MHS 291L</label>
+            </value>
+            <value>
+                <fullName>VZ Jetpack 4G MHS MIFI5510L</fullName>
+                <default>false</default>
+                <label>VZ Jetpack 4G MHS MIFI5510L</label>
+            </value>
+            <value>
+                <fullName>VZ JETPACK 4G MHS MIFI 6620L</fullName>
+                <default>false</default>
+                <label>VZ JETPACK 4G MHS MIFI 6620L</label>
+            </value>
+            <value>
+                <fullName>X1 Carbon</fullName>
+                <default>false</default>
+                <label>X1 Carbon</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

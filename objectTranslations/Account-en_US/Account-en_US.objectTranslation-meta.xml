@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- AccountFieldSet --></label>
+        <name>AccountFieldSet</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- AccountsMassEditFieldSet --></label>
+        <name>MassManager__AccountsMassEditFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Account Layout</layout>
+        <sections>
+            <label><!-- Account Summary --></label>
+            <section>Account Summary</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Corporate Layout</layout>
+        <sections>
+            <label><!-- Accounting Information --></label>
+            <section>Accounting Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Customer Layout</layout>
+        <sections>
+            <label><!-- Accounting Information --></label>
+            <section>Accounting Information</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Budget and Revenue Information --></label>
+            <section>Budget and Revenue Information</section>
+        </sections>
+        <sections>
+            <label><!-- Instructions --></label>
+            <section>Instructions</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Vendor</layout>
+        <sections>
+            <label><!-- Accounting Information --></label>
+            <section>Accounting Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- General --></label>
+            <section>General</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Balance --></label>
+        <name>Balance</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Child Account --></label>
+        <name>Child_Account</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Convert --></label>
+        <name>Convert</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Details --></label>
+        <name>Details</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Contact Report --></label>
+        <name>New_Contact_Report</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Create Quote/Order --></label>
+        <name>New_Sales_Document</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Rev/Bdg --></label>
+        <name>Rev_Bdg</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Prospect --></label>
+        <name>Account</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Corporate --></label>
+        <name>Corporate</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Customer --></label>
+        <name>Customer</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Vendor --></label>
+        <name>Vendor</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage><!-- Account Executive and Salesperson are required. --></errorMessage>
+        <name>AE_SP_Mandatory</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Account Executive cannot be changed. --></errorMessage>
+        <name>Account_Executive_Changed</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You do not have sufficient privileges to change PC --></errorMessage>
+        <name>Allow_Users_to_Change_PC</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You do not have sufficient privileges to change Vendor Account Details. --></errorMessage>
+        <name>Cannot_Change_Vendor_Account</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You do not have sufficient privileges to edit this field. --></errorMessage>
+        <name>Cannot_change_customer_account_name</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Project Manager cannot be changed. --></errorMessage>
+        <name>PC_Changed</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Subsidiary Company cannot be changed. --></errorMessage>
+        <name>SC_Changed</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The subsidiary company does not match service center setup. --></errorMessage>
+        <name>ValidateServiceCenter</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Account name must not exceed 50 characters. --></errorMessage>
+        <name>Validate_Account_Name_Character_Count</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- 2 address lines allowed and each address line must not exceed 50 characters. --></errorMessage>
+        <name>Validate_Address_Line_Character_Count</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Clone --></label>
+        <name>Clone</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Convert_to_Customer --></label>
+        <name>Convert_to_Customer</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Sales_Order --></label>
+        <name>Create_Sales_Order</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Sales_Quote --></label>
+        <name>Create_Sales_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleNews --></label>
+        <name>GoogleNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Delete --></label>
+        <name>MassManager__Mass_Delete</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Edit_Standard_Fields --></label>
+        <name>MassManager__Mass_Edit_Standard_Fields</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Update --></label>
+        <name>MassManager__Mass_Update</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Contact_Reports --></label>
+        <name>New_Contact_Reports</name>
+    </webLinks>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</CustomObjectTranslation>

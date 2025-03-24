@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Print_Billing_T_M</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Print Billing T&amp;M</masterLabel>
+    <openType>noSidebar</openType>
+    <protected>false</protected>
+    <url>{!URLFOR('/apex/NewTMBillingPDF?Id=' + TM__c.Id, null)}</url>
+</WebLink>

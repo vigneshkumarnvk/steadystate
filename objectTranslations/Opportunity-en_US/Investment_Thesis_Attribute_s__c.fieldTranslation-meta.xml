@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Investment Thesis Attribute(s) --></label>
+        <name>Investment_Thesis_Attribute_s__c</name>
+    </CustomFieldTranslation>

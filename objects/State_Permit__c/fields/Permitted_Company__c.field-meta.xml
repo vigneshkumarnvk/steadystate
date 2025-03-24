@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Permitted_Company__c</fullName>
+    <externalId>false</externalId>
+    <label>Permitted Company</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ACV Enviromental Svc</fullName>
+                <default>false</default>
+                <label>ACV Environmental Svc</label>
+            </value>
+            <value>
+                <fullName>Allstate Power Vac</fullName>
+                <default>false</default>
+                <label>Allstate Power Vac</label>
+            </value>
+            <value>
+                <fullName>Clean Venture</fullName>
+                <default>false</default>
+                <label>Clean Venture</label>
+            </value>
+            <value>
+                <fullName>Cycle Chem</fullName>
+                <default>false</default>
+                <label>Cycle Chem</label>
+            </value>
+            <value>
+                <fullName>Envirotech</fullName>
+                <default>false</default>
+                <label>Envirotech</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

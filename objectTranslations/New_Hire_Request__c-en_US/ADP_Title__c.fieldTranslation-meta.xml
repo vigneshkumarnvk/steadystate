@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- ADP Title --></label>
+        <name>ADP_Title__c</name>
+        <picklistValues>
+            <masterLabel>Chemist - Waste Specialist</masterLabel>
+            <translation><!-- Chemist - Waste Specialist --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Chemist I</masterLabel>
+            <translation><!-- Chemist I --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Confined Space Rescue Technician</masterLabel>
+            <translation><!-- Confined Space Rescue Technician --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Depack Chemist</masterLabel>
+            <translation><!-- Depack Chemist --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Driver</masterLabel>
+            <translation><!-- Driver --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Driver Operator - B Dry</masterLabel>
+            <translation><!-- Driver Operator - B Dry --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Driver/Operator</masterLabel>
+            <translation><!-- Driver/Operator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Driver/Operator A Dry</masterLabel>
+            <translation><!-- Driver/Operator A Dry --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Driver/Operator A Wet</masterLabel>
+            <translation><!-- Driver/Operator A Wet --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Service Project Mgmt.</masterLabel>
+            <translation><!-- Field Service Project Mgmt. --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Service Sales Specialist</masterLabel>
+            <translation><!-- Field Service Sales Specialist --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Services Foreman</masterLabel>
+            <translation><!-- Field Services Foreman --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Services Technician</masterLabel>
+            <translation><!-- Field Services Technician --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household Waste Days</masterLabel>
+            <translation><!-- Household Waste Days --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydrovac Driver/Operator</masterLabel>
+            <translation><!-- Hydrovac Driver/Operator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Laborer</masterLabel>
+            <translation><!-- Laborer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Plant Technician</masterLabel>
+            <translation><!-- Plant Technician --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

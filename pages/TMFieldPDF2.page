@@ -1,0 +1,964 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false"
+           renderAs="pdf" standardController="TM__c" id="thePage">
+<!--
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false"
+         renderAs="pdf" standardController="TM__c" extensions="TMController" id="thePage" action="{!getContractLineTMDescription}">
+    <html>
+    <head>
+        <style>
+            html * {
+                font-size: 8pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            @page {
+                margin-top: 1.5cm;
+                margin-bottom: 0cm;
+                margin-left: 5px;
+                margin-right: 5px;
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            div.header {
+                position: running(header);
+                padding: 0px;
+                width: 300%;
+                display: inline-block;
+                opacity: 0.7;
+                margin-top: 10px;
+            }
+
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+
+            .pageNumber {
+                text-align: right;
+            }
+
+            .title {
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .w100 {
+                width: 100%;
+            }
+
+            .w40 {
+                width: 40%;
+            }
+
+            .w45 {
+                width: 45%;
+            }
+
+            .w49 {
+                width: 49%;
+            }
+
+            .w50 {
+                width: 50%;
+            }
+
+            .w30 {
+                width: 30%;
+            }
+
+            .w70 {
+                width: 70%;
+            }
+
+            .w38 {
+                width: 35%;
+            }
+
+            .w62 {
+                width: 65%;
+            }
+
+            .tblOuterBorder {
+                border: 1px solid black;
+            }
+
+            .tblInsideGeneral tbody tr td:nth-child(2) {
+                font-weight: bold;
+            }
+
+            body {
+                font-size: 12px;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .u {
+                text-decoration: underline;
+            }
+
+            .i {
+                font-style: italic;
+            }
+
+            .alignRight {
+                text-align: right;
+            }
+
+            .alignCenter {
+                text-align: center;
+            }
+
+            .alignLeft {
+                text-align: left;
+            }
+
+            .bottomBorder {
+                border-bottom: 1px solid black;
+            }
+
+            .tblInnerBorders {
+                border-collapse: collapse;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+                border: 1px solid black;
+                padding: .5px 3px;
+                text-align: center;
+                font-size: 8pt;
+            }
+
+            .tblInnerBorders td {
+                border: 1px solid black;
+                padding: 4px 1px;
+                padding-bottom: 1px !important;
+                vertical-align: bottom;
+                font-size: 8pt !important;
+            }
+
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+
+            .tblHeading {
+                padding-bottom: 2px;
+            }
+
+            .chkbx {
+                border: 0.5pt solid #000;
+                font-size: 6pt;
+                margin: 3px 4px;
+            }
+
+            .vaTop {
+                vertical-align: top;
+            }
+
+            .ml5 {
+                margin-left: 5px;
+            }
+
+            .ml10 {
+                margin-left: 10px;
+            }
+
+            .ml15 {
+                margin-left: 15px;
+            }
+
+            .ml20 {
+                margin-left: 20px;
+            }
+
+            .ml25 {
+                margin-left: 25px;
+            }
+
+            .mr5 {
+                margin-right: 5px;
+            }
+
+            .mr10 {
+                margin-right: 10px;
+            }
+
+            .mr15 {
+                margin-right: 15px;
+            }
+
+            .mr20 {
+                margin-right: 20px;
+            }
+
+            .mr25 {
+                margin-right: 25px;
+            }
+
+            .mt2 {
+                margin-top: 2px;
+            }
+
+            .mt3 {
+                margin-top: 3px;
+            }
+
+            .mt5 {
+                margin-top: 5px;
+            }
+
+            .mt10 {
+                margin-top: 10px;
+            }
+
+            .mt15 {
+                margin-top: 15px;
+            }
+
+            .mt20 {
+                margin-top: 20px;
+            }
+
+            .mt25 {
+                margin-top: 25px;
+            }
+
+            .mt30 {
+                margin-top: 30px;
+            }
+
+            .fs7 {
+                font-size: 7px;
+            }
+
+            .fs8 {
+                font-size: 8px;
+            }
+
+            .fs9 {
+                font-size: 9px;
+            }
+
+            .fs10 {
+                font-size: 10px;
+            }
+
+            .fs11 {
+                font-size: 11px;
+            }
+
+            .fs12 {
+                font-size: 12px;
+            }
+
+            p {
+                margin-top: 0px !important;
+                margin-bottom: 0px !important;
+            }
+
+            /*#tblLabor tbody tr td{
+                height:15px;
+            }*/
+        </style>
+    </head>
+    <body>
+    <div class="header">
+        <table class="w100">
+            <tr>
+                <td width="30%">
+                    <div class="ml20">
+                        <apex:outputField value="{!CompanySetup.Company_Logo__c}"/>
+                    </div>
+                </td>
+                <td class="vaTop alignCenter">
+                    INDUSTRIAL / ENVIRONMENTAL SERVICES
+                    <div class="b alignCenter">
+                        800-7-SPILLS
+                    </div>
+                </td>
+                <td class="pageNumber vaTop " width="30%">
+                    <div style="float:right;" class="mr10">
+                        <table>
+                            <tr>
+                                <td>
+                                    T&amp;M #
+                                </td>
+                                <td colspan="3" class="alignCenter"
+                                    style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                    {!theTM.Name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Page &nbsp;
+                                </td>
+                                <td class="alignCenter" style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                    <span class="pagenumber"/>
+                                </td>
+                                <td>
+                                    of
+                                </td>
+                                <td class="alignCenter" style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                    <span class="pagecount"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="">
+        <div>
+            <table class="w100  tblGeneral" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="w50">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    DATE
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                        <apex:param value="{!theTM.Scheduled_Date__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="w45">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    SALES ORDER #
+                                </td>
+                                <td>
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Sales_Order__r.Name}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w50">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    CUSTOMER NAME
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Bill_To_Customer__r.Name}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="w45">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    CONTACT NAME
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Site_Contact__c}
+                                    {!IF(theTM.Site_Contact__c != null && theTM.Site_Phone_No__c != null, ' - ' + theTM.Site_Phone_No__c, theTM.Site_Phone_No__c)}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w50">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    CUSTOMER PO #
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Customer_PO_No__c}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="w45">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    SITE LOCATION
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!IF(theTM.Print_Site_Name__c == true,
+                                            theTM.Site_Name__c,
+                                            theTM.Site_Street__c)}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w50">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                    BILLING ADDRESS
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Bill_to_Customer__r.BillingStreet}, {!theTM.Bill_to_Customer__r.BillingCity}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="w45">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                </td>
+                                <td colspan="2" style="border-bottom: 1px solid black;">
+                                    {!IF(theTM.Print_Site_Name__c == true,
+                                    theTM.Site_Street__c + ', ' + theTM.Site_City__c + ', ' + theTM.Site_State__c + ' ' + theTM.Site_Postal_Code__c,
+                                    theTM.Site_City__c + ', ' + theTM.Site_State__c + ' ' + theTM.Site_Postal_Code__c)}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w50">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="w30 b">
+                                </td>
+                                <td class="w70" style="border-bottom: 1px solid black;">
+                                    {!theTM.Bill_to_Customer__r.BillingState}
+                                    , {!theTM.Bill_to_Customer__r.BillingCountry}
+                                    , {!theTM.Bill_to_Customer__r.BillingPostalCode}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="w45 vaTop">
+                        <table width="100%" class="tblInsideGeneral">
+                            <tr>
+                                <td class="vaTop" style="font-size:10px;">
+                                    <apex:outputText value="{!checkbxUrl[false]}" escape="false"/>
+                                    Job Complete
+                                    <div style="font-size:10px;">
+                                        <apex:outputText value="{!checkbxUrl[theTM.Prevailing_Wage_Job__c]}"
+                                                         escape="false"/>
+                                        Prevailing Wage
+                                    </div>
+                                </td>
+                                <td class="vaTop" style="font-size:10px;">
+                                    <apex:outputText value="{!checkbxUrl[false]}" escape="false"/>
+                                    Job Incomplete
+                                    <div style="font-size:10px;">
+                                        <apex:outputText value="{!checkbxUrl[false]}" escape="false"/>
+                                        Per Diem, If Yes How Many?_____
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="fs12 b tblHeading">
+            LABOR
+        </div>
+
+        <apex:outputPanel rendered="{!theTM.Bill_to_Customer__r.Print_TM_Time_Detail__c == true && theTM.Sales_Order__r.Sales_Order_Type__r.Name != 'Virus Decon'}">
+            <div id="divLabor" class="tblOuterBorder">
+            <table class="w100" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="width:80%;">
+                        <table id="tblLabor" class="tblInnerBorders w100">
+                            <thead>
+                            <th>
+                                NAME
+                            </th>
+                            <th class="alignCenter">
+                                TITLE
+                            </th>
+                            <th class="alignCenter">
+                                FLEET ID
+                            </th>
+                            <th class="alignCenter">
+                                JOB START
+                            </th>
+                            <th class="alignCenter">
+                                SITE START
+                            </th>
+                            <th class="alignCenter">
+                                SITE END
+                            </th>
+                            <th class="alignCenter">
+                                JOB END
+                            </th>
+                            <th class="alignCenter" width="15%">
+                                NOTES
+                            </th>
+                            </thead>
+                            <tbody>
+                            <apex:repeat value="{!TMLFieldListLaborWithNotes}" var="line">
+                                <tr>
+                                   <td style="min-width:100px">
+                                       {!line.tml.Resource_Name__c}
+                                    </td>
+                                    <td class="alignLeft">
+                                        <apex:outputText value="{0}" rendered="{!LEN(line.tml.Description__c) < 30 && ISBLANK(line.contractLineTMDescription)}">
+                                            <apex:param value="{!line.tml.Description__c}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value="{0}" rendered="{!LEN(line.tml.Description__c) >= 30 && ISBLANK(line.contractLineTMDescription)}" style="font-size:6pt">
+                                            <apex:param value="{!line.tml.Description__c}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value="{0}" rendered="{!LEN(line.contractLineTMDescription) < 30 && NOT(ISBLANK(line.contractLineTMDescription))}">
+                                            <apex:param value="{!line.contractLineTMDescription}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value="{0}" rendered="{!LEN(line.contractLineTMDescription) >= 30 && NOT(ISBLANK(line.contractLineTMDescription))}" style="font-size:6pt">
+                                            <apex:param value="{!line.contractLineTMDescription}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignLeft">
+                                        {!line.tml.Fleet_No__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!line.tml.Job_Start_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!line.tml.Site_Start_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!line.tml.Site_End_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!line.tml.Job_End_Time__c}"/>
+                                    </td>
+                                    <td class="alignLeft b">
+                                        <apex:outputText value="{!line.note}"/>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!theTM.Bill_to_Customer__r.Print_TM_Time_Detail__c != true || theTM.Sales_Order__r.Sales_Order_Type__r.Name == 'Virus Decon'}">
+            <div id="divLabor" class="tblOuterBorder">
+                <table class="w100" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="width:80%;">
+                            <table id="tblLabor" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    NAME
+                                </th>
+                                <th class="alignCenter">
+                                    TITLE
+                                </th>
+                                <th class="alignCenter">
+                                    FLEET ID
+                                </th>
+                                <th class="alignCenter">
+                                    START TIME
+                                </th>
+                                <th class="alignCenter">
+                                    END TIME
+                                </th>
+                                <th class="alignCenter" width="15%">
+                                    NOTES
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!TMLFieldListLaborWithNotes}" var="line">
+                                    <tr>
+                                        <td style="min-width:100px">
+                                            {!line.tml.Resource_Name__c}
+                                        </td>
+                                        <td class="alignLeft">
+                                            <apex:outputText value="{0}" rendered="{!LEN(line.tml.Description__c) < 30 && ISBLANK(line.contractLineTMDescription)}">
+                                                <apex:param value="{!line.tml.Description__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText value="{0}" rendered="{!LEN(line.tml.Description__c) >= 30 && ISBLANK(line.contractLineTMDescription)}" style="font-size:6pt">
+                                                <apex:param value="{!line.tml.Description__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText value="{0}" rendered="{!LEN(line.contractLineTMDescription) < 30 && NOT(ISBLANK(line.contractLineTMDescription))}">
+                                                <apex:param value="{!line.contractLineTMDescription}"/>
+                                            </apex:outputText>
+                                            <apex:outputText value="{0}" rendered="{!LEN(line.contractLineTMDescription) >= 30 && NOT(ISBLANK(line.contractLineTMDescription))}" style="font-size:6pt">
+                                                <apex:param value="{!line.contractLineTMDescription}"/>
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignLeft">
+                                            {!line.tml.Fleet_No__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputField value="{!line.tml.Job_Start_Time__c}"/>
+                                        </td>
+                                        <td class="alignCenter">
+                                            <apex:outputField value="{!line.tml.Job_End_Time__c}"/>
+                                        </td>
+                                        <td class="alignLeft b">
+                                            <apex:outputText value="{!line.note}"/>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+
+        <div class="w100 mt3">
+            <table class="w100" style="border-collapse: collapse;" cellpadding="0">
+                <tr>
+                    <td style="width:57%;" class="vaTop">
+                        <div id="divEquipment" class="tblOuterBorder">
+                            <table id="tblEquipment" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    EQUIPMENT
+                                </th>
+                                <th class="alignCenter">
+                                    QTY
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignCenter">
+                                    ID#
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!TMLFieldListEquipment}" var="line">
+                                    <tr>
+                                        <td style="width:49%">
+                                            <apex:outputText value="{0}" rendered="{!ISBLANK(line.contractLineTMDescription)}">
+                                                <apex:param value="{!line.tml.Description__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(line.contractLineTMDescription))}">
+                                                <apex:param value="{!line.contractLineTMDescription}"/>
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter" style="width:13%">
+                                            <apex:outputText value="{0, Number, ##0.00}"
+                                                             rendered="{!line.tml.Quantity__c != null && line.tml.Quantity__c != 0}">
+                                                <apex:param value="{!line.tml.Quantity__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!line.tml.Quantity__c == null || line.tml.Quantity__c == 0}">
+                                                &nbsp;
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter" style="width:13%">
+                                            {!line.tml.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!line.tml.Resource__r.Fleet_Number__c}
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </td>
+                    <td style="width:1%;"></td>
+                    <td style="width:42%;" class="vaTop">
+
+                        <div id="divMaterials" class="tblOuterBorder">
+                            <table id="tblMaterials" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    MATERIALS
+                                </th>
+                                <th class="alignCenter">
+                                    QTY
+                                </th>
+                                <th>
+                                    UOM
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!TMLFieldListMaterials}" var="line">
+                                    <tr>
+                                        <td>
+                                            <apex:outputText value="{0}" rendered="{!ISBLANK(line.contractLineTMDescription)}">
+                                                <apex:param value="{!line.tml.Description__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(line.contractLineTMDescription))}">
+                                                <apex:param value="{!line.contractLineTMDescription}"/>
+                                            </apex:outputText>
+                                        </td>
+                                        <td class="alignCenter" style="width:15%">
+                                            <apex:outputText value="{0, Number, ##0.00}"
+                                                             rendered="{!line.tml.Quantity__c != null && line.tml.Quantity__c != 0}">
+                                                <apex:param value="{!line.tml.Quantity__c}"/>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!line.tml.Quantity__c == null || line.tml.Quantity__c == 0}">
+                                                &nbsp;
+                                            </apex:outputText>
+                                        </td>
+                                        <td style="width:17%">
+                                            {!line.tml.Unit_of_Measure__r.Name}
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt3" style="border:1px solid black;">
+            <div class="b alignCenter" style="padding:.5px;font-size:7.4pt;background-color: #D3D3D3;">
+                JOB DESCRIPTION / COMMENTS
+            </div>
+            <div style="min-height:70px;border-top:1px solid black">
+                <div style="margin: 5px,5px,5px,5px; overflow-wrap: break-word; word-wrap: break-word;">
+                    <apex:outputText value="{!SUBSTITUTE(SUBSTITUTE(JSENCODE(theTM.Site_Scope__c) & '\n' & JSENCODE(theTM.Customer_Comments__c), '\r\n', '\n'),'\n','<br/>')}" escape="false" />
+                </div>
+            </div>
+        </div>
+
+        <div class="w100">
+            <table class="w100" style="border-collapse: collapse;" cellpadding="0">
+                <tr>
+                    <td style="width:53%;" class="vaTop">
+                        <div id="divWasteDisposal" class="tblOuterBorder">
+                            <table id="tblWasteDisposal" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    MANIFEST #
+                                </th>
+                                <th class="alignCenter">
+                                    WASTE DESCRIPTION
+                                </th>
+                                <th class="alignCenter">
+                                    QTY
+                                </th>
+                                <th class="alignCenter">
+                                    UOM
+                                </th>
+                                <th class="alignCenter">
+                                    FACILITY
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!TMLFieldListWasteDisposal}" var="tml">
+                                    <tr>
+                                        <td style="width:25%">
+                                            {!tml.BOL_Manifest__c}
+                                        </td>
+                                        <td class="alignCenter" style="width:30%">
+                                            {!tml.Description__c}&nbsp;
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!tml.Quantity__c}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!tml.Unit_of_Measure__r.Name}
+                                        </td>
+                                        <td class="alignCenter">
+                                            {!tml.Facility__r.Name}
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="width:1%;"></td>
+                    <td style="width:46%;" class="vaTop">
+                        <div id="divSubContractors" class="tblOuterBorder">
+                            <table id="tblSubContractors" class="tblInnerBorders w100">
+                                <thead>
+                                <th>
+                                    SUBCONTRACTOR
+                                </th>
+                                <th class="alignCenter">
+                                    DESCRIPTION
+                                </th>
+                                </thead>
+                                <tbody>
+                                <apex:repeat value="{!TMLFieldListSubcontractors}" var="tml">
+                                    <tr>
+                                        <td class="w50">
+                                            &nbsp;
+                                        </td>
+                                        <td class="w50 alignCenter">
+                                            {!tml.Description__c}&nbsp;
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <div>
+            <table class="w100  tblGeneral">
+                <tr>
+                    <td width="33%">SUPERVISOR SIGNATURE</td>
+                    <td width="34%">CUSTOMER SIGNATURE</td>
+                    <td width="34%">CUSTOMER SIGNATURE</td>
+                </tr>
+                <tr>
+                    <td valign="bottom">
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            X
+                            <apex:outputPanel rendered="{!SupervisorSignatureFileId != null}">
+                                <apex:image url="/servlet/servlet.FileDownload?file={!SupervisorSignatureFileId}" style="width:100px;height:45px;" />
+                            </apex:outputPanel>
+                        </div>
+                    </td>
+
+                    <td valign="bottom">
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            <span style="display: inline-block;width: 140px;">
+                                X
+                                <apex:outputPanel rendered="{!CustomerANotAvailable == true}">
+                                    <apex:outputPanel rendered="{!CustomerARequestingSignature == true}">
+                                        <apex:outputLabel >&nbsp;Requesting Signature</apex:outputLabel>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!CustomerARequestingSignature != true}">
+                                        <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!CustomerANotAvailable != true && CustomerASignatureFileId != null}">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!CustomerASignatureFileId}" style="width:100px;height:45px;" />
+                                </apex:outputPanel>
+                            </span>
+
+                            <span style="display: inline-block;">
+                                <apex:outputPanel rendered="{!CustomerANotAvailable != true}">
+                                    <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                        <apex:param value="{!CustomerASignatureDate}"/>
+                                    </apex:outputText>
+                                </apex:outputPanel>
+                            </span>
+                        </div>
+                    </td>
+
+                    <td valign="bottom">
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            <span style="display: inline-block; width: 140px;">
+                                X
+                                <apex:outputPanel rendered="{!CustomerBNotAvailable == true}">
+                                    <apex:outputPanel rendered="{!CustomerBRequestingSignature == true}">
+                                        <apex:outputLabel >&nbsp;Requesting Signature</apex:outputLabel>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!CustomerBRequestingSignature != true}">
+                                        <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!CustomerBNotAvailable != true && CustomerBSignatureFileId != null}">
+                                    <apex:image url="/servlet/servlet.FileDownload?file={!CustomerBSignatureFileId}" style="width:100px;height:45px;" />
+                                </apex:outputPanel>
+                            </span>
+
+                            <span style="display: inline-block;">
+                                <apex:outputPanel rendered="{!CustomerBNotAvailable != true}">
+                                    <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                        <apex:param value="{!CustomerBSignatureDate}"/>
+                                    </apex:outputText>
+                                </apex:outputPanel>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            {!SupervisorName}&nbsp;
+                        </div>
+                    </td>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            {!CustomerAName}&nbsp;
+                        </div>
+                    </td>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 80%;">
+                            {!CustomerBName}&nbsp;
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        Signature is client's acceptance of labor, equipment, inventory, and general terms and conditions as stated on the reverse side.
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="border-top:1px solid black;">
+            <table class="w100">
+                <tr>
+                    <td>
+                        <div class="i fs7">
+                            OPS-FM-115B-IDS
+                        </div>
+                    </td>
+                    <td class="pageNumber vaTop alignRight">
+                        <div class="i fs7">
+                            Revised: May 2018
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    </body>
+    </html>
+    -->
+</apex:page>

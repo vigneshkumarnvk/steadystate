@@ -1,0 +1,17 @@
+<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+    <apex:sectionHeader title="New Sales Invoice"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/>
+                <br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageMessage severity="ERROR" strength="3" summary="You must create new invoices from T&M."></apex:pageMessage>
+            <apex:outputLink > </apex:outputLink>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Return" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

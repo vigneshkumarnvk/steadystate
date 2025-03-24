@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EQAI_Work_Order_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>EQAI Work Order Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Industrial Services</fullName>
+                <default>false</default>
+                <label>Industrial Services</label>
+            </value>
+            <value>
+                <fullName>Lab Packs</fullName>
+                <default>false</default>
+                <label>Lab Packs</label>
+            </value>
+            <value>
+                <fullName>Emergency Response</fullName>
+                <default>false</default>
+                <label>Emergency Response</label>
+            </value>
+            <value>
+                <fullName>Marine Services</fullName>
+                <default>false</default>
+                <label>Marine Services</label>
+            </value>
+            <value>
+                <fullName>Remediation Project Management</fullName>
+                <default>false</default>
+                <label>Remediation Project Management</label>
+            </value>
+            <value>
+                <fullName>Self Waste Transportation and Disposal</fullName>
+                <default>false</default>
+                <label>Self Waste Transportation and Disposal</label>
+            </value>
+            <value>
+                <fullName>Other Services</fullName>
+                <default>false</default>
+                <label>Other Services</label>
+            </value>
+            <value>
+                <fullName>HHW Services</fullName>
+                <default>false</default>
+                <label>HHW Services</label>
+            </value>
+            <value>
+                <fullName>LTL</fullName>
+                <default>false</default>
+                <label>LTL</label>
+            </value>
+            <value>
+                <fullName>Brokered Trans/3rd Party Disposal</fullName>
+                <default>false</default>
+                <label>Brokered Trans/3rd Party Disposal</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

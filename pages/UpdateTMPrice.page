@@ -1,0 +1,28 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <apex:sectionHeader subtitle="Update Worksheet Pricing"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Are you sure to update pricing for all related billing worksheet lines?
+                <!--
+                <br/><br/>
+                <b>WARNING: This routine includes all sales lines for the order even if they have 0 Unit Price.</b>
+                <br/><br/>
+                -->
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <!--job task-->
+                <!--
+                <apex:commandButton value="Update TM Price" action="{!updateTMPrice}" reRender="thePageBlock"
+                                    rendered="{!isApproved == true}" status="loadingstatus" />
+                -->
+                <apex:commandButton value="Update Worksheet Pricing" action="{!updateTMPrice}" reRender="thePageBlock"
+                                    rendered="{!isApproved == true && isUpdated == false}" status="loadingstatus" />
+                <!--job task-->
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

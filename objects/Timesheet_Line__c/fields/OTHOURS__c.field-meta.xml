@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OTHOURS__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+OR(
+WEEKDAY(Scheduled_Date__c) = 1, /* Sunday */
+WEEKDAY(Scheduled_Date__c) = 7 /* Saturday */
+),
+(End_Time__c - Start_Time__c) / 3600000, /* Weekend, not considered overtime */
+(
+if(OR(OT_END_Time__c,OT_Start_Time__c),
+For_End_Time__c
+-
+For_Start_Time__c
+,0)) / 3600000
+
+)</formula>
+    <label>OT HOURS</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

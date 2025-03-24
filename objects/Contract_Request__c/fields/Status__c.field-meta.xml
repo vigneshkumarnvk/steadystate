@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Approved - Added to Existing Contract</fullName>
+                <default>false</default>
+                <label>Approved - Added to Existing Contract</label>
+            </value>
+            <value>
+                <fullName>Approved for Entry</fullName>
+                <default>false</default>
+                <label>Approved for Entry</label>
+            </value>
+            <value>
+                <fullName>Closed - Documentation Only</fullName>
+                <default>false</default>
+                <label>Closed - Documentation Only</label>
+            </value>
+            <value>
+                <fullName>Closed - No Action</fullName>
+                <default>false</default>
+                <label>Closed - No Action</label>
+            </value>
+            <value>
+                <fullName>Closed – Required Details Never Submitted</fullName>
+                <default>false</default>
+                <label>Closed – Required Details Never Submitted</label>
+            </value>
+            <value>
+                <fullName>Entry Completed</fullName>
+                <default>false</default>
+                <label>Entry Completed</label>
+            </value>
+            <value>
+                <fullName>Pending Approval</fullName>
+                <default>true</default>
+                <label>Pending Entry Approval</label>
+            </value>
+            <value>
+                <fullName>Pending – Missing Documents</fullName>
+                <default>false</default>
+                <label>Pending – Missing Documents</label>
+            </value>
+            <value>
+                <fullName>Pending – Potential Duplicate</fullName>
+                <default>false</default>
+                <label>Pending – Potential Duplicate</label>
+            </value>
+            <value>
+                <fullName>Pending Waste Coding</fullName>
+                <default>false</default>
+                <label>Pending Waste Coding</label>
+            </value>
+            <value>
+                <fullName>Pending Legal Review</fullName>
+                <default>false</default>
+                <label>Pending Legal Review</label>
+            </value>
+            <value>
+                <fullName>Open</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Open</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

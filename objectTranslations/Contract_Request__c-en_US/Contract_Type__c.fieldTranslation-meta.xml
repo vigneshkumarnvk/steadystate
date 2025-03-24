@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Contract Type --></label>
+        <name>Contract_Type__c</name>
+        <picklistValues>
+            <masterLabel>Bond</masterLabel>
+            <translation><!-- Bond --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ER</masterLabel>
+            <translation><!-- ER --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HHW</masterLabel>
+            <translation><!-- HHW --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Industrial Maintenance</masterLabel>
+            <translation><!-- Industrial Maintenance --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lab Pack</masterLabel>
+            <translation><!-- Lab Pack --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MSA - without pricing</masterLabel>
+            <translation><!-- MSA - without pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MSA with Pricing</masterLabel>
+            <translation><!-- MSA with Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pricing Agreement</masterLabel>
+            <translation><!-- Pricing Agreement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Project Specific Agreement</masterLabel>
+            <translation><!-- Project Specific Agreement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T&amp;D</masterLabel>
+            <translation><!-- T&amp;D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Virus Decon</masterLabel>
+            <translation><!-- Virus Decon --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

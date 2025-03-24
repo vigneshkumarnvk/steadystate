@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales</fullName>
+    <active>true</active>
+    <businessProcess>Sales Opportunity</businessProcess>
+    <label>Sales</label>
+    <picklistValues>
+        <picklist>Bid_Bond_Special_forms_provided__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Bid_Bond__c</picklist>
+        <values>
+            <fullName>%2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>0</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>1%25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25 %28also L%26M bond%2C performance bond%2C %26 DRS guarantee bond%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25 Bid Bond %2B P%26P</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25 NTE %2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25 NTE %2420K Bid Bond %2B Performance Bond</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25 of the bid%2C to a maximum of %2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25%2C NTE %2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10%25%2C max %2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>20 percent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>20%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>20000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5%25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5%25 Bid Bond %2B labor and materials%2Fpayment bond</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5%25 of Value</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5%25 of the Bid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>50%25 Performance Bond</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BID</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bid Gaurantee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>N%2FA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NONE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not needed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not required</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Only if over %2435K</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>P%26P Bonds Required</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Performance Bond</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Performance Bond of %24500K Annually</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Required but not providing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SEE RFP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>See bid%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TBD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unknown</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes - 5%25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>bid bond%2C certified check or cashier%27s check in the amount of 10%25 of the bid%2C to a maximum of %2420%2C000</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>no bid bond%3B  %2425k P%2FP Bond</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>unknown go to portal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>unknown%3F</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>yes 10%25%2F %2420k</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>yes if over %24150K</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Bid_Type__c</picklist>
+        <values>
+            <fullName>RSES Atlantic Bid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSES National Bid</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>CapEx_Required__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Consent_of_Surety_Special_forms__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Consent_of_Surety__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ForecastCategoryName</picklist>
+        <values>
+            <fullName>Best Case</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Omitted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pipeline</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>How_did_we_obtain_this_bid_opportunity__c</picklist>
+        <values>
+            <fullName>AE%2FPC found opportunity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bid Subscription</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sent from customer direct to AE%2FPC</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Job_Type__c</picklist>
+        <values>
+            <fullName>Backhauls</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dewatering %26 Treatment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disposal - Haz Bulk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disposal - Haz Drum</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disposal - NonHaz Bulk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disposal - NonHaz Drum</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Drum Management %28LTL%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Industrial Well</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Landfill</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Recycle</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Retail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Thermal Reclamation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ES Wastewater</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Emergency Response</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Household Hazardous Waste</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydroexcavation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Industrial - Nested</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Industrial - Shutdown%2FTurnaround</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Industrial Cleaning</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lab Pack</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Major Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marine Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rent Revenue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retail Petroleum Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Soil Remediation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Solid Waste</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stand-by ER Agreement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>T%26D - Nested</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TSDF %2F 10 Day</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Training%3B Safety Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transportation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Virus Decon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waste Minimization</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>2022 Leads</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baltimore Cross Sell Pilot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CIS- Construction Information Systems%2C Inc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contractor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Full Family</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Greensboro Cross Sell Pilot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Inbound Calls</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Knowsy</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Networking Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG Cross Sell Pilot</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Republic Services Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Specialist Research</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uproar Media Research</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uproar Research</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Website</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>e-Manifest</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Lead_Type__c</picklist>
+        <values>
+            <fullName>Ecoflo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Public</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Republic</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Line_of_Business__c</picklist>
+        <values>
+            <fullName>Field Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Industrial Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>T%26D</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Loss_Reason__c</picklist>
+        <values>
+            <fullName>Competitor - Logistical Advantage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Competitor - Pricing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Competitor - Technical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Competitor - Unknown</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Progress</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ownership_Type__c</picklist>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Equity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private but not PE</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Prevailing_Wage__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Public_Lead_Source__c</picklist>
+        <values>
+            <fullName>BidNet Direct</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BidSync</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bonfire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Envirobidnet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Governmentbids</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NYS Contract Reporter</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other %E2%80%93 Not Listed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>State%2FCounty%2FCity Portal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Referring_Vertical__c</picklist>
+        <values>
+            <fullName>ACV</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ecoflo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG Environmental Services %E2%80%93 TX</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG Field Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG Manufacturing%2FSpecial Waste</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG Municipal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RSG National Accounts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unknown</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Segment__c</picklist>
+        <values>
+            <fullName>EWS Rental</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Emergency Response</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>FIS</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Remediation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>WS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Service_Center_Facility__c</picklist>
+        <values>
+            <fullName>Aston%2C PA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baltimore%2C MD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Clayton%2C NJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Envirotech</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facility - Deep Green</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facility - Elizabeth</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facility - Lewisberry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro - Indiana</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro - MD and VA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro - PA and NJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro - Wisconsin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Major Events</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metro - Brooklyn%2C NY</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metro - Elizabeth%2C NJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metro - Rahway</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metro - Transportation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>N%2E PA - Harrisburg</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>N%2E PA - New Castle</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>N%2E PA - Williamsport</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New England - Maine</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New England - Mass</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Signature_Type__c</picklist>
+        <values>
+            <fullName>Original Signatures Required</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scanned Version Accepted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Submittal_Type__c</picklist>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Online Portal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Existing Customer - Existing Repetitive Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing Customer - New Repetitive Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing Customer - One Time Project</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Customer - New Repetitive Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Customer - One Time Project</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

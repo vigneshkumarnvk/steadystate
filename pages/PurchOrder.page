@@ -1,0 +1,1095 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Purchase_Order__c"
+           extensions="PurchOrderController" id="thePage" sidebar="false">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <head>
+        <style>
+            /*.purchaseLineWrap .lookupInput input[type='text'], .slds-scope .lookupInput input[type='text'] {
+                    padding-right: 2.25rem;
+                    max-width: 120px;
+                    min-width: 120px;
+                }*/
+            /* lookup button does not position far right
+                .purchaseLineWrap input[type="text"], .slds-scope input[type="text"] {
+                    min-width: 100px !important;
+                    max-width: 100px;
+                }*/
+            /*
+                        body td.actionColumn:before, .slds-scope td.actionColumn:before {
+                            display:none;
+                        }
+
+                        body .list .actionColumn, .slds-scope .list .actionColumn {
+                            padding-left: 0px;
+                        }
+                        */
+        </style>
+    </head>
+
+    <script>
+        $(document).ready(function () {
+            $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.thePLTable}")).find("tbody").sortable().on("sortstart", function (event, ui) {
+            }).on("sortstop", function (event, ui) {
+            }).on("sortchange", function (event, ui) {
+            }).on("sortupdate", function (event, ui) {
+                var elements = $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.thePLTable}")).find("tbody").find('tr').find('td').find('input');
+                var j = 0;
+                for (var i = 0; i < elements.length; i++) {
+                    if (elements[i].id.indexOf(":theLineNo") > 0) {
+                        j++;
+                        elements[i].value = j * 10;
+                    }
+                }
+            });
+        });
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        var focuselmnt;
+
+        function updateLookupHref(salesOrderField) {
+            var salesOrderFieldId = salesOrderField.getAttribute('id');
+            var names = salesOrderFieldId.split(':');
+            names[names.length - 1] = 'theLineServiceCenter_lkid';
+            var lineServiceCenterFieldId = names.join(':');
+            
+            var lineServiceCenterField = document.getElementById(lineServiceCenterFieldId);
+            var lineServiceCenterId = lineServiceCenterField.getAttribute('value');
+            
+            var href = salesOrderField.getAttribute('href');
+            if (href != null) {
+                var elements = href.split('%26');
+                for (var i = 0; i <elements.length; i++) {
+                    if (elements[i].startsWith('dplp')) {
+                        elements[i] = 'dplp%3D%27%20%2B%20' + '%27%5Bnull%2C%22' + lineServiceCenterId + '%22%5D%27' + '%2C670%2C%271%27%2C%27'; //overite depending lookup value and append ",670,'1','"
+                    }
+                }            
+                href = elements.join('%26');
+                salesOrderField.setAttribute('href', href);
+            }
+            document.getElementById('message').value = href;
+        }
+        
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theItem' || fieldName == 'theUOM' || fieldName == 'theLineServiceCenter' || fieldName == 'theLineSalesOrder') {
+                if (fieldThatChanged.value.trim() == '') {
+                    var newFieldValue = '';
+                } else {
+                    var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+                }
+            } else if(fieldName == 'theLineDirectGLAccount') { //Ticket 13388 >>
+                if(fieldThatChanged.checked == true){
+                    newFieldValue = 'true';
+                } else {
+                    newFieldValue = 'false';
+                } //Ticket 13388 <<
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+
+            validateField(fieldName, newFieldValue, lineNo);
+        }
+
+        function confirmReceiptDate(ctrl) {
+            var oldValue = ctrl.defaultValue;
+            var newValue = ctrl.value;
+            if (confirm('Expected Receipt Date on open Purchase Lines will be updated? Do you want to continue?')) {
+                ctrl.defaultValue = newValue;
+                //updateReceiptDate();
+            } else {
+                ctrl.value = oldValue;
+            }
+        }
+
+        function setFocusElement(ctrl) {
+            focuselmnt = ctrl.id;
+        }
+
+        function validateBuyFromVendor(ctrl) {
+            validateBuyFromVendor();
+        }
+
+        /*
+        function validateBillingVendor(ctrl) {
+            validateBillingVendor();
+        }
+        */
+
+        function validateShipToAddress(ctrl) {
+            validateShipToAddress();
+        }
+
+        function validatePaymentTerm(ctrl) {
+            validatePaymentTerm();
+        }
+
+        //function validateCurreny(ctrl) {
+        //    validateCurreny();
+        //}
+        function validateBillingContact(ctrl) {
+            validateBillingContact();
+        }
+
+        function validateServiceCenter(ctrl) {
+            validateServiceCenter();
+        }
+
+        function validatethePORequestor(ctrl) {
+            validatethePORequestor();
+        }
+
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="{!title}" subtitle="{!Purchase_Order__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="message"></apex:pageMessages>
+            <apex:pageBlockButtons rendered="{!PO.Coupa_Id__c == null}">
+                <apex:commandButton value="Save" action="{!save}" status="loadingstatus" rerender="thePageBlock"/>
+                <apex:commandButton value="Quick Save" action="{!quicksave}" status="loadingstatus"
+                                    rerender="thePageBlock"/>
+                <apex:commandButton value="Save + Submit for Approval" action="{!saveAndSubmit}" status="loadingstatus"
+                                    rerender="thePageBlock" rendered="{!open}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" status="loadingstatus" rerender="thePageBlock"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockButtons rendered="{!PO.Coupa_Id__c != null}">
+                <apex:commandButton value="Cancel" action="{!cancel}" status="loadingstatus" rerender="thePageBlock"/>
+            </apex:pageBlockButtons>
+
+            <apex:actionFunction name="validateBuyFromVendor" action="{!validateBuyFromVendor}"
+                                 reRender="thePageBlock,PLTotal" immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validatePaymentTerm" action="{!validatePaymentTerm}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validatethePORequestor" action="{!validatethePORequestor}"
+                                 reRender="thePageBlock" immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateShipToAddress" action="{!validateShipToAddress}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateBillingContact" action="{!validateBillingContact}"
+                                 reRender="thePageBlock" immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateServiceCenter" action="{!validateServiceCenter}" reRender="thePageBlock,thePLTable"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateField" action="{!validateField}" immediate="true"
+                                 reRender="thePLTable,PLTotal,message,message2" status="loadingstatus"
+                                 oncomplete="document.getElementById(focuselmnt).focus();">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+
+            <apex:pageBlockSection title="General" collapsible="true" id="thePageBlockSection" rendered="{!PO.Coupa_Id__c == null}">
+                <!-- PO Type -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Order_Type__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Order_Type__c}" rendered="{!open}"/>
+                        <apex:outputText value="{!PO.Order_Type__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--Document Status-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Document_Status__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!PO.Document_Status__c}"/>
+                </apex:pageBlockSectionItem>
+
+                <!--Buy-from Vendor-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Buy_from_Vendor__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputPanel rendered="{!open}">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <c:TypeaheadComponent componentId="{!$Component.thePageBlockSection}:theBuyFromVendor"
+                                                      style="width: 200px"
+                                                      minSearchLength="1"
+                                                      stealFocus="true"
+                                                      allowtoBlank="true"
+                                                      sObjectType="Purchase_Order__c"
+                                                      sObjectField="Buy_from_Vendor__c"
+                                                      sObject="{!PO}"
+                                                      onchange="validateBuyFromVendor(this)"/>
+                                <!--
+                                <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theBuyFromVendor"
+                                                style="width: 200px" useSOSL="false" minSearchLength="1" stealFocus="true"
+                                                sObject="{!PO}" sObjectType="Purchase_Order__c" sObjectField="Buy_from_Vendor__c"
+                                                onchange="validateBuyFromVendor(this)"
+    
+                                                LookupObject="Account"
+                                                LinkFieldName="Name"
+                                                FieldSetName="AccountFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateBuyFromVendor"
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                               fltr7="true" />
+                                -->
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputField value="{!PO.Buy_from_Vendor__r.Name}" rendered="{!NOT(open)}"/>                        
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--Closed-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Closed__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <!--ticket#16061--> 
+                        <!--
+                        <apex:inputField value="{!PO.Closed__c}" rendered="{!OR(open, PO.Document_Status__c == 'Partially Received') }" />
+                        <apex:outputField value="{!PO.Closed__c}" rendered="{!AND(NOT(open), PO.Document_Status__c != 'Partially Received')}"/>
+                        -->
+                        <apex:inputField value="{!PO.Closed__c}" rendered="{!OR(open, OR(PO.Document_Status__c == 'Partially Received', PO.Document_Status__c == 'Approved'))}" />
+                        <apex:outputField value="{!PO.Closed__c}" rendered="{!AND(NOT(open), AND(PO.Document_Status__c != 'Partially Received', PO.Document_Status__c != 'Approved'))}"/>
+                        <!--ticket#16061-->
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <!--empty slot-->
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+
+                <!--Sync'd-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Sync_d__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Sync_d__c}" rendered="{!IntegrationAdministrator == true}"/>
+                        <apex:outputField value="{!PO.Sync_d__c}" rendered="{!IntegrationAdministrator != true}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <!--Inter-co Account-->
+                <apex:pageBlockSectionItem >
+                    <!--
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Inter_co_Account__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputcheckbox value="{!PO.Inter_co_Account__c}" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.Inter_co_Account__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                    -->
+                </apex:pageBlockSectionItem>
+                                
+                <!--Requestor-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.PO_Requestor__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.PO_Requestor__c}" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.PO_Requestor__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--Service Center-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Service_Center__c.label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputPanel rendered="{!open}">
+                            <div class="requiredInput">
+                                <div class="requiredBlock"></div>
+                                <!--
+                                <c:TypeaheadComponent componentId="{!$Component.thePageBlockSection}:theServiceCenter"
+                                                      style="width: 200px"
+                                                      allowtoBlank="true"
+                                                      secondaryDisplayField="Description__c"
+                                                      minSearchLength="1"
+                                                      stealFocus="true"
+                                                      sObject="{!PO}" sObjectType="Purchase_Order__c" sObjectField="Service_Center__c"
+                                                      onchange="validateServiceCenter(this);" />
+                                -->
+    
+                                <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theServiceCenter"
+                                                style="width: 200px" useSOSL="false" minSearchLength="1" stealFocus="true"
+                                                sObject="{!PO}" sObjectType="Purchase_Order__c"
+                                                sObjectField="Service_Center__c"
+                                                onchange="validateServiceCenter(this);"
+    
+                                                LookupObject="Service_Center__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="ServiceCenterFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateServiceCenter"
+    
+                                                FilterName1="Subsidiary_Company__c"
+                                                FilterNameValue1="{!PO.Subsidiary_Company__c}"
+                                                FilterOperation1="Subsidiary_Company__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Subsidiary_Company__c"
+                                                FilterTypeValue1="String"
+    
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"/>
+                            </div>
+                        </apex:outputPanel>
+                        <apex:outputField value="{!PO.Service_Center__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--Order Date-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Order_Date__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Order_Date__c}" rendered="{!open}">
+                            <apex:actionSupport event="onchange" action="{!validateOrderDate}" reRender="thePageBlock,PLTotal" status="loadingstatus"/>
+                        </apex:inputField>
+                        <apex:outputField value="{!PO.Order_Date__c}" rendered="{!NOT(open)}"/>                        
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <!-- NAV Vendor Number -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Subsidiary_Vendor_Account__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!PO.Subsidiary_Vendor_Account__c}"/>
+                </apex:pageBlockSectionItem>
+                 
+                <!-- Sub Company -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Subsidiary_Company__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!PO.Subsidiary_Company__c}"/>
+                </apex:pageBlockSectionItem>
+                
+                <!--Expected Receipt Date-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Expected_Receipt_Date__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Expected_Receipt_Date__c}" onchange="confirmReceiptDate(this);" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.Expected_Receipt_Date__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                    
+                <!--Delivery Contact Name-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Delivery_Contact_Name__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Delivery_Contact_Name__c}" rendered="{!open}"/>
+                        <apex:outputText value="{!PO.Delivery_Contact_Name__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <!--Delivery Contact Phone-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Contact_Phone_No__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Contact_Phone_No__c}" rendered="{!open}"/>
+                        <apex:outputText value="{!PO.Contact_Phone_No__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Payment Term -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Payment_Term__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputpanel rendered="{!open}">
+                            <!--
+                            <c:TypeaheadComponent componentId="{!$Component.billingSection}:thePaymentTerm"
+                                                  style="width: 200px"
+                                                  allowtoBlank="true"
+                                                  secondaryDisplayField="Description__c"
+                                                  minSearchLength="1"
+                                                  sObject="{!PO}" sObjectType="Purchase_Order__c"
+                                                  sObjectField="Payment_Term__c"
+                                                  onchange="validatePaymentTerm(this);" />
+                            -->
+                            <c:CustomLookup componentId="{!$Component.billingSection}:thePaymentTerm" style="width: 200px"
+                                            useSOSL="false" minSearchLength="1"
+                                            sObject="{!PO}" sObjectType="Purchase_Order__c" sObjectField="Payment_Term__c"
+                                            onchange="validatePaymentTerm(this);"
+                                            LookupObject="Payment_Term__c"
+                                            LinkFieldName="Name"
+                                            FieldSetName="PaymentTermFieldSet"
+                                            LookupType="ID"
+                                            RunValidation="True"
+                                            ValidateFunction="validatePaymentTerm"
+    
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:outputpanel>
+                        <apex:outputField value="{!PO.Payment_Term__r.Name}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <!-- Cost Replace -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Cost_Replace__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputCheckbox value="{!PO.Cost_Replace__c}" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.Cost_Replace__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Markup -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Markup__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputCheckbox value="{!PO.Markup__c}" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.Markup__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Purchasing Contact -->
+                <!-- Ticket# 13468 AES-401 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Billing_Contact__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputPanel rendered="{!open}">
+                            <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theBillingContact"
+                                            style="width: 200px" useSOSL="false" minSearchLength="1" stealFocus="true"
+                                            sObject="{!PO}" sObjectType="Purchase_Order__c"
+                                            filterClause="AccountId=\'{!PO.Buy_from_Vendor__c}\'"
+                                            sObjectField="Billing_Contact__c"
+                                            onchange="validateBillingContact(this);"
+
+                                            LookupObject="Contact"
+                                            LinkFieldName="Name"
+                                            FieldSetName="ContactFieldSet"
+                                            RunValidation="True"
+                                            LookupType="ID"
+                                            ValidateFunction="validateBillingContact"
+
+                                            FilterName1="AccountId"
+                                            FilterNameValue1="{!PO.Buy_from_Vendor__c}"
+                                            FilterOperation1="AccountId"
+                                            FilterOperationValue1="="
+                                            FilterType1="AccountId"
+                                            FilterTypeValue1="String"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"/>
+                        </apex:outputPanel>
+                        <apex:outputField value="{!PO.Billing_Contact__c}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Owner -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.OwnerId.Label}</apex:outputLabel>
+                    <apex:outputPanel >                
+                        <apex:inputField value="{!PO.OwnerId}" rendered="{!open}"/>
+                        <apex:outputField value="{!PO.OwnerId}" rendered="{!NOT(open)}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <!--Vendor Invoice #-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Vendor_Invoice_No__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!PO.Vendor_Invoice_No__c}">
+                            <apex:actionSupport event="onchange" action="{!validateVendorInvoiceNo}" reRender="thePageBlock,PLTotal" status="loadingstatus"/>
+                        </apex:inputField>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="General" collapsible="true" id="theCoupaPageBlockSection" rendered="{!PO.Coupa_Id__c != null}">
+                <apex:outputField value="{!PO.Coupa_Id__c}" />
+                <apex:outputField value="{!PO.Name}" />
+                <apex:outputField value="{!PO.Order_Date__c}" />
+                <apex:outputField value="{!PO.Vendor_Name__c}" />
+                <apex:outputField value="{!PO.Payment_Term_Name__c}" />
+            </apex:pageBlockSection>
+            <!-- Notes and Instructions-->
+            <apex:pageBlockSection title="Notes and Instructions" collapsible="true" rendered="{!PO.Coupa_Id__c == null}">
+                <!-- Note -->
+                <apex:pageBlockSectionItem rendered="{!open}">
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.fields.Note__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!PO.Note__c}" rendered="{!open}" style="width:100%; height: 60px"/>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:outputField value="{!PO.Note__c}" rendered="{!NOT(open)}" style="width:100%; height: 60px"/>
+
+                <!--Instructions to Vendor-->
+                <apex:inputTextarea value="{!PO.Instructions_to_Vendor__c}" rendered="{!open}"
+                                    style="width:60%; height: 60px"/>
+                <apex:outputField value="{!PO.Instructions_to_Vendor__c}" rendered="{!NOT(open)}"
+                                  style="width:60%; height: 60px"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Shipping Information" collapsible="true" id="ShippingSection" rendered="{!PO.Coupa_Id__c == null}">
+                <apex:pageBlockSectionItem rendered="{!open}">
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Address__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <c:TypeaheadComponent componentId="{!$Component.ShippingSection}:theShipToAddress"
+                                              style="width: 200px"
+                                              allowtoBlank="true"
+                                              minSearchLength="1"
+                                              sObject="{!PO}" sObjectType="Purchase_Order__c"
+                                              sObjectField="Ship_To_Address__c"
+                                              onchange="validateShipToAddress(this);"/>
+                    </apex:outputPanel>
+                    <!--<apex:inputField value="{!PO.Ship_To_Address__c}" onchange="validateShipToAddress(this);"/>-->
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(open)}">
+                    <apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Ship_To_Address__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!PO.Ship_To_Address__r.Name}"/>
+                </apex:pageBlockSectionItem>
+
+
+                <!--<apex:pageBlockSectionItem rendered="{!open}">-->
+                <!--<apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Billing_Contact__c.Label}</apex:outputLabel>-->
+                <!--&lt;!&ndash;<apex:inputField value="{!PO.Billing_Contact__c}" onchange="validateBillingContact(this);" />&ndash;&gt;-->
+                <!--<apex:outputPanel rendered="{!NOT(Completed)}">-->
+                <!--<div class="requiredInput" >-->
+                <!--<c:CustomLookup componentId="{!$Component.thePLTable}:theBillingContact"-->
+                <!--styleClass="input-lookup" style="width: 200px" useSOSL="false" minSearchLength="1"-->
+                <!--sObjectType="Purchase_Order__c"-->
+                <!--sObject="{!PO}"-->
+                <!--sObjectField="Billing_Contact__c"-->
+
+                <!--LookupObject="Contact"-->
+                <!--LinkFieldName="Name"-->
+                <!--FieldSetName="ContactFieldset"-->
+
+                <!--RunValidation="True"-->
+                <!--LookupType="ID"-->
+                <!--FilterName1="AccountId"-->
+                <!--FilterNameValue1="{!PO.Buy_from_Vendor__c}"-->
+                <!--FilterOperation1="AccountId"-->
+                <!--FilterOperationValue1="="-->
+                <!--FilterType1="AccountId"-->
+                <!--FilterTypeValue1="String"-->
+
+                <!--fltr1="true"-->
+                <!--fltr2="true"-->
+                <!--fltr3="true"-->
+                <!--fltr4="true"-->
+                <!--fltr5="true"-->
+                <!--fltr6="true"-->
+                <!--fltr7="true"-->
+                <!--/>-->
+                <!--</div>-->
+                <!--</apex:outputPanel>-->
+                <!--</apex:pageBlockSectionItem>-->
+                <!--<apex:pageBlockSectionItem rendered="{!NOT(open)}">-->
+                <!--<apex:outputLabel >{!$ObjectType.Purchase_Order__c.Fields.Billing_Contact__c.Label}</apex:outputLabel>-->
+                <!--<apex:outputField value="{!PO.Billing_Contact__r.Name}" />-->
+                <!--</apex:pageBlockSectionItem> -->
+
+                <!--<apex:inputField value="{!PO.Billing_Street__c}" rendered="{!open}" style="width:220px;"/>-->
+                <!--<apex:outputField value="{!PO.Billing_Street__c}" rendered="{!NOT(open)}"/>-->
+                <apex:inputField value="{!PO.Shipping_Street__c}" rendered="{!open}" style="width:220px;"/>
+                <apex:outputField value="{!PO.Shipping_Street__c}" rendered="{!NOT(open)}"/>
+                <!--<apex:inputField value="{!PO.Billing_City__c}" rendered="{!open}"/>-->
+                <!--<apex:outputField value="{!PO.Billing_City__c}" rendered="{!NOT(open)}"/>-->
+                <apex:inputField value="{!PO.Shipping_City__c}" rendered="{!open}"/>
+                <apex:outputField value="{!PO.Shipping_City__c}" rendered="{!NOT(open)}"/>
+                <!--<apex:inputField value="{!PO.Billing_State__c}" rendered="{!open}"/>-->
+                <!--<apex:outputField value="{!PO.Billing_State__c}" rendered="{!NOT(open)}"/>-->
+                <apex:inputField value="{!PO.Shipping_State__c}" rendered="{!open}"/>
+                <apex:outputField value="{!PO.Shipping_State__c}" rendered="{!NOT(open)}"/>
+                <!--<apex:inputField value="{!PO.Billing_Postal_Code__c}" rendered="{!open}"/>-->
+                <!--<apex:outputField value="{!PO.Billing_Postal_Code__c}" rendered="{!NOT(open)}"/>-->
+                <apex:inputField value="{!PO.Shipping_Postal_Code__c}" rendered="{!open}"/>
+                <apex:outputField value="{!PO.Shipping_Postal_Code__c}" rendered="{!NOT(open)}"/>
+                <!--<apex:inputField value="{!PO.Billing_Country__c}" rendered="{!open}"/> -->
+                <!--<apex:outputField value="{!PO.Billing_Country__c}" rendered="{!NOT(open)}"/> -->
+                <apex:inputField value="{!PO.Shipping_Country__c}" rendered="{!open}"/>
+                <apex:outputField value="{!PO.Shipping_Country__c}" rendered="{!NOT(open)}"/>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Shipping Information" collapsible="true" id="coupaShippingSection" rendered="{!PO.Coupa_Id__c != null}">
+                <apex:outputField value="{!PO.Shipping_Street__c}" />
+                <apex:outputField value="{!PO.Shipping_City__c}" />
+                <apex:outputField value="{!PO.Shipping_State__c}" />
+                <apex:outputField value="{!PO.Shipping_Postal_Code__c}" />
+                <apex:outputField value="{!PO.Shipping_Country__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageMessages id="message2"></apex:pageMessages>
+            <apex:pageBlockSection id="theSection" columns="1" title="Lines" collapsible="true">
+                <apex:outputPanel styleClass="purchaseLineWrap" layout="block" style="overflow: scroll;">
+                    <apex:pageBlockTable id="thePLTable" value="{!PLList}" var="line" rendered="{!NOT(ISNULL(PLList)) && PO.Coupa_Id__c == null}">
+                        <apex:column headerValue="Action" styleClass="actionColumn">
+                            <apex:commandButton value="Delete" disabled="{!OR(Completed, (line.Received_Qty__c != 0))}"
+                                                onclick="if(!confirmDelete()){return false};" action="{!deleteLine}"
+                                                reRender="thePLTable">
+                                <apex:param id="objectType" name="objectType" value="PurchaseLine"/>
+                                <apex:param id="lineNo" name="lineNo" value="{!line.Line_No__c}"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <!-- Item -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Item__c.Label}">
+                            <apex:outputPanel rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <!--
+                                    <c:TypeaheadComponent componentId="{!$Component.thePLTable}:theItem"
+                                                          minSearchLength="1"
+                                                          allowtoBlank="true"
+                                                          stealFocus="true"
+                                                          styleClass="input-lookup"
+                                                          style="width: 100px"
+                                                          filterClause="Account__c=\'{!PO.Buy_from_Vendor__c}\'"
+                                                          sObjectType="Purchase_Line__c"
+                                                          sObject="{!line}"
+                                                          sObjectField="Item__c"
+                                                          onchange="validateFieldInList(this);" />
+                                    -->
+                                    <c:CustomLookup componentId="{!$Component.thePLTable}:theItem"
+                                                    styleClass="input-lookup" style="width: 180px" useSOSL="false"
+                                                    minSearchLength="1"
+                                                    filterClause="Purchase_Price__c.Account__c=\'{!line.Vendor_Account__c}\' AND Purchase_Price__c.Status__c != \'Rejected\'"
+                                                    sObjectType="Purchase_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Item__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Purchase_Price__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="PurchasePriceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    FilterName1="Account__c"
+                                                    FilterNameValue1="{!line.Vendor_Account__c}"
+                                                    FilterOperation1="Account__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Account__c"
+                                                    FilterTypeValue1="String"
+                                                    FilterName2="Status__c"
+                                                    FilterNameValue2="Rejected"
+                                                    FilterOperation2="Status__c"
+                                                    FilterOperationValue2="!="
+                                                    FilterType2="Status__c"
+                                                    FilterTypeValue2="String"
+                                                    ValidateFunction="validateFieldInList"
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputField rendered="{!OR(Completed, line.Received_Qty__c != 0)}" id="theOutputItem" value="{!line.Item__c}"
+                                              style="width:50px"/>
+                        </apex:column>
+
+                        <!-- Vendor SKU -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Vendor_SKU__c.Label}">
+                            <apex:inputField value="{!line.Vendor_SKU__c}" rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Vendor_SKU__c}" rendered="{!OR(Completed, line.Received_Qty__c != 0)}"/>
+                        </apex:column>
+                        <!-- Vendor Description -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Vendor_Description__c.Label}">
+                            <apex:inputField value="{!line.Vendor_Description__c}" rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Vendor_Description__c}" rendered="{!OR(Completed, line.Received_Qty__c != 0)}"/>
+                        </apex:column>
+                        <!-- UOM -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <!--
+                                    <c:TypeaheadComponent componentId="{!$Component.thePLTable}:theUOM"
+                                                          secondaryDisplayField="Description__c"
+                                                          styleClass="input-lookup"
+                                                          allowtoBlank="true"
+                                                          style="width: 80px"
+                                                          minSearchLength="1"
+                                                          sObjectType="Purchase_Line__c"
+                                                          sObject="{!line}"
+                                                          sObjectField="Unit_of_Measure__c"
+                                                          onchange="validateFieldInList(this);" />
+                                    -->
+                                    <c:CustomLookup componentId="{!$Component.thePLTable}:theUOM"
+                                                    styleClass="input-lookup" style="width: 80px" useSOSL="false"
+                                                    minSearchLength="1"
+                                                    sObjectType="Purchase_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateFieldInList"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField rendered="{!OR(Completed, line.Received_Qty__c != 0)}"
+                                              value="{!line.Unit_of_Measure__c}"></apex:outputField>
+                        </apex:column>
+
+                        <!-- Quantity -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Quantity__c.Label}">
+                            <apex:outputpanel rendered="{!NOT(Completed)}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputField onfocus="setFocusElement(this);" id="theQuantity"
+                                                     value="{!line.Quantity__c}" onchange="validateFieldInList(this)"
+                                                     style="width:50px" styleClass="Quantity input-numeric"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputPanel rendered="{!Completed}">{!line.Quantity__c}</apex:outputPanel>
+                        </apex:column>
+
+                        <!-- Unit Cost -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:inputField onfocus="setFocusElement(this);" id="theUnitCost"
+                                             rendered="{!NOT(Completed)}" value="{!line.Unit_Cost__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitCost input-numeric"/>
+
+                            <apex:outputPanel rendered="{!Completed}">{!line.Unit_Cost__c}</apex:outputPanel>
+                        </apex:column>
+
+                        <!-- Tax % -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Tax_Pct__c.Label}">
+                            <apex:inputField onfocus="setFocusElement(this);" id="theTaxPct"
+                                             rendered="{!NOT(Completed)}" value="{!line.Tax_Pct__c}"
+                                             onchange="validateFieldInList(this)" style="width:50px"
+                                             styleClass="input-numeric"/>
+                            <apex:outputPanel rendered="{!Completed}">{!line.Tax_Pct__c}</apex:outputPanel>
+                        </apex:column>
+
+                        <!-- Service Center -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Service_Center__c.Label}">
+                            <!--<apex:inputField value="{!line.Service_Center__c}" rendered="{!open}" />-->
+                            <apex:outputpanel rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <!--
+                                    <c:TypeaheadComponent componentId="{!$Component.thePLTable}:theLineServiceCenter"
+                                                          styleClass="input-lookup" style="width: 80px" minSearchLength="1"
+                                                          allowtoBlank="true"
+                                                          filterClause="Subsidiary_Company__c=\'{!PO.Service_Center__r.Subsidiary_Company__c}\'"
+                                                          sObjectType="Purchase_Line__c"
+                                                          sObject="{!line}"
+                                                          sObjectField="Service_Center__c"
+                                                          onchange="validateFieldInList(this);" />
+                                    -->
+                                    <c:CustomLookup componentId="{!$Component.thePLTable}:theLineServiceCenter"
+                                                    styleClass="input-lookup" style="width: 80px" useSOSL="false"
+                                                    minSearchLength="1"
+                                                    filterClause="Service_Center__c.Subsidiary_Company__c=\'{!PO.Service_Center__r.Subsidiary_Company__c}\'"
+                                                    sObjectType="Purchase_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Service_Center__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Service_Center__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ServiceCenterFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+
+                                                    FilterName1="Subsidiary_Company__c"
+                                                    FilterNameValue1="{!line.Subsidiary_Company__c}"
+                                                    FilterOperation1="Subsidiary_Company__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Subsidiary_Company__c"
+                                                    FilterTypeValue1="String"
+
+                                                    ValidateFunction="validateFieldInList"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Service_Center__c}" rendered="{!OR(Completed, AND(line.Received_Qty__c != 0, line.Received_Qty__c != null))}"/>
+                        </apex:column>
+                        <apex:column headerValue="Subsidiary Company">
+                            <apex:outputField value="{!line.Subsidiary_Company__r.Name}" />
+                        </apex:column>
+
+                        <!-- Sales Order -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Sales_Order__c.Label}">
+                            <apex:inputField id="theLineSalesOrder" value="{!line.Sales_Order__c}" rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}" onclick="updateLookupHref(this);"
+                                             onchange="validateFieldInList(this);"/>
+                            <apex:outputField id="theLineSalesOrder_Readonly" value="{!line.Sales_Order__c}" rendered="{!OR(Completed, line.Received_Qty__c != 0)}"/>
+
+                            <!--  <apex:outputpanel rendered="{!open}" >
+                                <div class="requiredInput" >
+                                    <div class="requiredBlock"></div>
+                                   <c:TypeaheadComponent componentId="{!$Component.thePLTable}:theLineSalesOrder"
+                                                          styleClass="input-lookup" style="width: 80px" minSearchLength="1"
+                                                          allowtoBlank="true"
+                                                          filterClause="Service_Center__c=\'{!line.Service_Center__c}\'"
+                                                          sObjectType="Purchase_Line__c"
+                                                          sObject="{!line}"
+                                                          sObjectField="Sales_Order__c"
+                                                          onchange="validateFieldInList(this);" /> 
+                                    
+                                    <c:CustomLookup componentId="{!$Component.thePLTable}:theLineSalesOrder"
+                                                    styleClass="input-lookup" style="width: 80px" useSOSL="false" minSearchLength="1"
+                                                    filterClause="Sales_Order__c.Service_Center__c=\'{!line.Service_Center__c}\'"
+                                                    sObjectType="Purchase_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Sales_Order__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Sales_Order__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="SalesOrderFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+
+                                                    FilterName1="Service_Center__c"
+                                                    FilterNameValue1="{!line.Service_Center__c}"
+                                                    FilterOperation1="Service_Center__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Service_Center__c"
+                                                    FilterTypeValue1="String"
+
+                                                    ValidateFunction="validateFieldInList"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel> 
+                            <apex:outputField value="{!line.Sales_Order__c}" rendered="{!NOT(open)}" />-->
+                        </apex:column>
+
+                        <!-- G/L Account -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.G_L_Account__c.Label}">
+                            <apex:outputPanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputField id="theLineGLAccount" value="{!line.G_L_Account__c}"
+                                             onchange="validateFieldInList(this)" rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputField value="{!line.G_L_Account__c}" rendered="{!OR(Completed, line.Received_Qty__c != 0)}"/>
+                        </apex:column>
+
+                        <!-- Note -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Note__c.Label}">
+                            <apex:inputField id="theDescription" rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}" value="{!line.Note__c}"
+                                             styleClass="input-description" html-tabIndex="-1"/>
+                            <apex:outputPanel rendered="{!OR(Completed, line.Received_Qty__c != 0)}">{!line.Note__c}</apex:outputPanel>
+                        </apex:column>
+
+                        <!-- Equipment No. -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Equipment_No__c.Label}">
+                            <apex:inputField onFocus="setFocusElement(this);" id="theEquipmentNo" value="{!line.Equipment_No__c}"
+                                             rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Equipment_No__c}"
+                                              rendered="{!OR(Completed, AND(line.Received_Qty__c != 0, line.Received_Qty__c != null))}"/>
+                        </apex:column>
+
+                        <!-- Cost Type -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Cost_Type__c.Label}">
+                            <apex:inputField onFocus="setFocusElement(this);" id="theCostType" value="{!line.Cost_Type__c}"
+                                             rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Cost_Type__c}"
+                                              rendered="{!OR(Completed, AND(line.Received_Qty__c != 0, line.Received_Qty__c != null))}"/>
+                        </apex:column>
+
+                        <!-- Vendor Vehicle Number -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Vendor_Vehicle_Number__c.Label}">
+                            <apex:inputField onFocus="setFocusElement(this);" id="theVendorVehicleNumber" value="{!line.Vendor_Vehicle_Number__c}"
+                                             rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Vendor_Vehicle_Number__c}"
+                                              rendered="{!OR(Completed, AND(line.Received_Qty__c != 0, line.Received_Qty__c != null))}"/>
+                        </apex:column>
+
+                        <!-- Rental Frequency -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Rental_Frequency__c.Label}">
+                            <apex:inputField onFocus="setFocusElement(this);" id="theRentalFrequency" value="{!line.Rental_Frequency__c}"
+                                             rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"/>
+                            <apex:outputField value="{!line.Rental_Frequency__c}"
+                                              rendered="{!OR(Completed, AND(line.Received_Qty__c != 0, line.Received_Qty__c != null))}"/>
+                        </apex:column>
+
+                        <!-- Tax Amount -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Tax__c.Label}">
+                            <apex:outputText id="theTaxAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="output-numeric" style="width:50px">
+                                <apex:param value="{!line.Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+
+                        <!-- Line Cost -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputText id="theLineCost" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Cost__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+
+                        <!-- Qty. to Received -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Received_Qty__c.Label}">
+                            <apex:outputPanel >{!line.Received_Qty__c}</apex:outputPanel>
+                        </apex:column>
+                        
+                        <!-- Line No -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Line_No__c.Label}">
+                            <apex:inputField id="theLineNo" rendered="{!NOT(Completed)}" value="{!line.Line_No__c}"
+                                             style="width:50px"/>
+                            <apex:outputPanel rendered="{!Completed}">{!line.Line_No__c}</apex:outputPanel>
+                        </apex:column>
+                        <!-- G/L Account Controller -->
+                        <!-- Ticket# 13388-->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Direct_G_L_Account__c.Label}">
+                            <apex:inputField id="theLineDirectGLAccount" value="{!line.Direct_G_L_Account__c}"
+                                             rendered="{!AND(NOT(Completed), OR(line.Received_Qty__c == 0, line.Received_Qty__c == null))}"
+                                             onChange="validateFieldInList(this)"/>
+                            <apex:outputField value="{!line.Direct_G_L_Account__c}" rendered="{!OR(Completed, line.Received_Qty__c != 0)}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+
+                    <!-- Coupa PO Layout -->
+                    <apex:pageBlockTable id="coupaLineTable" value="{!PLList}" var="line" rendered="{!NOT(ISNULL(PLList)) && PO.Coupa_Id__c != null}">
+                        <apex:column headerValue="Type">
+                            <apex:outputField value="{!line.Type__c}" />
+                        </apex:column>
+                        <apex:column headerValue="Item">
+                            <apex:outputField value="{!line.Coupa_Item__c}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputField value="{!line.Coupa_UOM__c}" />
+                        </apex:column>
+
+                        <!-- Quantity -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Quantity__c.Label}">
+                            <apex:outputField value="{!line.Quantity__c}" />
+                        </apex:column>
+
+                        <!-- Unit Cost -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputText value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Unit_Cost__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Service_Center__c.Label}">
+                            <apex:outputField value="{!line.Service_Center__c}" />
+                        </apex:column>
+
+                        <!-- G/L Account -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Coupa_GL_Account__c.Label}">
+                            <apex:outputField value="{!line.Coupa_GL_Account__c}" />
+                        </apex:column>
+
+                        <!-- Equipmemnt No. -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Equipment_No__c.Label}">
+                            <apex:outputField value="{!line.Equipment_No__c}" />
+                        </apex:column>
+                        
+						<!-- Cost Type -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Cost_Type__c.Label}">
+                            <apex:outputField value="{!line.Cost_Type__c}" />
+                        </apex:column>
+
+                        <!-- Line Cost -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputText value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Cost__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+
+                        <!-- Sales Order -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Sales_Order__c.Label}">
+                            <apex:outputField value="{!line.Sales_Order__c}" />
+                        </apex:column>
+
+                        <!-- Line No -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" />
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!PO.Coupa_Id__c == null}">
+                <apex:commandButton value="Add Lines" disabled="{!Completed}" action="{!insertLine}"
+                                    reRender="thePLTable,thePageBlock">
+                    <apex:param id="ObjectType" name="ObjectType" value="PurchaseLine"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <div style="float:right;width:900px;font-size:150%;">
+                <table border="0" align="right">
+                    <tr>
+                        <td style="vertical-align:middle;padding-left:25px;">{!$ObjectType.Purchase_Order__c.Fields.Estimated_Freight_Amount__c.Label}:</td>
+                            <td>
+                                <apex:inputField value="{!PO.Estimated_Freight_Amount__c}" styleClass="output-numeric" rendered="{!NOT(Completed) && PO.Coupa_Id__c == null}"/>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numberic" rendered="{!Completed && PO.Coupa_Id__c == null}">
+                                    <apex:param value="{!PO.Estimated_Freight_Amount__c}"/>
+                                </apex:outputText>
+                            </td>
+                        <td style="vertical-align:middle;padding-left:25px;">Sub Total:&nbsp;
+                            <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                <apex:param value="{!PLSubtotal}"/>
+                            </apex:outputText>
+                        </td>
+                        <td style="vertical-align:middle;padding-left:25px;">Tax:&nbsp;
+                            <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numberic">
+                                <apex:param value="{!TaxAmt}"/>
+                            </apex:outputText>
+                        </td>
+                        <td style="vertical-align:middle;padding-left:25px;">Total:&nbsp;
+                            <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                <apex:param value="{!TotalIncTax}"/>
+                            </apex:outputText>
+                       </td>
+                   </tr>
+                </table>
+            </div>
+            <script>
+                $(".purchaseLineWrap").css("max-width", (screen.width - 100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        .purchaseLineWrap {
+            max-height: 400px !important;
+        }
+    </style>
+</apex:page>

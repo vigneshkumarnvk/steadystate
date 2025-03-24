@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this permission set to allow users to create Public list views.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CR Public List Views</label>
+    <license>Salesforce</license>
+</PermissionSet>

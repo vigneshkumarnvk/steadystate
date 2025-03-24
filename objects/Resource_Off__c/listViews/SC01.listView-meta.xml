@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC01</fullName>
+    <columns>NAME</columns>
+    <columns>Resource__c</columns>
+    <columns>Description__c</columns>
+    <columns>Date__c</columns>
+    <columns>Off_Type__c</columns>
+    <columns>Start_Time__c</columns>
+    <columns>End_Time__c</columns>
+    <columns>Hours__c</columns>
+    <columns>Note__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>NAME</field>
+        <operation>equals</operation>
+        <value>090088 - A85</value>
+    </filters>
+    <label>SC01</label>
+</ListView>

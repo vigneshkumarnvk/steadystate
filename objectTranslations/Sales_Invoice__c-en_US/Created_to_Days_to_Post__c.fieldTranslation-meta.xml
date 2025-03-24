@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- Count days to post using sys posting date minus invoice created date --></help>
+        <label><!-- Created to Days to Post --></label>
+        <name>Created_to_Days_to_Post__c</name>
+    </CustomFieldTranslation>

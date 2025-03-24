@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC01_Labor_Resources</fullName>
+    <columns>NAME</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>Description__c</columns>
+    <columns>Start_Date__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Pay_Rule__c</columns>
+    <columns>Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Labor</value>
+    </filters>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>01</value>
+    </filters>
+    <label>SC01 Labor Resources</label>
+</ListView>

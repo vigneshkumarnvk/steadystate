@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Model --></label>
+        <name>Model__c</name>
+        <picklistValues>
+            <masterLabel>Brigadier by Kyocera</masterLabel>
+            <translation><!-- Brigadier by Kyocera --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CF-54</masterLabel>
+            <translation><!-- CF-54 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CRADLEPOINT - AER1600LP4</masterLabel>
+            <translation><!-- CRADLEPOINT - AER1600LP4 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CRADLEPOINT - MC400-1200M-B</masterLabel>
+            <translation><!-- CRADLEPOINT - MC400-1200M-B --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CRADLEPOINT - MC400LPE</masterLabel>
+            <translation><!-- CRADLEPOINT - MC400LPE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CRADLEPOINT MC400LP6</masterLabel>
+            <translation><!-- CRADLEPOINT MC400LP6 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Casio GzOne Ravine</masterLabel>
+            <translation><!-- Casio GzOne Ravine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DURA XV LTE WITH CAMERA</masterLabel>
+            <translation><!-- DURA XV LTE WITH CAMERA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DURAXVPLUS BY KYOCERA</masterLabel>
+            <translation><!-- DURAXVPLUS BY KYOCERA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dell Monitor</masterLabel>
+            <translation><!-- Dell Monitor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>E300</masterLabel>
+            <translation><!-- E300 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 100E</masterLabel>
+            <translation><!-- FortiGate 100E --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 300D</masterLabel>
+            <translation><!-- FortiGate 300D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 60D</masterLabel>
+            <translation><!-- FortiGate 60D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 60E</masterLabel>
+            <translation><!-- FortiGate 60E --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 60E-POE</masterLabel>
+            <translation><!-- FortiGate 60E-POE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 60F</masterLabel>
+            <translation><!-- FortiGate 60F --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 80E</masterLabel>
+            <translation><!-- FortiGate 80E --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 80E-POE</masterLabel>
+            <translation><!-- FortiGate 80E-POE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 90D</masterLabel>
+            <translation><!-- FortiGate 90D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FortiGate 90D-POE</masterLabel>
+            <translation><!-- FortiGate 90D-POE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fortigate 100D</masterLabel>
+            <translation><!-- Fortigate 100D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GALAXYS8PLUS</masterLabel>
+            <translation><!-- GALAXYS8PLUS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPAD 7TH GEN 32GB GRAY VZ</masterLabel>
+            <translation><!-- IPAD 7TH GEN 32GB GRAY VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPAD 9.7 32GB SPACE GRAY VZ</masterLabel>
+            <translation><!-- IPAD 9.7 32GB SPACE GRAY VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPAD PRO 11 INCH 256GB SGRAY VZ</masterLabel>
+            <translation><!-- IPAD PRO 11 INCH 256GB SGRAY VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 11 BLACK 64GB SO</masterLabel>
+            <translation><!-- IPHONE 11 BLACK 64GB SO --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 11 PRO MAX GRAY 512GB VZ</masterLabel>
+            <translation><!-- IPHONE 11 PRO MAX GRAY 512GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 11 PRO MAX GRAY 64GB VZ</masterLabel>
+            <translation><!-- IPHONE 11 PRO MAX GRAY 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 5S SPACE GRAY 16GB</masterLabel>
+            <translation><!-- IPHONE 5S SPACE GRAY 16GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 6 64GB SPACE GRAY</masterLabel>
+            <translation><!-- IPHONE 6 64GB SPACE GRAY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 6S 128GB SPACE GRAY</masterLabel>
+            <translation><!-- IPHONE 6S 128GB SPACE GRAY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 6S 16GB SPACE GRAY</masterLabel>
+            <translation><!-- IPHONE 6S 16GB SPACE GRAY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 6S 32GB SPACE GRAY</masterLabel>
+            <translation><!-- IPHONE 6S 32GB SPACE GRAY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 6S PLUS 32GB SPACE GRAY</masterLabel>
+            <translation><!-- IPHONE 6S PLUS 32GB SPACE GRAY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 7 BLACK 128GB</masterLabel>
+            <translation><!-- IPHONE 7 BLACK 128GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 7 BLACK 32GB</masterLabel>
+            <translation><!-- IPHONE 7 BLACK 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 7 PLUS BLACK 32GB</masterLabel>
+            <translation><!-- IPHONE 7 PLUS BLACK 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 8 PLUS SP GRAY 64GB VZ</masterLabel>
+            <translation><!-- IPHONE 8 PLUS SP GRAY 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 8 SILVER 64GB VZ</masterLabel>
+            <translation><!-- IPHONE 8 SILVER 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 8 SPACE GRAY 128GB VZ</masterLabel>
+            <translation><!-- IPHONE 8 SPACE GRAY 128GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE 8 SPACE GRAY 64GB VZ</masterLabel>
+            <translation><!-- IPHONE 8 SPACE GRAY 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE SE SILVER 64GB</masterLabel>
+            <translation><!-- IPHONE SE SILVER 64GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE SE SPACE GRAY 16GB</masterLabel>
+            <translation><!-- IPHONE SE SPACE GRAY 16GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE SE SPACE GRAY 32GB</masterLabel>
+            <translation><!-- IPHONE SE SPACE GRAY 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE SE SPACE GRAY 64GB</masterLabel>
+            <translation><!-- IPHONE SE SPACE GRAY 64GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE X SPACE GRAY 256GB VZ</masterLabel>
+            <translation><!-- IPHONE X SPACE GRAY 256GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE X SPACE GRAY 64GB VZ</masterLabel>
+            <translation><!-- IPHONE X SPACE GRAY 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE XR BLACK 64GB</masterLabel>
+            <translation><!-- IPHONE XR BLACK 64GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE XS MAX SPACE GRY 256GB VZ</masterLabel>
+            <translation><!-- IPHONE XS MAX SPACE GRY 256GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE XS MAX SPACE GRY 512GB VZ</masterLabel>
+            <translation><!-- IPHONE XS MAX SPACE GRY 512GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IPHONE XS SPACE GRAY 64GB VZ</masterLabel>
+            <translation><!-- IPHONE XS SPACE GRAY 64GB VZ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JETPACK 4G LTE MHS MIFI 7730L</masterLabel>
+            <translation><!-- JETPACK 4G LTE MHS MIFI 7730L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KYOCERA DURAXV</masterLabel>
+            <translation><!-- KYOCERA DURAXV --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kyocera DuraMax</masterLabel>
+            <translation><!-- Kyocera DuraMax --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kyocera DuraXT</masterLabel>
+            <translation><!-- Kyocera DuraXT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kyocera DuraXTP</masterLabel>
+            <translation><!-- Kyocera DuraXTP --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LG Gram 17Z90N-N</masterLabel>
+            <translation><!-- LG Gram 17Z90N-N --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LG Revere 3</masterLabel>
+            <translation><!-- LG Revere 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M70a</masterLabel>
+            <translation><!-- M70a --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M710q</masterLabel>
+            <translation><!-- M710q --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M73</masterLabel>
+            <translation><!-- M73 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M80q</masterLabel>
+            <translation><!-- M80q --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M90z</masterLabel>
+            <translation><!-- M90z --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M910z</masterLabel>
+            <translation><!-- M910z --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M920q</masterLabel>
+            <translation><!-- M920q --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M93p</masterLabel>
+            <translation><!-- M93p --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PROLIANT ML 110 GEN 10</masterLabel>
+            <translation><!-- PROLIANT ML 110 GEN 10 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pantech UML295</masterLabel>
+            <translation><!-- Pantech UML295 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>QA-HP-2.0</masterLabel>
+            <translation><!-- QA-HP-2.0 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SAMSUNG GALAXY S7 BLACK 32GB</masterLabel>
+            <translation><!-- SAMSUNG GALAXY S7 BLACK 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SAMSUNG GALAXY S9 MIDNIGHT BLACK</masterLabel>
+            <translation><!-- SAMSUNG GALAXY S9 MIDNIGHT BLACK --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SAMSUNG GALAXY TAB E 32GB</masterLabel>
+            <translation><!-- SAMSUNG GALAXY TAB E 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Samsung Convoy 3</masterLabel>
+            <translation><!-- Samsung Convoy 3 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Samsung Convoy II</masterLabel>
+            <translation><!-- Samsung Convoy II --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Samsung Tab A</masterLabel>
+            <translation><!-- Samsung Tab A --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T14s</masterLabel>
+            <translation><!-- T14s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T15</masterLabel>
+            <translation><!-- T15 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T430s</masterLabel>
+            <translation><!-- T430s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T460s</masterLabel>
+            <translation><!-- T460s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T470</masterLabel>
+            <translation><!-- T470 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T470s</masterLabel>
+            <translation><!-- T470s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T480s</masterLabel>
+            <translation><!-- T480s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T490s</masterLabel>
+            <translation><!-- T490s --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VERIZON ELLIPSIS JETPACK MHS900L</masterLabel>
+            <translation><!-- VERIZON ELLIPSIS JETPACK MHS900L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VERIZON JETPACK MIFI 8800L</masterLabel>
+            <translation><!-- VERIZON JETPACK MIFI 8800L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VZ JETPACK 4G MHS MIFI 6620L</masterLabel>
+            <translation><!-- VZ JETPACK 4G MHS MIFI 6620L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VZ Jetpack 4G MHS 291L</masterLabel>
+            <translation><!-- VZ Jetpack 4G MHS 291L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VZ Jetpack 4G MHS MIFI5510L</masterLabel>
+            <translation><!-- VZ Jetpack 4G MHS MIFI5510L --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vostro 200</masterLabel>
+            <translation><!-- Vostro 200 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>X1 Carbon</masterLabel>
+            <translation><!-- X1 Carbon --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPad 32GB</masterLabel>
+            <translation><!-- iPad 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 11 RED 128MB</masterLabel>
+            <translation><!-- iPhone 11 RED 128MB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 12 Pro Max 256GB</masterLabel>
+            <translation><!-- iPhone 12 Pro Max 256GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 14</masterLabel>
+            <translation><!-- iPhone 14 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 6 16GB</masterLabel>
+            <translation><!-- iPhone 6 16GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 6S 32GB</masterLabel>
+            <translation><!-- iPhone 6S 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 6S Plus 32GB</masterLabel>
+            <translation><!-- iPhone 6S Plus 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone 7 32GB</masterLabel>
+            <translation><!-- iPhone 7 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone SE 128GB</masterLabel>
+            <translation><!-- iPhone SE 128GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone SE 32GB</masterLabel>
+            <translation><!-- iPhone SE 32GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone XR 64GB</masterLabel>
+            <translation><!-- iPhone XR 64GB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iPhone XS Max 64GB</masterLabel>
+            <translation><!-- iPhone XS Max 64GB --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

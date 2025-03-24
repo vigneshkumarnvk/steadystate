@@ -1,0 +1,319 @@
+<apex:page showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardController="Purchase_Order__c"
+           extensions="PurchaseOrderPDF" standardStylesheets="false" contentType="application/pdf#{!thePO.Name}.pdf">
+    <head>
+        <apex:stylesheet value="{!$Resource.PDFStyle}"/>
+        <style>
+        </style>
+        <title>{!thePO.Name}</title>
+    </head>
+        
+    <!-- FOOTER -->
+    <div class="footer">
+        <div style="text-align:center;">
+            <span style="font-size:8pt;">1500 Rahway Avenue, Avenel, NJ 07001 Ph:732-375-9988 | For terms and conditions http://www.acvenviro.com/terms-and-conditions</span>
+        </div>
+    </div>
+    
+    <!-- HEADER -->
+    <c:PDFComponent section="header" companySetup="{!theCompanySetup}" pdfTitle="PURCHASE ORDER">
+        <table align="right" class="orderno">
+            <tr>
+                <td align="right">ORDER NO : </td><td align="left"> {!thePO.Name}</td>
+            </tr>
+            <tr>
+                <td align="right">ORDER DATE : </td>
+                <td align="left">
+                    <apex:outputText value="{0,date,MM/dd/yyyy}" >
+                        <apex:param value="{!thePO.Order_Date__c}"/>
+                    </apex:outputText>
+                </td>
+            </tr>
+        </table>
+    </c:PDFComponent>
+        
+    <!-- CONTENT -->     
+    <div style="text-align: left">
+        <div class="margin-b-20">
+            <table width="100%" id="tblItems" class="tableStyle" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td width="50%" class="leftBorder rightBorder bottomBorder">
+                        <table width="100%">
+                            <tr>
+                                <td colspan="2">
+                                    <div class="companyTitle">
+                                        <div>
+                                            {!thePO.Subsidiary_Company__r.Display_Name__c}
+                                        </div>
+                                    </div>
+                                    <div class="companyAddress" style="padding-top: 10px">
+                                        <div>
+                                            {!thePO.Service_Center__r.Street__c}<br/>
+                                            {!thePO.Service_Center__r.City__c}{!IF(ISBLANK(thePO.Service_Center__r.City__c) && ISBLANK(thePO.Service_Center__r.State__c), '', ',' )} {!thePO.Service_Center__r.State__c}&nbsp;
+                                            {!thePO.Service_Center__r.Postal_Code__c}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel topMargin-10">{!$ObjectType.Service_Center__c.fields.Phone__c.Label}: </span>
+                                        <span>{!thePO.Service_Center__r.Phone__c}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">Created By: </span>
+                                        <span>{!createdByName}</span>
+                                    </div>                                    
+                                    <div>
+                                        <span class="lalign spanLabel">Requested By: </span>
+                                        <span>{!thePO.PO_Requestor__r.Name}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">Approved By: </span>
+                                        <span>{!approvedByName}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">{!$ObjectType.Purchase_Order__c.fields.Service_Center__c.Label}: </span>
+                                        <span>{!thePO.Service_Center__r.Description__c}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="50%" class="rightBorder bottomBorder">
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="companyTitle">
+                                        <div>
+                                            <!--<span class="lalign spanLabel" style="font-size: 18px">Supplier: </span>-->
+                                            {!thePO.Buy_from_Vendor__r.Name}
+                                        </div>
+                                    </div>
+                                    <div class="companyAddress" style="padding-top: 10px">
+                                        <div>
+                                            {!thePO.Subsidiary_Vendor_Account__r.Billing_Street__c}<br/>
+                                            {!thePO.Subsidiary_Vendor_Account__r.Billing_City__c}{!IF(ISBLANK(thePO.Subsidiary_Vendor_Account__r.Billing_City__c) && ISBLANK(thePO.Subsidiary_Vendor_Account__r.Billing_State__c), '', ',' )} {!thePO.Subsidiary_Vendor_Account__r.Billing_State__c} {!thePO.Subsidiary_Vendor_Account__r.Billing_Postal_Code__c}
+                                        </div>
+                                    </div>
+                                    <div class="topMargin-10">
+                                        <span class="lalign spanLabel">Phone: </span>
+                                        <span>{!thePO.Subsidiary_Vendor_Account__r.Phone__c}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">E-Mail: </span>
+                                        <span>{!thePO.Billing_Contact__r.Email}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">Tax Number: </span>
+                                        <span></span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">Contact Person: </span>
+                                        <span>{!thePO.Billing_Contact__r.Name}</span>
+                                    </div>
+                                    <div>
+                                        <span class="lalign spanLabel">Payment Terms: </span>
+                                        <span>{!thePO.Payment_Term__r.Name}</span>
+                                    </div>
+                                </td>
+                                <!--<td width="100px">Supplier</td>-->
+                                <!--<td width="250px" class="lalign">{!thePO.Buy_from_Vendor__r.Name}</td>-->
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="leftBorder rightBorder bottomBorder" valign="top" style="padding: 0px 0px 0px 0px">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                            <tr>
+                                <td class="bottomBorder" style="padding-left: 8px">
+                                    <table>
+                                        <tr>
+                                            <td class="lalign tdLabel">Ship To:</td>
+                                            <td>
+                                                <span>{!thePO.Shipping_Street__c}{!IF(ISBLANK(thePO.Shipping_Street__c) && ISBLANK(thePO.Shipping_City__c), '', ',' )} {!thePO.Shipping_City__c}{!IF(ISBLANK(thePO.Shipping_City__c) && ISBLANK(thePO.Shipping_State__c), '', ',' )} {!thePO.Shipping_State__c}&nbsp;{!thePO.Shipping_Postal_Code__c}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bottomBorder" style="padding-left: 8px">
+                                    <span class="lalign spanLabel">Contact Phone No.:</span>
+                                    <span>{!thePO.Contact_Phone_No__c}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-left: 8px">
+                                    <span class="lalign spanLabel">Exp. Rcpt. Date:</span>
+                                    <span>
+                                        <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                            <apex:param value="{!thePO.Expected_Receipt_Date__c}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" class="rightBorder bottomBorder">
+                        <table width="100%">
+                            <tr>
+                                <td>Instructions to Vendor:</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!thePO.Instructions_to_Vendor__c}" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+
+            </table>
+        </div>
+
+        <div style="margin-top:20px;">
+            <table id="tblItems" class="tableStyle" cellspacing="0" cellpadding="5" width="100%">
+                <thead>
+                    <tr>
+                        <th class="leftBorder rightBorder bottomBorder lalign" width="15%">SKU</th>
+                        <th class="rightBorder bottomBorder lalign" width="20%">Description</th>
+                        <th class="rightBorder bottomBorder ralign" width="15%">Sales Order#/<br />Service Center#</th>
+                        <th class="rightBorder bottomBorder ralign" width="15%">Unit Price</th>
+                        <th class="rightBorder bottomBorder ralign" width="10%">Units</th>
+                        <th class="rightBorder bottomBorder ralign" width="10%">Tax %</th>
+                        <th class="rightBorder bottomBorder ralign" width="15%">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat var="POLineItems" value="{!thePLList}">
+                        <tr>
+                            <td class="leftBorder rightBorder bottomBorder lalign">{!POLineItems.Vendor_SKU__c}</td>
+                            <td class="rightBorder bottomBorder lalign">{!POLineItems.Vendor_Description__c}</td>
+                            <td class="rightBorder bottomBorder ralign">
+                                {!If(POLineItems.Sales_Order__c != '',POLineItems.Sales_Order__r.Name,POLineItems.Service_Center__r.Name)}
+                            </td>
+                            <td class="rightBorder bottomBorder ralign">
+                            <apex:outputText value="{0, Number, $#,##0.00}" >
+                                <apex:param value="{!POLineItems.Unit_Cost__c}" />
+                              </apex:outputText> 
+                            </td>
+                            <td class="rightBorder bottomBorder ralign">{!POLineItems.Quantity__c}</td>
+                            <td class="rightBorder bottomBorder ralign">
+                                <apex:outputText value="{!POLineItems.Tax_Pct__c}" />
+                            </td>
+                            <td class="rightBorder bottomBorder ralign">
+                                <apex:outputText value="{0, Number, $#,##0.00}" >
+                                    <apex:param value="{!POLineItems.Line_Cost__c}" />
+                                  </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                </tbody>
+            </table>
+            <br /> <br />
+            
+            <table width="100%" id="tblItems" class="tableStyle" cellspacing="0" cellpadding="5">
+                <tr>
+                    <td width="50%" class="leftBorder rightBorder bottomBorder">
+                        <table class="margin-3">
+                            <tr>
+                                <td width="100px" colspan="2">
+                                    Send Invoices To:
+                                    <div>
+                                        Email: invoices@acvenviro.com
+                                    </div>
+                                    <div>
+                                        <br/>
+                                        <b>{!thePO.Subsidiary_Company__r.Display_Name__c}</b><br />
+                                        1500 Rahway Ave <br />
+                                        Avenel, New Jersey 07001 <br/>
+                                        Phone: 732-375-9988
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="50%" class="rightBorder bottomBorder">
+                        <table width="100%">
+                            <tr>
+                                <td class="specialCol ralign total_td">Total Excluding Tax:</td>
+                                <td class="ralign">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" >
+                                        <apex:param value="{!totalAmount}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="specialCol ralign total_td">Tax:</td>
+                                <td class="ralign">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!taxAmount}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="specialCol ralign total_td">Freight:</td>
+                                <td class="ralign">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!freightAmount}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>                             
+                            <tr>
+                                <td class="specialCol ralign total_td">Total Including Tax:</td>
+                                <td class="ralign">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!totalAmtInclTax}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+            </table>
+            <!--<table width="100%">
+                <tr>
+                    <td width="15%"></td>
+                    <td width="30%"></td>
+                    <td width="15%"></td>
+                    <td width="15%"></td>
+                    <td width="10%"></td>
+                    <td width="15%"></td>
+                </tr>
+                <tr>
+                   <td colspan="5" class="specialCol ralign total_td">Total Excluding Tax:</td>
+                    <td>
+                        <apex:outputText value="{0, Number, $#,##0.00}" >
+                            <apex:param value="{!totalAmount}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="specialCol ralign total_td">Tax: </td>
+                    <td>
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!taxAmount}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="specialCol ralign total_td">Total Including Tax: </td>
+                    <td>
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!totalAmtInclTax}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%">
+                <tr>
+                    <td width="1%" valign="top">1.</td>
+                    <td width="40%" valign="top" style="padding-bottom:50px;">Send invoice to: invoice@acvenviro.com</td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>-->
+        </div>
+    </div>
+
+
+</apex:page>

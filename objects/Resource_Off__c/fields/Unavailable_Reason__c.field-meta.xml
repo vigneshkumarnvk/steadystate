@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unavailable_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Unavailable Reason</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Discipline</fullName>
+                <default>false</default>
+                <label>Discipline</label>
+            </value>
+            <value>
+                <fullName>No Show</fullName>
+                <default>false</default>
+                <label>No Show</label>
+            </value>
+            <value>
+                <fullName>On Leave</fullName>
+                <default>false</default>
+                <label>On Leave</label>
+            </value>
+            <value>
+                <fullName>Call Out</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Call Out</label>
+            </value>
+            <value>
+                <fullName>DOT Reset</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DOT Reset</label>
+            </value>
+            <value>
+                <fullName>FMLA</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>FMLA</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

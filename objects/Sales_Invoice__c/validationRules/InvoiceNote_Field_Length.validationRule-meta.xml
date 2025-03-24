@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InvoiceNote_Field_Length</fullName>
+    <active>true</active>
+    <errorConditionFormula>LEN( Invoice_Note__c ) &gt; 80</errorConditionFormula>
+    <errorMessage>Invoice note value is too long. (max length = 80)  Please edit the Invoice Note and Save.</errorMessage>
+</ValidationRule>

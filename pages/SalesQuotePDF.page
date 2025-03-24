@@ -1,0 +1,2110 @@
+<!--
+    Ticket#21540
+
+     Ticket#80939
+        - Changed surcharge type picklist field from "Energy & Insurance" to "Energy and Environmental Compliance Fee"
+    Ticket#85807
+        - Changed surcharge type picklist field from "Energy and Environmental Compliance Fee" to "EEC Fee"
+	Ticket#US140822
+		- Sales Quote Customer Facing PDF Should be in Proper Case
+-->
+<apex:page showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf"
+           standardController="Sales_Order__c" extensions="SalesQuotePDFController" standardStylesheets="false">
+    <head>
+        <style>
+            html * {
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                line-height: 1.5;
+            }
+
+            #signature@font-face {font-family:'Lucida Handwriting' !important;}
+            @page {
+                margin-top: 5cm;
+                margin-bottom: 3cm;
+                margin-left: 0.15cm;
+                margin-right: 0.15cm;
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+
+                <!--ticket 21088-->
+                background-image: {!draftImageUrl};
+                background-repeat: repeat-y;
+                background-position: center;
+                overflow: auto;
+                <!--ticket 21088-->
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            div.footer {
+                position: running(footer) !important;
+                display: block;
+            }
+
+            div.header {
+                position: running(header);
+                padding: 0px 60px;
+                opacity: 0.7;
+                display: block;
+            }
+
+            .content {
+                padding: 0px 60px;
+            }
+
+            .ml5 {
+                margin-left: 5px;
+            }
+
+            .ml10 {
+                margin-left: 10px;
+            }
+
+            .ml15 {
+                margin-left: 15px;
+            }
+
+            .ml20 {
+                margin-left: 20px;
+            }
+
+            .ml25 {
+                margin-left: 25px;
+            }
+
+            .ml50 {
+                margin-left: 50px;
+            }
+
+            .mr5 {
+                margin-right: 5px;
+            }
+
+            .mr10 {
+                margin-right: 10px;
+            }
+
+            .mr15 {
+                margin-right: 15px;
+            }
+
+            .mr20 {
+                margin-right: 20px;
+            }
+
+            .mr25 {
+                margin-right: 25px;
+            }
+
+            .mt5 {
+                margin-top: 5px;
+            }
+
+            .mt10 {
+                margin-top: 10px;
+            }
+
+            .mt15 {
+                margin-top: 15px;
+            }
+
+            .mt20 {
+                margin-top: 20px;
+            }
+
+            .mt25 {
+                margin-top: 25px;
+            }
+
+            .mt30 {
+                margin-top: 30px;
+            }
+
+            .mt50 {
+                margin-top: 50px;
+            }
+
+            .mb20 {
+                margin-bottom: 20px;
+            }
+
+            .w100 {
+                width: 100%;
+            }
+
+            .w50 {
+                width: 50%;
+            }
+
+            .noBorder {
+                border: none;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .i {
+                font-style: italic;
+            }
+
+            .u {
+                text-decoration: underline;
+            }
+
+            .border1 {
+                border: 1px solid black;
+            }
+
+            .alignCenter {
+                text-align: center;
+            }
+
+            .alignLeft {
+                text-align: left;
+            }
+
+            .alignRight {
+                text-align: right;
+            }
+
+            .valignTop {
+                vertical-align: top;
+            }
+
+            .valignBottom {
+                vertical-align: bottom;
+            }
+
+            .fs6 {
+                font-size: 6pt;
+            }
+
+            .fs7 {
+                font-size: 7pt;
+            }
+
+            .fs8 {
+                font-size: 8pt;
+            }
+
+            .fs9 {
+                font-size: 9pt;
+            }
+
+            .fs10 {
+                font-size: 10pt;
+            }
+
+            .fs11 {
+                font-size: 11pt;
+            }
+
+            .fs12 {
+                font-size: 12pt;
+            }
+
+            .fs14 {
+                font-size: 14pt;
+            }
+
+            .fs16 {
+                font-size: 16pt;
+            }
+
+            .tblInnerBorders {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+            }
+
+            .tblInnerBorders td, .tblInnerBorders th {
+                border: 1px solid black;
+            }
+
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+
+            .pb5 {
+                padding-bottom: 5px;
+            }
+
+            .pb10 {
+                padding-bottom: 10px;
+            }
+
+            .divWrap {
+                page-break-before: always;
+                counter-reset: page;
+            }
+
+            .divWrap:first-child {
+                page-break-before: auto !important;
+            }
+
+            .fr {
+                float: right;
+            }
+
+            .fl {
+                float: left;
+            }
+
+            .cb {
+                clear: both;
+            }
+
+            .lineTable {
+                border-collapse: collapse;
+            }
+
+            .lineTable thead tr th {
+                border-bottom: 1px solid black;
+                vertical-align: bottom;
+            }
+
+            .myUL li {
+                line-height: 2;
+                font-size: 12px;
+                margin-left: -28px;
+            }
+
+            .companyLogo span table tbody tr td div p img {
+                height: 100px !important;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="footer">
+        <div class="alignCenter">
+            Page <span class="pagenumber"/> of <span class="pagecount"/>
+        </div>
+        <div class="alignCenter" style="color:rgb(0, 0, 0)">
+            {!Sales_Order__c.Service_Center__r.Street__c}, {!Sales_Order__c.Service_Center__r.City__c}, {!Sales_Order__c.Service_Center__r.State__c} {!Sales_Order__c.Service_Center__r.Postal_Code__c} |
+            <span class="b">PHONE</span> {!Sales_Order__c.Service_Center__r.Phone__c} |
+            <span class="b">FAX</span> {!Sales_Order__c.Service_Center__r.Fax__c} |
+            <span style="color:rgb(0, 0, 0)" class="b">
+                <!-- {!UPPER(Sales_Order__c.Service_Center__r.Subsidiary_Company__r.Website__c)} -->
+                {!UPPER(websiteUrl)}
+            </span>
+            <!-- <apex:image url="{!$Resource.fb}" style="margin-bottom:-5px;" width="20" height="20"/>
+            <apex:image url="{!$Resource.In}" style="margin-bottom:-4px;" width="20" height="18"/>
+            <apex:image url="{!$Resource.twitter}" style="margin-bottom:-5px;margin-left:1px;" width="20" height="18"/>
+            <apex:image url="{!$Resource.G}" style="margin-bottom:-5px;margin-left:2px;" width="20" height="18"/> -->
+        </div>
+
+        <div style="border-bottom:10px solid rgb(23,35,104);" class="mt5"></div>
+    </div>
+
+    <div class="header">
+        <table class="w100">
+            <tr>
+                <td class="pageNumber w50 vaTop">
+                    <div>
+                    </div>
+                </td>
+                <td class="w50">
+                    <div class="fr">
+                        <!-- Ticket#21540 -->
+                        <!--
+                        <apex:outputField value="{!CompanySetup.Company_Logo__c}" rendered="{!SalesOrder.Service_Center__r.Logo__c == null}" />
+                        <apex:outputField value="{!SalesOrder.Service_Center__r.Logo__c}" rendered="{!SalesOrder.Service_Center__r.Logo__c != null}" />
+                        -->
+                        <!--- Ticket#23989
+                        <apex:outputField value="{!CompanySetup.Company_Logo__c}" rendered="{!companySetupLogo != null}" />
+                        <apex:outputField value="{!serviceCenterSetupLog.Logo__c}" rendered="{!serviceCenterSetupLog != null}" />
+                        <apex:outputField value="{!contractSetupLogo.Logo__c}" rendered="{!contractSetupLogo != null}" />
+                        -->
+                        <img src="{!logoUrl}" />
+                    </div>
+                    <div class="cb">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pageNumber w50 vaTop">
+                </td>
+                <td class="w50">
+                    <div class="fr">
+                        <span class="ml50">{!salesOrder.Name}</span><br/>
+                    </div>
+                    <div class="cb">
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="pageNumber w50 vaTop"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="content">
+        <div>
+            <table class="w100">
+                <tr>
+                    <td class="pageNumber w50 vaTop">
+                        <apex:outputText value="{0,date,MMMM d','  yyyy}">
+                            <apex:param value="{!salesOrder.CreatedDate}"/>
+                        </apex:outputText>
+                    </td>
+                    <td class="w50">
+                        <div class="cb">
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt30">
+            {!contactName}
+            <br/> {!contactTitle}
+        </div>
+        <div>
+            {!billToCustName}
+        </div>
+        <div>
+            {!billToCustBillingStreet}
+        </div>
+        <div>
+            {!billToCustBillingCity},
+            {!salesOrder.Bill_to_Customer_No__r.BillingStateCode} {!salesOrder.Bill_to_Customer_No__r.BillingPostalCode}
+        </div>
+        <div class="mt10">
+            <table>
+                <tr>
+                    <td style="padding-right: 10px; vertical-align: top; text-align: left">
+                        <apex:outputText rendered="{!salesOrder.Site_Name__c != null || salesOrder.Site_Street__c != null || salesOrder.Site_City__c != null || salesOrder.Site_Postal_Code__c != null || salesOrder.Site_State__c != null}">
+                            RE:
+                        </apex:outputText>
+                    </td>
+                    <td>
+                        <apex:outputText rendered="{!salesOrder.Site_Name__c != null}">
+                            {!siteName}
+                        </apex:outputText>
+                        <div>
+                            {!siteStreet}
+                        </div>
+                        <div>
+                            <apex:outputText rendered="{!salesOrder.Site_City__c != null}">{!siteCity},</apex:outputText>
+                            {!salesOrder.Site_State__c} {!salesOrder.Site_Postal_Code__c}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt30">
+            Dear {!contactName},
+        </div>
+
+        <div class="mt20">
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_Introductory_Paragraph__c == null}">
+                Republic Services is pleased to provide you with this Quote for the services outlined below in the Scope of Work.
+                We pride ourselves on being responsive and delivering a quality service. We appreciate being considered for this opportunity.
+                Upon your review, if there are any changes to the Scope of Work, or if additional services are required,
+                we would be pleased to discuss any additional needs you may have.
+            </apex:outputText>
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_Introductory_Paragraph__c != null}"
+                             value="{!SalesOrder.Service_Center__r.Quote_Introductory_Paragraph__c}" />
+            <br />
+            <apex:outputPanel rendered="{!printEstimatedDuration == true}">
+            Quote is based on estimated work date:
+            <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">
+                <apex:param value="{!salesOrder.Estimated_Job_Start_Date__c}" />
+            </apex:outputText>
+            <apex:outputText value=" - {0, date, MM'/'dd'/'yyyy}" rendered="{!salesOrder.Estimated_Job_Start_Date__c != salesOrder.Estimated_Job_End_Date__c}">
+                <apex:param value="{!salesOrder.Estimated_Job_End_Date__c}" />
+            </apex:outputText>
+            </apex:outputPanel>
+
+            <apex:outputText value=", including holiday and weekend." rendered="{!salesOrder.Include_Holiday__c == true && salesOrder.Include_Weekend__c == true}" />
+            <apex:outputText value=", including holiday." rendered="{!salesOrder.Include_Holiday__c == true && salesOrder.Include_Weekend__c == false}" />
+            <apex:outputText value=", including weekend." rendered="{!salesOrder.Include_Holiday__c == false && salesOrder.Include_Weekend__c == true}" />
+        </div>
+
+        <!--Scope of Work-->
+        <div class="mt20">
+            <table class="w100 lineTable">
+                <thead>
+                <tr>
+                    <th>
+                        SCOPE OF WORK
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5">
+                        <!--<apex:outputText value="{!SUBSTITUTE(SUBSTITUTE(JSENCODE(salesOrder.Site_Scope__c), '\r\n', '\n'),'\n','<br/>')}" escape="false" />-->
+                        <apex:outputField value="{!salesOrder.Site_Scope__c}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <apex:variable var="index" value="{!0}" />
+        <apex:repeat value="{!Jobs}" var="job" >
+            <apex:variable var="index" value="{!index + 1}" />
+
+            <div class="mt20 fs9 b w100" style="border-bottom: 1px solid #000">
+                Task {!job.JobTask.Task_No__c} - {!job.JobTask.Name}
+            </div>
+
+            <!-- begin of detail report -->
+            <apex:outputPanel rendered="{!printType == 'Detail'}">
+                <!--LABOR & EQUIPMENT-->
+                <div class="mt20"
+                     style="{!if(job.LaborGroup.SplitLaborLines.size + job.EquipmentGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                LABOR AND EQUIPMENT
+                            </th>
+                            <th width="8%" class="alignCenter">
+
+                            </th>
+                            <th  width="8%" class="alignCenter">
+                                EST.
+                                <div>
+                                    QTY.
+                                </div>
+                            </th>
+                            <th width="8%" class="alignCenter">
+                                UOM
+                                <div>
+                                    QTY.
+                                </div>
+                            </th>
+                            <th width="8%" class="alignCenter">
+                                UOM
+                            </th>
+
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.LaborGroup.SplitLaborLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.description}
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.rateType}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                        <apex:param value="{!line.qty}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                        <apex:param value="{!line.uomQty}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.uom}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.unitPrice}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.extendedPrice}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <apex:repeat value="{!job.EquipmentGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td>
+                                </td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                        <apex:param value="{!line.UOM_Qty__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="7">
+                                <apex:outputPanel rendered="{!job.LaborGroup.Subtotal + job.EquipmentGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="=6" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LaborGroup.Subtotal + job.EquipmentGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  colspan="=6" class="alignRight" style="padding-right: 5px;">Tax: </td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LaborGroup.Tax + job.EquipmentGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td  colspan="=6" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LaborGroup.Total + job.EquipmentGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--MATERIALS-->
+                <div class="mt20" style="{!if(job.MaterialGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                MATERIALS
+                            </th>
+                            <th width="8%">
+
+                            </th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter" >
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter" >
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight" >
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.MaterialGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}" rendered="{!line.Category__c != 'Materials'}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}" rendered="{!line.Category__c != 'Materials'}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}" rendered="{!line.Category__c == 'Materials'}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}" rendered="{!line.Category__c == 'Materials'}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c * line.Number_of_Day__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.MaterialGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MaterialGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MaterialGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MaterialGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Cost Plus Materials, Equipment, and Services -->
+                <div class="mt20" style="{!if(job.SubcontractorGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                COST PLUS MATERIALS, EQUIPMENT AND SERVICES
+                            </th>
+                            <th width="8%"></th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.SubcontractorGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c/line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.SubcontractorGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.SubcontractorGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.SubcontractorGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.SubcontractorGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--WASTE DISPOSAL-->
+                <div class="mt20" style="{!if(job.WasteDisposalGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                DISPOSAL
+                            </th>
+                            <th width="8%" class="alignCenter">
+
+                            </th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.WasteDisposalGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td class="alignCenter">
+
+                                </td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.WasteDisposalGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.WasteDisposalGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.WasteDisposalGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.WasteDisposalGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Demurrage -->
+                <div class="mt20" style="{!if(job.DemurrageGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                TRANSPORTATION, DEMURRAGE AND FEES
+                            </th>
+                            <th width="8">
+                            </th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.DemurrageGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td>
+                                </td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.DemurrageGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.DemurrageGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.DemurrageGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.DemurrageGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Lump sum -->
+                <div class="mt20" style="{!if(job.LumpSumGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                <!--LUMP SUM-->
+                                Bundled Resources
+                            </th>
+                            <th width="8%" class="alignCenter">
+                            </th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.LumpSumGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.LumpSumGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LumpSumGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LumpSumGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.LumpSumGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Miscellaneous Fee’s, Charges and Taxes-->
+                <div class="mt20" style="{!if(job.MiscChargeGroup.SalesLines.size > 0,'','display:None;')}">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <thead>
+                        <tr>
+                            <th width="40%">
+                                MISCELLANEOUS FEES, CHARGES AND TAXES
+                            </th>
+                            <th width="8%" class="alignCenter">
+
+                            </th>
+                            <th width="13%" class="alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="alignCenter">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    UNIT PRICE
+                                </apex:outputPanel>
+                            </th>
+                            <th width="12%" class="alignRight">
+                                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </apex:outputPanel>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!job.MiscChargeGroup.SalesLines}" var="line">
+                            <tr>
+                                <td>
+                                    {!line.Description__c}
+                                </td>
+                                <td>
+
+                                </td>
+                                <td class="alignCenter">
+                                    <!--ticket 19982-->
+                                    <!--
+                                    <apex:outputText value="{0, Number, #,##0.00}">
+                                    -->
+                                    <apex:outputText value="{0, Number, #,##0.00##}">
+                                        <!--ticket 19982-->
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="alignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00#}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="6">
+                                <apex:outputPanel rendered="{!job.MiscChargeGroup.Subtotal > 0 && job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                    <table align="right" style="page-break-inside: avoid;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Subtotal:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MiscChargeGroup.Subtotal}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Tax:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MiscChargeGroup.Tax}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="alignRight" style="padding-right: 5px;">Total:</td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, number, $###,##0.00}">
+                                                    <apex:param value="{!job.MiscChargeGroup.Total}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+            <!-- end of detail report -->
+
+            <!-- begin of consolidated report -->
+            <apex:outputPanel rendered="{!PrintType == 'Consolidated'}">
+                <apex:outputPanel rendered="{!job.JobTask.Billing_Type__c != 'Fixed Price'}">
+                    <div class="mt20">
+                        <table class="w100 lineTable" style="page-break-inside: avoid;">
+                            <thead>
+                            <tr>
+                                <th width="40%">
+                                    Billing Description
+                                </th>
+                                <th width="5%">
+                                </th>
+                                <th  width="8%" class="alignCenter">
+                                    EST.
+                                    <div>
+                                        QTY.
+                                    </div>
+                                </th>
+                                <th  width="8%" class="alignCenter">
+                                    UOM
+                                    <div>
+                                        QTY.
+                                    </div>
+                                </th>
+                                <th width="4%" class="alignCenter">
+                                    UOM
+                                </th>
+                                <th width="15%" class="alignCenter">
+                                    UNIT PRICE
+                                </th>
+                                <th width="10%" class="alignRight">
+                                    EXTENDED
+                                    <div>
+                                        PRICE
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <apex:repeat value="{!job.LaborGroup.SplitLaborLines}" var="line">
+                                <tr>
+                                    <td style="vertical-align: top;">
+                                        {!line.description}
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        {!line.rateType}
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, #,##0.00}">
+                                            <apex:param value="{!line.qty}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, #,##0.00}">
+                                            <apex:param value="{!line.uomQty}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        {!line.uom}
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!line.unitPrice}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignRight" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!line.extendedPrice}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <apex:repeat value="{!job.ConsolidatedGroup.SalesLines}" var="line">
+                                <tr>
+                                    <!--
+                                    <td style="vertical-align: top;">
+
+                                        <apex:outputText value="Cost Plus Materials, Equipment and Services" rendered="{!line.Category__c == 'Subcontractors'}" />
+                                        <apex:outputText value="Transportation, Demurrage and Fees" rendered="{!line.Category__c == 'Demurrage'}" />
+
+                                        <apex:outputText value="Cost Plus" rendered="{!line.Category__c == 'Subcontractors'}" />
+                                        <apex:outputText value="Trans, Demurrage & Fees" rendered="{!line.Category__c == 'Demurrage'}" />
+                                        <apex:outputText value="Bundled" rendered="{!line.Category__c == 'Bundled'}" />
+                                        <apex:outputText value="{!line.Category__c}" rendered="{!line.Category__c != 'Subcontractors' && line.Category__c != 'Demurrage' && line.Category__c != 'Bundled'}" />
+                                    </td>
+                                    -->
+                                    <td style="vertical-align: top;">
+                                        {!line.Description__c}
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <!--ticket 19982-->
+                                        <!--
+                                        <apex:outputText value="{0, Number, #,##0.00}">
+                                        -->
+                                        <apex:outputText value="{0, Number, #,##0.00##}">
+                                            <!--ticket 19982-->
+                                            <apex:param value="{!line.Quantity__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, #,##0.00}" rendered="{!line.Category__c == 'Labor' || line.Category__c == 'Equipment'}">
+                                            <apex:param value="{!line.UOM_Qty__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        {!line.Unit_Of_Measure__r.Name}
+                                    </td>
+                                    <td class="alignCenter" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, $#,##0.00#}">
+                                            <apex:param value="{!line.Unit_Price__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                    <td class="alignRight" style="vertical-align: top;">
+                                        <apex:outputText value="{0, Number, $#,##0.00}">
+                                            <apex:param value="{!line.Line_Amount__c}"/>
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <!-- end of consolidated report -->
+
+            <!-- job total -->
+            <apex:outputPanel rendered="{!Jobs.size > 1}">
+                <div class="mt20">
+                    <table class="w100 lineTable" style="page-break-inside: avoid;">
+                        <tbody>
+                        <tr>
+                            <td colspan="4" class="alignRight">
+                                {!job.JobTask.Name} Subtotal:
+                            </td>
+                            <td width="18%" class="alignRight">
+                                <apex:outputText value="{0,number, $#,##0.00}">
+                                    <apex:param value="{!job.Subtotal}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                            <!--<tr style="{!if(job.JobTask.Billing_Type__c != 'Fixed Price', '', 'display:none;')}">-->
+                        <tr style="{!if((job.JobTask.Billing_Type__c != 'Fixed Price') || (job.JobTask.Billing_Type__c == 'Fixed Price' && job.JobTask.Fixed_Price_Surcharge_Option__c == 'Fixed Price Does Not Include Surcharge'), '', 'display:none;')}">
+                            <!--ticket 19672-->
+                            <td colspan="4" class="alignRight">
+                                {!job.JobTask.Name} {!IF(Sales_Order__c.Surcharge_Type__c != null, IF(Sales_Order__c.Surcharge_Type__c == 'Fuel Surcharge', 'Fuel Surcharge:', IF(Sales_Order__c.Surcharge_Type__c == 'ESIC', 'ESIC Surcharge:', Sales_Order__c.Surcharge_Type__c + ' Surcharge:')), '')}
+                            </td>
+                            <td width="18%" class="alignRight">
+                                <apex:outputText value="{0,number, $#,##0.00}" rendered="{!job.SurchargeAmount != null}">
+                                    <apex:param value="{!job.SurchargeAmount}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <!-- Ticket TA487704 - Duplicate tax line in Sales Quote
+                        <tr>
+                            <td colspan="4" class="alignRight">
+                                {!job.JobTask.Name} Tax:
+                            </td>
+                            <td width="18%" class="alignRight">
+                                <apex:outputText value="{0,number, $#,##0.00}">
+                                    <apex:param value="{!job.Tax}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <!--ticket 19672-->
+                        
+                        <tr>
+                            <td colspan="4" class="alignRight">
+                                {!job.JobTask.Name} Tax:
+                            </td>
+                            <td width="18%" class="alignRight">
+                                <apex:outputText value="{0,number, $#,##0.00}">
+                                    <apex:param value="{!job.Tax}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="alignRight">
+                                {!if(job.JobTask.Billing_Type__c != 'Fixed Price', 'Estimated Total:', 'Total:')}
+                            </td>
+                            <td width="18%" class="alignRight">
+                                <apex:outputText value="{0, Number, $#,##0.00}">
+                                    <apex:param value="{!job.Total}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+        </apex:repeat>
+
+        <!-- grand total begin -->
+        <div class="mt20">
+            <table class="w100 lineTable" style="page-break-inside: avoid;">
+                <tbody>
+                <tr>
+                    <td colspan="4" class="alignRight b">
+                        TOTAL:
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}">
+                            <apex:param value="{!Subtotal}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                     <tr style="{!if(SurchargeAmount != 0, '', 'display:none;')}">
+                    <td colspan="4" class="alignRight b" style="text-transform: uppercase;">
+                        {!IF(Sales_Order__c.Surcharge_Pct__c != null, IF(Sales_Order__c.Surcharge_Type__c == 'ESIC','ESIC Surcharge:',Sales_Order__c.Surcharge_Type__c + ' Surcharge:'),'')}
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}" rendered="{!SurchargeAmount != null}">
+                            <apex:param value="{!SurchargeAmount}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="alignRight b">
+                        TAX:
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}">
+                            <apex:param value="{!Tax}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <!--ticket 19672-->
+                <!--
+                <tr style="{!if(IsFixedPriceJob != true, '', 'display:none;')}">
+                    <td colspan="4" class="alignRight b" style="text-transform: uppercase;">
+                        {!IF(Sales_Order__c.Surcharge_Pct__c != null, IF(Sales_Order__c.Surcharge_Type__c == 'Fuel Surcharge','Fuel Surcharge:',Sales_Order__c.Surcharge_Type__c + ' Surcharge:'),'')}
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}" rendered="{!SurchargeAmount != null}">
+                            <apex:param value="{!SurchargeAmount}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="alignRight b">
+                        <apex:outputPanel rendered="{!IsFixedPriceJob != true}">
+                            ESTIMATED GRAND TOTAL:
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IsFixedPriceJob == true}">
+                            GRAND TOTAL:
+                        </apex:outputPanel>
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!Total}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                -->
+                <tr>
+                    <td colspan="4" class="alignRight b">
+                        <apex:outputPanel rendered="{!IsFixedPriceJob != true}">
+                            ESTIMATED GRAND TOTAL:
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IsFixedPriceJob == true}">
+                            GRAND TOTAL:
+                        </apex:outputPanel>
+                    </td>
+                    <td width="18%" class="alignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!Total}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <!--ticket 19672-->
+                </tbody>
+            </table>
+        </div>
+        <!-- grand total end -->
+
+        <div style="page-break-before: always;" class="mt30">
+        <!--<div class="mt30">-->
+            <div class="b u">
+                ASSUMPTIONS &amp; CONTINGENCIES
+            </div>
+            <ul class="myUL">
+                <li>
+                    {!salesorder.Custom_Assumptions1__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions2__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions3__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions4__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions5__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions6__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions7__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions8__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions9__c}
+                </li>
+                <li>
+                    {!salesorder.Custom_Assumptions10__c}
+                </li>
+                <li style="{!if(salesOrder.Free_Access__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt1__c == null}" value="Republic Services will have free and easy access to the work area." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt1__c != null}" value="{!SalesOrder.Service_Center__r.Standard_AC_Opt1__c}" />
+                </li>
+                <li style="{!if(salesOrder.Pricing__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt2__c == null}" value="Pricing is based on work being completed during normal business hours Monday - Friday." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt2__c != null}" value="{!SalesOrder.Service_Center__r.Standard_AC_Opt2__c}" />
+                </li>
+                <li style="{!if(salesOrder.Expendables__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt3__c == null}" value="Any expendables used are charged in accordance with Republic Services' current expendable price list." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt3__c != null}" value="{!SalesOrder.Service_Center__r.Standard_AC_Opt3__c}" />
+                </li>
+                <li style="{!if(salesOrder.Applicable_Taxes__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt4__c == null}" value="Applicable local, state, federal, transporter and/or other applicable taxes or fees will be added to the invoice." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Standard_AC_Opt4__c != null}" value="{!SalesOrder.Service_Center__r.Standard_AC_Opt4__c}" />
+                </li>
+                <li style="{!if(salesOrder.Portal_Basis__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility. Overtime rates will apply after eight
+                    hours.
+                </li>
+                <li style="{!if(salesOrder.Overtime_Rate__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis. Overtime rates will
+                    apply after eight hours.
+                </li>
+                <li style="{!if(salesOrder.Daily_Rate__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed as a daily rate. This pricing is based on a 10
+                    hour day, portal-to-portal.
+                </li>
+                <li style="{!if(salesOrder.Lump_Sum__c,'','display:None;')}">
+                    The labor, materials and equipment portion of this quote is lump sum; it is based on information
+                    provided by you and/or gained at the site tour. Any conditions that differ may result in additional
+                    charges.
+                </li>
+                <!--Ticket#24559-->
+                <!--
+                <li style="{!if(salesOrder.Portal_Basis_Adv__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility.
+                    Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30 pm,
+                    on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holiday.
+                </li>
+                -->
+                <li style="{!if(salesOrder.Default_Billing_Rule_To_Display__c == 'PortalBasisAdv','','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility.
+                    Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30 pm,
+                    on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holiday.
+                </li>
+                <li style="{!if(salesOrder.Default_Billing_Rule_To_Display__c == '','','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility.
+                    Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00 pm,
+                    on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holidays.
+                </li>
+                <!--Ticket#24559-->
+                <li style="{!if(salesOrder.Minimum_Disposal_Fee__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt1__c == null}" value="This is a minimum disposal fee of $975.00 per shipment." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt1__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt1__c}" />
+                </li>
+                <li style="{!if(salesOrder.Disposal_Pricing__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt2__c == null}" value="Disposal pricing is based on profile and analytical review and acceptance." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt2__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt2__c}" />
+                </li>
+                <li style="{!if(salesOrder.First_Hour_Of_Loading__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c == null && SalesOrder.CreatedDate >= DATETIMEVALUE('2023-07-14 00:00:00')}" value="The first 15 minutes of loading/off-loading is free; thereafter demurrage is $195.00 per hour." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c == null && SalesOrder.CreatedDate < DATETIMEVALUE('2023-07-14 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr." />
+                    <!--
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c == null && SalesOrder.CreatedDate >= DATETIMEVALUE('2021-07-12 00:00:00') && SalesOrder.CreatedDate < DATETIMEVALUE('2023-06-01 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c == null && SalesOrder.CreatedDate < DATETIMEVALUE('2021-07-12 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr." />
+                    -->
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c}" />
+                </li>
+                <li style="{!if(salesOrder.Invoice_Of_Work__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt4__c == null}" value="The invoice may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt4__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt4__c}" />
+                </li>
+                <li style="{!if(salesOrder.Minimum_Disposal_Charge__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt5__c == null}" value="There is a 15 tons minimum disposal charge per load." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt5__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt5__c}" />
+                </li>
+                <li style="{!if(salesOrder.Maximum_Weight__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt6__c == null}" value="There is a maximum weight of 18 tons per roll-off container." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt6__c != null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt6__c}" />
+                </li>
+                <li style="{!if(salesOrder.Off_Specification__c,'','display:None;')}">
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt7__c == null}" value="This Quote is based on the generator’s characterization of the waste. Off-specification charges will apply if the actual waste and/or waste packaging does not meet the expected specifications." />
+                    <apex:outputText rendered="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt7__c == null}" value="{!SalesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt7__c}" />
+                </li>
+                <li>
+                    <apex:outputText value="Fees will be charged for waste approvals. A Profile Submission Fee of $125 will be charged for each initial profile approval, and a Profile Renewal Fee of $40 will be charged for each profile renewal." />
+                </li>
+            </ul>
+
+
+            <!-- job level assumptions begin -->
+            <apex:repeat value="{!Jobs}" var="job">
+                <apex:outputPanel rendered="{!job.JobTask.Custom_Assumption1__c != null}">
+                    <div class="b u" style="text-transform: uppercase;">
+                        Task {!job.JobTask.Task_No__c} - {!job.JobTask.Name}
+                    </div>
+                    <ul class="myUL">
+                        <li>
+                            {!job.JobTask.Custom_Assumption1__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption2__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption3__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption4__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption5__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption6__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption7__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption8__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption9__c}
+                        </li>
+                        <li>
+                            {!job.JobTask.Custom_Assumption10__c}
+                        </li>
+                    </ul>
+                </apex:outputPanel>
+            </apex:repeat>
+            <!-- job level assumptions end -->
+        </div>
+
+        <div class="b u mt20">
+            TERMS &amp; CONDITIONS
+        </div>
+        <!-- <div class="mt20">
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_TC_Introductory_Paragraph__c == null}" value="Except where superseded by an existing service agreement between customer and an Republic Services entity, the terms and conditions below apply to this quoted business proposal." />
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_TC_Introductory_Paragraph__c != null}" value="{!SalesOrder.Service_Center__r.Quote_TC_Introductory_Paragraph__c}" />
+        </div> -->
+        <ul class="myUL">
+            <li style="{!if(salesOrder.Any_Deviations__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt1__c == null}">
+                    Except where superseded by an existing contract between Customer and Republic Services, as noted in the Proposal Acceptance, the terms and conditions below apply to this Quote. This quoted estimate is provided based upon information provided by or gathered at Customer’s location. Services provided will be charged at no less than the estimate. Charges incurred that exceed the cost estimate will be invoiced based upon actual labor, materials, and/or disposal services provided by Republic Services and will be billed at a time and materials basis.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt1__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt1__c}" />
+            </li>
+            <li style="{!if(salesOrder.Shippable_Containers__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt2__c == null}" value="This Quote is contingent upon Customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers." />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt2__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt2__c}" />
+            </li>
+           <!-- 
+            <li style="{!if(salesOrder.First_Hour_Of_Loading__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c == null && SalesOrder.CreatedDate >= DATETIMEVALUE('2023-07-14 00:00:00') }" value="The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr." />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c == null && SalesOrder.CreatedDate < DATETIMEVALUE('2023-07-14 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr." />
+                
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c == null && SalesOrder.CreatedDate >= DATETIMEVALUE('2021-07-12 00:00:00') && SalesOrder.CreatedDate < DATETIMEVALUE('2023-06-01 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr." />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c == null && SalesOrder.CreatedDate < DATETIMEVALUE('2021-07-12 00:00:00')}" value="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr." />
+        
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt3__c}" />
+            </li> 
+            -->
+
+            <!--Ticket#24559-->
+            <!--
+            <li style="{!if(salesOrder.Overtime_Rate_Description__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c == null}">
+                An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday.
+                Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include:
+                <div style="padding: 0 60px;">
+                    New Year's Day, President's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.
+                </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c}" />
+            </li>
+            -->
+            <li style="{!if(salesOrder.Overtime_Rate_Description__c == true && salesOrder.Default_Billing_Rule_To_Display__c == 'PortalBasisAdv','','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c == null}">
+                    An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday.
+                    Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include:
+                    <div style="padding: 0 60px;">
+                        New Year's Day, President's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.
+                    </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c}" />
+            </li>
+            <li style="{!if(salesOrder.Overtime_Rate_Description__c == true && salesOrder.Default_Billing_Rule_To_Display__c == '','','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c == null}">
+                    An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00pm,
+                    on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include:
+                    <div style="padding: 0 60px;">
+                        New Year's Day, Birthday of Martin Luther King, Jr., President's Day, Memorial Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving Day, The day after Thanksgiving, Christmas Eve, and Christmas Day.
+                    </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt4__c}" />
+            </li>
+            <!--Ticket#24559-->
+
+            <li style="{!if(salesOrder.Rate_Time_Definitions__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt5__c == null}">
+                Rate Time Definitions
+                <div style="padding:0 60px;">
+                    a. The day rate, where applicable, is defined as twelve hours.
+                </div>
+                <div style="padding: 0 60px;">
+                    b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in the Rate sheet for an item,
+                    it will be calculated as the Day Rate divided by 12.
+                </div>
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt5__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt5__c}" />
+            </li>
+            <li style="{!if(salesOrder.Charges_For_Labor__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt6__c == null}">
+                Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job,
+                for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment.
+                This includes on-site and off-site labor and equipment.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt6__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt6__c}" />
+            </li>
+            <li style="{!if(salesOrder.Waste_Disposal_And_Ancillary__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt7__c == null}">
+                Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste);
+                Ancillary supplies required and used will be billed in accordance with Republic Services standard rates sheet.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt7__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt7__c}" />
+            </li>
+            <li style="{!if(salesOrder.Characterization_Of_Waste__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt8__c == null}">
+                This Quote is based on the generator’s characterization of the waste and the Republic Services assigned Process Code.
+                Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt8__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt8__c}" />
+            </li>
+            <li style="{!if(salesOrder.Generate_Before_Final__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt9__c == null}">
+                The invoice for work referenced above may be generated before final disposal information has been received.
+                If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt9__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt9__c}" />
+            </li>
+            <li style="{!if(salesOrder.Lab_Packs_Rate__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt10__c == null}">
+                Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material;
+                Republic Services may furnish a separate quotation for any high-hazard work, if requested.
+                Republic Services reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt10__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt10__c}" />
+            </li>
+            <li style="{!if(salesOrder.Cylinders_Require_Evaluation__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt11__c == null}">
+                Cylinders require evaluation and approval by an authorized Republic Services representative prior to shipment.
+                Cylinders must be in DOT shippable condition, be marked with original stenciling,
+                labels and/or tags, and valves must be operational.  Cylinders not meeting Republic Services approval and the aforementioned conditions may be subject to additional charges.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt11__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt11__c}" />
+            </li>
+            <li style="{!if(salesOrder.Manifest_And_Profile__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt12__c == null}" value="A manifest fee of $20.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%." />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt12__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt12__c}" />
+            </li>
+            <li style="{!if(salesOrder.Net_Due_Day__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt13__c == null}">
+                Net due {!SUBSTITUTE(Sales_Order__c.Payment_Term__r.Name,'D','')} days with prior credit approval unless modified by executed purchase order or contract.
+                Finance charges of one and one half (1.5) percent per month will be due on payments past due after thirty days from date of invoice.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt13__c != null}">
+                Net due {!SUBSTITUTE(Sales_Order__c.Payment_Term__r.Name,'D','')} {!SalesOrder.Service_Center__r.Term_Conditions_Opt13__c}
+                </apex:outputText>
+            </li>
+            <li style="{!if(salesOrder.Applicable_Taxes_Quote__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt14__c == null}" value="Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable." />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt14__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt14__c}" />
+            </li>
+            <li>
+                <apex:outputPanel rendered="{!Sales_Order__c.Surcharge_Type__c == 'Fuel Surcharge'}">
+                    Due to uncontrollable fluctuating fuel costs a fuel surcharge will be billed only on equipment that
+                    requires fuel and all transportation charges, based on the Department of Energy on Highway Diesel Fuel
+                    Prices (National Average). Please ask Republic Services representative for current rate at time of work. <!--{!surchargeOnPDF}-->
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!Sales_Order__c.Surcharge_Type__c == 'EEC Fee'}">
+                     An EEC fee will be added to your services. EEC is an environmental, energy &amp; compliance fee. The EEC fluctuates monthly and will be charged as a percentage of all invoiced charges, excluding taxes. For more information about this fee, please visit&nbsp;<apex:outputlink >www.republicservices.com/customer-support/fee-disclosures</apex:outputlink>.
+                </apex:outputPanel>
+            </li>
+            <li style="{!if(salesOrder.Client_Is_Responsible__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt15__c == null}">
+                Customer is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary.
+                Said charges will be at Republic Services' standard T&amp;M rates and disposal cost plus 30%.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt15__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt15__c}" />
+            </li>
+            <!-- <li style="{!if(salesOrder.In_The_Event__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt16__c == null}">
+                In the event legal or other action is required to collect unpaid invoice balances,
+                Customer agrees to pay all costs of collection, including reasonable attorneys’ fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt16__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt16__c}" />
+            </li> -->
+            <li style="{!if(salesOrder.Quote_Valid_30__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt17__c == null}">
+                This Quote is valid for 30 days.  Pricing is based on the current market capacity, conditions, and Government regulations.
+                If a significant market-wide pricing, capacity or regulatory change affects our pricing, this quote is subject to change.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt17__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt17__c}" />
+            </li>
+            <!-- <li style="{!if(salesOrder.Unless_Superseded__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt18__c == null}">
+                Unless superseded by a fully executed agreement with terms that conflict,
+                additional terms &amp; conditions located at https://www.republicservices.com/cms/documents/Environmental-Solutions/Environmental-Services-Terms-Conditions.pdf are hereby incorporated by reference and are agreed to and acknowledged by customer.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt18__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt18__c}" />
+            </li> -->
+            <li style="{!if(salesOrder.Charge_Rinse_Out_Fee__c,'','display:None;')}">
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt19__c == null}">
+                    Decon performed on-site at rates listed, special rates may apply under listed conditions. Decon performed off-site will be charged a $200.00 Rinse Out Fee. 
+                    This fee will be added to each job per use for each piece of vacuum equipment and all non-lined waste storage equipment (Frac Tanks, Vac Boxes, Filter Boxes, Roll Off Containers, Etc.) 
+                    coming into contact with light oils or other contaminates. Charges for the removal of heavy oils, solids or equipment cleaning requiring a confined space entry will be quoted on a case by case basis.
+                </apex:outputText>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Term_Conditions_Opt19__c != null}" value="{!SalesOrder.Service_Center__r.Term_Conditions_Opt19__c}" />
+            </li>
+        </ul>
+
+        <div class="mt30">
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_Closing_Paragraph__c == null}">
+            Republic Services appreciates the opportunity to work for you. We sincerely look forward to performing this
+            project.
+            Should you have any questions, please do not hesitate to call me directly
+            at {!Sales_Order__c.Service_Center__r.Phone__c}
+            </apex:outputText>
+            <apex:outputText rendered="{!SalesOrder.Service_Center__r.Quote_Closing_Paragraph__c != null}" value="{!SalesOrder.Service_Center__r.Quote_Closing_Paragraph__c}" />
+        </div>
+
+        <!-- <div class="mt20">
+        </div> -->
+
+        <div style="page-break-before: always;">
+            <div class="alignCenter b">
+                QUOTE ACCEPTANCE
+            </div>
+
+            <div class="alignLeft mt25">
+                THE ADDRESSEE OF THIS QUOTE IS THE "CUSTOMER". ALL SERVICES PROVIDED UNDER THIS QUOTE 
+                ARE SUBJECT TO REPUBLIC SERVICES’ ENVIRONMENTAL SERVICES TERMS AND CONDITIONS 
+                (“SERVICE TERMS”) INCORPORATED HEREIN BY THIS REFERENCE AND LOCATED AT: <a>www.RepublicServices.com/ServiceTermsES.</a>
+                A HARD COPY OF THE SERVICE TERMS WILL BE PROVIDED UPON REQUEST. BY EXECUTING THIS QUOTE OR 
+                RECEIVING THE SERVICES, CUSTOMER ACKNOWLEDGES THAT IT AUTHORIZES REPUBLIC SERVICES TO
+                PROVIDE THE SERVICES AND THAT IT HAS READ AND AGREES TO BE BOUND BY THE SERVICE TERMS. 
+                IF CUSTOMER HAS A VALID CONTRACT WITH REPUBLIC SERVICES THAT INCLUDES THE SCOPE OF SERVICES 
+                HEREIN, THE TERMS OF SUCH CONTRACT SHALL PREVAIL IN THE EVENT OF ANY CONFLICTS WITH THE  
+                SERVICE TERMS. NO TERMS OR CONDITIONS ON ANY CUSTOMER-PROVIDED DOCUMENT OR RELATED 
+                TO CUSTOMER VENDOR SET UP PROCESS SHALL APPLY. THIS QUOTE AND THE SERVICE 
+                TERMS OR CONTRACT, AS APPLICABLE, CONTAIN  THE ENTIRE AGREEMENT OF THE PARTIES RELATED 
+                TO THE SERVICES INCLUDED IN THIS QUOTE. CUSTOMER UNDERSIGNED REPRESENTATIVE 
+                WARRANTS THAT HE/SHE HAS AUTHORITY TO BIND CUSTOMER TO THIS QUOTE.
+            </div>
+
+            <div class="b mt25 alignCenter">
+                <span>Quote Prepared by: </span>
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Legal_Entity_Name__c != null}" value="{!SalesOrder.Service_Center__r.Legal_Entity_Name__c}, a Republic Services Company (“Republic Services”)" />
+                <apex:outputText rendered="{!SalesOrder.Service_Center__r.Legal_Entity_Name__c == null}" value="A Republic Services Company (“Republic Services”)" />
+            </div>
+
+            <div>
+                <table class="w100 b mt25">
+                    <tr>
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 0px 50px">
+                            <div id="signature" style="font-style: italic; font-family:'Times' !important;font-size: large; background-color: aliceblue; padding-bottom: 5px;">
+                                {!Sales_Order__c.CreatedBy.Name}
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                {!representativeColLabel}
+                            </div>
+                        </td>
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 0px 50px">
+                            <div style="font-style: italic; font-family:'Times' !important; background-color: aliceblue;padding-bottom:5px;">
+                                <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                    <apex:param value="{!Sales_Order__c.Quote_Date__c}"/>
+                                </apex:outputText>
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Date
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+           
+            <div class="b alignCenter mt25">
+                TO ACCEPT THIS QUOTE AND ORDER THE SERVICES, PLEASE EXECUTE THIS SECTION AND RETURN THE FULL QUOTE DOCUMENT TO YOUR REPUBLIC SERVICES REPRESENTATIVE.
+            </div>
+
+            <div>
+                <table class="w100 b mt25">
+                    <tr>
+                        <!--ticket 21113-->
+                        <!--
+                        <td class="w50 alignCenter" style="border-top:2px solid black;">
+                            Customer Signature
+                        </td>
+                        <td class="w50 alignCenter" style="border-top:2px solid black;">
+                            Date
+                        </td>
+                        -->
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 10px 50px">
+                            <div>
+                                <apex:image url="{!URLFOR($Action.Attachment.Download, CustomerSignatureFileId)}" style="width:175px;height:80px;" rendered="{!CustomerSignatureFileId != null}"/>
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Customer Signature
+                            </div>
+                        </td>
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 10px 50px">
+                            <div style="font-style: italic; font-family:'Times' !important; background-color: aliceblue;padding-bottom:5px;">
+                                <apex:outputText value="{0,date,MM/dd/yyyy}" rendered="{!CustomerSignatureFileId != null}">
+                                    <apex:param value="{!CustomerSignatureDate}"/>
+                                </apex:outputText>
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Date
+                            </div>
+                        </td>
+                        <!--ticket 21113-->
+                    </tr>
+                    <tr style="padding-top: 25px">
+                        <!--ticket 21113-->
+                        <!--
+                        <td class="w50 alignCenter" style="border-top:2px solid black;">
+                            Customer Print Name
+                        </td>
+                        <td class="w50 alignCenter" style="border-top:2px solid black;">
+                            Purchase Order No.
+                        </td>
+                        -->
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 15px 50px">
+                            <div style="padding-bottom:5px;">
+                                <apex:outputPanel rendered="{!CustomerSignatureFileId != null}">
+                                    {!CustomerPrintName}
+                                </apex:outputPanel>
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Customer Print Name
+                            </div>
+                        </td>
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 15px 50px">
+                            <div style="padding-bottom:5px;">
+                                <!--ticket 21113-->
+                                {!CustomerPONo}
+                                <!--ticket 21113-->
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Purchase Order No.
+                            </div>
+                        </td>
+                        <!--ticket 21113-->
+                    </tr>
+                    <!-- <tr>
+                        <td class="w50 alignCenter" style="vertical-align: bottom; padding: 25px 50px">
+                            <div style="padding-bottom:5px;">
+                                
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Customer Representative Title
+                            </div>
+                        </td>
+                    </tr> -->
+                  
+                        <!--ticket 21113-->
+                        <!--
+                        <td class="w50 alignCenter">
+                            <div id="signature" style="font-style: italic; font-family:'Times' !important;font-size: large; background-color: aliceblue; padding: 20px 0px 0px 0px; margin-top:-55px;">
+                                {!Sales_Order__c.CreatedBy.Name}
+                            </div>
+                            <div style="border-top:2px solid black;margin-top:5px;">
+                                {!representativeColLabel}
+                            </div>
+                        </td>
+                        <td class="w50 alignCenter">
+                            <div id="signature" style="font-style: italic; font-family:'Times' !important; background-color: aliceblue; padding: 27px 0px 0px 0px; margin-top:-55px;">
+                                <apex:outputText value="{0, date,MM/dd/yyyy}">
+                                    <apex:param value="{!Sales_Order__c.Quote_Date__c}"/>
+                                </apex:outputText>
+                            </div>
+                            <div style="border-top:2px solid black;margin-top:5px;">
+                                Date
+                            </div>
+                        </td>
+                        -->
+                        <!-- <td class="w50 alignCenter" style="vertical-align: bottom">
+                            <div id="signature" style="font-style: italic; font-family:'Times' !important;font-size: large; background-color: aliceblue; padding-bottom: 5px;">
+                                {!Sales_Order__c.CreatedBy.Name}
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                {!representativeColLabel}
+                            </div>
+                        </td>
+                        <td class="w50 alignCenter">
+                            <div id="signature" style="font-style: italic; font-family:'Times' !important; background-color: aliceblue; padding-bottom: 5px;">
+                                <apex:outputText value="{0, date,MM/dd/yyyy}">
+                                    <apex:param value="{!Sales_Order__c.Quote_Date__c}"/>
+                                </apex:outputText>
+                            </div>
+                            <div style="border-top:2px solid black;">
+                                Date
+                            </div>
+                        </td> -->
+                        <!--ticket 21113-->
+                    
+                    
+
+                </table>
+            </div>
+           
+        </div>
+    </div>
+    </body>
+</apex:page>

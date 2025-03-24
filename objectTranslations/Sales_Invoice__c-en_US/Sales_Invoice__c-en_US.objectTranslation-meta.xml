@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Sales Invoice</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Sales Invoices</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- SalesInvoiceFieldSet --></label>
+        <name>SalesInvoiceFieldSet</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Sales Quote --></label>
+        <name>Sales_Quote</name>
+    </fieldSets>
+    <layouts>
+        <layout>Open Invoice Layout</layout>
+        <sections>
+            <label><!-- Billing Address --></label>
+            <section>Billing Address</section>
+        </sections>
+        <sections>
+            <label><!-- Billing Instructions --></label>
+            <section>Billing Instructions</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Invoice Details --></label>
+            <section>Invoice Details</section>
+        </sections>
+        <sections>
+            <label><!-- Rental Information --></label>
+            <section>Rental Information</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+        <sections>
+            <label><!-- Surcharge Details --></label>
+            <section>Surcharge Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Posted Invoice Layout</layout>
+        <sections>
+            <label><!-- Billing Address --></label>
+            <section>Billing Address</section>
+        </sections>
+        <sections>
+            <label><!-- Billing Information --></label>
+            <section>Billing Information</section>
+        </sections>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Credit Memo Information --></label>
+            <section>Credit Memo Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Rental Information --></label>
+            <section>Rental Information</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Approval Information --></label>
+        <name>ApprovalInformation</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Task --></label>
+        <name>Task</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Open Invoice --></label>
+        <name>Open_Invoice</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Posted Invoice --></label>
+        <name>Posted_Invoice</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Collect_Retainage --></label>
+        <name>Collect_Retainage</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Delete --></label>
+        <name>Delete</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Edit_Classic --></label>
+        <name>Edit_Classic</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Edit_with_Line_Pagination --></label>
+        <name>Edit_with_Line_Pagination</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Email_Document --></label>
+        <name>Email_Document</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Post --></label>
+        <name>Post</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Print_Document --></label>
+        <name>Print_Document</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Reverse_Invoice --></label>
+        <name>Reverse_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Submit_for_Approval_vf_si --></label>
+        <name>Submit_for_Approval_vf_si</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Unpost --></label>
+        <name>Unpost</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Update_Unit_Cost --></label>
+        <name>Update_Unit_Cost</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Void --></label>
+        <name>Void</name>
+    </webLinks>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</CustomObjectTranslation>

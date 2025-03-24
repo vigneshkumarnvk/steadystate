@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Customer__c</columns>
+    <columns>Document_Type__c</columns>
+    <columns>Description__c</columns>
+    <columns>Service_Center_Code__c</columns>
+    <columns>Posting_Date__c</columns>
+    <columns>Amount__c</columns>
+    <columns>Remaining_Amount__c</columns>
+    <columns>Open__c</columns>
+    <columns>Subsidiary_Company__c</columns>
+    <columns>Closed_at_Date__c</columns>
+    <columns>Credit_Amount_LCY__c</columns>
+    <columns>Amount_LCY__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Document_Type__c</field>
+        <operation>equals</operation>
+        <value>Invoice,Credit_Memo</value>
+    </filters>
+    <label>All</label>
+</ListView>

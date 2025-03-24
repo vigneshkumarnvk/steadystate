@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_User_from_creating_SO</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+
+ ISNEW(),
+ ($User.Id  =  '0051V0000078A1T'))
+
+|| 
+
+AND(
+NOT(ISNEW()),
+($User.Id  = '0051V0000078A1T'))</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to create/edit</errorMessage>
+</ValidationRule>

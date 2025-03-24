@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- ###Depreciated###
+ACV’s portion paid to fund the Medicare program. --></help>
+        <label><!-- Medicare --></label>
+        <name>Medicare__c</name>
+    </CustomFieldTranslation>

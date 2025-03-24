@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Subsidiary Company 2 --></label>
+        <name>Subsidiary_Company_2__c</name>
+        <relationshipLabel><!-- Vendor Request (Subsidiary Company 2) --></relationshipLabel>
+    </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- ACV contribution to employee’s retirement savings plan based on the amount of employee’s contribution. --></help>
+        <label><!-- 401K Match % --></label>
+        <name>X401K_Match_Pct__c</name>
+    </CustomFieldTranslation>

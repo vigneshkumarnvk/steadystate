@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- Last Stage Change Date --></help>
+        <label><!-- Stage Change Date --></label>
+        <name>Stage_Change_Date__c</name>
+    </CustomFieldTranslation>

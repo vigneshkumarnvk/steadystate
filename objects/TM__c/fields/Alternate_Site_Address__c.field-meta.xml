@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Alternate_Site_Address__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Site Address Lookup</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Site_Address__c.Customer__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Bill_to_Customer__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Site_Address__c</referenceTo>
+    <relationshipLabel>T&amp;Ms</relationshipLabel>
+    <relationshipName>T_Ms</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

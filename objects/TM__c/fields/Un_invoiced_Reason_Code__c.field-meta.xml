@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Un_invoiced_Reason_Code__c</fullName>
+    <externalId>false</externalId>
+    <label>Un-invoiced Reason Code</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Billing completed by different department</fullName>
+                <default>false</default>
+                <label>Billing completed by different department</label>
+            </value>
+            <value>
+                <fullName>COD required</fullName>
+                <default>false</default>
+                <label>COD required</label>
+            </value>
+            <value>
+                <fullName>Customer Service Sales Tax (Add to generator)</fullName>
+                <default>false</default>
+                <label>Customer Service Sales Tax (Add to generator)</label>
+            </value>
+            <value>
+                <fullName>Customer Service Sales Tax (apply/exempt)</fullName>
+                <default>false</default>
+                <label>Customer Service Sales Tax (apply/exempt)</label>
+            </value>
+            <value>
+                <fullName>Incomplete Paperwork</fullName>
+                <default>false</default>
+                <label>Incomplete Paperwork</label>
+            </value>
+            <value>
+                <fullName>Link Requirement</fullName>
+                <default>false</default>
+                <label>Link Requirement</label>
+            </value>
+            <value>
+                <fullName>PO Required</fullName>
+                <default>false</default>
+                <label>PO Required</label>
+            </value>
+            <value>
+                <fullName>Quote/Pricing Needed</fullName>
+                <default>false</default>
+                <label>Quote/Pricing Needed</label>
+            </value>
+            <value>
+                <fullName>Internal Associate must review prior to submittal</fullName>
+                <default>false</default>
+                <label>Internal Associate must review prior to submittal</label>
+            </value>
+            <value>
+                <fullName>Waiting on third party invoice</fullName>
+                <default>false</default>
+                <label>Waiting on third party invoice</label>
+            </value>
+            <value>
+                <fullName>Waiting on IC invoice</fullName>
+                <default>false</default>
+                <label>Waiting on IC invoice</label>
+            </value>
+            <value>
+                <fullName>Waiting for Customer Approval</fullName>
+                <default>false</default>
+                <label>Waiting for Customer Approval</label>
+            </value>
+            <value>
+                <fullName>Waiting on approval to be entered</fullName>
+                <default>false</default>
+                <label>Waiting on approval to be entered</label>
+            </value>
+            <value>
+                <fullName>Need IT Assistance</fullName>
+                <default>false</default>
+                <label>Need IT Assistance</label>
+            </value>
+            <value>
+                <fullName>Waiting on lab/analysis</fullName>
+                <default>false</default>
+                <label>Waiting on lab/analysis</label>
+            </value>
+            <value>
+                <fullName>Ongoing job must bill at one time</fullName>
+                <default>false</default>
+                <label>Ongoing job must bill at one time</label>
+            </value>
+            <value>
+                <fullName>Generator Needs to be entered</fullName>
+                <default>false</default>
+                <label>Generator Needs to be entered</label>
+            </value>
+            <value>
+                <fullName>Approved for Invoicing</fullName>
+                <default>false</default>
+                <label>Approved for Invoicing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

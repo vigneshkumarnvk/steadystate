@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Task_Accepted_Button</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Task Accepted Button</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT("/soap/ajax/20.0/connection.js")} 
+
+var taskObj = new sforce.SObject("Task"); 
+taskObj.Id = '{!Task.Id}'; 
+
+taskObj.Meeting_Requested__c = 'Accepted';
+var result = sforce.connection.update([taskObj]); 
+
+if (result[0].success=='false') { 
+alert(result[0].errors.message); 
+} else { 
+window.parent.location.href="/{!Task.Id}"; 
+}</url>
+</WebLink>

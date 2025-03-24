@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Credit_Memo_Reason_Code__c</fullName>
+    <externalId>false</externalId>
+    <label>Credit Memo Reason Code</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Credit and Rebill</fullName>
+                <default>false</default>
+                <label>Credit and Rebill</label>
+            </value>
+            <value>
+                <fullName>Customer is tax exempt</fullName>
+                <default>false</default>
+                <label>Customer is tax exempt</label>
+            </value>
+            <value>
+                <fullName>Duplicate billing</fullName>
+                <default>false</default>
+                <label>Duplicate billing</label>
+            </value>
+            <value>
+                <fullName>Good will</fullName>
+                <default>false</default>
+                <label>Good will</label>
+            </value>
+            <value>
+                <fullName>Pricing error</fullName>
+                <default>false</default>
+                <label>Pricing error</label>
+            </value>
+            <value>
+                <fullName>Service credit</fullName>
+                <default>false</default>
+                <label>Service credit</label>
+            </value>
+            <value>
+                <fullName>Wrong billing address</fullName>
+                <default>false</default>
+                <label>Wrong billing address</label>
+            </value>
+            <value>
+                <fullName>Wrong posting date on invoice</fullName>
+                <default>false</default>
+                <label>Wrong posting date on invoice</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

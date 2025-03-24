@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CVCC_Customers</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Balance_Due_LCY_Current__c</columns>
+    <columns>Balance_Due_LCY__c</columns>
+    <columns>ACCOUNT.ACCOUNT_NUMBER</columns>
+    <columns>Account_Executive__c</columns>
+    <columns>Salesperson__c</columns>
+    <columns>Subsidiary_Company__c</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Account.Customer</value>
+    </filters>
+    <filters>
+        <field>Subsidiary_Company__c</field>
+        <operation>startsWith</operation>
+        <value>2-CYCLE CHEM</value>
+    </filters>
+    <label>CVCC Customers</label>
+</ListView>

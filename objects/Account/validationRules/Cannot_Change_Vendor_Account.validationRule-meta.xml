@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_Vendor_Account</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+OR(RecordTypeId = "012f4000000Ulp0"), 
+OR($Profile.Id &lt;&gt; "00ef4000000Dizy"),
+OR($User.Id &lt;&gt; "0051V000006Zdam"),
+OR( $User.Id  &lt;&gt;  "005f40000042Gkp"))</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to change Vendor Account Details.</errorMessage>
+</ValidationRule>

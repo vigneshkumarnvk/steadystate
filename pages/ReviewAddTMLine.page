@@ -1,0 +1,2628 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Sales_Order__c"
+           extensions="SalesOrderController2" id="thePage"
+           sidebar="false">
+    <!--
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js">
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js">
+    </script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <head>
+        <style>
+
+            .tmLineWrap input[type="text"], .slds-scope input[type="text"] {
+                max-width: 100px;
+            }
+
+            body td.actionColumn:before, .slds-scope td.actionColumn:before {
+                display: none;
+            }
+
+            body .list .actionColumn, .slds-scope .list .actionColumn {
+                padding-left: 0px;
+            }
+
+            .tmLineWrap {
+                overflow: scroll;
+            }
+        </style>
+    </head>
+    <script>
+        $ = jQuery.noConflict();
+
+        $(document).ready(function () {
+            $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").sortable().on("sortstart", function (event, ui) {
+            }).on("sortstop", function (event, ui) {
+            }).on("sortchange", function (event, ui) {
+            }).on("sortupdate", function (event, ui) {
+                var elements = $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").find('tr').find('td').find('input');
+                var j = 0;
+                for (var i = 0; i < elements.length; i++) {
+                    if (elements[i].id.indexOf(":theLineNo") > 0) {
+                        j++;
+                        elements[i].value = j * 10;
+                    }
+                }
+            });
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            //$(".tmLineWrap").css("max-width", (screen.width-100));
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        function confirmCopyTime(lineType) {
+            var result = confirm("Are you sure to copy times to other T&M " + lineType + " lines?");
+            if (!result) {
+                return false;
+            }
+
+            return true;
+        }
+
+        var focuselmnt;
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            //AES-388 add theMiscResource
+            if (fieldName == 'theJobPosition' || fieldName == 'theServiceCenter' || fieldName == 'theEServiceCenter' || fieldName == 'theUOM' || fieldName == 'theMResource' ||
+                fieldName == 'theLResource' || fieldName == 'theEResource' || fieldName == 'theSResource' || fieldName == 'theFResource' || fieldName == 'theWResource' ||
+                fieldName == 'theDResource' || fieldName == 'theLUOM' || fieldName == 'theMUOM' || fieldName == 'theEUOM' || fieldName == 'theSUOM'
+                || fieldName == 'theFUOM' || fieldName == 'theWUOM' || fieldName == 'theDUOM' || fieldName == 'theLumpUOM' || fieldName == 'theMiscUOM' ||
+                fieldName == 'theEquipment' || fieldName == 'theLContractLine' || fieldName == 'theEContractLine' || fieldName == 'theMContractLine' ||
+                fieldName == 'theLumpSumResourceType' || fieldName == 'theLumpSumContractLine' || fieldName == 'theTaxArea' || fieldName == 'theMiscResource' || fieldName == 'theLTM') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            }
+            else if (fieldName == 'theUsePremiumRate' || fieldName == 'theBillSiteTime' || fieldName == 'theLBillasLumpSum' || fieldName == 'theEBillasLumpSum' ||
+                fieldName == 'theMBillasLumpSum' || fieldName == 'theSBillasLumpSum' || fieldName == 'theDBillasLumpSum' || fieldName == 'theMiscBillasLumpSum' ||
+                fieldName == 'theWBillasLumpSum' || fieldName == 'theLNonBillable' || fieldName == 'theENonBillable' || fieldName == 'theMNonBillable' ||
+                fieldName == 'theSNonBillable' || fieldName == 'theDNonBillable' || fieldName == 'theMiscNonBillable' || fieldName == 'theWNonBillable') {
+                //Ticket#13673
+                var newFieldValue = document.getElementById(elemenetIdForField).checked;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+            //alert (fieldName +"/" + newFieldValue + "/" + lineNo);
+            setFocusElement(fieldName, elemenetIdForField);
+            if (fieldName == 'theTaxArea') {
+                lineNo = -1;
+                validateTaxArea(fieldName, newFieldValue, lineNo);
+            } else {
+                validateField(fieldName, newFieldValue, lineNo);
+            }
+        }
+
+        function setFocusElement(fieldName, elemenetIdForField) {
+            switch (fieldName) {
+                case "theLTM":
+                    focuselmnt = elemenetIdForField.replace('theLTM', 'theJobPosition');
+                    break;
+                case "theJobPosition":
+                    focuselmnt = elemenetIdForField.replace('theJobPosition', 'theLResource');
+                    break;
+                case "theLResource":
+                    focuselmnt = elemenetIdForField.replace('theLResource', 'theDescription');
+                    break;
+                case "theDescription":
+                    focuselmnt = elemenetIdForField.replace('theDescription', 'theJobStartTime');
+                    break;
+                case "theJobStartTime":
+                    focuselmnt = elemenetIdForField.replace('theJobStartTime', 'theSiteStartTime');
+                    break;
+                case "theSiteStartTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteStartTime', 'theSiteEndTime');
+                    break;
+                case "theSiteEndTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteEndTime', 'theJobEndTime');
+                    break;
+                case "theJobEndTime":
+                    focuselmnt = elemenetIdForField.replace('theJobEndTime', 'theLunchStartTime');
+                    break;
+                case "theLunchStartTime":
+                    focuselmnt = elemenetIdForField.replace('theLunchStartTime', 'theLunchEndTime');
+                    break;
+                case "theLunchEndTime":
+                    focuselmnt = elemenetIdForField.replace('theLunchEndTime', 'theLunch');
+                    break;
+                case "theLunch":
+                    focuselmnt = elemenetIdForField.replace('theLunch', 'theBillSiteTime');
+                    break;
+                case "theBillSiteTime":
+                    focuselmnt = elemenetIdForField.replace('theBillSiteTime', 'theBillingStartTime');
+                    break;
+                case "theBillingStartTime":
+                    focuselmnt = elemenetIdForField.replace('theBillingStartTime', 'theBillingEndTime');
+                    break;
+                case "theBillingEndTime":
+                    focuselmnt = elemenetIdForField.replace('theBillingEndTime', 'theLQuantity');
+                    break;
+                case "theLQuantity":
+                    focuselmnt = elemenetIdForField.replace('theLQuantity', 'theRegularHour');
+                    break;
+                case "theRegularHour":
+                    focuselmnt = elemenetIdForField.replace('theRegularHour', 'theOvertimeHour');
+                    break;
+                case "theOvertimeHour":
+                    focuselmnt = elemenetIdForField.replace('theOvertimeHour', 'thePremiumHours');
+                    break;
+                case "thePremiumHours":
+                    focuselmnt = elemenetIdForField.replace('thePremiumHours', 'theLBillasLumpSum');
+                    break;
+                case "theLBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theLBillasLumpSum', 'theLNonBillable');
+                    break;
+                case "theLNonBillable":
+                    focuselmnt = elemenetIdForField.replace('theLNonBillable', 'theRegularRate');
+                    break;
+                case "theRegularRate":
+                    focuselmnt = elemenetIdForField.replace('theRegularRate', 'theOvertimeRate');
+                    break;
+                case "theOvertimeRate":
+                    focuselmnt = elemenetIdForField.replace('theOvertimeRate', 'thePremiumRate');
+                    break;
+                case "thePremiumRate":
+                    focuselmnt = elemenetIdForField.replace('thePremiumRate', 'theLUOM');
+                    break;
+                case "theLUOM":
+                    focuselmnt = elemenetIdForField.replace('theLUOM', 'theTaxGroup');
+                    break;
+                case "theTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theTaxGroup', 'theOverTime');
+                    break;
+
+                //Equipment Lines
+                case "theETM":
+                    focuselmnt = elemenetIdForField.replace('theETM', 'theEQuantity');
+                    break;
+                case "theEQuantity":
+                    focuselmnt = elemenetIdForField.replace('theEQuantity', 'theEUOM');
+                    break;
+                case "theEUOM":
+                    focuselmnt = elemenetIdForField.replace('theEUOM', 'theEBillasLumpSum');
+                    break;
+                case "theEBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theEBillasLumpSum', 'theENonBillable');
+                    break;
+                case "theENonBillable":
+                    focuselmnt = elemenetIdForField.replace('theENonBillable', 'theEUnitPrice');
+                    break;
+                case "theEUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theEUnitPrice', 'theETaxGroup');
+                    break;
+                case "theETaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theETaxGroup', 'thePickUpRental');
+                    break;
+                case "thePickUpRental":
+                    focuselmnt = elemenetIdForField.replace('thePickUpRental', 'thePickUpRO');
+                    break;
+                case "thePickUpRO":
+                    focuselmnt = elemenetIdForField.replace('thePickUpRO', 'theDropOffRental');
+                    break;
+
+                // Material
+                case "theMTM":
+                    focuselmnt = elemenetIdForField.replace('theMTM', 'theMResource');
+                    break;
+                case "theMResource":
+                    focuselmnt = elemenetIdForField.replace('theMResource', 'theMDescription');
+                    break;
+                case "theMDescription":theMDescription
+                    focuselmnt = elemenetIdForField.replace('theMDescription', 'theMQuantity');
+                    break;
+                case "theMQuantity":
+                    focuselmnt = elemenetIdForField.replace('theMQuantity', 'theMUOM');
+                    break;
+                case "theMUOM":
+                    focuselmnt = elemenetIdForField.replace('theMUOM', 'theMUnitPrice');
+                    break;
+                case "theMUOM":
+                    focuselmnt = elemenetIdForField.replace('theMUOM', 'theMUnitPrice');
+                    break;
+                case "theMUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theMUnitPrice', 'theMTaxGroup');
+                    break;
+                case "theMTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theMTaxGroup', 'theMBillasLumpSum');
+                    break;
+                case "theMBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theMBillasLumpSum', 'theMNonBillable');
+                    break;
+
+                //Subcontractor
+                case "theSTM":
+                    focuselmnt = elemenetIdForField.replace('theSTM', 'theSResource');
+                    break;
+                case "theSResource":
+                    focuselmnt = elemenetIdForField.replace('theSResource', 'theSQuantity');
+                    break;
+                case "theSQuantity":
+                    focuselmnt = elemenetIdForField.replace('theSQuantity', 'theSUOM');
+                    break;
+                case "theSUOM":
+                    focuselmnt = elemenetIdForField.replace('theSUOM', 'theSUnitPrice');
+                    break;
+                case "theSUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theSUnitPrice', 'theSMarkupOption');
+                    break;
+                case "theSMarkupOption":
+                    focuselmnt = elemenetIdForField.replace('theSMarkupOption', 'theSMarkup');
+                    break;
+                case "theSMarkup":
+                    focuselmnt = elemenetIdForField.replace('theSMarkup', 'theSTaxGroup');
+                    break;
+                case "theSTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theSTaxGroup', 'theSBillasLumpSum');
+                    break;
+                case "theSBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theSBillasLumpSum', 'theSNonBillable');
+                    break;
+
+
+                //Waste Disposal
+                case "theWTM":
+                    focuselmnt = elemenetIdForField.replace('theWTM', 'theWResource');
+                    break;
+                case "theWResource":
+                    focuselmnt = elemenetIdForField.replace('theWResource', 'theWDescription');
+                    break;
+                case "theWDescription":
+                    focuselmnt = elemenetIdForField.replace('theWDescription', 'theWQuantity');
+                    break;
+                case "theWQuantity":
+                    focuselmnt = elemenetIdForField.replace('theWQuantity', 'theWUOM');
+                    break;
+                case "theWUOM":
+                    focuselmnt = elemenetIdForField.replace('theWUOM', 'theWBOLManifest');
+                    break;
+                case "theWBOLManifest":
+                    focuselmnt = elemenetIdForField.replace('theWBOLManifest', 'theWFacility');
+                    break;
+                case "theWFacility":
+                    focuselmnt = elemenetIdForField.replace('theWFacility', 'theWUnitPrice');
+                    break;
+                case "theWUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theWUnitPrice', 'theWMarkupOption');
+                    break;
+                case "theWMarkupOption":
+                    focuselmnt = elemenetIdForField.replace('theWMarkupOption', 'theWMarkup');
+                    break;
+                case "theWMarkup":
+                    focuselmnt = elemenetIdForField.replace('theWMarkup', 'theWTaxGroup');
+                    break;
+                case "theWTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theWTaxGroup', 'theWBillasLumpSum');
+                    break;
+                case "theWBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theWBillasLumpSum', 'theWNonBillable');
+                    break;
+
+                //Demurrage
+                case "theDTM":
+                    focuselmnt = elemenetIdForField.replace('theDTM', 'theDResource');
+                    break;
+                case "theDResource":
+                    focuselmnt = elemenetIdForField.replace('theDResource', 'theDDescription');
+                    break;
+                case "theDDescription":
+                    focuselmnt = elemenetIdForField.replace('theDDescription', 'theDSiteStartTime');
+                    break;
+                case "theDSiteStartTime":
+                    focuselmnt = elemenetIdForField.replace('theDSiteStartTime', 'theDSiteEndTime');
+                    break;
+                case "theDSiteEndTime":
+                    focuselmnt = elemenetIdForField.replace('theDSiteEndTime', 'theDQuantity');
+                    break;
+                case "theDQuantity":
+                    focuselmnt = elemenetIdForField.replace('theDQuantity', 'theDUOM');
+                    break;
+                case "theDUOM":
+                    focuselmnt = elemenetIdForField.replace('theDUOM', 'theDUnitPrice');
+                    break;
+                case "theDUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theDUnitPrice', 'theDFuelSurcharge');
+                    break;
+                case "theDFuelSurcharge":
+                    focuselmnt = elemenetIdForField.replace('theDFuelSurcharge', 'theDTaxGroup');
+                    break;
+                case "theDTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theDTaxGroup', 'theDBillasLumpSum');
+                    break;
+                case "theDBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theDBillasLumpSum', 'theDNonBillable');
+                    break;
+
+                //Lump Sum
+                case "theLumpTM":
+                    focuselmnt = elemenetIdForField.replace('theLumpTM', 'theLumpSumResourceType');
+                    break;
+                case "theLumpSumResourceType":
+                    focuselmnt = elemenetIdForField.replace('theLumpSumResourceType', 'theLumpDescription');
+                    break;
+                case "theLumpDescription":
+                    focuselmnt = elemenetIdForField.replace('theLumpDescription', 'theLumpQuantity');
+                    break;
+                case "theLumpQuantity":
+                    focuselmnt = elemenetIdForField.replace('theLumpQuantity', 'theLumpUOM');
+                    break;
+                case "theLumpUOM":
+                    focuselmnt = elemenetIdForField.replace('theLumpUOM', 'theLumpUnitPrice');
+                    break;
+                case "theLumpUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theLumpUnitPrice', 'theLumpTaxGroup');
+                    break;
+
+
+                //Misc
+                case "theMiscTM":
+                    focuselmnt = elemenetIdForField.replace('theMiscTM', 'theMiscResource');
+                    break;
+                case "theMiscResource":
+                    focuselmnt = elemenetIdForField.replace('theMiscResource', 'theMiscDescription');
+                    break;
+                case "theMiscDescription":
+                    focuselmnt = elemenetIdForField.replace('theMiscDescription', 'theMiscQuantity');
+                    break;
+                case "theMiscQuantity":
+                    focuselmnt = elemenetIdForField.replace('theMiscQuantity', 'theMiscUOM');
+                    break;
+                case "theMiscUOM":
+                    focuselmnt = elemenetIdForField.replace('theMiscUOM', 'theMiscUnitPrice');
+                    break;
+                case "theMiscUnitPrice":
+                    focuselmnt = elemenetIdForField.replace('theMiscUnitPrice', 'theMiscTaxGroup');
+                    break;
+                case "theMiscTaxGroup":
+                    focuselmnt = elemenetIdForField.replace('theMiscTaxGroup', 'theMiscBillasLumpSum');
+                    break;
+                case "theMiscBillasLumpSum":
+                    focuselmnt = elemenetIdForField.replace('theMiscBillasLumpSum', 'theMiscNonBillable');
+                    break;
+            }
+        }
+
+        function setFocus() {
+            document.getElementById(focuselmnt).focus();
+        }
+
+        /*function validateTaxArea(ctrl) {
+                    validateTaxArea();
+                }*/
+
+        function validateContacts(ctrl) {
+            validateContacts();
+        }
+
+        function validateTaxLiable(ctrl) {
+            validateTaxLiable();
+        }
+
+        function validateSalesOrder(ctrl) {
+            validateSalesOrder();
+        }
+
+        function validateAltSiteAddress(ctrl) {
+            validateAltSiteAddress();
+        }
+
+        function setScheduleDate() {
+            setScheduleDate();
+        }
+
+        //function validateTMCompleted(ctrl) {
+        //    validateTMCompleted();
+        //}
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function insertColon(ctrl, evt) {
+            var anc = ctrl;
+            //if(ctrl.value.length == 2 && evt.keyCode != 8) {
+            //    ctrl.value = ctrl.value + ':';
+            //}
+
+            if (ctrl.value.length >= 3 && ctrl.value.indexOf(':') < 0) {
+                switch (ctrl.value.length) {
+                    case 3:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+                        break;
+                    default:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, ctrl.value.length - 2);
+                        break;
+                }
+            }
+        }
+
+        function validateStartTime(ctrl) {
+            validateStartTime();
+        }
+
+        function setWidth() {
+            $(".tmLineWrap").css("max-width", (screen.width - 100));
+        }
+
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Sales Order" subtitle="{!salesOrder.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!saveTM}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Quick Save" action="{!quickSaveTM}" rerender="theForm"
+                                    status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancelAddTMline}" rerender="theForm"
+                                    status="loadingstatus"/>
+            </apex:pageBlockButtons>
+
+            <apex:actionFunction name="validateField" action="{!validateTMField}" oncomplete="setWidth();setFocus();"
+                                 reRender="thePageBlock,theLaborSection,theMaterialsSection,theEquipmentSection,theSubcontractorsSection, theFieldRemediationSection, theWasteDisposalSection, theDemurrageSection, theLumpSumSection, theMiscSection, theMessage,theMessage2"
+                                 immediate="true" status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Labor'}" id="theLaborSection" columns="1"
+                                   title="Labor Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLLaborTable" value="{!theTMLListLabor}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListLabor))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" disabled="true"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                oncomplete="setWidth();" action="{!deleteTMLine}"
+                                                reRender="theTMLLaborTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Labor"/>
+                            </apex:commandButton>
+
+
+
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theLTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Labor Type">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theJobPosition"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+
+                        </apex:column>
+                        <apex:column headerValue="SC">
+                            <apex:outputpanel >
+
+                                <apex:outputField value="{!line.Service_Center__c}" />
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_Site_Time__c.Label}">
+                            <apex:inputField id="theBillSiteTime" value="{!line.Bill_Site_Time__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Billing_Start_Time__c.Label}">
+                            <apex:inputField id="theBillingStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Billing_Start_Time__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Billing_End_Time__c.Label}">
+                            <apex:inputField id="theBillingEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Billing_End_Time__c}" onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Hour__c.Label}">
+                            <apex:outputField id="theHour" value="{!line.Hour__c}" style="width:60px"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theLQuantity" onchange="validateFieldInList(this);"
+                                             value="{!line.Quantity__c}" style="width:60px"
+                                             styleClass="input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Regular_Hours__c.Label}">
+                            <apex:inputField id="theRegularHour" onchange="validateFieldInList(this);"
+                                             value="{!line.Regular_Hours__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Overtime_Hours__c.Label}">
+                            <apex:inputField id="theOvertimeHour" onchange="validateFieldInList(this);"
+                                             value="{!line.Overtime_Hours__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Premium_Hours__c.Label}">
+                            <apex:inputField id="thePremiumHours" onchange="validateFieldInList(this);"
+                                             value="{!line.Premium_Hours__c}"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theLQuantityx" onchange="validateFieldInList(this);" value="{!line.Quantity__c}" style="width:60px"
+                                             styleClass="input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Regular_Hours__c.Label}">
+                            <apex:inputField id="theRegularHourx" onchange="validateFieldInList(this);"
+                                             value="{!line.Regular_Hours__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Overtime_Hours__c.Label}">
+                            <apex:inputField id="theOvertimeHourx" onchange="validateFieldInList(this);"
+                                             value="{!line.Overtime_Hours__c}"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theLBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theLNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Regular_Rate__c.Label}">
+                            <apex:inputField id="theRegularRate" onchange="validateFieldInList(this);"
+                                             value="{!line.Regular_Rate__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Overtime_Rate__c.Label}">
+                            <apex:inputField id="theOvertimeRate" onchange="validateFieldInList(this);"
+                                             value="{!line.Overtime_Rate__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Premium_Rate__c.Label}">
+                            <apex:inputField id="thePremiumRate" onchange="validateFieldInList(this);"
+                                             value="{!line.Premium_Rate__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theLUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="ResourceType"
+                                                    FilterNameValue1Special="{!line.Resource_Type__c}"
+                                                    FilterOperation1Special="ResourceType"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="ResourceType"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="LUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputField id="theLineAmount" value="{!line.Line_Amount__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputField id="theLineAmountInclTax" value="{!line.Line_Amt_Incl_Tax__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_Start_Time__c.Label}">
+                            <apex:inputField id="theJobStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_Start_Time__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_Start_Time__c.Label}">
+                            <apex:inputField id="theSiteStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_End_Time__c.Label}">
+                            <apex:inputField id="theSiteEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_End_Time__c.Label}">
+                            <apex:inputField id="theJobEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_Start_Time__c.Label}">
+                            <apex:inputField id="theLunchStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Lunch_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_End_Time__c.Label}">
+                            <apex:inputField id="theLunchEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Lunch_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch__c.Label}">
+                            <apex:inputField id="theLunch" value="{!line.Lunch__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_Start_Time__c.Label}">
+                            <apex:outputField value="{!line.Job_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_Start_Time__c.Label}">
+                            <apex:outputField value="{!line.Site_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_End_Time__c.Label}">
+                            <apex:outputField value="{!line.Site_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_End_Time__c.Label}">
+                            <apex:outputField value="{!line.Job_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_Start_Time__c.Label}">
+                            <apex:outputField value="{!line.Lunch_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_End_Time__c.Label}">
+                            <apex:outputField value="{!line.Lunch_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Lunch__c.Label}">
+                            <apex:outputField value="{!line.Lunch__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Overtime__c.Label}">
+                            <apex:inputField value="{!line.Overtime__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Total_Job_Hours__c.Label}">
+                            <apex:outputField id="theTotalJobHours" value="{!line.Total_Job_Hours__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Total_Site_Hours__c.Label}">
+                            <apex:outputField id="theTotalSiteHours" value="{!line.Total_Site_Hours__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Line__c.Label}">
+
+                            <apex:outputpanel >
+                                <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theLContractLine"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                secondaryDisplayField="Customer_Description__c"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="TM_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="Contract_Line__c"
+                                                onchange="validateFieldInList(this);"
+
+                                                allowtoBlank="true"
+                                                LookupObject="Contract_Line__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="CLFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="Resource_Type_Category__c"
+                                                FilterNameValue1="Labor"
+                                                FilterOperation1="Resource_Type_Category__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Resource_Type_Category__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Resource_Type__c"
+                                                FilterNameValue2="{!line.Resource_Type__c}"
+                                                FilterOperation2="Resource_Type__c"
+                                                FilterOperationValue2="="
+                                                FilterType2="Resource_Type__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Contract__c"
+                                                FilterNameValue3="{!line.TM__r.Contract__c}"
+                                                FilterOperation3="Contract__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Contract__c"
+                                                FilterTypeValue3="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Regular_Rate__c.Label}"
+                                     rendered="{!line.TM__r.Contract__c!=null}">
+                            <apex:outputField id="theContractRegularRate" value="{!line.Contract_Regular_Rate__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Overtime_Rate__c.Label}"
+                                     rendered="{!line.TM__r.Contract__c!=null}">
+                            <apex:outputField id="theContractOvertimeRate" value="{!line.Contract_Overtime_Rate__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Premium_Rate__c.Label}"
+                                     rendered="{!line.TM__r.Contract__c!=null}">
+                            <apex:outputField id="theContractPremiumRate" value="{!line.Contract_Premium_Rate__c}"/>
+                        </apex:column>
+
+
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Labor'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();"
+                                    reRender="theLaborSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="TempLabor"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Equipment'}" id="theEquipmentSection" columns="1"
+                                   title="Equipment Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLEquipmentTable" value="{!theTMLListEquipment}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListEquipment))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" disabled="true"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLEquipmentTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Equipment"/>
+                            </apex:commandButton>
+
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theETM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Equipment Type">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+
+                                    <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theEquipment"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c=\'Equipment\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    allowtoBlank="true"
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Equipment"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+
+                        </apex:column>
+                        <apex:column headerValue="SC">
+
+                            <apex:outputField value="{!line.Service_Center__c}" />
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Fleet_No_Required__c.Label}">
+                            <apex:outputField value="{!line.Fleet_No_Required__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Fleet_No__c.Label}">
+                            <apex:inputField id="theEFleetNumber" value="{!line.Fleet_No__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Billing_Start_Time__c.Label}">
+                            <apex:inputField id="theEBillingStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Billing_Start_Time__c}" onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Billing_End_Time__c.Label}">
+                            <apex:inputField id="theEBillingEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Billing_End_Time__c}" onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Hour__c.Label}">
+                            <apex:outputField id="theHour" value="{!line.Hour__c}" style="width:60px"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}"
+                        >
+                            <apex:inputField id="theEQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}"
+                        >
+                            <apex:outputpanel >
+
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theEUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="ResourceType"
+                                                    FilterNameValue1Special="{!line.Resource_Type__c}"
+                                                    FilterOperation1Special="ResourceType"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="ResourceType"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="EUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theEBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theENonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theEUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theETaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_Start_Time__c.Label}">
+                            <apex:inputField id="theESiteStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_End_Time__c.Label}">
+                            <apex:inputField id="theESiteEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_End_Time__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Line__c.Label}"
+                                     rendered="{!line.TM__r.Contract__c!=null}">
+
+                            <apex:outputpanel >
+                                <c:CustomLookup componentId="{!$Component.theTMLEquipmentTable}:theEContractLine"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                secondaryDisplayField="Name"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="TM_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="Contract_Line__c"
+                                                onchange="validateFieldInList(this);"
+
+                                                allowtoBlank="true"
+                                                LookupObject="Contract_Line__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="CLFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="Resource_Type_Category__c"
+                                                FilterNameValue1="Equipment"
+                                                FilterOperation1="Resource_Type_Category__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Resource_Type_Category__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Resource_Type__c"
+                                                FilterNameValue2="{!line.Resource_Type__c}"
+                                                FilterOperation2="Resource_Type__c"
+                                                FilterOperationValue2="="
+                                                FilterType2="Resource_Type__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Contract__c"
+                                                FilterNameValue3="{!line.TM__r.Contract__c}"
+                                                FilterOperation3="Contract__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Contract__c"
+                                                FilterTypeValue3="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Regular_Rate__c.Label}">
+                            <apex:outputField id="theEContractRegularRate" value="{!line.Contract_Regular_Rate__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Rental_Allowed__c.Label}">
+                            <apex:outputField value="{!line.Rental_Allowed__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Pick_Up_Rental__c.Label}">
+                            <apex:inputField id="thePickUpRental" value="{!line.Pick_Up_Rental__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Pick Up R/O No.">
+                            <apex:inputField id="thePickUpRO" value="{!line.Pick_Up_R_O__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Drop_Off_Rental__c.Label}">
+                            <apex:inputField id="theDropOffRental" value="{!line.Drop_Off_Rental__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Drop Off R/O No.">
+                            <apex:outputField id="theDropOffRO" value="{!line.Drop_Off_R_O__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_Start_Time__c.Label}">
+                            <apex:outputField value="{!line.Job_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Job_End_Time__c.Label}">
+                            <apex:outputField value="{!line.Job_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Total_Job_Hours__c.Label}">
+                            <apex:outputField value="{!line.Total_Job_Hours__c}"/>
+                        </apex:column>
+
+
+
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Equipment'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();"
+                                    reRender="theEquipmentSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="TempEquipment"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Materials'}" id="theMaterialsSection" columns="1"
+                                   title="Material Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLMaterialsTable" value="{!theTMLListMaterials}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListMaterials))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLMaterialsTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Materials"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMaterialsTable}:theMTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Material">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMaterialsTable}:theMResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Materials\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Materials"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+
+                        </apex:column>
+
+                        <apex:column headerValue="Billing Description">
+                            <apex:inputField id="theMDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theMQuantity" onchange="validateFieldInList(this);"
+                                             value="{!line.Quantity__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMaterialsTable}:theMUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="MUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theMUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theMTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theMBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theMNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Line__c.Label}">
+
+                            <apex:outputpanel >
+                                <c:CustomLookup componentId="{!$Component.theTMLMaterialsTable}:theMContractLine"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                secondaryDisplayField="Name"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="TM_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="Contract_Line__c"
+                                                onchange="validateFieldInList(this);"
+
+                                                allowtoBlank="true"
+                                                LookupObject="Contract_Line__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="CLFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="Resource_Category__c"
+                                                FilterNameValue1="Materials"
+                                                FilterOperation1="Resource_Category__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Resource_Category__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Resource__c"
+                                                FilterNameValue2="{!line.Resource__c}"
+                                                FilterOperation2="Resource__c"
+                                                FilterOperationValue2="="
+                                                FilterType2="Resource__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Contract__c"
+                                                FilterNameValue3="{!line.TM__r.Contract__c}"
+                                                FilterOperation3="Contract__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Contract__c"
+                                                FilterTypeValue3="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Regular_Rate__c.Label}">
+                            <apex:outputField id="theMContractRegularRate" value="{!line.Contract_Regular_Rate__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Materials'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theMaterialsSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Materials"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Subcontractors'}" id="theSubcontractorsSection"
+                                   columns="1" title="Cost Plus Materials, Equipment, and Services"
+                                   collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLSubcontractorsTable" value="{!theTMLListSubcontractors}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListSubcontractors))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLSubcontractorsTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Subcontractors"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLSubcontractorsTable}:theSTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theSQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLSubcontractorsTable}:theSUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theSUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Markup_Option__c.Label}">
+                            <apex:inputField id="theSMarkupOption" value="{!line.Markup_Option__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Markup__c.Label}">
+                            <apex:inputField id="theSMarkup" value="{!line.Markup__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theSTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theSBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theSNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Subcontractors'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}"
+                                    reRender="theSubcontractorsSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Subcontractors"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Waste Disposal'}" id="theWasteDisposalSection"
+                                   columns="1" title="Waste Disposal Lines"
+                                   collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLWasteDisposalTable" value="{!theTMLListWasteDisposal}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListWasteDisposal))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLWasteDisposalTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Waste Disposal"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLWasteDisposalTable}:theWTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="Waste Disposal">
+                            <apex:outputpanel rendered="{!NOT(line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void')}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLWasteDisposalTable}:theWResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Waste Disposal\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Waste Disposal"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+
+                            <apex:outputField value="{!line.Resource__c}"
+                                              rendered="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theWDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theWQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLWasteDisposalTable}:theWUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="WUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.BOL_Manifest__c.Label}">
+                            <apex:inputField id="theWBOLManifest" value="{!line.BOL_Manifest__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Facility__c.Label}">
+                            <apex:inputField id="theWFacility" value="{!line.Facility__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theWUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Markup_Option__c.Label}">
+                            <apex:inputField id="theWMarkupOption" value="{!line.Markup_Option__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Markup__c.Label}">
+                            <apex:inputField id="theWMarkup" value="{!line.Markup__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theWTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theWBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theWNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Waste Disposal'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theWasteDisposalSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Waste Disposal"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Demurrage'}"
+                                   id="theDemurrageSection" columns="1"
+                                   title="Transportation, Demurrage, Fuel Surcharge and Fees" collapsible="true">
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLDemurrageTable" value="{!theTMLListDemurrage}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListDemurrage))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLDemurrageTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Demurrage"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLDemurrageTable}:theDTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Service">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLDemurrageTable}:theDResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Demurrage\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Demurrage"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_Start_Time__c.Label}">
+                            <apex:inputField id="theDSiteStartTime" onchange="validateFieldInList(this);"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Site_End_Time__c.Label}">
+                            <apex:inputField id="theDSiteEndTime" onchange="validateFieldInList(this);"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Hour__c.Label}">
+                            <apex:outputField id="theHour" value="{!line.Hour__c}" style="width:60px"/>
+                        </apex:column>
+                        <apex:column headerValue="Quantity">
+                            <apex:inputField id="theDQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLDemurrageTable}:theDUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="DUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theDUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Fuel_Surcharge__c.Label}">
+                            <apex:inputField id="theDFuelSurcharge" value="{!line.Fuel_Surcharge__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theDTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theDBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theDNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Demurrage'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theDemurrageSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Demurrage"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Lump Sum'}" id="theLumpSumSection" columns="1"
+                                   title="Lump Sum / Bundle Lines" collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLLumpSumTable" value="{!theTMLListLumpSum}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListLumpSum))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLLumpSumTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Lump Sum"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLumpSumTable}:theLumpTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Resource Type">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLumpSumTable}:theLumpSumResourceType"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Lump Sum"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Resource No.">
+                            <apex:outputField value="{!line.Resource__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theLumpDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theLumpQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this)"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLumpSumTable}:theLumpUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="LumpUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theLumpUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Line__c.Label}">
+                            <apex:outputpanel >
+                                <c:CustomLookup componentId="{!$Component.theTMLLumpSumTable}:theLumpSumContractLine"
+                                                styleClass="input-lookup"
+                                                style="width: 100px"
+                                                secondaryDisplayField="Name"
+                                                minSearchLength="1"
+                                                stealFocus="true"
+                                                sObjectType="TM_Line__c"
+                                                sObject="{!line}"
+                                                sObjectField="Contract_Line__c"
+                                                onchange="validateFieldInList(this);"
+
+                                                allowtoBlank="true"
+                                                LookupObject="Contract_Line__c"
+                                                LinkFieldName="Name"
+                                                FieldSetName="CLFieldSet"
+                                                RunValidation="True"
+                                                LookupType="ID"
+                                                ValidateFunction="validateField"
+
+                                                FilterName1="Resource_Type_Category__c"
+                                                FilterNameValue1="Lump Sum"
+                                                FilterOperation1="Resource_Type_Category__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Resource_Type_Category__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Resource_Type__c"
+                                                FilterNameValue2="{!line.Resource_Type__c}"
+                                                FilterOperation2="Resource_Type__c"
+                                                FilterOperationValue2="="
+                                                FilterType2="Resource_Type__c"
+                                                FilterTypeValue2="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.Contract__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Contract_Regular_Rate__c.Label}">
+                            <apex:outputField id="theContractRegularRate" value="{!line.Contract_Regular_Rate__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theLumpTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered="{!addLineCategory == 'Lump Sum'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theLumpSumSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Lump Sum"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+            <apex:pageBlockSection rendered="{!addLineCategory == 'Misc. Charges And Taxes'}"
+                                   id="theMiscSection" columns="1" title="Miscellaneous Charges And Taxes Lines"
+                                   collapsible="true">
+
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLMiscTable" value="{!theTMLListMisc}" var="line"
+                                         rendered="{!NOT(ISNULL(theTMLListMisc))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                disabled="{!line.TM__r.Status__c == 'Fully Invoiced' || line.TM__r.Status__c == 'Closed' || line.TM__r.Status__c == 'Void'}"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                action="{!deleteTMLine}" reRender="theTMLMiscTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Misc. Charges And Taxes"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="T&M">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMiscTable}:theMiscTM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Sales_Order__c = {!orderId} AND Invoiceable = true"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="TM__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="TM__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="TMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Sales_Order__c"
+                                                    FilterNameValue1="{!orderId}"
+                                                    FilterOperation1="Sales_Order__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Sales_Order__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Invoiceable__c"
+                                                    FilterNameValue2="true"
+                                                    FilterOperation2="Invoiceable__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Invoiceable__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="Service">
+
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMiscTable}:theMiscResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Misc. Charges And Taxes\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Misc. Charges And Taxes"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theMiscDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theMiscQuantity" value="{!line.Quantity__c}"
+                                             onchange="validateFieldInList(this)"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLMiscTable}:theMiscUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"/>
+                                </div>
+
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theMiscUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theMiscTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             styleClass="input-description"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:inputField id="theMiscBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:inputField id="theMiscNonBillable" value="{!line.Non_Billable__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column rendered="{!line.TM__r.From_Sales_Quote__c!=null}"
+                                     headerValue="{!$ObjectType.TM_Line__c.fields.Sales_Line__c.Label}">
+                            <apex:inputField id="theQuoteLine" value="{!line.Sales_Line__c}" style="width: 100px"/>
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel rendered="{!addLineCategory == 'Misc. Charges And Taxes'}">
+                <apex:commandButton value="Add Lines" action="{!addLine}" reRender="theMiscSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Misc. Charges And Taxes"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+
+            <div style="clear:both;">
+
+            </div>
+
+            <script>
+                /*function setWidth() {
+                        $(".tmLineWrap").css("max-width", (screen.width-100));
+                    }*/
+                $(".tmLineWrap").css("max-width", (screen.width - 100));
+
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+    -->
+</apex:page>

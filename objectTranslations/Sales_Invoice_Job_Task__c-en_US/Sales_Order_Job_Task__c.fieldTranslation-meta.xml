@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Sales Order Job Task --></label>
+        <name>Sales_Order_Job_Task__c</name>
+        <relationshipLabel><!-- Sales Invoice Job Tasks --></relationshipLabel>
+    </CustomFieldTranslation>

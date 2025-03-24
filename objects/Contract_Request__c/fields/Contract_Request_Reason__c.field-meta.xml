@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Request_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Contract Request Reason</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Billing Instructions</fullName>
+                <default>false</default>
+                <label>Billing Instructions</label>
+            </value>
+            <value>
+                <fullName>Contract Extension</fullName>
+                <default>false</default>
+                <label>Contract Extension</label>
+            </value>
+            <value>
+                <fullName>Contract Renewal</fullName>
+                <default>false</default>
+                <label>Contract Renewal</label>
+            </value>
+            <value>
+                <fullName>Documentation Only</fullName>
+                <default>false</default>
+                <label>Documentation Only</label>
+            </value>
+            <value>
+                <fullName>Emergency Service Agreement</fullName>
+                <default>false</default>
+                <label>Emergency Service Agreement</label>
+            </value>
+            <value>
+                <fullName>New Contract</fullName>
+                <default>false</default>
+                <label>New Contract</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Pricing Change</fullName>
+                <default>false</default>
+                <label>Pricing Change</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

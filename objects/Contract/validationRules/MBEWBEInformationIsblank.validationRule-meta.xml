@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MBEWBEInformationIsblank</fullName>
+    <active>true</active>
+    <description>MBE/WBE Information cannot be blank when MBE/ WBE Requirements value equals 'yes'.</description>
+    <errorConditionFormula>AND(
+TEXT( MBE_WBE_Requirementss__c) = 'Yes', 
+ ISBLANK( MBE_WBE_Information__c ),
+ $Profile.Id  != '2F00ef4000000Dizy'
+
+
+ 
+)</errorConditionFormula>
+    <errorDisplayField>MBE_WBE_Information__c</errorDisplayField>
+    <errorMessage>MBE/WBE Information cannot be blank when MBE/ WBE Requirements value is 'yes'.</errorMessage>
+</ValidationRule>

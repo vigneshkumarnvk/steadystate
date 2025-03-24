@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Quote/Order Assumption --></label>
+        <name>Quote_Order_Assumption__c</name>
+        <picklistValues>
+            <masterLabel>DailyRate</masterLabel>
+            <translation><!-- DailyRate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DefaultBillingRule2023</masterLabel>
+            <translation><!-- DefaultBillingRule2023 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LumpSum</masterLabel>
+            <translation><!-- LumpSum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LumpSum2023</masterLabel>
+            <translation><!-- LumpSum2023 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OvertimeRate</masterLabel>
+            <translation><!-- OvertimeRate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PortalBasis</masterLabel>
+            <translation><!-- PortalBasis --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PortalBasisAdv</masterLabel>
+            <translation><!-- PortalBasisAdv --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

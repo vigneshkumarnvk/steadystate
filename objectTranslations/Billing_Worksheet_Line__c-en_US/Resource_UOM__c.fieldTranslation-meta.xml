@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Resource UOM --></label>
+        <name>Resource_UOM__c</name>
+        <relationshipLabel><!-- Billing Worksheet Lines --></relationshipLabel>
+    </CustomFieldTranslation>

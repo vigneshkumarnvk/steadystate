@@ -1,0 +1,312 @@
+<apex:page standardController="TM__c" extensions="ResourceController" action="{!selectResourceList}" id="thePage"
+           sidebar="false" lightningStyleSheets="true">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+        <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+
+        <script>
+            function showDropDown(tmId) {
+                //debugger;
+                $('.dropdown-content').hide();
+                $('#myDropdown' + tmId).show();
+                //document.getElementById("myDropdown" + tmId).classList.toggle("show");
+            }
+
+            // Close the dropdown if the user clicks outside of ii
+            window.onclick = function (event) {
+                if (!event.target.matches('.dropbtn')) {
+                    $('.dropdown-content').hide();
+                }
+            }
+
+            function filter(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(charCode == 13){
+                    selectResourceList();
+                    return false;                    
+                }
+                return true;
+            }
+        
+            function setFocusToFilter() {
+                 $("[id$='txtFilter']").focus();
+            }
+
+            function openAssignment(id) {
+                if(id != '' && id != undefined) {
+                    window.open('/' + id, '_blank');
+                }
+            }
+
+        </script>
+
+        <Style>
+            .fixedCol {
+                white-space: nowrap !important;
+                text-overflow: ellipsis;
+                max-width: 130px;
+                overflow: hidden;
+            }
+            
+            .b {
+                font-weight: bold;
+            }
+        </Style>
+    </head>
+    <c:LoadingStatus />
+    <apex:form id="theForm">
+        <apex:pageMessages id="theMsg"/>
+        <apex:pageBlock id="thePageBlock">
+            <apex:actionFunction name="selectResourceList" oncomplete="setFocusToFilter();" action="{!selectResourceList}" reRender="thePageBlock,theResourceTable,LineInfo,pgStat"
+                                 immediate="false" status="loadingstatus">            
+            </apex:actionFunction>
+            <apex:pageBlockSection id="pbsection1" columns="3" title="" collapsible="false">
+            </apex:pageBlockSection>
+            
+            <table width="100%" style="margin-bottom:!0px;">
+                <tr>
+                    <td width="35%">
+                        <!--<span class="b">Date: </span>-->
+                        <apex:commandButton action="{!setPreviousDate}" value="<< Prev" status="loadingstatus" />
+                        <apex:inputText style="margin-left:5px;" value="{!scheduledDateValue}" id="scheduledDate">
+                            <apex:actionSupport event="onchange" action="{!selectResourceList}"
+                                                reRender="theResourceTable" status="loadingstatus"/>
+                        </apex:inputText>
+                        <apex:commandButton action="{!setNextDate}" value="Next >>" status="loadingstatus"/>
+                    </td>
+                    <td  width="15%">
+                        <span class="b">Company:</span> {!theSC.Subsidiary_Company__r.Name}
+                    </td>
+                    <td  width="15%"  style="white-space:nowrap;">
+                        <span class="b">Service Center:</span>
+                        <apex:inputField label="Service Center: " value="{!theUser.Service_Center__c}" >
+                            <apex:actionSupport event="onchange" action="{!selectResourceList}"
+                                                reRender="theResourceTable" status="loadingstatus"/>
+                        </apex:inputField>
+                    </td>
+                </tr>
+            </table>
+            <table width="85%" style="margin-bottom:!0px;">
+                <tr>
+                    <td>
+                        <b>Field to Filter : </b>
+                        <apex:selectList style="height:32px;" size="1" value="{!selFilterField}">
+                            <apex:selectOptions value="{!lstFilterField}"/>
+                        </apex:selectList>
+                    </td>
+                    <td>
+                        <apex:selectList style="height:32px;" size="1" value="{!selFilterOp}">
+                            <apex:selectOptions value="{!lstFilterOperator}"/>
+                        </apex:selectList>
+                    </td>
+                    <td>
+                        <apex:inputText onkeypress="return filter();" id="txtFilter" value="{!filterInput}"/>
+                    </td>
+                    <td>
+                        <apex:commandButton value="Filter" action="{!selectResourceList}"
+                                            rerender="thePageBlock,theResourceTable,LineInfo,pgStat">
+                            <apex:param id="theSearch" name="theSearch" value="Item"/>
+                        </apex:commandButton>
+                        <apex:outputPanel id="pgStat">
+                            {!paginationStat}&nbsp;&nbsp;
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+
+                        <apex:commandButton action="{!first}" disabled="{!!hasPrevious}" value="|<< First"/>
+                        <apex:commandButton action="{!previous}" disabled="{!!hasPrevious}" value="<< Previous"/>
+                        <apex:commandButton action="{!next}" disabled="{!!hasNext}" value="Next >>"/>
+                        <apex:commandButton action="{!last}" disabled="{!!hasNext}" value="Last >>|"/>
+
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" style="margin-bottom:!0px;">
+                <tr>
+                    <td>
+                        <apex:commandButton value="Assign to T&M" action="{!resourceOff}" reRender="theMsg"
+                                            status="loadingstatus">
+                            <apex:param name="offType" value="Assign" assignTo="{!offType}"/>
+                            <apex:param name="calledFrom" value="EquipmentRoster" assignTo="{!calledFrom}"/>
+                        </apex:commandButton>
+                        <apex:commandButton value="OOS-On Lot" action="{!resourceOff}" reRender="theMsg" status="loadingstatus" rendered="{!theUser.Equipment_Manager__c}">
+                            <apex:param name="offType" value="Out of Service" assignTo="{!offType}"/>
+                            <apex:param name="calledFrom" value="EquipmentRoster" assignTo="{!calledFrom}"/>
+                        </apex:commandButton>
+                        <apex:commandButton value="Other" action="{!resourceOff}" reRender="theMsg" status="loadingstatus">
+                            <apex:param name="offType" value="Other" assignTo="{!offType}"/>
+                            <apex:param name="calledFrom" value="EquipmentRoster" assignTo="{!calledFrom}"/>
+                        </apex:commandButton>
+                        <apex:commandButton value="Available" action="{!resourceOff}" reRender="theMsg"
+                                            status="loadingstatus" rendered="{!theUser.Equipment_Manager__c}">
+                            <apex:param name="offType" value="Available" assignTo="{!offType}"/>
+                            <apex:param name="calledFrom" value="EquipmentRoster" assignTo="{!calledFrom}"/>
+                        </apex:commandButton>
+                    </td>
+                </tr>
+            </table>
+            
+            
+            <apex:outputPanel id="theResourceTable" style="layout:block;">
+                <table class="list" width="100%" cellpadding="3" cellspacing="0">
+                    <thead>
+                        <tr class="headerRow">
+                            <th>
+                            </th>
+                            <apex:repeat value="{!lstFields}" var="fld"> 
+                                <th>
+                                    <apex:commandLink reRender="thePageBlock" action="{!setOrderBy}" status="loadingstatus">
+                                        <apex:param name="orderBy" value="{!fld}"/>
+                                        <apex:outputLabel value="{!$ObjectType.Resource__c.fields[fld].Label}" />
+                                        
+                                        &nbsp;
+                                        <apex:outputPanel layout="none" rendered="{!sortBy==fld}">
+                                            <apex:image value="/img/colTitle_uparrow.gif"
+                                                        rendered="{!sortDirection=='ASC'}"/>
+                                            <apex:image value="/img/colTitle_downarrow.gif"
+                                                        rendered="{!sortDirection=='DESC'}"/>
+                                        </apex:outputPanel>
+                                        &nbsp;
+                                    </apex:commandLink>
+                                </th>
+                            </apex:repeat>
+                            <th>
+                                Service Center
+                            </th>
+                            <th>
+                                Assigned Job
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!ResourceWrapList}" var="line">
+                            <tr class="dataRow">
+                                <td>
+                                    <apex:inputCheckbox value="{!line.isSelected}"/>
+                                </td>
+                                <td>
+                                    <apex:outputLink value="{!URLFOR($Action.Resource__c.View, line.theResource.id)}">{!line.theResource.Name}</apex:outputLink>
+                                    
+                                </td>
+                                <td>
+                                    <apex:outputField id="theFleetNumber" value="{!line.theResource.Fleet_Number__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputField id="theResourceDescription" value="{!line.theResource.Description__c}"/>
+                                </td>
+                                <td>
+                                    <apex:outputField id="theEquipmentType" value="{!line.theResource.Resource_Type__r.Name}"/>
+                                </td>
+                                <td>
+                                    <apex:outputField id="theServiceCenter" value="{!line.theResource.Service_Center__r.Name}"/>
+                                </td>
+                                <td>
+                                    <!--
+                                    <apex:outputPanel >
+                                        <!--<apex:dataTable value="{!line.salesOrder}" var="v">
+                                            <apex:column >{!v}</apex:column>
+                                        </apex:dataTable>-->
+                                    <!--
+                                        <apex:dataTable value="{!line.mapSalesOrder}" var="key">
+                                            <apex:column >{!line.mapSalesOrder[key]}</apex:column>
+                                        </apex:dataTable>
+                                    </apex:outputPanel>
+                                    -->
+                                    <apex:outputPanel >
+                                        <!-- <apex:dataTable value="{!line.salesOrder}" var="v">
+                                            <apex:column >{!v}</apex:column>
+                                        </apex:dataTable>-->
+                                        <apex:dataTable value="{!line.mapSalesOrder}" var="key">
+                                            <apex:column >
+                                                <apex:outputLink onclick="openAssignment('{!key}');">{!line.mapSalesOrder[key]}</apex:outputLink>
+                                            </apex:column>
+                                            <!--<apex:column >{!line.mapSalesOrder[key]}</apex:column>-->
+                                        </apex:dataTable>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </apex:outputPanel>
+            
+            
+            
+            <!--<apex:pageBlockSection title="" collapsible="false" columns="1">
+                <apex:pageBlockTable columnClasses="fixedCol" value="{!ResourceWrapList}" var="line"
+                                     id="theResourceTable" rendered="{!NOT(ISNULL(ResourceWrapList))}">
+                    <apex:column >
+                        <apex:inputCheckbox value="{!line.isSelected}"/>
+                    </apex:column>
+                    <apex:column title="{!line.theResource.Name}"
+                                 headerValue="{!$ObjectType.Resource__c.fields.Name.Label}">
+                        <apex:outputLink value="{!URLFOR($Action.Resource__c.View, line.theResource.id)}">{!line.theResource.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column title="{!line.theResource.Fleet_Number__c}" headerValue="Fleet Number">
+                        <apex:outputField id="theFleetNumber" value="{!line.theResource.Fleet_Number__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.theResource.Resource_Type__c}" headerValue="Resource Type">
+                        <apex:outputField id="theEquipmentType" value="{!line.theResource.Resource_Type__r.Name}"/>
+                    </apex:column>
+                    <apex:column title="{!line.theResource.Service_Center__r.Name}"
+                                 headerValue="{!$ObjectType.Resource__c.fields.Service_Center__c.Label}">
+                        <apex:outputField id="theServiceCenter" value="{!line.theResource.Service_Center__r.Name}"/>-->
+                        <!--<apex:outputPanel >
+                            <c:CustomLookup componentId="{!$Component.theResourceTable}:theServiceCenter"
+                                            style="width: 100px" useSOSL="false" minSearchLength="1" stealFocus="true"
+                                            sObject="{!line.theResource}" sObjectType="Resource__c" sObjectField="Service_Center__c"
+                                            onchange="validateServiceCenterInList(this)"
+                                            
+                                            LookupObject="Service_Center__c"
+                                            LinkFieldName="Name"
+                                            FieldSetName="ServiceCenterFieldSet"
+                                            RunValidation="True"
+                                            LookupType="ID"
+                                            ValidateFunction="validateServiceCenterInWrapList"
+                                            
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true" />
+                        </apex:outputPanel>-->
+                    <!--</apex:column>
+                    <apex:column headerValue="Assigned Job">
+                        <apex:outputPanel >
+                            <apex:dataTable value="{!line.salesOrder}" var="v">
+                                <apex:column >{!v}</apex:column>
+                            </apex:dataTable>
+                        </apex:outputPanel>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>-->
+        </apex:pageBlock>
+    </apex:form>
+    <Script>
+
+        function setFocusOnLoad() {
+        }
+
+    </Script>
+    <script>
+
+        $(document).ready(function () {
+            $("[id$='scheduledDate']").datepicker({});
+
+            $("[id$='scheduledDate']").on("keypress", function () {
+                $("[id$='scheduledDate']").datepicker("hide");
+                if (event.keyCode == 13) {
+                    refreshTMList();
+                    $(this).blur();
+                    return false;
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">new MenuButton('Actions', false);</script>
+</apex:page>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Pay_Rules</fullName>
+    <columns>NAME</columns>
+    <columns>Pay_Holiday__c</columns>
+    <columns>Pay_Travel_Time__c</columns>
+    <columns>Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>Blocked__c</columns>
+    <columns>Use_Pay_Rule_Line_Detail_for_Hour_Calc__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Pay Rules</label>
+</ListView>

@@ -1,0 +1,154 @@
+<apex:page standardController="TM__c" extensions="InterCompanyCostTrackingController" recordSetVar="">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"  />
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js" />
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js" />
+
+        <script>
+            $(document).ready(function(){
+                $("[id$='startingDate']").datepicker({
+                });
+
+                $("[id$='endingDate']").datepicker({
+                });
+            });
+            function checkDatesCall() {
+                if($("[id$='startingDate']").val() != '') {
+                    checkDates();
+                }
+            }
+            function renderDate() {
+                $("[id$='startingDate']").datepicker({
+                });
+
+                $("[id$='endingDate']").datepicker({
+                });
+            }
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Inter-Company Cost Report"/>
+    <apex:form id="theForm">
+        <apex:actionFunction name="checkDates" action="{!checkDates}" reRender="thePageBlock,DisplayTMLines, pgButtons" immediate="false" oncomplete="renderDate();" />
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessages"></apex:pageMessages>
+
+            <apex:pageBlockSection id="InputSection" columns="1" collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Starting Date</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputText value="{!startingDateValue}" id="startingDate" onchange="checkDatesCall()">
+                        </apex:inputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Ending Date</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputText value="{!endingDateValue}" id="endingDate" onchange="checkDatesCall()">
+                        </apex:inputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <!--<apex:pageBlockSectionItem >-->
+                <!--<apex:outputLabel >Service Center:</apex:outputLabel>-->
+                <!--<apex:inputField value="{!theUser.Service_Center__c}" id="theServiceCenter">-->
+                <!--&lt;!&ndash;<apex:actionSupport event="onchange" action="{!setServiceCenter}"/>&ndash;&gt;-->
+                <!--</apex:inputField>-->
+                <!--</apex:pageBlockSectionItem>-->
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="DisplayTMLines" title="" collapsible="false" columns="1">
+                <apex:pageBlockTable value="{!interCoCostWrapList}" var="line">
+                    <apex:column headerClass="" headerValue="Description">
+                        {!line.description}
+                        <!--{!'Service Center '+theUser.Service_Center__c + ' due to Service center ' + line.description}-->
+                    </apex:column>
+                    <apex:column headerValue="Category">
+                        {!line.category}
+                    </apex:column>
+                    <apex:column headerValue="Total Cost">
+                        {!line.totalCost}
+                    </apex:column>
+                    <apex:column breakBefore="true" colSpan="2">
+                        <apex:pageBlockSection id="InterCompanyTMLines" collapsible="true" columns="1">
+                            <apex:pageBlockTable value="{!line.tmLines}" var="tmLine">
+                                <apex:column headerValue="T&M No.">
+                                    {!tmLine.TM__r.Name}
+                                </apex:column>
+                                <apex:column headerValue="T&M Status">
+                                    {!tmLine.TM__r.Status__c}
+                                </apex:column>
+                                <apex:column headerValue="Service Center">
+                                    {!tmLine.TM__r.Service_Center__r.Name}
+                                </apex:column>
+                                <apex:column headerValue="Scheduled Date">
+                                    <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                        <apex:param value="{!tmLine.TM__r.Scheduled_Date__c}" />
+                                    </apex:outputText>
+                                </apex:column>
+                                <apex:column headerValue="Category">
+                                    {!tmLine.Category__c}
+                                </apex:column>
+                                <apex:column headerValue="Resource">
+                                    {!tmLine.Resource_Name__c}
+                                </apex:column>
+                                <apex:column headerValue="Description">
+                                    {!tmLine.Description__c}
+                                </apex:column>
+                                <apex:column headerValue="Resource Service Center">
+                                    {!tmLine.Service_Center__r.Name}
+                                </apex:column>
+                                <apex:column headerValue="Qty.">
+                                    <apex:outputText value="{!tmLine.Cost_Qty__c}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}" />
+                                    <apex:outputText value="{!tmLine.Billing_Worksheet_Line__r.Cost_Qty__c}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}" />
+                                </apex:column>
+<!--                                <apex:column headerValue="Quantity">-->
+<!--                                    {!tmLine.Quantity__c}-->
+<!--                                </apex:column>-->
+<!--                                <apex:column headerValue="Hour">-->
+<!--                                    {!tmLine.Hour__c}-->
+<!--                                </apex:column>-->
+                                <apex:column headerValue="Unit Cost">
+                                    <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}">
+                                        <apex:param value="{!tmLine.Unit_Cost__c}" />
+                                    </apex:outputText>
+                                    <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}">
+                                        <apex:param value="{!tmLine.Billing_Worksheet_Line__r.Unit_Cost__c}" />
+                                    </apex:outputText>
+                                </apex:column>
+                                <apex:column headerValue="Line Cost">
+                                    <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.TM__r.Status__c == 'Fully Invoiced' && tmLine.Billing_Worksheet_Line__c == null}">
+                                        <apex:param value="{!tmLine.Line_Cost__c}" />
+                                    </apex:outputText>
+                                    <apex:outputText value="{0,number,###,###,##0.00}" rendered="{!tmLine.Billing_Worksheet_Line__c != null}">
+                                        <apex:param value="{!tmLine.Billing_Worksheet_Line__r.Line_Cost__c}" />
+                                    </apex:outputText>
+                                </apex:column>
+                                <apex:column headerValue="Manual Closed By">
+                                    {!tmLine.TM__r.Manual_Closed_By__r.Name}
+                                </apex:column>
+                                <apex:column headerValue="Manual Closed At">
+                                    <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                        <apex:param value="{!tmLine.TM__r.Manual_Closed_At__c}" />
+                                    </apex:outputText>
+                                </apex:column>
+                            </apex:pageBlockTable>
+                        </apex:pageBlockSection>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons id="pgButtons">
+                <apex:commandButton value="Show Inter-Company Cost"
+                                    action="{!showInterCompanyCost}"
+                                    rendered="{!renderedButton}"
+                                    status="loadingstatus"
+                                    reRender="thePageBlock,DisplayTMLines, pgButtons" onComplete="renderDate();"/>
+                <apex:commandButton value="Export to Excel"
+                                    status="loadingstatus"
+                                    action="{!saveAsExcel}"/>
+                <apex:commandButton value="Return" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

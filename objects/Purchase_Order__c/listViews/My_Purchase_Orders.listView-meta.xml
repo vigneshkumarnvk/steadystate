@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Purchase_Orders</fullName>
+    <columns>OWNER.ALIAS</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Coupa_Id__c</columns>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Coupa_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All My Purchase Orders</label>
+</ListView>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DSO__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(Days_Sales_Outstanding__c  &lt;= 30,
+30,
+
+
+
+
+IF(Days_Sales_Outstanding__c  &gt;30 &amp;&amp; Days_Sales_Outstanding__c &lt;= 60,
+60,
+
+
+
+IF(Days_Sales_Outstanding__c  &gt;60 &amp;&amp; Days_Sales_Outstanding__c &lt;= 90,
+90,
+
+IF(Days_Sales_Outstanding__c  &gt;90 &amp;&amp; Days_Sales_Outstanding__c &lt;= 120,
+120,
+
+
+IF(Days_Sales_Outstanding__c  &gt;120 &amp;&amp; Days_Sales_Outstanding__c &lt;= 700,
+365,
+Days_Sales_Outstanding__c 
+)))))</formula>
+    <label>DSO</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

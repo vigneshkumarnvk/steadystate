@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cost_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Cost Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>AD-AP1</fullName>
+                <default>false</default>
+                <label>AD-AP1 : ACCIDENT PURCHASES</label>
+            </value>
+            <value>
+                <fullName>CP-AP1</fullName>
+                <default>false</default>
+                <label>CP-AP1 : CAPITAL PURCHASES</label>
+            </value>
+            <value>
+                <fullName>DN-AP1</fullName>
+                <default>false</default>
+                <label>DN-AP1 : NEGLECT PURCHASES</label>
+            </value>
+            <value>
+                <fullName>FU-EL1</fullName>
+                <default>false</default>
+                <label>FU-EL1 : FUEL PURCHASES</label>
+            </value>
+            <value>
+                <fullName>PM-AP1</fullName>
+                <default>false</default>
+                <label>PM-AP1 : PM PURCHASES</label>
+            </value>
+            <value>
+                <fullName>PT-001</fullName>
+                <default>false</default>
+                <label>PT-001 : PARTS PURCHASE</label>
+            </value>
+            <value>
+                <fullName>RG-000</fullName>
+                <default>false</default>
+                <label>RG-000 : AP - REGISTRATION</label>
+            </value>
+            <value>
+                <fullName>RP-AP1</fullName>
+                <default>false</default>
+                <label>RP-AP1 : REPAIR PURCHASES</label>
+            </value>
+            <value>
+                <fullName>TI-RES</fullName>
+                <default>false</default>
+                <label>TI-RES : TIRE PURCHASES</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

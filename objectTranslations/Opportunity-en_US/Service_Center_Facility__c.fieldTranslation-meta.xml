@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Service Center/Facility --></label>
+        <name>Service_Center_Facility__c</name>
+        <picklistValues>
+            <masterLabel>Aston, PA</masterLabel>
+            <translation><!-- Aston, PA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Baltimore, MD</masterLabel>
+            <translation><!-- Baltimore, MD --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Clayton, NJ</masterLabel>
+            <translation><!-- Clayton, NJ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Envirotech</masterLabel>
+            <translation><!-- Envirotech --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Facility - Deep Green</masterLabel>
+            <translation><!-- Facility - Deep Green --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Facility - Elizabeth</masterLabel>
+            <translation><!-- Facility - Elizabeth --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Facility - Lewisberry</masterLabel>
+            <translation><!-- Facility - Lewisberry --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydro - Indiana</masterLabel>
+            <translation><!-- Hydro - Indiana --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydro - MD and VA</masterLabel>
+            <translation><!-- Hydro - MD and VA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydro - PA and NJ</masterLabel>
+            <translation><!-- Hydro - PA and NJ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydro - Wisconsin</masterLabel>
+            <translation><!-- Hydro - Wisconsin --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Major Events</masterLabel>
+            <translation><!-- Major Events --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Metro - Brooklyn, NY</masterLabel>
+            <translation><!-- Metro - Brooklyn, NY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Metro - Elizabeth, NJ</masterLabel>
+            <translation><!-- Metro - Elizabeth, NJ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Metro - Rahway</masterLabel>
+            <translation><!-- Metro - Rahway --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Metro - Transportation</masterLabel>
+            <translation><!-- Metro - Transportation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>N. PA - Harrisburg</masterLabel>
+            <translation><!-- N. PA - Harrisburg --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>N. PA - New Castle</masterLabel>
+            <translation><!-- N. PA - New Castle --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>N. PA - Williamsport</masterLabel>
+            <translation><!-- N. PA - Williamsport --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>New England - Maine</masterLabel>
+            <translation><!-- New England - Maine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>New England - Mass</masterLabel>
+            <translation><!-- New England - Mass --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

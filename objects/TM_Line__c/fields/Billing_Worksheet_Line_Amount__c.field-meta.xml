@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Billing_Worksheet_Line_Amount__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF (Billing_Worksheet_Line__r.Invoiced__c = TRUE, 0, IF(Billing_Worksheet_Line__r.Bill_as_Lump_Sum__c == TRUE &amp;&amp; Billing_Worksheet_Line__r.Bundle_Line__c == NULL, Billing_Worksheet_Line__r.xLine_Amount__c, Billing_Worksheet_Line__r.Line_Amount__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Unbilled Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

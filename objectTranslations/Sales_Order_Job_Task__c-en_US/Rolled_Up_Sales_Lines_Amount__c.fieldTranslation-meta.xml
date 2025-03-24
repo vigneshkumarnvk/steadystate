@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Rolled-Up Sales Lines Amount --></label>
+        <name>Rolled_Up_Sales_Lines_Amount__c</name>
+    </CustomFieldTranslation>

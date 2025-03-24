@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_England_Service_Centers</fullName>
+    <columns>NAME</columns>
+    <columns>Code__c</columns>
+    <columns>Description__c</columns>
+    <columns>RSG_Division_No__c</columns>
+    <columns>SO_Prefix__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Blocked__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>NAME</field>
+        <operation>equals</operation>
+        <value>07,17,20,21,27,28,29</value>
+    </filters>
+    <label>New England Service Centers</label>
+</ListView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Holidays_with_Overtime_Pay__c</fullName>
+    <externalId>false</externalId>
+    <label>Holiday with Overtime Pay</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Holiday_List</valueSetName>
+    </valueSet>
+    <visibleLines>6</visibleLines>
+</CustomField>

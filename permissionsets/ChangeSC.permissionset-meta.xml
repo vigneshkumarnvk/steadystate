@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Change SC on user setup</description>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>User.Service_Center__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>ChangeSC</label>
+    <license>Salesforce</license>
+</PermissionSet>

@@ -1,0 +1,51 @@
+<apex:page standardController="Purchase_Order__c" extensions="PurchOrderController">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Post Purchase Receipt for Purchase Order" subtitle="{!title}?"/>
+    <apex:form id="theForm">                                  
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rerender="thePageBlock" value="Post Purchase Receipt" action="{!postPR}"/>
+                <apex:commandButton value="Return to Purchase Order" action="{!returnBack}"/>                
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Actual Receipt Date</apex:outputLabel>
+                    <apex:inputField value="{!TempPR.Actual_Receipt_Date__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Purchase order complete</apex:outputLabel>
+                    <apex:inputCheckbox value="{!forceClosePO}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="theLineSection" columns="1" title="Received Lines" collapsible="false">
+                <apex:outputPanel styleClass="purchaseLineWrap" layout="block" style="overflow: scroll;">
+                    <apex:pageBlockTable id="thePLTable" value="{!PLList}" var="line" rendered="{!NOT(ISNULL(PLList))}">
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Item__c.Label}">
+                            <apex:outputField id="theOutputItem" value="{!line.Item__c}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Quantity__c.Label}">
+                            <apex:outputField id="theOutputQuantity" value="{!line.Quantity__c}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Qty_to_Receive__c.Label}">
+                            <apex:inputField id="theOutputQuantityToReceive" value="{!line.Qty_to_Receive__c}" rendered="{!line.Quantity__c > line.Received_Qty__c}"/>
+                            <apex:outputField id="theOutputQuantityToReceiveNonEditable"  value="{!line.Qty_to_Receive__c}" rendered="{!line.Quantity__c <= line.Received_Qty__c}"/>
+                        </apex:column>
+
+                            <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Note__c.Label}">
+                                <apex:inputField id="theDescription" rendered="{!line.Quantity__c > line.Received_Qty__c}" value="{!line.Note__c}"
+                                                 styleClass="input-description" html-tabIndex="-1"/>
+                                <apex:outputPanel rendered="{!line.Quantity__c <= line.Received_Qty__c}">{!line.Note__c}</apex:outputPanel>
+                            </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Purchase_Line__c.fields.Received_Qty__c.Label}">
+                            <apex:outputField id="theOutputReceivedQty" value="{!line.Received_Qty__c}" />
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>          
+    </apex:form>  
+</apex:page>

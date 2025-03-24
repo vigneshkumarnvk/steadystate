@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Account --></label>
+        <lookupFilter>
+            <errorMessage><!-- Contracts cannot be associated to Customer Accounts that have not yet been issued a customer account number. --></errorMessage>
+        </lookupFilter>
+        <name>Account__c</name>
+        <relationshipLabel><!-- Associated Contract --></relationshipLabel>
+    </CustomFieldTranslation>

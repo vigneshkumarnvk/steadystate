@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Unit of Measure</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Units of Measure</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    <fieldSets>
+        <label><!-- UOMFieldSet --></label>
+        <name>UOMFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Unit of Measure Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Duplicate record found! --></errorMessage>
+        <name>Prevent_Duplicate</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Type --></label>
+        <name>Type__c</name>
+        <picklistValues>
+            <masterLabel>Cable</masterLabel>
+            <translation><!-- Cable --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DSL</masterLabel>
+            <translation><!-- DSL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fiber</masterLabel>
+            <translation><!-- Fiber --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LTE</masterLabel>
+            <translation><!-- LTE --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

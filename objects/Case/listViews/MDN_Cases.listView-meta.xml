@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MDN_Cases</fullName>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>MDN_Case__c</columns>
+    <columns>NAME</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.CREATED_DATE_DATE_ONLY</columns>
+    <columns>CASES.LAST_UPDATE_DATE_ONLY</columns>
+    <columns>CASES.REASON</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.Case_Record</value>
+    </filters>
+    <filters>
+        <field>MDN_Case__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>MDN Cases</label>
+</ListView>

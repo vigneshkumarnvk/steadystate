@@ -1,0 +1,392 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" controller="ResourceOffController" id="thePage" sidebar="true">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+        <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+        <script>
+            function renderDate() {
+                $("[id$='startDate']").datepicker({});
+                $("[id$='endDate']").datepicker({});
+            }
+
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+
+            function insertColon(ctrl, evt) {
+
+                if (ctrl.value.length == 3 && ctrl.value.indexOf(':') < 0) {
+                    ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+                }
+            }
+
+            function validateTM(ctrl) {
+                alert('validate TM')
+                validateTM();
+            }
+
+            function validateServiceCenter(ctrl) {
+                validateServiceCenter();
+            }
+
+            /*function validateResource(ctrl) {
+                validateResource();
+            }*/
+
+            function validateResourceCall(field) {
+                var fieldId = field.id;
+                var resourceId = document.getElementById(fieldId + "_lkid").value;
+                validateResource(resourceId);
+            }
+
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Manage Resource Availability" />
+    <apex:form id="theForm">
+        <apex:pageMessages id="theMsg" escape="false"/>
+        <apex:pageBlock id="thePageBlock">
+            <apex:actionFunction name="validateTM" action="{!validateTM}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateServiceCenter" action="{!validateServiceCenter}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus" />
+            <apex:actionFunction name="validateResource" action="{!validateResource}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus">
+                <apex:param value="" name="resourceId"/>
+            </apex:actionFunction>
+
+            <div style="text-align:center;" >
+                <apex:commandButton value="Save" action="{!save}" oncomplete="renderDate();" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </div>
+
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable width="100%" columnClasses="fixedCol" value="{!theResourceList}" var="line"
+                                     id="theResourceTable" rendered="{!NOT(ISNULL(theResourceList)) && offType != 'borrowedResShopTime'}">
+                    <apex:column width="40%"></apex:column>
+                    <apex:column headerValue="No." >
+                        <apex:outputText value="{!line.Name}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Description__c}" headerValue="Description">
+                        <apex:outputField value="{!line.Description__c}"/>
+                    </apex:column>
+                    <apex:column width="40%"></apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection collapsible="false" columns="1" id="thePageBlockSection">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Resource Off: </apex:outputLabel>
+                    <apex:outputText value="{!IF(offType == 'borrowedResShopTime', 'Shop Time', offType)}" id="resourceOff">
+                    </apex:outputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!offType =='borrowedResShopTime'}">
+                    <apex:outputLabel >Resource Service Center: </apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theResServiceCenter"
+                                            styleClass="input-lookup"
+                                            style="width: 150px"
+                                            secondaryDisplayField="Description__c"
+                                            minSearchLength="1"
+                                            stealFocus="true"
+                                            useSOSL="false"
+                                            allowtoBlank="true"
+                                            onchange="validateServiceCenter(this);"
+
+                                            sObjectType="Resource_Off__c"
+                                            sObject="{!theResOff}"
+                                            sObjectField="Resource_Service_Center__c"
+
+                                            LookupObject="Service_Center__c"
+                                            LinkFieldName="Name"
+                                            FieldSetName="ServiceCenterFieldSet"
+                                            RunValidation="True"
+                                            LookupType="ID"
+                                            ValidateFunction="validateServiceCenter"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"/>
+                        </div>
+                    </apex:outputpanel>
+                    <!--<apex:inputField value="{!theResOff.Resource_Service_Center__c}" />-->
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType=='borrowedResShopTime'}">
+                    <apex:outputLabel >Resource: </apex:outputLabel>
+                    <apex:outputPanel >
+                        <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theResource"
+                                        style="width: 200px"
+                                        useSOSL="false"
+                                        minSearchLength="1"
+                                        stealFocus="true"
+                                        sObject="{!theResource}"
+                                        sObjectType="Resource__c"
+                                        sObjectField="Description__c"
+                                        allowtoBlank="true"
+                                        onchange="validateResourceCall(this)"
+                                        sObjectTypeSearch="Resource__c"
+
+                                        LookupObject="Resource__c"
+                                        LinkFieldName="Name"
+                                        FieldSetName="ResourceFieldSet"
+                                        RunValidation="True"
+                                        LookupType="ID"
+                                        ValidateFunction="validateResourceCall(this)"
+
+                                        FilterName1="Category__c"
+                                        FilterNameValue1="Labor"
+                                        FilterOperation1="Category__c"
+                                        FilterOperationValue1="="
+                                        FilterType1="Category__c"
+                                        FilterTypeValue1="String"
+
+                                        FilterName2="Service_Center__c"
+                                        FilterNameValue2="{!theResOff.Resource_Service_Center__c}"
+                                        FilterOperation2="Service_Center__c"
+                                        FilterOperationValue2="="
+                                        FilterType2="Service_Center__c"
+                                        FilterTypeValue2="String"
+
+                                        FilterName3="Status__c"
+                                        FilterNameValue3="Active"
+                                        FilterOperation3="Status__c"
+                                        FilterOperationValue3="="
+                                        FilterType3="Status__c"
+                                        FilterTypeValue3="String"
+
+                                        fltr1="true"
+                                        fltr2="true"
+                                        fltr3="true"
+                                        fltr4="true"
+                                        fltr5="true"
+                                        fltr6="true"
+                                        fltr7="true"/>
+                    </apex:outputPanel>
+                    <!--<apex:pageBlockSectionItem rendered="{!offType=='borrowedResShopTime'}">
+                        <apex:outputLabel >Resource: </apex:outputLabel>
+                        <apex:outputPanel >
+                            <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theResource"
+                                            style="width: 200px"
+                                            useSOSL="false"
+                                            minSearchLength="1"
+                                            stealFocus="true"
+                                        sObject="{!theResOff}"
+                                        sObjectType="Resource_Off__c"
+                                        sObjectField="Resource__c"
+                                        allowtoBlank="true"
+                                        onchange="validateResource(this)"
+
+                                        LookupObject="Resource__c"
+                                        LinkFieldName="Name"
+                                        FieldSetName="ResourceFieldSet"
+                                        RunValidation="True"
+                                        LookupType="ID"
+                                        ValidateFunction="validateResource"
+
+                                        FilterName1="Category__c"
+                                        FilterNameValue1="Labor"
+                                        FilterOperation1="Category__c"
+                                        FilterOperationValue1="="
+                                        FilterType1="Category__c"
+                                        FilterTypeValue1="String"
+
+                                        FilterName2="Service_Center__c"
+                                        FilterNameValue2="{!theResOff.Resource_Service_Center__c}"
+                                        FilterOperation2="Service_Center__c"
+                                        FilterOperationValue2="="
+                                        FilterType2="Service_Center__c"
+                                        FilterTypeValue2="String"
+
+                                        FilterName3="Status__c"
+                                        FilterNameValue3="Active"
+                                        FilterOperation3="Status__c"
+                                        FilterOperationValue3="="
+                                        FilterType3="Status__c"
+                                        FilterTypeValue3="String"
+
+                                        fltr1="true"
+                                        fltr2="true"
+                                        fltr3="true"
+                                        fltr4="true"
+                                        fltr5="true"
+                                        fltr6="true"
+                                        fltr7="true"/>
+                        </apex:outputPanel>-->
+                    <!--<apex:inputField value="{!theResOff.Resource__c}" />-->
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Paid Time Off'}">
+                    <apex:outputLabel >PTO Type: </apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="thePTOType" value="{!theResOff.PTO_Type__c}" />
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Unavailable'}">
+                    <apex:outputLabel >Unavailable Reason: </apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="thePTOType" value="{!theResOff.Unavailable_Reason__c}"/>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType != 'Assign'}" >
+                    <apex:outputLabel >Start Date: </apex:outputLabel>
+                    <apex:inputText value="{!startDate}" id="startDate">
+                    </apex:inputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Assign'}" >
+                    <apex:outputLabel >Start Date: </apex:outputLabel>
+                    <apex:outputText value="{!startDate}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType != 'Available' && offType != 'Assign'
+                                                        && offType != 'No Work Available' && offType != 'Unpaid Time Off'}" >
+                    <apex:outputLabel >Start Time: </apex:outputLabel>
+                    <apex:inputText onkeyup="insertColon(this, event);" onkeypress="return isNumber(event);" id="startTime" value="{!strStartTime}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType != 'Assign' && offType!= 'Shop Time' && offType != 'borrowedResShopTime' && offType != 'Out of Service'}">
+                    <apex:outputLabel >End Date: </apex:outputLabel>
+                    <apex:inputText value="{!endDate}" id="endDate">
+                    </apex:inputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType != 'Available'  && offType != 'Assign'
+                                                        && offType != 'No Work Available' && offType != 'Unpaid Time Off'}">
+                    <apex:outputLabel >End Time: </apex:outputLabel>
+                    <apex:inputText onkeyup="insertColon(this, event);" onkeypress="return isNumber(event);" id="endTime" value="{!strEndTime}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Shop Time' || offType == 'borrowedResShopTime'}" >
+                    <apex:outputLabel >Lunch Start Time: </apex:outputLabel>
+                    <apex:inputText onkeyup="insertColon(this, event);" onkeypress="return isNumber(event);" id="lunchStartTime" value="{!strLunchStartTime}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Shop Time' || offType == 'borrowedResShopTime'}" >
+                    <apex:outputLabel >Lunch End Time: </apex:outputLabel>
+                    <apex:inputText onkeyup="insertColon(this, event);" onkeypress="return isNumber(event);" id="lunchEndTime" value="{!strLunchEndTime}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Shop Time' || offType == 'borrowedResShopTime'}" >
+                    <apex:outputLabel >Shop Time Category: </apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField id="shopTimeCategory" value="{!theResOff.Shop_Time_Category__c}"/>
+                        </div>
+                    </apex:outputpanel>
+                    <!--<apex:inputField id="shopTimeCategory" value="{!theResOff.Shop_Time_Category__c}"/>-->
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#23713 -->
+                <apex:pageBlockSectionItem rendered="{!offType == 'Shop Time' || offType == 'borrowedResShopTime'}" >
+                    <apex:outputLabel >Flat Rate Type: </apex:outputLabel>
+                    <apex:inputField id="flatRateType" value="{!theResOff.Flat_Rate_Type__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Shop Time' || offType == 'borrowedResShopTime'}" >
+                    <apex:outputLabel >Rate: </apex:outputLabel>
+                    <apex:inputText id="flatPayRate" value="{!theResOff.Flat_Pay_Rate__c}"/>
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#23713 -->
+
+                <apex:pageBlockSectionItem rendered="{!offType != 'Available'  && offType != 'Assign'}">
+                    <apex:outputLabel >Note: </apex:outputLabel>
+                    <apex:inputTextArea value="{!note}" style="width:50%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!offType == 'Assign'}">
+                    <apex:outputLabel >T&amp;M No.: </apex:outputLabel>
+                    <apex:outputPanel >
+                        <c:CustomLookup componentId="{!$Component.thePageBlockSection}:theTM"
+                                        style="width: 200px"
+                                        useSOSL="false"
+                                        minSearchLength="1"
+                                        stealFocus="true"
+                                        sObject="{!theTMLine}"
+                                        sObjectType="TM_Line__c"
+                                        sObjectField="TM__c"
+                                        allowtoBlank="true"
+                                        onchange="validateTM(this)"
+
+                                        LookupObject="TM__c"
+                                        LinkFieldName="Name"
+                                        FieldSetName="TMFieldSet"
+                                        RunValidation="True"
+                                        LookupType="ID"
+                                        ValidateFunction="validateTM"
+
+                                        FilterName1="Status__c"
+                                        FilterNameValue1="Scheduled"
+                                        FilterOperation1="Status__c"
+                                        FilterOperationValue1="="
+                                        FilterType1="Status__c"
+                                        FilterTypeValue1="String"
+
+                                        FilterName2="Scheduled_Date__c"
+                                        FilterNameValue2="{!dtStart}"
+                                        FilterOperation2="Scheduled_Date__c"
+                                        FilterOperationValue2="="
+                                        FilterType2="Scheduled_Date__c"
+                                        FilterTypeValue2="date"
+
+                                        FilterName3="Service_Center__r.Name"
+                                        FilterNameValue3="{!selectedSC}"
+                                        FilterOperation3="Service_Center__r.Name"
+                                        FilterOperationValue3="="
+                                        FilterType3="Service_Center__r.Name"
+                                        FilterTypeValue3="String"
+
+                                        fltr1="true"
+                                        fltr2="true"
+                                        fltr3="true"
+                                        fltr4="true"
+                                        fltr5="true"
+                                        fltr6="true"
+                                        fltr7="true"/>
+                    </apex:outputPanel>
+                    <!-- //Ticket 13326 added Service Center filter-->
+                </apex:pageBlockSectionItem>
+                <!--job task-->
+                <apex:pageBlockSectionItem rendered="{!offType == 'Assign'}">
+                    <apex:outputLabel >Job Task: </apex:outputLabel>
+                    <apex:selectList label="Job Task" value="{!theTMLine.TM_Job_Task__c}" size="1" multiSelect="false">
+                        <apex:selectOptions value="{!jobTaskSelectOptions}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <!--job task-->
+            </apex:pageBlockSection>
+            <div style="text-align:center;">
+                <apex:outputPanel rendered="{!offType == 'Available'}">
+                    <br/>
+                    Are you sure to delete all Resource Off entries, and Open &amp; Scheduled T&amp;M Lines for the selected resources and dates?
+                    <br/>
+                    <br/>
+                </apex:outputPanel>
+            </div>
+
+            <div style="text-align:center;" >
+                <apex:commandButton value="Save" action="{!save}" oncomplete="renderDate();" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Return to Roster" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+    <Script>
+
+        function setFocusOnLoad() {
+        }
+
+    </Script>
+    <script>
+        $(document).ready(function () {
+            renderDate();
+        });
+    </script>
+</apex:page>

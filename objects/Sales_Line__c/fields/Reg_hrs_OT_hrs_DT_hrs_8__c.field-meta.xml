@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reg_hrs_OT_hrs_DT_hrs_8__c</fullName>
+    <externalId>false</externalId>
+    <formula>Regular_Hours__c + Overtime_Hours__c + Premium_Hours__c  &lt; 8</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Reg hrs + OT hrs + DT hrs &lt; 8</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

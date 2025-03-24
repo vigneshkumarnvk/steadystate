@@ -1,0 +1,44 @@
+<apex:page recordSetVar="products" standardController="Purchase_Price__c" extensions="CreatePOController" lightningStylesheets="true">
+    <apex:sectionHeader title="Create PO"/>    
+    <apex:form id="theForm">    
+        <c:LoadingStatus />                                                                           
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Service Center</apex:outputLabel>
+                    <apex:selectList value="{!theUser.Service_Center__c}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!ServiceCenterOptions}"/>
+                    </apex:selectList>
+                    <!--apex:inputField id="theServiceCenter" value="{!theUser.Service_Center__c}" /-->
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Note</apex:outputLabel>
+                    <apex:inputTextarea rows="5" id="theNote" value="{!note}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Create" action="{!createPO}" reRender="thePageBlock" status="loadingstatus"/>                             
+                <apex:commandButton value="Return" action="{!returnBack}" />                                   
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection id="theSection" columns="1" title="Items" collapsible="false" >
+                <apex:outputPanel styleClass="purchaseLineWrap" layout="block" style="overflow: scroll;">
+                    <apex:pageBlockTable id="thePLTable" value="{!selectedProductList}" var="line" rendered="{!NOT(ISNULL(selectedProductList))}">
+                        <!-- Item -->
+                        <apex:column headerValue="{!$ObjectType.Purchase_Price__c.fields.Name.Label}">
+                            <apex:outputField id="theOutputItem" value="{!line.Name}" style="width:50px"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Purchase_Price__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputField id="theLineUOM" value="{!line.Unit_of_Measure__r.Name}"/>
+                        </apex:column>
+                        <apex:column headerValue="Quantity">
+                            <apex:inputField id="theQty" value="{!line.Minimum_Quantity__c}"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:pageBlock>            
+    </apex:form> 
+</apex:page>

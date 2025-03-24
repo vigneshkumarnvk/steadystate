@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Pay_Rule__c</columns>
+    <columns>Eligible_Holidays__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Eligible_Holidays__c</field>
+        <operation>includes</operation>
+        <value>Juneteenth Actual,Juneteenth PW Observed</value>
+    </filters>
+    <label>All</label>
+</ListView>

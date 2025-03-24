@@ -1,0 +1,104 @@
+<apex:page controller="EquipmentUtilizationController" readOnly="true" renderAs="pdf" applyBodyTag="false" showHeader="false" sidebar="false" docType="html-5.0" applyHtmlTag="false">
+	<html lang="en-us" dir="ltr">
+    <head>
+            <style>            
+                @page {
+                	size:A4 landscape;
+                	margin-top: 5%;
+                	margin-left: 5%;
+                }
+                
+                html *{
+                	font-size:12px;
+                }
+   
+            </style>
+    </head>    
+    <body>
+    <apex:dataTable value="{!TMEquipLinesPDF}" cellpadding="3" cellspacing="0" var="line" id="theTable" rowClasses="odd,even" style="margin:0 auto;" styleClass="tableClass" border="1" >
+        <apex:column >
+            <apex:facet name="header">No.</apex:facet>
+            <apex:outputText value="{!line.ResourceNo}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Home<br/>Service<br/>Center</apex:facet>
+            <apex:outputText value="{!line.HomeServiceCenter}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Fleet<br/>Number</apex:facet>
+            <apex:outputText value="{!line.FleetNumber}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Equip<br/>Group</apex:facet>
+            <apex:outputText value="{!line.EquipmentGroup}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Resource<br/>Type</apex:facet>
+            <apex:outputText value="{!line.ResourceType}"/>
+        </apex:column>        
+
+        <apex:column >
+            <apex:facet name="header">Name</apex:facet>
+            <apex:outputText value="{!line.ResourceName}" />
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Year</apex:facet>
+            <apex:outputText value="{!line.Year}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Make</apex:facet>
+            <apex:outputText value="{!line.Make}"/>
+        </apex:column>
+
+        <apex:column >
+            <apex:facet name="header">Model</apex:facet>
+            <apex:outputText value="{!line.Model}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">VIN</apex:facet>
+            <apex:outputText value="{!line.VIN}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Assigned<br/>SC<br/>Hours</apex:facet>
+            <apex:outputText value="{!line.SC_Hours}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">I/C<br/>Hours</apex:facet>
+            <apex:outputText value="{!line.IC_Hours}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Job<br/>Total Hours</apex:facet>
+            <apex:outputText value="{!line.Total_Hours}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">% Utilization</apex:facet>
+            <!--<apex:outputText value="{!line.Utilization}"/>-->
+            <apex:outputText value="{0, number, 00.0%}">
+                <apex:param value="{!line.Utilization}" />
+            </apex:outputText>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Goal<br/>Hours<br/>Assigned</apex:facet>
+            <apex:outputText value="{!line.GoalHoursAssigned}"/>
+        </apex:column>
+        
+        <apex:column >
+            <apex:facet name="header">Delta</apex:facet>
+            <apex:outputText value="{!line.Delta}"/>
+        </apex:column>
+    </apex:dataTable>    
+    </body>
+    </html>
+</apex:page>

@@ -1,0 +1,531 @@
+<!-- <apex:page controller="TMController" sidebar="false" tabStyle="TM__c" id="thePage" lightningStyleSheets="true"> -->
+<apex:page standardController="TM__c" sidebar="false" tabStyle="TM__c" id="thePage" lightningStyleSheets="true">
+    <!--
+    <head>
+        <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js">
+        </script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js">
+        </script>
+        <script>
+            var lastSelecetdStatus = '';
+            function setLeftButtonsCss(evt) {
+                $('.' + evt).css('background-color', '#a9aaaa');
+                lastSelecetdStatus = evt;
+            }
+
+            $(document).ready(function () {
+                var flterByStatus = getParameterByName('flterByStatus');
+                if(flterByStatus != null && flterByStatus != '') {
+                    if(flterByStatus == 'Ready to Bill') {
+                        $('.btnReadytoBill').css('background-color', '#a9aaaa');
+                    } else {
+                        $('.btn' + flterByStatus).css('background-color', '#a9aaaa');
+                    }
+                } else {
+                    $('.btnOpen').css('background-color', '#a9aaaa');
+                }
+            });
+        
+            function setStatusBackground() {
+                if(lastSelecetdStatus == '') {
+                    $('.btnAll').css('background-color', '#a9aaaa');
+                } else {
+                    $('.' + lastSelecetdStatus).css('background-color', '#a9aaaa');   
+                }
+            }
+        
+            function getParameterByName(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+        
+            function confirmVoidTM() {
+                var result = confirm("Are you sure you want to Void T&M?");
+                if (!result) {
+                    return false;
+                }
+                
+                setStatusToVoid();
+            }
+        
+            function confirmAddEmergency() {
+                var result = confirm("Are you sure to create emergency T&M?");
+                if (!result) {
+                    return false;
+                }
+                
+                AddEmergencyTMs();
+            }
+        
+            function filter(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(charCode == 13){
+                    search();
+                    return false;                    
+                }
+                return true;
+            }
+        
+            function setFocusToFilter() {
+                 $("[id$='txtFilter']").focus();
+            }
+            
+            // Last tab restoration logic
+            function savestate(method) { document.cookie = 'method='+method+'; expires=Wed, 1 Jan 2070 13:47:11 UTC; path=/' }  
+            
+            $(function() 
+            { 
+                if(getCookie("method") !== 'undefined')
+                { 
+                    $("[id$='"+ getCookie("method")+"']").click();
+                }
+            });             
+            // Last tab restoration logic            
+        
+        
+            function printBillingTM(ids) {
+                if(ids != '' && ids != undefined) {
+                    window.open('/apex/TMBillingMultiple?selectedTMIds=' + ids, '_blank');
+                }
+            }
+            
+            function printFieldTM(ids) {
+                if(ids != '' && ids != undefined) {
+                    window.open('/apex/TMFieldMultiplePDF2?selectedTMIds=' + ids, '_blank');
+                }
+            }
+            
+        </script>
+    </head>
+
+    <style>
+        .list td {
+            text-align: left;
+        }
+
+        .list th {
+            text-align: left;
+        }
+
+        .btn, .btnDisabled {
+            padding: 2px 3px !important;
+        }
+
+        .pagination-buttons td {
+            padding-left: 7px;
+        }
+
+        .actionCol a {
+            text-decoration: none;
+            color: #015ba7;
+        }
+
+        #divLeft .btn {
+            min-width: 120px !important;
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        #divMain {
+            width: 100%;
+        }
+
+        #divLeft {
+            width: 10%;
+            float: left;
+        }
+
+        #divRight {
+            width: 90%;
+            float: right;
+        }
+
+        .cb {
+            clear: both;
+        }
+
+        .alignCenter {
+            text-align: center;
+        }
+        
+        body input[type="button"][disabled], body .pbButton .btn[disabled], body .pbButtonb .btn[disabled], body input.btn[disabled], .slds-scope input[type="submit"][disabled], .slds-scope .pbButton .btn[disabled], .slds-scope .pbButtonb .btn[disabled], .slds-scope input.btn[disabled] {
+            background-color: white !important;
+            cursor: default !important;
+        }
+        
+        body input[type="button"][disabled], body .pbButton .btn[disabled], body .pbButtonb .btn[disabled], body input.btn[disabled], .slds-scope input[type="submit"][disabled], .slds-scope .pbButton .btn[disabled], .slds-scope .pbButtonb .btn[disabled], .slds-scope input.btn[disabled] {
+            color: #dddbda !important;
+        }
+        
+        body input[type="button"], body .pbButton .btn, body .pbButtonb .btn, body input.btn, .slds-scope input[type="button"], .slds-scope .pbButton .btn, .slds-scope .pbButtonb .btn, .slds-scope input.btn {
+            -webkit-appearance: none;
+            position: relative;
+            display: inline-block;
+            border: 1px solid transparent;
+            padding: 0;
+            font-size: .75rem;
+            line-height: 1.875rem;
+            text-decoration: none;
+            white-space: normal;
+            border-radius: .25rem;
+            background: transparent;
+            background-clip: border-box;
+            color: #0070d2;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-transition: color .05s linear,background-color .05s linear;
+            transition: color .05s linear,background-color .05s linear;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #dddbda;
+            -webkit-transition: border .15s linear;
+            transition: border .15s linear;
+            border-color: #dddbda;
+            background-color: white;
+        }
+        
+        .bPageBlock{
+        	padding:.5rem !important;
+        }
+        .btn, .btnDisabled {
+        	padding: 0px 3px !important;
+        }
+    </style>
+
+    <c:LoadingStatus />
+    <apex:form id="theForm">
+        <apex:actionFunction name="AddEmergencyTMs" action="{!AddEmergencyTMs}" reRender="theTMStatusTable,theMsg"
+                                 immediate="false" status="loadingstatus"/>
+        <apex:actionFunction name="setStatusToVoid" oncomplete="setLeftButtonsCss('btnOpen');" action="{!setStatusToVoid}" reRender="theTMStatusTable,theMsg"
+                             immediate="false" status="loadingstatus">            
+        </apex:actionFunction>
+        <apex:actionFunction name="search" oncomplete="setStatusBackground();setFocusToFilter();" action="{!search}" reRender="theStatus, theForm,pgStat"
+                             immediate="false" status="loadingstatus">            
+        </apex:actionFunction>
+        <div id="divMain">
+            <div id="divLeft" class="alignCenter">
+
+                <apex:commandButton id="btnAll" oncomplete="setLeftButtonsCss('btnAll');" styleClass="btnAll" value="All" onclick="savestate('btnAll');"
+                                    action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+                <apex:commandButton id="btnOpen" oncomplete="setLeftButtonsCss('btnOpen');" styleClass="btnOpen" value="Open" onclick="savestate('btnOpen');"
+                                    action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Open" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnScheduled" oncomplete="setLeftButtonsCss('btnScheduled');" styleClass="btnScheduled" onclick="savestate('btnScheduled');"
+                                    value="Scheduled" action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Scheduled" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton oncomplete="setLeftButtonsCss('btnMobileReview');"
+                                    styleClass="btnMobileReview" value="Mobile Review" action="{!searchTM}"
+                                    reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Mobile Review" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnConfirmed" oncomplete="setLeftButtonsCss('btnConfirmed');" styleClass="btnConfirmed"  onclick="savestate('btnConfirmed');"
+                                    value="Confirmed" action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Confirmed" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnReceivedByBilling" oncomplete="setLeftButtonsCss('btnReceivedByBilling');"
+                                    styleClass="btnReceivedByBilling" value="Received By Billing" action="{!searchTM}" onclick="savestate('btnReceivedByBilling');"
+                                    reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Received By Billing" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnReadytoBill" oncomplete="setLeftButtonsCss('btnReadytoBill');" styleClass="btnReadytoBill"  onclick="savestate('btnReadytoBill');"
+                                    value="Ready to Bill" action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Ready to Bill" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+                
+                <apex:commandButton id="btnPartiallyInvoiced" oncomplete="setLeftButtonsCss('btnPartiallyInvoiced');" styleClass="btnPartiallyInvoiced"  onclick="savestate('btnPartiallyInvoiced');"
+                                    value="Partially Invoiced" action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Partially Invoiced" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnFullyInvoiced" oncomplete="setLeftButtonsCss('btnFullyInvoiced');" styleClass="btnFullyInvoiced"  onclick="savestate('btnFullyInvoiced');"
+                                    value="Fully Invoiced" action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Fully Invoiced" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+
+                <apex:commandButton id="btnClosed" oncomplete="setLeftButtonsCss('btnClosed');" styleClass="btnClosed" value="Closed"  onclick="savestate('btnClosed');"
+                                    action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Closed" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+                <apex:commandButton id="btnVoid" oncomplete="setLeftButtonsCss('btnVoid');" styleClass="btnVoid" value="Void"  onclick="savestate('btnVoid');"
+                                    action="{!searchTM}" reRender="theStatus, theForm">
+                    <apex:param name="flterBy" value="Void" assignTo="{!filterInput2}"/>
+                </apex:commandButton>
+            </div>
+            <div id="divRight" class="">
+                <apex:pageMessages id="theMsg" escape="false"/>
+                <apex:pageBlock rendered="{!theTMListPerStatus == null || theTMListPerStatus.size <= 0}" >
+                    <span style="color:red;">** Records not found **</span>
+                </apex:pageBlock>
+                <apex:pageBlock rendered="{!filterInput2 == ''}">
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                </apex:pageBlock>
+                <apex:pageBlock rendered="{!filterInput2 == 'Open'}">
+                    <apex:commandButton value="Schedule" action="{!ScheduleTMs}"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton value="Add Emergency T&Ms" onclick="return confirmAddEmergency();" 
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+                    <apex:commandButton value="Void T&Ms" oncomplete="setLeftButtonsCss('btnOpen');" onclick="return confirmVoidTM();">
+                    </apex:commandButton>
+                </apex:pageBlock>
+                <apex:pageBlock rendered="{!filterInput2 == 'Scheduled'}">
+
+                    <apex:commandButton action="{!setStatus}" value="Open" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Open"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!setStatus}" value="Confirmed" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Confirmed"/>
+                    </apex:commandButton>                    
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Confirmed'}">
+                    <apex:commandButton action="{!setStatus}" value="Scheduled" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Scheduled"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!setStatus}" value="Received By Billing" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Received By Billing"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Received By Billing'}">
+                    <apex:commandButton action="{!setStatus}" value="Confirm T&M" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Confirmed"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!setStatus}" value="Ready to Bill" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Ready to Bill"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}"  oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Ready to Bill'}">
+                    <apex:commandButton action="{!setStatus}" value="Received By Billing" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Received By Billing"/>
+                    </apex:commandButton>
+
+                    <apex:commandButton value="Create Invoice" action="{!CreateInvoiceFromProcessTM}"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!manualCloseTM}" value="Close T&M"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+
+                </apex:pageBlock>
+                
+                <apex:pageBlock rendered="{!filterInput2 == 'Partially Invoiced'}">
+                    <apex:commandButton action="{!setStatus}" value="Received By Billing" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Received By Billing"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Create Invoice" action="{!CreateInvoiceFromProcessTM}"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!manualCloseTM}" value="Close T&M"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Fully Invoiced'}">
+                    <apex:commandButton action="{!setStatus}" value="Close T&M" reRender="theTMStatusTable,theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Closed"/>
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToFieldTMMultiplePDF}" oncomplete="printFieldTM('{!selectedTMsIds}');" value="Print Field T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                    <apex:commandButton action="{!GoToReadyToBillPDF}" oncomplete="printBillingTM('{!selectedTMsIds}');" value="Print Billing T&M"
+                                        reRender="theTMStatusTable,theMsg" status="loadingstatus">
+                    </apex:commandButton>
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Closed'}">
+                    <apex:commandButton action="{!reopenTM}" value="Re-open T&M"
+                                        reRender="theTMStatusTable,theMsg">
+                    </apex:commandButton>
+                </apex:pageBlock>
+
+                <apex:pageBlock rendered="{!filterInput2 == 'Void'}">
+                    <apex:commandButton action="{!setStatus}" value="Un-Void" reRender="theTMStatusTable, theMsg">
+                        <apex:param name="changeStatusTo" assignTo="{!changeStatusTo}" value="Open" />
+                    </apex:commandButton>
+                </apex:pageBlock>
+
+                <apex:pageBlock id="thePB">
+                    <div>
+                        <apex:panelGrid columns="6" cellpadding="5">
+                            <apex:outputPanel >
+                                <b>Field to Filter : </b>
+                                <apex:selectList style="height:32px;" size="1" value="{!selFilterField}">
+                                    <apex:selectOptions value="{!lstFilterField}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                            <apex:outputPanel >
+                                <apex:selectList style="height:32px;" size="1" value="{!selFilterOp}">
+                                    <apex:selectOptions value="{!lstFilterOperator}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                            <apex:outputPanel >
+                                <apex:inputText onkeypress="return filter();" id="txtFilter" value="{!filterInput}"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel >
+                                <apex:commandButton oncomplete="setStatusBackground();" value="Filter" action="{!search}"
+                                                    rerender="theStatus, theForm,pgStat">
+                                    <apex:param id="theSearch" name="theSearch" value="Item"/>
+                                </apex:commandButton>
+                                <apex:outputPanel id="pgStat">
+                                    Showing {!getStartIndexStatusWrap} to {!getEndIndexStatusWrap } of {!getTotalRecordsStatusWrap}&nbsp;&nbsp;
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel style="float:right">
+                                <apex:panelGrid styleClass="pagination-buttons" columns="4"
+                                                style="display:inline-block;">
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" style="line-height: 1.750rem;"  action="{!firstpageStatusWrap}" disabled="{!hasPreviouspageStatusWrap}" value="|<< First"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" style="line-height: 1.750rem;" action="{!previouspageStatusWrap}" disabled="{!hasPreviouspageStatusWrap}"
+                                                        value="<< Previous"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" style="line-height: 1.750rem;" action="{!nextpageStatusWrap}" disabled="{!hasNextpageStatusWrap}" value="Next >>"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" style="line-height: 1.750rem;" action="{!lastpageStatusWrap}" disabled="{!hasNextpageStatusWrap}" value="Last >>|"/>
+                                </apex:panelGrid>
+                            </apex:outputPanel>
+
+                            <apex:outputPanel style="float:right">
+                                <span class="b">Service Center: </span>
+                                <apex:inputField label="Service Center:" value="{!theUser.Service_Center__c}" >
+                                    <apex:actionSupport event="onchange" action="{!search}"
+                                                        rerender="theStatus, theForm,pgStat" status="loadingstatus"/>
+                                </apex:inputField>
+                            </apex:outputPanel>
+
+                        </apex:panelGrid>
+
+                    </div>
+                    <apex:outputPanel id="theTMStatusTable" style="layout:block;">
+                        <table class="list" width="100%" cellpadding="3" cellspacing="0">
+                            <thead>
+                            <tr class="headerRow">
+                                <th style="text-align:left;">SEL</th>
+                                <th style="text-align:left;">ACTION</th>
+                                <apex:repeat value="{!lstFields}" var="fld">
+                                    <th>
+                                        <apex:commandLink oncomplete="setStatusBackground();" reRender="thePB" action="{!setOrderBy}">
+                                            <apex:param name="orderBy" value="{!fld}"/>
+                                            <apex:outputLabel rendered="{!fld != 'Service_Center__c' && fld != 'Total_Lines__c'}" value="{!$ObjectType.TM__c.fields[fld].Label}" />
+                                            <apex:outputLabel rendered="{!fld == 'Service_Center__c'}" value="SC" />
+                                            <apex:outputLabel rendered="{!fld == 'Total_Lines__c'}" value="Lines" />
+                                            
+                                            &nbsp;
+                                            <apex:outputPanel layout="none" rendered="{!sortBy==fld}">
+                                                <apex:image value="/img/colTitle_uparrow.gif"
+                                                            rendered="{!sortDirection=='ASC'}"/>
+                                                <apex:image value="/img/colTitle_downarrow.gif"
+                                                            rendered="{!sortDirection=='DESC'}"/>
+                                            </apex:outputPanel>
+                                            &nbsp;
+                                        </apex:commandLink>
+
+                                    </th>
+                                </apex:repeat>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <apex:repeat value="{!theTMListPerStatus}" var="tmc">
+                                <tr class="dataRow">
+                                    <td style="text-align:left;">
+                                        <apex:inputCheckbox value="{!tmc.isSelected}"/>
+                                    </td>
+                                    <td style="text-align:left;" class="actionCol">
+                                        <apex:outputLink value="{!URLFOR($Action.TM__c.Edit, tmc.theTM.Id)}">Edit
+                                        </apex:outputLink>
+
+                                    </td>
+                                    <apex:repeat value="{!lstFields}" var="fld">
+                                        <td>
+                                            <apex:outputField value="{!tmc.theTM[fld]}" rendered="{!fld!='Name'}"/>
+                                            <apex:outputLink value="{!URLFOR($Action.TM__c.View, tmc.theTM.Id)}"
+                                                             rendered="{!fld=='Name'}">{!tmc.theTM.Name}</apex:outputLink>
+                                        </td>
+                                    </apex:repeat>
+                                </tr>
+                            </apex:repeat>
+                            </tbody>
+                        </table>
+
+                        <div style="padding-bottom: 4px;">
+                            Showing {!getStartIndexStatusWrap} to {!getEndIndexStatusWrap } of {!getTotalRecordsStatusWrap}&nbsp;&nbsp;
+                            <div style="float:right;">
+                                <apex:panelGrid styleClass="pagination-buttons" columns="4"
+                                                style="display:inline-block;">
+                                    <apex:commandButton action="{!firstpageStatusWrap}" disabled="{!hasPreviouspageStatusWrap}" value="|<< First"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" action="{!previouspageStatusWrap}" disabled="{!hasPreviouspageStatusWrap}"
+                                                        value="<< Previous"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" action="{!nextpageStatusWrap}" disabled="{!hasNextpageStatusWrap}" value="Next >>"/>
+                                    <apex:commandButton oncomplete="setStatusBackground();" reRender="thePB,theTMStatusTable" action="{!lastpageStatusWrap}" disabled="{!hasNextpageStatusWrap}" value="Last >>|"/>
+                                </apex:panelGrid>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlock>
+
+            </div>
+        </div>
+        <div class="cb">
+
+        </div>
+    </apex:form>
+    -->
+</apex:page>

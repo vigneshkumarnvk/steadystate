@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bid_Bond__c</fullName>
+    <externalId>false</externalId>
+    <label>Bid Bond</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Yes</fullName>
+                <default>false</default>
+                <label>Yes</label>
+            </value>
+            <value>
+                <fullName>No</fullName>
+                <default>false</default>
+                <label>No</label>
+            </value>
+            <value>
+                <fullName>$20,000</fullName>
+                <default>false</default>
+                <label>$20,000</label>
+            </value>
+            <value>
+                <fullName>.</fullName>
+                <default>false</default>
+                <label>.</label>
+            </value>
+            <value>
+                <fullName>0</fullName>
+                <default>false</default>
+                <label>0</label>
+            </value>
+            <value>
+                <fullName>1</fullName>
+                <default>false</default>
+                <label>1</label>
+            </value>
+            <value>
+                <fullName>1%</fullName>
+                <default>false</default>
+                <label>1%</label>
+            </value>
+            <value>
+                <fullName>10%</fullName>
+                <default>false</default>
+                <label>10%</label>
+            </value>
+            <value>
+                <fullName>10% (also L&amp;M bond, performance bond, &amp; DRS guarantee bond)</fullName>
+                <default>false</default>
+                <label>10% (also L&amp;M bond, performance bond, &amp; DRS guarantee bond)</label>
+            </value>
+            <value>
+                <fullName>10% Bid Bond + P&amp;P</fullName>
+                <default>false</default>
+                <label>10% Bid Bond + P&amp;P</label>
+            </value>
+            <value>
+                <fullName>10% NTE $20,000</fullName>
+                <default>false</default>
+                <label>10% NTE $20,000</label>
+            </value>
+            <value>
+                <fullName>10% NTE $20K Bid Bond + Performance Bond</fullName>
+                <default>false</default>
+                <label>10% NTE $20K Bid Bond + Performance Bond</label>
+            </value>
+            <value>
+                <fullName>10% of the bid, to a maximum of $20,000</fullName>
+                <default>false</default>
+                <label>10% of the bid, to a maximum of $20,000</label>
+            </value>
+            <value>
+                <fullName>10%, NTE $20,000</fullName>
+                <default>false</default>
+                <label>10%, NTE $20,000</label>
+            </value>
+            <value>
+                <fullName>10%, max $20,000</fullName>
+                <default>false</default>
+                <label>10%, max $20,000</label>
+            </value>
+            <value>
+                <fullName>10000</fullName>
+                <default>false</default>
+                <label>10000</label>
+            </value>
+            <value>
+                <fullName>20 percent</fullName>
+                <default>false</default>
+                <label>20 percent</label>
+            </value>
+            <value>
+                <fullName>20,000</fullName>
+                <default>false</default>
+                <label>20,000</label>
+            </value>
+            <value>
+                <fullName>20000</fullName>
+                <default>false</default>
+                <label>20000</label>
+            </value>
+            <value>
+                <fullName>5%</fullName>
+                <default>false</default>
+                <label>5%</label>
+            </value>
+            <value>
+                <fullName>5% Bid Bond + labor and materials/payment bond</fullName>
+                <default>false</default>
+                <label>5% Bid Bond + labor and materials/payment bond</label>
+            </value>
+            <value>
+                <fullName>5% of Value</fullName>
+                <default>false</default>
+                <label>5% of Value</label>
+            </value>
+            <value>
+                <fullName>5% of the Bid</fullName>
+                <default>false</default>
+                <label>5% of the Bid</label>
+            </value>
+            <value>
+                <fullName>50% Performance Bond</fullName>
+                <default>false</default>
+                <label>50% Performance Bond</label>
+            </value>
+            <value>
+                <fullName>BID</fullName>
+                <default>false</default>
+                <label>BID</label>
+            </value>
+            <value>
+                <fullName>Bid Gaurantee</fullName>
+                <default>false</default>
+                <label>Bid Gaurantee</label>
+            </value>
+            <value>
+                <fullName>N/A</fullName>
+                <default>false</default>
+                <label>N/A</label>
+            </value>
+            <value>
+                <fullName>NA</fullName>
+                <default>false</default>
+                <label>NA</label>
+            </value>
+            <value>
+                <fullName>NONE</fullName>
+                <default>false</default>
+                <label>NONE</label>
+            </value>
+            <value>
+                <fullName>Not needed</fullName>
+                <default>false</default>
+                <label>Not needed</label>
+            </value>
+            <value>
+                <fullName>Not required</fullName>
+                <default>false</default>
+                <label>Not required</label>
+            </value>
+            <value>
+                <fullName>Only if over $35K</fullName>
+                <default>false</default>
+                <label>Only if over $35K</label>
+            </value>
+            <value>
+                <fullName>P&amp;P Bonds Required</fullName>
+                <default>false</default>
+                <label>P&amp;P Bonds Required</label>
+            </value>
+            <value>
+                <fullName>Performance Bond</fullName>
+                <default>false</default>
+                <label>Performance Bond</label>
+            </value>
+            <value>
+                <fullName>Performance Bond of $500K Annually</fullName>
+                <default>false</default>
+                <label>Performance Bond of $500K Annually</label>
+            </value>
+            <value>
+                <fullName>Required but not providing</fullName>
+                <default>false</default>
+                <label>Required but not providing</label>
+            </value>
+            <value>
+                <fullName>SEE RFP</fullName>
+                <default>false</default>
+                <label>SEE RFP</label>
+            </value>
+            <value>
+                <fullName>See bid.</fullName>
+                <default>false</default>
+                <label>See bid.</label>
+            </value>
+            <value>
+                <fullName>TBD</fullName>
+                <default>false</default>
+                <label>TBD</label>
+            </value>
+            <value>
+                <fullName>Unknown</fullName>
+                <default>false</default>
+                <label>Unknown</label>
+            </value>
+            <value>
+                <fullName>Yes - 5%</fullName>
+                <default>false</default>
+                <label>Yes - 5%</label>
+            </value>
+            <value>
+                <fullName>bid bond, certified check or cashier's check in the amount of 10% of the bid, to a maximum of $20,000</fullName>
+                <default>false</default>
+                <label>bid bond, certified check or cashier's check in the amount of 10% of the bid, to a maximum of $20,000</label>
+            </value>
+            <value>
+                <fullName>no bid bond;  $25k P/P Bond</fullName>
+                <default>false</default>
+                <label>no bid bond;  $25k P/P Bond</label>
+            </value>
+            <value>
+                <fullName>unknown go to portal</fullName>
+                <default>false</default>
+                <label>unknown go to portal</label>
+            </value>
+            <value>
+                <fullName>unknown?</fullName>
+                <default>false</default>
+                <label>unknown?</label>
+            </value>
+            <value>
+                <fullName>yes 10%/ $20k</fullName>
+                <default>false</default>
+                <label>yes 10%/ $20k</label>
+            </value>
+            <value>
+                <fullName>yes if over $150K</fullName>
+                <default>false</default>
+                <label>yes if over $150K</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

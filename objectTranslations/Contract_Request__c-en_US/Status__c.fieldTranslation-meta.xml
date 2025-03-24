@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Approved - Added to Existing Contract</masterLabel>
+            <translation><!-- Approved - Added to Existing Contract --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Approved for Entry</masterLabel>
+            <translation><!-- Approved for Entry --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed - Documentation Only</masterLabel>
+            <translation><!-- Closed - Documentation Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed - No Action</masterLabel>
+            <translation><!-- Closed - No Action --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed – Required Details Never Submitted</masterLabel>
+            <translation><!-- Closed – Required Details Never Submitted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Entry Completed</masterLabel>
+            <translation><!-- Entry Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Entry Approval</masterLabel>
+            <translation><!-- Pending Entry Approval --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Legal Review</masterLabel>
+            <translation><!-- Pending Legal Review --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Waste Coding</masterLabel>
+            <translation><!-- Pending Waste Coding --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending – Missing Documents</masterLabel>
+            <translation><!-- Pending – Missing Documents --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending – Potential Duplicate</masterLabel>
+            <translation><!-- Pending – Potential Duplicate --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

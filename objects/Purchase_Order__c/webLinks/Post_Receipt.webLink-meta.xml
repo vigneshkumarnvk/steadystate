@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Post_Receipt</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Post Receipt</masterLabel>
+    <openType>sidebar</openType>
+    <page>CreatePurchaseReceipt</page>
+    <protected>false</protected>
+</WebLink>

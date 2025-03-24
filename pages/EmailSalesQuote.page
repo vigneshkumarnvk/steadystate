@@ -1,0 +1,83 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesQuoteEmailing" id="thePage" showHeader="true">
+    <apex:includeScript value="{!URLFOR($Resource.bootstrap, '/bootstrap/jquery-3.3.1.js')}"/>
+    <script type="text/javascript">
+        var j$ = jQuery.noConflict();
+        var printType = 'Detail';
+        var printEstimatedDuration = {!printEstimatedDuration};
+        function setPrintType(value){
+            printType = value;
+            reloadIFrame();
+        }
+
+        function setPrintEstimatedDuration(checkboxCtrl){
+            printEstimatedDuration = checkboxCtrl.checked;
+            reloadIFrame();
+        }
+
+        function reloadIFrame() {
+            j$('#sipdf_preview').attr('src', '/apex/SalesQuotePDF?id={!theSO.Id}&printType=' + printType + '&printEstimatedDuration=' + printEstimatedDuration);
+            //j$('#sipdf_preview').attr('src', '/apex/CreateSalesQuotePDF?id={!theSO.Id}&printType=' + value);
+        }
+    </script>
+    <apex:sectionHeader title="Email Sales Quote" subtitle="{!title}?"/>
+    <apex:form id="theForm"><br/><br/>
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:outputPanel rendered="{!showEmail}">
+                <apex:outputLabel value="Internal Only" /> <br />
+                <apex:inputCheckbox value="{!isTest}" />
+                <br/><br/>
+
+                <apex:outputLabel value="From" for="From" />: <br />
+                <apex:outputText value="{!$User.Email}" />
+                <br/><br/>
+
+                <apex:outputLabel value="To" for="To"/>: <br/>
+                <apex:inputText value="{!theToAddresses}" id="to" disabled="true" style="width:835px;"/>
+                <br/><br/>
+
+                <apex:outputLabel value="CC" for="cc"/>: <br/>
+                <apex:inputTextarea value="{!theCcAddresses}" id="cc" rows="1" cols="150" />
+                <br/><br/>
+
+                <apex:outputLabel value="Subject" for="Subject"/>: <br/>
+                <apex:inputTextarea value="{!theSubject}" id="Subject" rows="2" cols="150"/>
+                <br/><br/>
+
+                <apex:outputLabel value="Body" for="Body"/>: <br/>
+                <apex:inputTextarea value="{!theBody}" id="Body" rows="5" cols="150"/>
+                <br/><br/>
+                <apex:outputText value="Please select a file to attach"/><br/><br/>
+                <apex:outputLabel value="File" for="file"/>
+                <apex:inputFile value="{!file.body}" filename="{!file.Name}" id="file"/>
+                <br/><br/>
+                <apex:outputLabel >Quote Type:</apex:outputLabel>
+                <!--
+                <apex:selectList size="1" id="selPrintType" value="{!selPrintType}" onChange="reloadIFrame(this.value)">
+                    <apex:selectOptions value="{!lstPrintType}"/>
+                </apex:selectList>
+                -->
+                <apex:selectList size="1" id="selPrintType" value="{!selPrintType}" onChange="setPrintType(this.value)">
+                    <apex:selectOptions value="{!lstPrintType}"/>
+                </apex:selectList>
+                <br/><br/>
+                <apex:outputLabel value="Print Estimated Job Duration	" /> <br />
+                <apex:inputCheckbox id="printEstDuration" value="{!printEstimatedDuration}" onchange="setPrintEstimatedDuration(this)" >
+                </apex:inputCheckbox>
+                <br/><br/>
+                <apex:outputLabel value="PDF" for="PDF"/>: <br/>
+                <iframe id="sipdf_preview" src="/apex/SalesQuotePDF?id={!theSO.Id}&printType={!selPrintType}&printEstimatedDuration={!printEstimatedDuration}" scrolling="true" height="800px" width="800px" />
+                <br/><br/>
+            </apex:outputPanel>
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Send Email" action="{!EmailSalesQuote}" rendered="{!allowToEmail}"/>
+                <apex:commandButton value="Return to Sales Quote" action="{!returnBack}" rendered="{!allowToEmail}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

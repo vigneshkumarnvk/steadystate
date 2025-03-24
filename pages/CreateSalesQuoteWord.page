@@ -1,0 +1,1784 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController"
+           contentType="application/msword#{!salesOrder.Name}.doc" cache="true" sidebar="false"
+           standardStylesheets="false">
+
+    <!--deprecate-->
+    <!--
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title></title>
+        <style>
+            v\: * {
+                behavior: url(#default#VML);
+            }
+
+            o\: * {
+                behavior: url(#default#VML);
+            }
+
+            w\: * {
+                behavior: url(#default#VML);
+            }
+
+            .shape {
+                behavior: url(#default#VML);
+            }
+        </style>
+        <style>
+            @page {
+                mso-page-orientation: portrait;
+                size: 21cm 29.7cm;
+                margin: 1cm 1cm 1cm 1cm;
+            }
+
+            @page Section1 {
+                mso-header-margin: .5in;
+                mso-footer-margin: .5in;
+                mso-header: h1;
+                mso-footer: f1;
+            }
+
+            div.Section1 {
+                page: Section1;
+            }
+
+            table#MainTable {
+                margin: 0in 0in 0in 10in;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            }
+
+            p.MsoFooter, li.MsoFooter, div.MsoFooter {
+                margin: 0in;
+                margin-bottom: .0001pt;
+                mso-pagination: widow-orphan;
+                tab-stops: center 3.0in;
+                font-size: 12.0pt;
+            }
+        </style>
+        <style>
+            html {
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                line-height: 1.5;
+            }
+
+            .content {
+                padding: 0px 10px;
+            }
+
+            .ml5 {
+                margin-left: 5px;
+            }
+
+            .ml10 {
+                margin-left: 10px;
+            }
+
+            .ml15 {
+                margin-left: 15px;
+            }
+
+            .ml20 {
+                margin-left: 20px;
+            }
+
+            .ml25 {
+                margin-left: 25px;
+            }
+
+            .ml50 {
+                margin-left: 50px;
+            }
+
+            .mr5 {
+                margin-right: 5px;
+            }
+
+            .mr10 {
+                margin-right: 10px;
+            }
+
+            .mr15 {
+                margin-right: 15px;
+            }
+
+            .mr20 {
+                margin-right: 20px;
+            }
+
+            .mr25 {
+                margin-right: 25px;
+            }
+
+            .mt5 {
+                margin-top: 5px;
+            }
+
+            .mt10 {
+                margin-top: 10px;
+            }
+
+            .mt15 {
+                margin-top: 15px;
+            }
+
+            .mt20 {
+                margin-top: 20px;
+            }
+
+            .mt25 {
+                margin-top: 25px;
+            }
+
+            .mt30 {
+                margin-top: 30px;
+            }
+
+            .mt50 {
+                margin-top: 50px;
+            }
+
+            .w100 {
+                width: 100%;
+            }
+
+            .w50 {
+                width: 50%;
+            }
+
+            .w70 {
+                width: 70%;
+            }
+            .noBorder {
+                border: none;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .i {
+                font-style: italic;
+            }
+
+            .u {
+                text-decoration: underline;
+            }
+
+            .border1 {
+                border: 1px solid black;
+            }
+
+            .alignCenter {
+                text-align: center;
+            }
+
+            .alignLeft {
+                text-align: left;
+            }
+
+            .alignRight {
+                text-align: right;
+            }
+
+            .valignTop {
+                vertical-align: top;
+            }
+
+            .valignBottom {
+                vertical-align: bottom;
+            }
+
+            .fs6 {
+                font-size: 6pt;
+            }
+
+            .fs7 {
+                font-size: 7pt;
+            }
+
+            .fs8 {
+                font-size: 8pt;
+            }
+
+            .fs9 {
+                font-size: 9pt;
+            }
+
+            .fs10 {
+                font-size: 10pt;
+            }
+
+            .fs11 {
+                font-size: 11pt;
+            }
+
+            .fs12 {
+                font-size: 12pt;
+            }
+
+            .fs14 {
+                font-size: 14pt;
+            }
+
+            .fs16 {
+                font-size: 16pt;
+            }
+
+            .tblInnerBorders {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+            }
+
+            .tblInnerBorders td, .tblInnerBorders th {
+                border: 1px solid black;
+            }
+
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+
+            .pb5 {
+                padding-bottom: 5px;
+            }
+
+            .pb10 {
+                padding-bottom: 10px;
+            }
+
+            .divWrap {
+                page-break-before: always;
+                counter-reset: page;
+            }
+
+            .divWrap:first-child {
+                page-break-before: auto !important;
+            }
+
+            .fr {
+                float: right;
+            }
+
+            .fl {
+                float: left;
+            }
+
+            .cb {
+                clear: both;
+            }
+
+            .lineTable {
+                border-collapse: collapse;
+            }
+
+            .lineTable thead tr th {
+                border-bottom: 1px solid black;
+                vertical-align: bottom;
+            }
+
+            .myUL li {
+                line-height: 2;
+                font-size: 12px;
+                margin-left: -28px;
+            }
+
+            .companyLogo span table tbody tr td div p img {
+                /*height: 100px !important;*/
+            }
+
+            .defaultFont {
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            .defaultFontAlignCenter {
+                text-align: center;
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            .defaultFontAlignRight {
+                text-align: right;
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            .tblHeadersLeft {
+                vertical-align: bottom;
+                border-bottom: 1px solid black;
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                text-align: left;
+            }
+
+            .tblHeaders {
+                vertical-align: bottom;
+                border-bottom: 1px solid black;
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            .tblHeadersRight {
+                vertical-align: bottom;
+                border-bottom: 1px solid black;
+                font-size: 9pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="content">
+        <div>
+            <table class="w100">
+                <tr>
+                    <td class="pageNumber w50 vaTop">
+                        <apex:outputText styleClass="defaultFont" value="{0,date,MMMM d','  yyyy}">
+                            <apex:param value="{!salesOrder.CreatedDate}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="mt30">
+            {!salesOrder.Bill_to_Contact__r.Salutation} {!salesORder.Bill_to_Contact__r.FirstName}
+            {!salesOrder.Bill_to_Contact__r.LastName}
+            <br/> {!salesOrder.Bill_to_Contact__r.Title}
+        </div>
+        <div>
+            {!salesOrder.Bill_to_Customer_No__r.Name}
+        </div>
+        <div>
+            {!salesOrder.Bill_to_Customer_No__r.BillingStreet}
+        </div>
+        <div>
+            {!salesOrder.Bill_to_Customer_No__r.BillingCity},
+            {!salesOrder.Bill_to_Customer_No__r.BillingState} {!salesOrder.Bill_to_Customer_No__r.BillingPostalCode}
+        </div>
+        <div class="mt30">
+            Dear {!salesOrder.Bill_to_Contact__r.Salutation} {!salesORder.Bill_to_Contact__r.FirstName}
+            {!salesOrder.Bill_to_Contact__r.LastName},
+        </div>
+        <div class="mt20">
+            ACV Enviro is pleased to provide you with this quotation for the services outlined below in the Scope of
+            Work.
+            We pride ourselves on being responsive and delivering a quality service; We appreciate being considered for
+            this opportunity.
+            Upon your review, if there are any changes to the Scope of Work, or if additional services are required,
+            we would be pleased to discuss any additional needs you may have. <br />
+            Quote is based on estimated work date:
+            <apex:outputText value="{0, date, MM'/'dd'/'yyyy}">
+                <apex:param value="{!salesOrder.Estimated_Job_Start_Date__c}" />
+            </apex:outputText>
+            <apex:outputText value=" - {0, date, MM'/'dd'/'yyyy}" rendered="{!salesOrder.Estimated_Job_Start_Date__c != salesOrder.Estimated_Job_End_Date__c}">
+                <apex:param value="{!salesOrder.Estimated_Job_End_Date__c}" />
+            </apex:outputText>
+            <apex:outputText value=", including holiday and weekend." rendered="{!salesOrder.Include_Holiday__c == true && salesOrder.Include_Weekend__c == true}" />
+            <apex:outputText value=", including holiday." rendered="{!salesOrder.Include_Holiday__c == true && salesOrder.Include_Weekend__c == false}" />
+            <apex:outputText value=", including weekend." rendered="{!salesOrder.Include_Holiday__c == false && salesOrder.Include_Weekend__c == true}" />
+        </div>
+
+        <div class="mt20">
+            <table class="w100 lineTable">
+                <thead>
+                <tr>
+                    <th class="tblHeadersLeft">
+                        SCOPE OF WORK
+                    </th>
+                    <th class="tblHeaders">
+
+                    </th>
+                    <th class="tblHeaders">
+
+                    </th>
+                    <th class="tblHeaders">
+
+                    </th>
+                    <th class="tblHeaders">
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5" class="defaultFont">
+                        <apex:outputField value="{!salesOrder.Site_Scope__c}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <apex:outputPanel rendered="{!selectedPrintType == 'Detail'}">
+
+            <apex:outputPanel rendered="{!if(OR(soLineListForLaborPDF.size > 0, SOListEquipmentLinesWithoutLumpSum.size > 0), true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                Description
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+                                EST.
+                                <div>
+                                    Qty.
+                                </div>
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+                                UOM
+                                <div>
+                                    Qty.
+                                </div>
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXT.
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!soLineListForLaborPDF}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.description}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.rateType}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.qty}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.uomQty}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.uom}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.unitPrice}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.extPrice}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+
+                        <apex:repeat value="{!SOListEquipmentLinesWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.UOM_Qty__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalLabor + SLSubtotalEquipment}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalLabor + SLTaxTotalEquipment}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalLabor + SLTotalEquipment}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!if(SOListMaterialLinesWithoutLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                MATERIALS
+                            </th>
+                            <th width="8%" class="tblHeaders">
+                                &nbsp;
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListMaterialLinesWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalMaterials}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalMaterials}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalMaterials}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!if(SOListSubContractorLinesWithoutLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                COST PLUS MATERIALS, EQUIPMENT AND SERVICES
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+                                &nbsp;
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListSubContractorLinesWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c/line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalSubcontractors}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalSubcontractors}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalSubcontractors}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!if(SOListWasteDisposalWithoutLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                DISPOSAL
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListWasteDisposalWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalWasteDisposal}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalWasteDisposal}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalWasteDisposal}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!if(SOListDemurrageWithoutLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                TRANSPORTATION, DEMURRAGE AND FEES
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListDemurrageWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalDemurrage}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalDemurrage}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalDemurrage}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!if(SOListLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                LUMP SUM
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalLumpSum}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalLumpSum}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalLumpSum}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+
+            <apex:outputPanel rendered="{!if(SOListMiscWithoutLumpSum.size > 0, true, false)}">
+                <div class="mt20">
+                    <table class="w100 lineTable">
+                        <thead>
+                        <tr>
+                            <th width="40%" class="tblHeadersLeft">
+                                MISCELLANEOUS FEES, CHARGES AND TAXES
+                            </th>
+                            <th width="8%" class="tblHeaders alignCenter">
+
+                            </th>
+                            <th width="13%" class="tblHeaders alignCenter">
+                                ESTIMATED
+                                <div>
+                                    QUANTITY
+                                </div>
+                            </th>
+                            <th width="11%" class="tblHeaders alignCenter">
+                                UOM
+                            </th>
+                            <th width="16%" class="tblHeaders alignCenter">
+                                UNIT PRICE
+                            </th>
+                            <th width="12%" class="tblHeadersRight">
+                                EXTENDED
+                                <div>
+                                    PRICE
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!SOListMiscWithoutLumpSum}" var="line">
+                            <tr>
+                                <td class="defaultFont">
+                                    {!line.Description__c}
+                                </td>
+                                <td></td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, #,##0}">
+                                        <apex:param value="{!line.Quantity__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    {!line.Unit_Of_Measure__r.Name}
+                                </td>
+                                <td class="defaultFontAlignCenter">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Subtotal:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLSubtotalMisc}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Tax:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTaxTotalMisc}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="defaultFontAlignRight">Total:</td>
+                            <td class="defaultFontAlignRight">
+                                <apex:outputText value="{0, number, $###,##0.00}">
+                                    <apex:param value="{!SLTotalMisc}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </apex:outputPanel>
+
+        </apex:outputPanel>
+
+        <apex:outputPanel rendered="{!selectedPrintType == 'Consolidated'}">
+            <div class="mt20">
+                <table class="w100 lineTable">
+                    <thead>
+                    <tr>
+                        <th width="20%" class="tblHeadersLeft">
+                            Category
+                        </th>
+                        <th width="20%" class="tblHeaders">
+                            Billing Description
+                        </th>
+                        <th width="5%" class="tblHeaders">
+                        </th>
+                        <th class="tblHeaders alignCenter " width="8%">
+                            EST.
+                            <div>
+                                QTY.
+                            </div>
+                        </th>
+                        <th class="tblHeaders alignCenter " width="8%">
+                            UOM
+                            <div>
+                                QTY.
+                            </div>
+                        </th>
+                        <th class="tblHeaders alignCenter " width="4%">
+                            UOM
+                        </th>
+                        <th class="tblHeaders alignCenter" width="15%">
+                            UNIT PRICE
+                        </th>
+                        <th class="tblHeadersRight" width="10%">
+                            EXTENDED
+                            <div>
+                                PRICE
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <apex:repeat value="{!laborPDFWrapsConsolidate}" var="line">
+                        <tr>
+                            <td width="20%" class="defaultFont">
+                                Labor
+                            </td>
+                            <td width="20%" class="defaultFontAlignCenter">
+                                {!line.description}
+                            </td>
+                            <td width="5%" class="defaultFontAlignCenter">
+                                {!line.rateType}
+                            </td>
+                            <td width="8%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, #,##0}">
+                                    <apex:param value="{!line.qty}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="8%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, #,##0}">
+                                    <apex:param value="{!line.uomQty}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="4%" class="defaultFontAlignCenter">
+                                {!line.uom}
+                            </td>
+                            <td width="15%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, $#,##0.00}">
+                                    <apex:param value="{!line.unitPrice}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="10%" class="defaultFontAlignRight">
+                                <apex:outputText value="{0, Number, $#,##0.00}">
+                                    <apex:param value="{!line.extPrice}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    <apex:repeat value="{!soLineListForConsolidated}" var="line">
+                        <tr>
+                            <td width="20%" class="defaultFont">
+                                {!line.Category__c}
+                            </td>
+                            <td width="20%" class="defaultFontAlignCenter">
+                                {!line.Description__c}
+                            </td>
+                            <td width="5%" class="defaultFontAlignCenter">
+
+                            </td>
+                            <td width="8%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, #,##0}">
+                                    <apex:param value="{!line.Quantity__c}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="8%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, #,##0}">
+                                    <apex:param value="{!line.UOM_Qty__c}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="4%" class="defaultFontAlignCenter">
+                                {!line.Unit_Of_Measure__r.Name}
+                            </td>
+                            <td width="15%" class="defaultFontAlignCenter">
+                                <apex:outputText value="{0, Number, $#,##0.00}">
+                                    <apex:param value="{!line.Unit_Price__c}"/>
+                                </apex:outputText>
+                            </td>
+                            <td width="10%" class="defaultFontAlignRight">
+                                <apex:outputText value="{0, Number, $#,##0.00}">
+                                    <apex:param value="{!line.Line_Amount__c}"/>
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+        </apex:outputPanel>
+
+        <div class="mt20">
+            <table class="w100 lineTable">
+                <tbody>
+                <tr>
+                    <td width="10%"></td>
+                    <td width="35%" class="defaultFontAlignRight">
+                    </td>
+                    <td width="15%" class="defaultFont">
+                    </td>
+                    <td></td>
+                    <td width="25%" class="defaultFont b" style="font-weight:bold;">
+                        Subtotal:
+                    </td>
+                    <td width="20%" class="defaultFontAlignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}">
+                            <apex:param value="{!SLSubtotal}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%"></td>
+                    <td width="35%" class="defaultFontAlignRight">
+                    </td>
+                    <td width="15%" class="defaultFont">
+                    </td>
+                    <td></td>
+                    <td width="25%" class="defaultFont b" style="font-weight:bold;">
+                        Tax:
+                    </td>
+                    <td width="20%" class="defaultFontAlignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}">
+                            <apex:param value="{!SLTaxTotal}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%"></td>
+                    <td width="35%" class="defaultFontAlignRight">
+                    </td>
+                    <td width="15%" class="defaultFont">
+                    </td>
+                    <td></td>
+                    <td width="25%" class="defaultFont b" style="font-weight:bold;">
+                        {!IF(Sales_Order__c.Surcharge_Pct__c != null, IF(Sales_Order__c.Surcharge_Type__c == 'Fuel Surcharge','Fuel Surcharge:',Sales_Order__c.Surcharge_Type__c + ' Surcharge:'),'')}
+                    </td>
+                    <td width="20%" class="defaultFontAlignRight">
+                        <apex:outputText value="{0,number, $#,##0.00}"
+                                         rendered="{!Sales_Order__c.Surcharge_Pct__c != null}">
+                            <apex:param value="{!Sales_Order__c.Surcharge_Amount__c}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%"></td>
+                    <td width="35%" class="defaultFontAlignRight">
+                    </td>
+                    <td width="15%" class="defaultFont">
+                    </td>
+                    <td></td>
+                    <td width="25%" class="defaultFont b" style="font-weight:bold;">
+                        ESTIMATED TOTAL:
+                    </td>
+                    <td width="20%" class="defaultFontAlignRight">
+                        <apex:outputText value="{0, Number, $#,##0.00}">
+                            <apex:param value="{!SLtotal}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt30">
+            <div class="b tblHeaders">
+                ASSUMPTIONS &amp; CONTINGENCIES
+            </div>
+            <ul class="myUL">
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions1__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions1__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions2__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions2__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions3__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions3__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions4__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions4__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions5__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions5__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions6__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions6__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions7__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions7__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions8__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions8__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions9__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions9__c}
+                </li>
+                <li style="{!if(ISBLANK(salesorder.Custom_Assumptions10__c),'display:None;','')}">
+                    {!salesorder.Custom_Assumptions10__c}
+                </li>
+                <li style="{!if(salesOrder.Free_Access__c,'','display:None;')}">
+                    ACV Enviro will have free and easy access to the work area.
+                </li>
+                <li style="{!if(salesOrder.Pricing__c,'','display:None;')}">
+                    Pricing is based on work being completed during normal business hours Monday - Friday.
+                </li>
+                <li style="{!if(salesOrder.Expendables__c,'','display:None;')}">
+                    Any expendables used are charged in accordance with ACV Enviro's current expendable price list.
+                </li>
+                <li style="{!if(salesOrder.Applicable_Taxes__c,'','display:None;')}">
+                    Applicable local, state, federal, transporter and/or other applicable taxes or fees will be added to
+                    the invoice.
+                </li>
+                <li style="{!if(salesOrder.Portal_Basis__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility. Overtime rates will apply after eight
+                    hours.
+                </li>
+                <li style="{!if(salesOrder.Overtime_Rate__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis. Overtime rates will
+                    apply after eight hours.
+                </li>
+                <li style="{!if(salesOrder.Daily_Rate__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed as a daily rate. This pricing is based on a 10
+                    hour day, portal-to-portal.
+                </li>
+                <li style="{!if(salesOrder.Lump_Sum__c,'','display:None;')}">
+                    The labor, materials and equipment portion of this quote is lump sum; it is based on information
+                    provided by you and/or gained at the site tour. Any conditions that differ may result in additional
+                    charges.
+                </li>
+                <li style="{!if(salesOrder.Portal_Basis_Adv__c,'','display:None;')}">
+                    All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to
+                    analyze and off-load the waste at the disposal facility.
+                    Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30 pm,
+                    on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holiday.
+                </li>
+                <li style="{!if(salesOrder.Minimum_Disposal_Fee__c,'','display:None;')}">
+                    This is a minimum disposal fee of $975.00 per shipment.
+                </li>
+                <li style="{!if(salesOrder.Disposal_Pricing__c,'','display:None;')}">
+                    Disposal pricing is based on profile and analytical review and acceptance.
+                </li>
+                <li style="{!if(salesOrder.First_Hour_Of_Loading__c,'','display:None;')}">
+                    The first hour of loading/off-loading is free; thereafter demurrage is $100.00 per hour.
+                </li>
+                <li style="{!if(salesOrder.Invoice_Of_Work__c,'','display:None;')}">
+                    The invoice for work referenced above may be generated before final disposal information has been
+                    received. If your waste is classified as off-specification upon receipt, you will be notified, and
+                    an additional
+                    invoice will be generated for any unexpected costs.
+                </li>
+                <li style="{!if(salesOrder.Minimum_Disposal_Charge__c,'','display:None;')}">
+                    There is a 15 tons minimum disposal charge per load.
+                </li>
+                <li style="{!if(salesOrder.Maximum_Weight__c,'','display:None;')}">
+                    There is a maximum weight of 18 tons per roll-off container.
+                </li>
+                <li style="{!if(salesOrder.Off_Specification__c,'','display:None;')}">
+                    This quotation is based on the generator’s characterization of the waste. Off-specification charges
+                    will
+                    apply if the actual waste does not meet the expected specifications.
+                </li>
+            </ul>
+        </div>
+
+        <div class="tblHeaders b mt20">
+            TERMS &amp; CONDITIONS
+        </div>
+        <div class="mt20">
+            Except where superseded by an existing service agreement between customer and an ACV entity, the terms and conditions below apply to this quoted business proposal.
+        </div>
+        <ul class="myUL">
+            <li style="{!if(salesOrder.Any_Deviations__c,'','display:None;')}">
+                This quoted estimate is provided based upon information provided by or gathered at customer’s location.
+                Any deviations from this quotation will be invoiced based upon actual labor, materials, and/or disposal services provided by ACV and will be billed at a time and materials basis.
+            </li>
+            <li style="{!if(salesOrder.Shippable_Containers__c,'','display:None;')}">
+                This quotation is contingent upon customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers.
+            </li>
+            <li style="{!if(salesOrder.First_Hour_Of_Loading__c,'','display:None;')}">
+                The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr.
+            </li>
+            <li style="{!if(salesOrder.Overtime_Rate_Description__c,'','display:None;')}">
+                An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday.
+                Double time will apply to all hours worked on Sunday and ACV Holidays. ACV Holidays include:
+                <div style="padding: 0 60px;">
+                    New Year's Day, President's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.
+                </div>
+            </li>
+            <li style="{!if(salesOrder.Rate_Time_Definitions__c,'','display:None;')}">
+                Rate Time Definitions
+                <div style="padding:0 60px;">
+                    a. The day rate, where applicable, is defined as twelve hours.
+                </div>
+                <div style="padding: 0 60px;">
+                    b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in the Rate sheet for an item,
+                    it will be calculated as the Day Rate divided by 12.
+                </div>
+            </li>
+            <li style="{!if(salesOrder.Charges_For_Labor__c,'','display:None;')}">
+                Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job,
+                for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment.
+                This includes on‐site and off‐site labor and equipment.
+            </li>
+            <li style="{!if(salesOrder.Waste_Disposal_And_Ancillary__c,'','display:None;')}">
+                Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste);
+                Ancillary supplies required and used will be billed in accordance with ACV standard rates sheet.
+            </li>
+            <li style="{!if(salesOrder.Characterization_Of_Waste__c,'','display:None;')}">
+                This quotation is based on the generator’s characterization of the waste and the ACV assigned Process Code.
+                Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.
+            </li>
+            <li style="{!if(salesOrder.Generate_Before_Final__c,'','display:None;')}">
+                The invoice for work referenced above may be generated before final disposal information has been received.
+                If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.
+            </li>
+            <li style="{!if(salesOrder.Lab_Packs_Rate__c,'','display:None;')}">
+                Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material;
+                ACV may furnish a separate quotation for any high-hazard work, if requested.
+                ACV reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.
+            </li>
+            <li style="{!if(salesOrder.Cylinders_Require_Evaluation__c,'','display:None;')}">
+                Cylinders require evaluation and approval by an authorized ACV representative prior to shipment.
+                Cylinders must be in DOT shippable condition, be marked with original stenciling,
+                labels and/or tags, and valves must be operational.  Cylinders not meeting ACV approval and the aforementioned conditions may be subject to additional charges.
+            </li>
+            <li style="{!if(salesOrder.Manifest_And_Profile__c,'','display:None;')}">
+                A manifest fee of $25.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%.
+            </li>
+            <li style="{!if(salesOrder.Net_Due_Day__c,'','display:None;')}">
+                Net due {!SUBSTITUTE(Sales_Order__c.Payment_Term__r.Name,'D','')} days with prior credit approval unless modified by executed purchase order or contract.
+                Finance charges of one and one half (1.5) percent per month will be due on payments past due after thirty days from date of invoice.
+            </li>
+            <li style="{!if(salesOrder.Applicable_Taxes_Quote__c,'','display:None;')}">
+                Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable.
+            </li>
+            <li style="{!if(Sales_Order__c.Surcharge_Type__c == 'N/A', 'display:None;', '' )}">
+                <apex:outputPanel rendered="{!Sales_Order__c.Surcharge_Type__c == 'Fuel Surcharge'}">
+                    Due to uncontrollable fluctuating fuel costs a fuel surcharge will be billed only on equipment that
+                    requires fuel and all transportation charges, based on the Department of Energy on Highway Diesel Fuel
+                    Prices (National Average). Please ask ACV representative for current rate at time of work.
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!Sales_Order__c.Surcharge_Type__c == 'EEC Fee'}">
+                An Energy and Environmental Compliance (EEC) surcharge will be included in the invoice.
+                </apex:outputPanel>
+            </li>
+            <li style="{!if(salesOrder.Client_Is_Responsible__c,'','display:None;')}">
+                Client is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary.
+                Said charges will be at ACV standard T&amp;M rates and disposal cost plus 30%.
+            </li>
+            <li style="{!if(salesOrder.In_The_Event__c,'','display:None;')}">
+                In the event legal or other action is required to collect unpaid invoice balances,
+                Customer agrees to pay all costs of collection, including reasonable attorneys’ fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.
+            </li>
+            <li style="{!if(salesOrder.Quote_Valid_30__c,'','display:None;')}">
+                This Quotation is valid for 30 days.  Pricing is based on the current market capacity, conditions, and Government regulations.
+                If a significant market-wide pricing, capacity or regulatory change affects our pricing, this quotation is subject to change.
+            </li>
+            <li style="{!if(salesOrder.Unless_Superseded__c,'','display:None;')}">
+                Unless superseded by a fully executed agreement with terms that conflict,
+                additional terms &amp; conditions located at https://www.acvenviro.com/terms-and-conditions/ are hereby incorporated by reference and are agreed to and acknowledged by customer.
+            </li>
+        </ul>
+
+        <div class="mt30">
+            ACV Enviro appreciates the opportunity to work for you. We look forward to performing this
+            project.
+            Should you have any questions, please do not hesitate to call me directly
+            at {!Sales_Order__c.Service_Center__r.Phone__c}.
+        </div>
+
+        <div class="mt20">
+        </div>
+
+
+    </div>
+
+    <div style="page-break-before:always;">
+        &nbsp;
+    </div>
+    <div class="defaultFontAlignCenter mt30">
+        <div class="b mt50 alignCenter">
+            PROPOSAL ACCEPTANCE
+        </div>
+
+        <div class="b alignCenter mt50" style="margin-top:50px;">
+            This quote, including terms &amp; conditions is satisfactory and hereby accepted. I am commissioning
+            this
+            <div>work as an authorized representative of
+                {!salesOrder.Bill_to_Customer_No__r.Name}. Payment will be made as outlined in
+            </div>
+            <div>this proposal. My signature denotes a legal and binding contract.
+                {!salesOrder.Bill_to_Customer_No__r.Name} agrees to the
+            </div>
+            <div>above terms and conditions and assumes full responsibility for all off-specification surcharges,
+            </div>
+            <div>payment collection actions, and associated fees.</div>
+        </div>
+
+        <div>
+            <table class="w100 b" cellspacing="60">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="defaultFontAlignCenter w50">
+                        <div style="border-top:2px solid black;">
+                        Customer Signature
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="defaultFontAlignCenter w50">
+                        <div style="border-top:2px solid black;">
+                        Date
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="defaultFontAlignCenter w50">
+                        <div style="border-top:2px solid black;">
+                        Customer Print Name
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="defaultFontAlignCenter w50" >
+                        <div style="border-top:2px solid black;">
+                        Purchase Order No.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="defaultFontAlignCenter w50">
+                        <div style="font-size:13.0pt;font-family:'Times' !important;font-style:italic;padding: 0px 0px 0px 0px;">
+                        {!Sales_Order__c.Owner.Name}
+                        </div>
+                        <div style="border-top:2px solid black;">
+                        ACV Enviro Representative
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                    <td class="defaultFontAlignCenter w50">
+                        <div style="font-size:13.0pt;font-family:'Times' !important;font-style:italic;padding: 0px 0px 0px 0px;">
+                        <apex:outputText value="{0, date,MM/dd/yyyy}">
+                            <apex:param value="{!Sales_Order__c.Quote_Date__c}"/>
+                        </apex:outputText>
+                        </div>
+                        <div style="border-top:2px solid black; width:50%;">
+                        Date
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="defaultFontAlignCenter b mt30" style="font-weight:bold;">
+            IF THIS QUOTATION IS ACCEPTABLE, PLEASE EXECUTE AND RETURN THE PROPOSAL ACCEPTANCE SECTION.
+        </div>
+    </div>
+    <div class="Section1">
+
+        <p>&nbsp;</p>
+        <br/>
+        <table id="MainTable" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="defaultFont">
+                    <div style="mso-element:header" id="h1">
+
+                        <p class="MsoHeader">
+                        <table style="width:100%">
+
+                            <tr>
+                                <td class="defaultFont" style="width:50%">
+                                </td>
+                                <td class="defaultFontAlignRight companyLogo" style="width:50%">
+                                    <apex:image url="{!companyLogoURL}">
+                                    </apex:image>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w50 margin-top: 100px">
+                                </td>
+                                <td class="defaultFontAlignRight">
+                                    <div class="fr">
+                                        <span class="ml50">{!salesOrder.Name}</span><br/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        </p>
+                    </div>
+                </td>
+                <td class="defaultFontAlignCenter">
+                    <div class="defaultFontAlignCenter" style="mso-element:footer" id="f1">
+                        <span class="defaultFontAlignCenter" style="position:relative;z-index:-1">
+                            <span style='mso-no-proof:yes'>[if gte vml 1]
+                                <v:shapetype
+                                        id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+                                        path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+                                    <v:formulas>
+                                        <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+                                        <v:f eqn="sum @0 1 0"/>
+                                        <v:f eqn="sum 0 0 @1"/>
+                                        <v:f eqn="prod @2 1 2"/>
+                                        <v:f eqn="prod @3 21600 pixelWidth"/>
+                                        <v:f eqn="prod @3 21600 pixelHeight"/>
+                                        <v:f eqn="sum @0 0 1"/>
+                                        <v:f eqn="prod @6 1 2"/>
+                                        <v:f eqn="prod @7 21600 pixelWidth"/>
+                                        <v:f eqn="sum @8 21600 0"/>
+                                        <v:f eqn="prod @7 21600 pixelHeight"/>
+                                        <v:f eqn="sum @10 21600 0"/>
+                                    </v:formulas>
+                                    <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+                                    <o:lock v:ext="edit" aspectratio="t"/>
+                                </v:shapetype>
+                                <v:shape id="Picture_x0020_1" o:spid="_x0000_s3073" type="#_x0000_t75"
+                                         alt="VHB" style='position:absolute;
+         margin-right:0pt;margin-top:-400pt;
+         z-index:-1;
+         visibility:visible;mso-wrap-style:square;mso-wrap-distance-left:9pt;
+         mso-wrap-distance-top:0;mso-wrap-distance-right:9pt;
+         mso-wrap-distance-bottom:0;mso-position-horizontal:absolute;
+         mso-position-horizontal-relative:text;mso-position-vertical:absolute;
+         mso-position-vertical-relative:text'>
+                                    <v:imagedata src="https://www.google.bg/logos/2012/Rodin-2012-homepage.png"/>
+                                </v:shape><![endif]</span>
+                            <p class="defaultFontAlignCenter MsoFooter">
+                                {!Sales_Order__c.Service_Center__r.Street__c}, {!Sales_Order__c.Service_Center__r.City__c}, {!Sales_Order__c.Service_Center__r.State__c} {!Sales_Order__c.Service_Center__r.Postal_Code__c}
+                                |
+                            <span class="b">PHONE</span> {!Sales_Order__c.Service_Center__r.Phone__c} |
+                            <span class="b">FAX</span> {!Sales_Order__c.Service_Center__r.Fax__c} |
+                            <span style="color:rgb(98,169,69)" class="b">ACVENVIRO.COM</span>
+
+
+                                <apex:image url="{!fbURL}" style="margin-bottom:-5px;" width="20" height="20"/>
+                                <apex:image url="{!GoogleURL}" style="margin-bottom:-4px;" width="20" height="18"/>
+                                <apex:image url="{!TwitterURL}" style="margin-bottom:-5px;margin-left:1px;" width="20"
+                                            height="18"/>
+                                <apex:image url="{!linkdURL}" style="margin-bottom:-5px;margin-left:2px;" width="20"
+                                            height="18"/>
+                            <apex:image url="{!$Resource.In}" style="margin-bottom:-4px;" width="20" height="18"/>
+                            </p>
+
+
+                            <p class="defaultFontAlignCenter MsoFooter">
+                                <span style="mso-tab-count:2"></span>
+                                Page
+                                <span style="mso-field-code:page"></span><span style="mso-no-proof:yes"></span>
+                                of
+                                <span style="mso-field-code:NUMPAGES"></span>
+
+                            </p>
+                        </span>
+                    </div>
+
+
+                    <div style="mso-element:header" id="fh1">
+                        <p class="MsoHeader"><span lang="EN-US" style="mso-ansi-language:EN-US">&nbsp; abaca;oweifjaw;eoif</span>
+                        </p>
+                    </div>
+                    <div style="mso-element:footer" id="ff1">
+                        <p class="MsoFooter"><span lang="EN-US"
+                                                   style="mso-ansi-language:EN-US">&nbsp;awefawefawefawef</span></p>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    </body>
+    </html>
+    -->
+</apex:page>

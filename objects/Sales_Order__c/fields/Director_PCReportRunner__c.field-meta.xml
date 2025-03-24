@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Director_PCReportRunner__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF
+(
+And($User.UserRoleId = '00E1V0000014rlO',
+Project_Coordinator__r.User__r.UserRole.Id = '00E1V0000014rlY'),
+true, false)
+
+||
+
+IF(
+AND($User.UserRoleId = '00E1V0000014rlO',
+Project_Coordinator__r.User__r.UserRole.Id ='00E000014rlY'),
+true, false)
+
+||
+
+IF(
+AND($User.UserRoleId = '00E1V0000014rls',
+Project_Coordinator__r.User__r.UserRole.Id ='00E1V0000014rlx'),
+true, false)
+
+||
+IF(
+AND($User.UserRoleId = '00E1V0000014rls',
+Project_Coordinator__r.User__r.UserRole.Id ='00E1V0000014rm2'),
+true, false)
+
+||
+
+IF(
+AND($User.UserRoleId = '00E1V0000014rld',
+Project_Coordinator__r.User__r.UserRole.Id ='00E1V0000014rli'),
+true, false)
+
+||
+IF(
+AND($User.UserRoleId = '00E1V0000014rld',
+Project_Coordinator__r.User__r.UserRole.Id ='00E1V0000014rln'),
+true, false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Director_PCReportRunner</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

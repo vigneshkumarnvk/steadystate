@@ -1,0 +1,161 @@
+<!--
+    Ticket#20977
+        - Prevent converting to account if no billing contact found
+-->
+<apex:page standardController="Account" extensions="AccountController" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="Convert Account to Customer" subtitle="{!Account.Name}"/>
+        <apex:pageBlock title="Please choose a service center">
+            <apex:messages />
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Convert Now" action="{!ConvertTocustomer}" rendered="{!hasBillingContact == true}"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" rendered="{!hasBillingContact == false}">
+                <apex:outputText value="Cannot convert this prospect because no billing contact is setup for the account!" />
+            </apex:pageBlockSection>           
+            <apex:pageBlockSection columns="1" rendered="{!hasBillingContact == true}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Name.Label}"/>
+                    <apex:inputField value="{!Account.Name}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Estimated_Amount__c.Label}" />
+                    <apex:inputField value="{!Account.Estimated_Amount__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Billing_Contact__c.Label}" />
+                    <!-- billing contact -->
+                    <!--<apex:inputField value="{!Account.Billing_Contact__c}" required="true" />-->
+                    <apex:outputPanel >
+                        <div class = "requiredInput">
+                            <div class = "requiredBlock"></div>
+                            <apex:selectList value="{!BillingContactId}" required="true" multiSelect="false" size="1" style="min-width: 185px;">
+                                <apex:selectOptions value="{!BillingContactOptions}"/>
+                            </apex:selectList>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- billing contact -->
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.BillingStreet.Label}"/>
+                    <apex:inputField value="{!Account.BillingStreet}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.BillingCity.Label}"/>
+                    <apex:inputField value="{!Account.BillingCity}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.BillingState.Label}"/>
+                    <apex:inputField value="{!Account.BillingStateCode}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.BillingPostalCode.Label}"/>
+                    <apex:inputField value="{!Account.BillingPostalCode}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.BillingCountry.Label}"/>
+                    <apex:inputField value="{!Account.BillingCountryCode}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <!-- TICKET US130968 -->
+                <!-- <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Customer_Type__c.Label}"/>
+                    <apex:inputField value="{!Account.Customer_Type__c}" required="true"/>
+                </apex:pageBlockSectionItem> -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Account_Executive__c.Label}"/>                   
+                     <apex:inputField value="{!Account.Account_Executive__c}" html-disabled="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Additional Account Executives"/>
+                   <apex:selectList value="{!selectedSalespersons}" disabled="true" size="5" style="min-width: 185px;">
+                                <apex:selectOptions value="{!salespersonOptions}"/>
+                            </apex:selectList>                     
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#20977 -->
+                <apex:pageBlockSectionItem rendered="{!Account.Subsidiary_Company__r.Name = '5-RS-ES Gulf Coast'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Payment_Term__c.Label}"/>
+                    <apex:inputField value="{!Account.Payment_Term__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Account.Subsidiary_Company__r.Name = '5-RS-ES Gulf Coast'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Tax_Area__c.Label}"/>
+                    <apex:inputField value="{!Account.Tax_Area__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Account.Subsidiary_Company__r.Name = '5-RS-ES Gulf Coast'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Tax_Liable__c.Label}"/>
+                    <apex:inputField value="{!Account.Tax_Liable__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Account.Subsidiary_Company__r.Name = '5-RS-ES Gulf Coast'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Customer_Status__c.Label}"/>
+                    <apex:inputField value="{!Account.Customer_Status__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#20977 -->
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Salesperson__c.Label}"/>
+                    <apex:inputField value="{!Account.Salesperson__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Service_Center__c.Label}"/>
+                    <apex:actionRegion >
+                        <apex:inputField value="{!Account.Service_Center__c}" required="true">
+                            <apex:actionSupport event="onchange" action="{!ValidateServiceCenter}" reRender="theSubsidiaryCompany"/>
+                        </apex:inputField>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.Fields.Subsidiary_Company__c.Label}"/>
+                    <apex:inputField id="theSubsidiaryCompany" value="{!Account.Subsidiary_Company__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                
+                <!-- Ticket#DE37531 Start --> 
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.PO_Number_Type__c.Label}" />
+                    <apex:inputField id="poNumberType" value="{!Account.PO_Number_Type__c}" required="true"/>
+                </apex:pageBlockSectionItem>            
+                -->
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.PO_Number_Type__c.Label}" />
+                <apex:outputPanel >
+                        <div class = "requiredInput">
+                            <div class = "requiredBlock"></div>
+                            <apex:selectList Value="{!SelectedPONumberType}" label="{!$ObjectType.Account.fields.PO_Number_Type__c.Label}" required="true"  multiSelect="false" size="1" style="min-width: 185px;">
+                                 <apex:selectOptions value="{!PONumberTypeOptions}">
+                                </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </apex:outputPanel>
+                   </apex:pageBlockSectionItem>
+                <!-- Ticket#DE37531 End -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Invoice_Email_Contact_Types__c.Label}" />
+                    <apex:inputField id="invoiceEmailContactType" value="{!Account.Invoice_Email_Contact_Types__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Invoice_Submission_Channels__c.Label}" />
+                    <apex:inputField id="invoiceSubmissionChannel" value="{!Account.Invoice_Submission_Channels__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Invoice_Portal__c.Label}" />
+                    <apex:inputField id="invoicePortal" value="{!Account.Invoice_Portal__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Invoice_Backup_Documents__c.Label}" />
+                    <apex:inputField id="invoiceBackupDocument" value="{!Account.Invoice_Backup_Documents__c}" required="true" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Customer_Specific_Documentation__c.Label}" />
+                    <apex:inputField id="invoicePortal" value="{!Account.Customer_Specific_Documentation__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Additional Billing Instructions" />
+                    <apex:inputField id="billingInstruction" value="{!Account.Billing_Instructions__c}" style="width: 50%" />
+                </apex:pageBlockSectionItem>               
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

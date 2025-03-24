@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Send_Method__c</fullName>
+    <externalId>false</externalId>
+    <label>Email Send Method</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>SFDC</fullName>
+                <default>false</default>
+                <label>SFDC</label>
+            </value>
+            <value>
+                <fullName>NATIVE</fullName>
+                <default>false</default>
+                <label>NATIVE</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

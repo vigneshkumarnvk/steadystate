@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CapEx_PO</fullName>
+    <columns>OWNER.ALIAS</columns>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Order_Cost_Incl_Tax__c</columns>
+    <columns>Expected_Receipt_Date__c</columns>
+    <columns>Subsidiary_Company__c</columns>
+    <columns>Closed__c</columns>
+    <columns>Sync_d__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Order_Type__c</field>
+        <operation>equals</operation>
+        <value>CapEx</value>
+    </filters>
+    <label>CapEx PO</label>
+</ListView>

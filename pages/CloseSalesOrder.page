@@ -1,0 +1,16 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <apex:sectionHeader title="Close {!title}" subtitle="{!title}?"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Close {!title}" action="{!closeSO}" reRender="thePageBlock" status="loadingstatus" />
+                <apex:commandButton value="Return to {!title}" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

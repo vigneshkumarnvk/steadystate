@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>T&amp;M</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>T&amp;Ms</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- TMFieldSet --></label>
+        <name>TMFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Closed TM Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Confirmed TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Invoice Detail --></label>
+            <section>Invoice Detail</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Invoice Created TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Invoice Detail --></label>
+            <section>Invoice Detail</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Details --></label>
+            <section>Reporting Details</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Mobile Review TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Open TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile --></label>
+            <section>Mobile</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Ready to Bill TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Received By Billing TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Scheduled TM Layout</layout>
+        <sections>
+            <label><!-- Cost Details --></label>
+            <section>Cost Details</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Mobile TM --></label>
+            <section>Mobile TM</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting Fields --></label>
+            <section>Reporting Fields</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Void TM Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Information --></label>
+            <section>Information</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Scope --></label>
+            <section>Scope</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Clone and Schedule --></label>
+        <name>Clone_and_Schedule</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Closed --></label>
+        <name>Closed</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Confirmed --></label>
+        <name>Confirmed</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Fully Invoiced --></label>
+        <name>Fully_Invoiced</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Mobile Review --></label>
+        <name>Mobile_Review</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Open --></label>
+        <name>Open</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Partially Invoiced --></label>
+        <name>Partially_Invoiced</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Ready to Bill --></label>
+        <name>Ready_to_Bill</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Received By Billing --></label>
+        <name>Received_By_Billing</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Scheduled --></label>
+        <name>Scheduled</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Void --></label>
+        <name>Void</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Customer is Inactive --></errorMessage>
+        <name>Inactive_Customer</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Create_Billing --></label>
+        <name>Create_Billing</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Invoice --></label>
+        <name>Create_Invoice</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Edit_Classic --></label>
+        <name>Edit_Classic</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Intercompany_Cost_Accrual --></label>
+        <name>Intercompany_Cost_Accrual</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Print_Billing_T_M --></label>
+        <name>Print_Billing_T_M</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Print_Field_T_M --></label>
+        <name>Print_Field_T_M</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Process_Signatures --></label>
+        <name>Process_Signatures</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Request_Signatures --></label>
+        <name>Request_Signatures</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- TM_Reports --></label>
+        <name>TM_Reports</name>
+    </webLinks>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</CustomObjectTranslation>

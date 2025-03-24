@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Special Certificates --></label>
+        <name>Special_Certificates__c</name>
+        <picklistValues>
+            <masterLabel>Disabled Veteran-Owned Business (DVBE)</masterLabel>
+            <translation><!-- Disabled Veteran-Owned Business (DVBE) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HUBZone Small Business</masterLabel>
+            <translation><!-- HUBZone Small Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LGBTQ or Gender Non-Conforming Individual Owned Business</masterLabel>
+            <translation><!-- LGBTQ or Gender Non-Conforming Individual Owned Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MBE</masterLabel>
+            <translation><!-- MBE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Physically Challenged Business Enterprise (PBE)</masterLabel>
+            <translation><!-- Physically Challenged Business Enterprise (PBE) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SBE</masterLabel>
+            <translation><!-- SBE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Service-Disabled Veteran-Owned Business (SDVOB)</masterLabel>
+            <translation><!-- Service-Disabled Veteran-Owned Business (SDVOB) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Small Disadvantaged Business Enterprise (SDB)</masterLabel>
+            <translation><!-- Small Disadvantaged Business Enterprise (SDB) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Veteran-Owned Business Enterprise (VBE)</masterLabel>
+            <translation><!-- Veteran-Owned Business Enterprise (VBE) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WBE</masterLabel>
+            <translation><!-- WBE --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

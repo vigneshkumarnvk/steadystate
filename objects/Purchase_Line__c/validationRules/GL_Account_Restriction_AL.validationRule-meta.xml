@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GL_Account_Restriction_AL</fullName>
+    <active>false</active>
+    <description>Angela Laterza</description>
+    <errorConditionFormula>AND( 
+OR (ISNEW(), ISCHANGED (  G_L_Account__c  )), 
+OR (ISPICKVAL(PRIORVALUE( G_L_Account__c ),  '16400'),
+ ISPICKVAL( G_L_Account__c, '16400')), 
+ OR(  $User.Id  &lt;&gt; "005f4000000olOF"))</errorConditionFormula>
+    <errorDisplayField>G_L_Account__c</errorDisplayField>
+    <errorMessage>Restricted GL Account</errorMessage>
+</ValidationRule>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Line of Business --></label>
+        <name>Job_Type__c</name>
+        <picklistValues>
+            <masterLabel>Backhauls</masterLabel>
+            <translation><!-- Backhauls --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dewatering &amp; Treatment</masterLabel>
+            <translation><!-- Dewatering &amp; Treatment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Disposal - Haz Bulk</masterLabel>
+            <translation><!-- Disposal - Haz Bulk --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Disposal - Haz Drum</masterLabel>
+            <translation><!-- Disposal - Haz Drum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Disposal - NonHaz Bulk</masterLabel>
+            <translation><!-- Disposal - NonHaz Bulk --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Disposal - NonHaz Drum</masterLabel>
+            <translation><!-- Disposal - NonHaz Drum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Drum Management (LTL)</masterLabel>
+            <translation><!-- ES Drum Management (LTL) --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Industrial Well</masterLabel>
+            <translation><!-- ES Industrial Well --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Landfill</masterLabel>
+            <translation><!-- ES Landfill --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Recycle</masterLabel>
+            <translation><!-- ES Recycle --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Retail</masterLabel>
+            <translation><!-- ES Retail --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Thermal Reclamation</masterLabel>
+            <translation><!-- ES Thermal Reclamation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES Wastewater</masterLabel>
+            <translation><!-- ES Wastewater --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Emergency Response</masterLabel>
+            <translation><!-- Emergency Response --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Services</masterLabel>
+            <translation><!-- Field Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household Hazardous Waste</masterLabel>
+            <translation><!-- Household Hazardous Waste --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hydroexcavation</masterLabel>
+            <translation><!-- Hydroexcavation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Industrial - Nested</masterLabel>
+            <translation><!-- Industrial - Nested --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Industrial - Shutdown/Turnaround</masterLabel>
+            <translation><!-- Industrial - Shutdown/Turnaround --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Industrial Cleaning</masterLabel>
+            <translation><!-- Industrial Cleaning --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lab Pack</masterLabel>
+            <translation><!-- Lab Pack --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Major Event</masterLabel>
+            <translation><!-- Major Event --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine Services</masterLabel>
+            <translation><!-- Marine Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Onsite Services</masterLabel>
+            <translation><!-- Onsite Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Product Sales</masterLabel>
+            <translation><!-- Product Sales --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rent Revenue</masterLabel>
+            <translation><!-- Rent Revenue --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Retail Petroleum Service</masterLabel>
+            <translation><!-- Retail Petroleum Service --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Soil Remediation</masterLabel>
+            <translation><!-- Soil Remediation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Solid Waste</masterLabel>
+            <translation><!-- Solid Waste --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Stand-by ER Agreement</masterLabel>
+            <translation><!-- Stand-by ER Agreement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T&amp;D</masterLabel>
+            <translation><!-- T&amp;D --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>T&amp;D - Nested</masterLabel>
+            <translation><!-- T&amp;D - Nested --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TSDF / 10 Day</masterLabel>
+            <translation><!-- TSDF / 10 Day --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tank Cleaning</masterLabel>
+            <translation><!-- Tank Cleaning --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tank Removal</masterLabel>
+            <translation><!-- Tank Removal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Total Waste Management</masterLabel>
+            <translation><!-- Total Waste Management --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Training; Safety Services</masterLabel>
+            <translation><!-- Training; Safety Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Transportation</masterLabel>
+            <translation><!-- Transportation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Virus Decon</masterLabel>
+            <translation><!-- Virus Decon --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Waste Minimization</masterLabel>
+            <translation><!-- Waste Minimization --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Excluded_From_NAV_Integration__c</fullName>
+    <externalId>false</externalId>
+    <formula>Service_Center__r.Exclude_Sales_Orders_SF_Nav_Integration__c</formula>
+    <label>Excluded From NAV Integration</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

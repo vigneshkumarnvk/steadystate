@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restrict_creation_of_opportunity</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISPICKVAL(Account.Customer_Status__c, 'Inactive') &amp;&amp; ISNEW()</errorConditionFormula>
+    <errorMessage>The account is not active. You cannot create quotes/orders for inactive accounts.</errorMessage>
+</ValidationRule>

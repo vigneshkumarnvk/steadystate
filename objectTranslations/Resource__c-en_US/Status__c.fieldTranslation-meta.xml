@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Available</masterLabel>
+            <translation><!-- Available --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Gone</masterLabel>
+            <translation><!-- Gone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Inactive</masterLabel>
+            <translation><!-- Inactive --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OOS-On Lot</masterLabel>
+            <translation><!-- OOS-On Lot --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OOS-Pending Sale</masterLabel>
+            <translation><!-- OOS-Pending Sale --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

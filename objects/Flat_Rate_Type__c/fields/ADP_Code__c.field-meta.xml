@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ADP_Code__c</fullName>
+    <externalId>false</externalId>
+    <label>ADP Code</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>BP</fullName>
+                <default>false</default>
+                <label>Boom Pay</label>
+            </value>
+            <value>
+                <fullName>PDL</fullName>
+                <default>false</default>
+                <label>Per Diem Layover</label>
+            </value>
+            <value>
+                <fullName>SPA</fullName>
+                <default>false</default>
+                <label>Spill Pay</label>
+            </value>
+            <value>
+                <fullName>STB</fullName>
+                <default>false</default>
+                <label>Stand By</label>
+            </value>
+            <value>
+                <fullName>TRP</fullName>
+                <default>false</default>
+                <label>Truck Pay</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

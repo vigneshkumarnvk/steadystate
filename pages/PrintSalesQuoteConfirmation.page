@@ -1,0 +1,62 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <style>
+        table.detailList {
+            width: 50% !important;
+            text-align: center;
+            margin: 0 auto;
+        }
+    </style>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Sales Order" subTitle="{!titleInPrintConfirmation}?" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <!--ticket 21088-->
+            <!--
+            <apex:outputPanel rendered="{!isApproved != true}">
+                <p>This {!salesOrder.Document_Type__c} is not approved. The Print function is disabled!</p>
+            </apex:outputPanel>
+            -->
+            <!--ticket 21088-->
+
+            <!--job task-->
+            <apex:outputPanel rendered="{!Sales_Order__c.Quote_Contact__c == null}">
+                <p>This {!salesOrder.Document_Type__c} does not have Quote Contact. Please enter a quote contact!</p>
+            </apex:outputPanel>
+            <!--job task-->
+            <apex:pageMessages id="theMessage"/>
+            <!--ticket 21088-->
+            <!--
+            <apex:pageBlockSection rendered="{!isApproved == true && validForApproval == true}">
+            -->
+            <apex:pageBlockSection rendered="{!validForApproval == true}" columns="1">
+            <!--ticket 21088-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Quote Type:</apex:outputLabel>
+                    <apex:selectList size="1" value="{!selPrintType}">
+                        <apex:selectOptions value="{!lstPrintType}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#21772 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Print Estimated Job Duration </apex:outputLabel>
+                    <apex:inputCheckbox value="{!printEstimatedDuration}" />
+                </apex:pageBlockSectionItem>
+                <!-- Ticket#21772 -->
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <!--ticket 21088-->
+                <!--
+                <apex:commandButton value="Print PDF" action="{!printQuotePDF}" status="loadingstatus" rendered="{!isApproved && Sales_Order__c.Quote_Contact__c != null && validForApproval}" />
+                -->
+                <apex:commandButton value="Print PDF" action="{!printQuotePDF}" status="loadingstatus" rendered="{!Sales_Order__c.Quote_Contact__c != null && validForApproval}" />
+                <!--ticket 21088-->
+                <!--<apex:commandButton value="Print Word" action="{!printQuoteWord}" status="loadingstatus" rendered="{!isApproved}" />-->
+                <!--job task-->
+                <!--<apex:commandButton value="Print PDF (Old)" action="{!printOldQuotePDF}" status="loadingstatus" rendered="{!isApproved}" />-->
+                <!--job task-->
+                <apex:commandButton value="Return" action="{!returnBack}" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

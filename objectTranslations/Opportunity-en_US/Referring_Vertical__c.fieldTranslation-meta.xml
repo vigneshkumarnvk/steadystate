@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Cross Sell Referring Vertical --></label>
+        <name>Referring_Vertical__c</name>
+        <picklistValues>
+            <masterLabel>ACT</masterLabel>
+            <translation><!-- ACT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ACV</masterLabel>
+            <translation><!-- ACV --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Ecoflo</masterLabel>
+            <translation><!-- Ecoflo --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG Environmental Services – TX</masterLabel>
+            <translation><!-- RSG Environmental Services – TX --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG Field Sales</masterLabel>
+            <translation><!-- RSG Field Sales --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG Lead Program</masterLabel>
+            <translation><!-- RSG Lead Program --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG Manufacturing/Special Waste</masterLabel>
+            <translation><!-- RSG Manufacturing/Special Waste --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG Municipal</masterLabel>
+            <translation><!-- RSG Municipal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSG National Accounts</masterLabel>
+            <translation><!-- RSG National Accounts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>USE</masterLabel>
+            <translation><!-- USE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

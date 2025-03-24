@@ -1,0 +1,69 @@
+<!--
+    Ticket#16937 remove column N(PW Job Type Code)
+-->
+<apex:page contentType="application/vnd.ms-excel#{!fileName}.xls" controller="PayrollController" sidebar="false"
+           showHeader="false" standardStylesheets="false" readOnly="true">
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePB">
+            <table width="100%" border="1" cellspacing="0" cellpadding="3" class="list">
+                <thead>
+                    <tr class="headerRow">
+                        <th>CO Code</th>
+                        <th>Batch ID</th>
+                        <th>File #</th>
+                        <th>Employee Name</th>
+                        <th>Temp Cost Number</th>
+                        <th>Temp Rate</th>
+                        <th>Reg Hours</th>
+                        <th>O/T Hours</th>
+                        <th>Hours 3 Code</th>
+                        <th>Hours 3 Amount</th>
+                        <th>Earnings 3 Code</th>
+                        <th>Earnings 3 Amount</th>
+                        <!--<th>PW Job Type Code</th>-->
+                    </tr>
+                </thead>
+                <apex:repeat value="{!exportLineList}" var="line">
+                    <tr class="dataRow itemRow">
+                        <td>{!line.Payroll_Export_CO_Code__c}</td>
+                        <td>{!line.Payroll_Export_ADP_Batch_ID__c}</td>
+                        <td>{!line.Payroll_Export_File_No__c}</td>
+                        <td>{!line.Payroll_Export_Employee_Name__c}</td>
+                        <td>
+                            <apex:outputText value="{!line.Payroll_Export_Job_No__c}" />
+                        </td>
+                        <td class="">{!line.Payroll_Export_Temp_Rate__c}</td>
+                        <td>{!line.Net_Hours__c}</td>
+                        <td>{!line.Payroll_Export_OT_Hours__c}</td>
+                        <td class="">{!line.Payroll_Export_Hour_Code__c}</td>
+                        <td>{!line.Payroll_Export_Hour_Amount__c}</td>
+                        <td>{!line.Payroll_Export_Earning_Code__c}</td>
+                        <td>{!line.Payroll_Export_Earning_Amt__c}</td>
+                        <!--<td>{!line.PW_Job_Type_Code__c}</td>-->
+                    </tr>
+                </apex:repeat>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+    <style>
+        
+        body {
+        	font-size: 12px;
+        }
+        
+        #popover-target label {
+            margin: 0 5px;
+            display: block;
+        }
+        
+        #popover-target input {
+        	margin-right: 5px;
+        }
+        
+        #popover-target .disabled {
+        	color: #ddd;
+        }
+        
+    </style>
+
+</apex:page>

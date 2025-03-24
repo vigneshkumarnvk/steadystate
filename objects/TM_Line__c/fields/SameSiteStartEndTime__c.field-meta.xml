@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SameSiteStartEndTime__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND((Site_Start_Time__c == Site_End_Time__c),(TM__r.Prevailing_Wage_Job__c == TRUE))</formula>
+    <label>SameSiteStartEndTime</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

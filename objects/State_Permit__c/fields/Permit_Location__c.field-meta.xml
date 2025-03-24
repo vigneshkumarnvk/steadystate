@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Permit_Location__c</fullName>
+    <externalId>false</externalId>
+    <label>Permit Location</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Linden Branch</fullName>
+                <default>false</default>
+                <label>Linden Branch</label>
+            </value>
+            <value>
+                <fullName>MA Branch</fullName>
+                <default>false</default>
+                <label>MA Branch</label>
+            </value>
+            <value>
+                <fullName>NJ Branch</fullName>
+                <default>false</default>
+                <label>NJ Branch</label>
+            </value>
+            <value>
+                <fullName>New York Branch</fullName>
+                <default>false</default>
+                <label>New York Branch</label>
+            </value>
+            <value>
+                <fullName>Northern PA</fullName>
+                <default>false</default>
+                <label>Northern PA</label>
+            </value>
+            <value>
+                <fullName>Pennsylvania Branch</fullName>
+                <default>false</default>
+                <label>Pennsylvania Branch</label>
+            </value>
+            <value>
+                <fullName>Rahway Branch</fullName>
+                <default>false</default>
+                <label>Rahway Branch</label>
+            </value>
+            <value>
+                <fullName>Transportation</fullName>
+                <default>false</default>
+                <label>Transportation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

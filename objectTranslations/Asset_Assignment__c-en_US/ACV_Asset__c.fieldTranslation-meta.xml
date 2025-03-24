@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- ACV Asset --></label>
+        <name>ACV_Asset__c</name>
+        <relationshipLabel><!-- Asset Assignments --></relationshipLabel>
+    </CustomFieldTranslation>

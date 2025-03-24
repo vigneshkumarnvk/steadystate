@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Total Amount Incl. Tax FF --></label>
+        <name>Total_Amount_Incl_Tax_FF__c</name>
+    </CustomFieldTranslation>

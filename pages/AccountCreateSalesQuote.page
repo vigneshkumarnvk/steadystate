@@ -1,0 +1,37 @@
+<apex:page standardController="Account" extensions="AccountCreateSalesQuoteOrOrderController" action="{!checkAccountContractBeforeRenderPage}">
+    <apex:includeScript value="{!URLFOR($Resource.bootstrap, '/bootstrap/jquery-3.3.1.js')}"/>
+    <script>
+        $ = jQuery.noConflict();
+        $(document).ready(function(){
+
+        });
+        function contractChanged() {
+            $(".checkBox").prop('checked', false);
+        }
+        function checkBoxChanged(){
+            $(".contract input:radio").prop('checked', false);
+        }
+    </script>
+    <apex:sectionHeader title="Create Sales Quote"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"/>
+            <apex:pageBlockSection columns="1" rendered="{!isAllowedToCreateSalesRecord == true}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >New Sales Quote</apex:outputLabel>
+                    <apex:inputCheckbox value="{!isPlain}" styleClass="checkBox" onChange="checkBoxChanged()"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >Contract:</apex:outputText>
+                    <apex:selectRadio value="{!chosenContract}" layout="pageDirection" onChange="contractChanged()" styleClass="contract">
+                        <apex:selectOptions value="{!contractOptions}"/>
+                    </apex:selectRadio>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Create" action="{!redirectToSalesOrderPage}" rendered="{!isAllowedToCreateSalesRecord == true}" reRender="theMessage" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

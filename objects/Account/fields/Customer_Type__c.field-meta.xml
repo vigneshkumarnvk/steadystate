@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Customer_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Customer Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>AGR</fullName>
+                <default>false</default>
+                <label>AGR</label>
+            </value>
+            <value>
+                <fullName>AUTOMOBILE</fullName>
+                <default>false</default>
+                <label>AUTOMOBILE</label>
+            </value>
+            <value>
+                <fullName>CHEMICAL</fullName>
+                <default>false</default>
+                <label>CHEMICAL</label>
+            </value>
+            <value>
+                <fullName>CONSTRUCTION</fullName>
+                <default>false</default>
+                <label>CONSTRUCTION</label>
+            </value>
+            <value>
+                <fullName>CONSULTANT-ENGINEER</fullName>
+                <default>false</default>
+                <label>CONSULTANT-ENGINEER</label>
+            </value>
+            <value>
+                <fullName>CONTRACTOR</fullName>
+                <default>false</default>
+                <label>CONTRACTOR</label>
+            </value>
+            <value>
+                <fullName>GOVERNMENT</fullName>
+                <default>false</default>
+                <label>GOVERNMENT</label>
+            </value>
+            <value>
+                <fullName>GSA</fullName>
+                <default>false</default>
+                <label>GSA</label>
+            </value>
+            <value>
+                <fullName>HOSPITAL</fullName>
+                <default>false</default>
+                <label>HOSPITAL</label>
+            </value>
+            <value>
+                <fullName>I/C</fullName>
+                <default>false</default>
+                <label>I/C</label>
+            </value>
+            <value>
+                <fullName>INSURANCE</fullName>
+                <default>false</default>
+                <label>INSURANCE</label>
+            </value>
+            <value>
+                <fullName>LAB</fullName>
+                <default>false</default>
+                <label>LAB</label>
+            </value>
+            <value>
+                <fullName>MANU</fullName>
+                <default>false</default>
+                <label>MANU</label>
+            </value>
+            <value>
+                <fullName>MARINE</fullName>
+                <default>false</default>
+                <label>MARINE</label>
+            </value>
+            <value>
+                <fullName>OIL &amp; GAS</fullName>
+                <default>false</default>
+                <label>OIL &amp; GAS</label>
+            </value>
+            <value>
+                <fullName>OTHER</fullName>
+                <default>false</default>
+                <label>OTHER</label>
+            </value>
+            <value>
+                <fullName>PETROLEUM</fullName>
+                <default>false</default>
+                <label>PETROLEUM</label>
+            </value>
+            <value>
+                <fullName>PHARMACEUTICAL</fullName>
+                <default>false</default>
+                <label>PHARMACEUTICAL</label>
+            </value>
+            <value>
+                <fullName>PROPERTY</fullName>
+                <default>false</default>
+                <label>PROPERTY</label>
+            </value>
+            <value>
+                <fullName>REFINERY</fullName>
+                <default>false</default>
+                <label>REFINERY</label>
+            </value>
+            <value>
+                <fullName>REMEDIATION</fullName>
+                <default>false</default>
+                <label>REMEDIATION</label>
+            </value>
+            <value>
+                <fullName>RESIDENCE</fullName>
+                <default>false</default>
+                <label>RESIDENCE</label>
+            </value>
+            <value>
+                <fullName>SCHOOLS</fullName>
+                <default>false</default>
+                <label>SCHOOLS</label>
+            </value>
+            <value>
+                <fullName>STEEL</fullName>
+                <default>false</default>
+                <label>STEEL</label>
+            </value>
+            <value>
+                <fullName>TRANS</fullName>
+                <default>false</default>
+                <label>TRANS</label>
+            </value>
+            <value>
+                <fullName>UTILITIES</fullName>
+                <default>false</default>
+                <label>UTILITIES</label>
+            </value>
+            <value>
+                <fullName>Environmental</fullName>
+                <default>false</default>
+                <label>Environmental</label>
+            </value>
+            <value>
+                <fullName>OIL AND GAS</fullName>
+                <default>false</default>
+                <label>OIL AND GAS</label>
+            </value>
+            <value>
+                <fullName>ASBESTOS</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>ASBESTOS</label>
+            </value>
+            <value>
+                <fullName>AUTOMBILE</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>AUTOMBILE</label>
+            </value>
+            <value>
+                <fullName>DEMOLITION</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>DEMOLITION</label>
+            </value>
+            <value>
+                <fullName>GEOPROBE</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>GEOPROBE</label>
+            </value>
+            <value>
+                <fullName>INDUSTRIAL MAINT.</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>INDUSTRIAL MAINT.</label>
+            </value>
+            <value>
+                <fullName>PUMP OUT</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>PUMP OUT</label>
+            </value>
+            <value>
+                <fullName>REMOVAL/INSTALLATION</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>REMOVAL/INSTALLATION</label>
+            </value>
+            <value>
+                <fullName>SNOW PLOWING</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SNOW PLOWING</label>
+            </value>
+            <value>
+                <fullName>SOIL SAMPLES</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SOIL SAMPLES</label>
+            </value>
+            <value>
+                <fullName>SPILL RESPONSE</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SPILL RESPONSE</label>
+            </value>
+            <value>
+                <fullName>TANK ABANDONMENT</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>TANK ABANDONMENT</label>
+            </value>
+            <value>
+                <fullName>TANK INSTALL</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>TANK INSTALL</label>
+            </value>
+            <value>
+                <fullName>TANK REMOVAL</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>TANK REMOVAL</label>
+            </value>
+            <value>
+                <fullName>TANK SEARCH</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>TANK SEARCH</label>
+            </value>
+            <value>
+                <fullName>WASTE DISPOSAL</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>WASTE DISPOSAL</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

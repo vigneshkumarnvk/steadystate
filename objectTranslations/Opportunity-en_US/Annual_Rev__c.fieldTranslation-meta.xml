@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- When you enter a monetary amount you can use the shortcuts k, m, or b to indicate thousands, millions, or billions. For example, when you enter 50k it appears as 50,000 --></help>
+        <label><!-- Annual Rev --></label>
+        <name>Annual_Rev__c</name>
+    </CustomFieldTranslation>

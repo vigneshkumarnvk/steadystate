@@ -1,0 +1,11 @@
+<apex:page standardController="TM_Line__c">
+    <apex:sectionHeader title="TM Line" subtitle="{!TM_Line__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessage strength="3" summary="You must add/delete/edit T&M Lines from T&M Visualforce page." severity="error"></apex:pageMessage>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Return" action="{!URLFOR(' ' & $CurrentPage.parameters.retURL)}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

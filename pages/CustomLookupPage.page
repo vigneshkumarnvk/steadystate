@@ -1,0 +1,231 @@
+<!--
+/**********************************************************
+* Page Name: CustomLookupPage
+* Author: Ashish
+* Date: 14-May-2017
+* Requirement # Request Id:
+* Description: VF page for ItemJnlLines EnterLot Lookup
+**********************************************************/
+-->
+
+<apex:page controller="CustomLookupController" sidebar="false" showHeader="false"
+           tabStyle="{!IF(sObjectName<>null,sObjectName,'Account')}" readOnly="true">
+
+    <head>
+        <title>Salesforce Lookup Search Page</title>
+        <script type="text/javascript" src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery.js')}"></script>
+        <script type="text/javascript"
+                src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery.tablesorter.js')}"></script>
+        <script type="text/javascript"
+                src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery.tablesorter.pager.min.js')}"></script>
+        <script type="text/javascript"
+                src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery.tablesorter.widgets.min.js')}"></script>
+        <script type="text/javascript"
+                src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery.blockUI.min.js')}"></script>
+        <script type="text/javascript"
+                src="{!URLFOR($Resource.LookupResource,'LookupResource/JS/jquery-ui.js')}"></script>
+        <apex:stylesheet value="{!URLFOR($Resource.LookupResource,'LookupResource/CSS/jquery-ui.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.LookupResource,'LookupResource/CSS/jquery.tablesorter.pager.css')}"/>
+    </head>
+    <Script>
+
+        $=jQuery.noConflict();
+
+        function getTable(){
+
+            $.unblockUI();
+            $('table[id$="sitetable"]').tablesorter(
+                    {
+                        widgets: ["filter","zebra"],
+                        sortReset: true,
+                        sortRestart: true,
+                        headers: {
+                            0: { filter: false},
+                            1: { filter: {!fltr1}},
+                            2: { filter: {!fltr2}},
+                            3: { filter: {!fltr3}},
+                            4: { filter: {!fltr4}},
+                            5: { filter: {!fltr5}},
+                            6: { filter: {!fltr6}},
+                            7: { filter: {!fltr7}},
+                        },
+                        widgetZebra: {
+                            css: ["even", "odd"],
+
+                        },
+                        widgetOptions : {
+                            zebra : [ "normal-row", "alt-row" ]
+                        }
+
+                    }).tablesorterPager({
+                container: $(".pager")
+            });
+
+            $("table thead th:eq(0), table thead th:eq(1)").data({
+                sorter: false,
+                filter: false
+            });
+        }
+
+        $(document).ready(function() {
+            getTable();
+        });
+        
+        function gotoSearch(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if(charCode == 13){
+                search();
+                return false;               
+            }
+        }
+    </script>
+
+    <apex:form id="FRM">
+        <apex:sectionHeader id="TitleSection" title="Lookup"/>
+        <body class="lookupTab">
+    <apex:pageBlock mode="maindetail">
+            <apex:actionFunction name="search" action="{!search}" reRender="FRM,sitetable, dataSection, dataSectionPB"
+                                 immediate="false" status="status"/>
+            <!--<apex:pageBlockSection rendered="{!sobjList.size >= maxLookupRows}" title="Limit Search Results" collapsible="false">-->
+        <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <!--<apex:pageBlockSection rendered="{!sobjList.size >= maxLookupRows}" columns="1" collapsible="false">-->
+            <apex:pageBlockSection rendered="{!!isSpecialScenario&&(originalSizeOfList >= maxLookupRows)}" columns="1" collapsible="false">
+            <apex:pageBlock id="dataSectionPB" mode="detail">
+                <div class="pager">
+                    <apex:outputPanel >
+                        <b>Limit Results: </b>
+                        <apex:selectList size="1" value="{!selFilterField}">
+                            <apex:selectOptions value="{!lstFilterField}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:outputPanel >
+                        <apex:selectList style="width:80px;" size="1" value="{!selFilterOp}">
+                            <apex:selectOptions value="{!lstFilterOperator}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                    <apex:outputPanel >
+                            <apex:inputText style="width:150px;" onkeypress="return filter();" id="txtFilter"
+                                        value="{!filterInput}"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel >
+                        <apex:commandButton value="Filter" action="{!search}"
+                                            rerender="FRM"
+                                            status="loadingstatus" oncomplete="getTable();">
+                            <apex:param id="theSearch" name="theSearch" value="Item"/>
+                        </apex:commandButton>
+                    </apex:outputPanel>
+                </div>
+            </apex:pageBlock>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection id="dataSection" columns="1" collapsible="false">
+            <apex:pageBlock id="dataSectionPB" mode="detail" title="{!sObjectLabel}">
+                    <!--Pagination Section-->
+                    <div class="pager">
+                        <img src="{!URLFOR($Resource.LookupResource,'LookupResource/Icons/First.png')}" height="20"
+                             class="first"/>
+                        <img src="{!URLFOR($Resource.LookupResource,'LookupResource/Icons/Previous.png')}" height="20"
+                             class="prev"/>
+                        <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                        <img src="{!URLFOR($Resource.LookupResource,'LookupResource/Icons/Next.png')}" height="20"
+                             class="next"/>
+                        <img src="{!URLFOR($Resource.LookupResource,'LookupResource/Icons/Last.png')}" height="20"
+                             class="last"/>
+                        Records/Page
+                        <select class="pagesize" title="Select page size">
+                            <option selected="selected" value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+
+                        <!--<apex:outputPanel >
+                            <b>Limit Results : </b>
+                            <apex:selectList size="1" value="{!selFilterField}">
+                                <apex:selectOptions value="{!lstFilterField}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                        <apex:outputPanel >
+                            <apex:selectList style="width:80px;" size="1" value="{!selFilterOp}">
+                                <apex:selectOptions value="{!lstFilterOperator}"/>
+                            </apex:selectList>
+                        </apex:outputPanel>
+                        <apex:outputPanel >-->
+                        <!--<apex:inputText id="filterInput" value="{!filterInput}"/>-->
+                        <!---<apex:inputText style="width:150px;" onkeypress="return filter();" id="txtFilter"
+                                        value="{!filterInput}"/>
+                    </apex:outputPanel>
+                    <apex:outputPanel >
+                        <apex:commandButton value="Filter" action="{!search1}"
+                                            rerender="FRM"
+                                            status="loadingstatus" oncomplete="getTable();">
+                            <apex:param id="theSearch" name="theSearch" value="Item"/>
+                        </apex:commandButton>
+                    </apex:outputPanel>-->
+                    </div>
+                    <!--Pagination Section Ends-->
+
+                    <!--Filtered Records Section Starts-->
+                    <apex:pageBlockTable value="{!sobjList}" var="sobj" id="sitetable" >
+                        <apex:column style="width:1%">
+                        <apex:commandButton onclick="fillIn('{!JSENCODE(sobj[LinkFieldName])}','{!sobj['ID']}');return false;"
+                                    value="Select"/>
+                            <!--<apex:commandButton onclick="fillIn('{!sobj[LinkFieldName]}','{!sobj['ID']}');return false;" value="Select"/>-->
+                        </apex:column>
+                        <apex:repeat value="{!fieldapiname}" var="flds" >
+                            <apex:column value="{!sobj[flds]}" style="width:15%"/>
+                        </apex:repeat>
+                    </apex:pageBlockTable>
+                    <!--Filtered Records Section Ends-->
+                    <br/>
+                    <apex:outputText rendered="{!(sobjList.size = 0)}" value="No Records Found."
+                                     style="font-weight: bold;font-size: 120%;"/>
+                </apex:pageBlock>
+
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        </body>
+    </apex:form>
+
+    <script>
+        function fillIn(Name,Id){
+
+            var elemenetIdForField ='{!JSENCODE($CurrentPage.parameters.LookupNameId)}';//Updated with VisualForce encoding
+            var rv='{!JSENCODE($CurrentPage.parameters.RunValidation)}';//Updated with VisualForce encoding
+            var isLink='{!JSENCODE($CurrentPage.parameters.LookupType)}';//Updated with VisualForce encoding
+            var func='{!JSENCODE($CurrentPage.parameters.ValidateFunction)}';//Updated with VisualForce encoding
+            var invokefrm='{!JSENCODE($CurrentPage.parameters.invokefrm)}';//Updated with VisualForce encoding
+
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            var winMain=window.opener;
+
+            if (isLink == 'Name') {
+                Name  = Name.substring(0, 15);
+                Name=$("a[href$='" + Name + "']").first().text();
+        } else if (isLink == 'ID') Name = Id.substring(0, 15);
+
+            if (null==winMain)  winMain=window.parent.opener;
+
+            var hiddenprl=elemenetIdForField.replace(fieldName,'');
+            if(invokefrm =='page') winMain.closeLookupPopupPage(fieldName,Name,lineNo,hiddenprl,rv,func);
+            else winMain.closeLookupPopup(fieldName,Name,lineNo,hiddenprl,rv,func);
+        }
+    </script>
+    <style>
+        tr.tablesorter-filter-row input.disabled {
+            display: none
+        }
+
+        .tablesorter .tablesorter-filter {
+            width: 85%;
+        }
+
+        .tablesorter thead .disabled {
+            display: none
+        }
+    </style>
+</apex:page>

@@ -1,0 +1,807 @@
+<!--------------------------------------------------------------------------------------------------------------------------------------------
+ * Name         :  NewSalesInvoicePDF
+ * Description  :   
+ *
+ * Modification Log :
+ * Developer                 Date                   Description
+ * -----------------------------------------------------------------------------------------------------------------------------------------                 
+ * Samuel M             	02/12/2025             US139233: (Unplanned) Remove Remit To Information Section of Draft Invoice
+ ------------------------------------------------------------------------------------------------------------------------------------------>
+<apex:page showHeader="false" applyHtmlTag="false" applyBodyTag="false" controller="SalesInvoicePDFController" standardStylesheets="false" renderAs="pdf">
+    <head>
+        <style>
+            html * {
+                font-size: 8pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+            @page {
+                margin-top: 10.1cm;
+                margin-bottom: 3cm;
+
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+                background-image: {!draftImageUrl};
+                background-repeat: repeat-y;
+                background-position: center;
+                overflow: auto;
+            }
+
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+            div.header {
+                position: running(header);
+                display: block;
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            .ml5 {
+                margin-left:5px;
+            }
+            .ml20 {
+                margin-left:20px;
+            }
+            .ml60 {
+                margin-left: 60px;
+            }
+            .mt5 {
+                margin-top:5px;
+            }
+
+            .mt10 {
+                margin-top:10px;
+            }
+
+            .mt15{
+                margin-top:15px;
+            }
+
+            .mt20 {
+                margin-top:20px;
+            }
+            .mt50 {
+                margin-top: 50px;
+            }
+            .w100 {
+                width: 100%;
+            }
+
+            .w80 {
+                width:80%;
+            }
+
+            .noBorder {
+                border:none;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .n {
+                font-weight:normal;
+            }
+
+            .i {
+                font-style:italic;
+            }
+
+            .u {
+                text-decoration:underline;
+            }
+
+            .border1 {
+                border:1px solid black;
+            }
+
+            .alignCenter {
+                text-align:center;
+            }
+
+            .alignLeft {
+                text-align:left;
+            }
+
+            .alignRight {
+                text-align:right;
+            }
+
+            .valignTop {
+                vertical-align:top;
+            }
+
+            .valignBottom {
+                vertical-align:bottom;
+            }
+
+            .fs6 {
+                font-size:6pt;
+            }
+
+            .fs7 {
+                font-size:7pt;
+            }
+
+            .fs8 {
+                font-size:8pt;
+            }
+
+            .fs9 {
+                font-size:9pt;
+            }
+
+            .fs10 {
+                font-size:10pt;
+            }
+
+            .fs11 {
+                font-size:11pt;
+            }
+
+            .fs12 {
+                font-size:12pt;
+            }
+
+            .fs14 {
+                font-size:14pt;
+            }
+
+            .fs16 {
+                font-size:16pt;
+            }
+
+            .tblInnerBorders {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+            }
+            .tblInnerBorders td, .tblInnerBorders th {
+                border: 1px solid black;
+            }
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+
+            .pb5 {
+                padding-bottom:5px;
+            }
+
+            .pb10 {
+                padding-bottom:10px;
+            }
+
+            .divWrap {
+                page-break-before: always;
+                counter-reset: page;
+            }
+            .divWrap:first-child {
+                page-break-before: auto !important;
+            }
+            .sfdc_richtext img {
+                width: 121px;
+                height: 55px;
+            }
+
+            .watermark {
+                background-image: url("{!URLFOR($Resource.draftWaterMark)}");
+                /*background-repeat: no-repeat;*/
+                background-repeat: repeat-y;
+                /*background-position: center center;*/
+                background-position: center;
+                overflow: auto;
+            }
+        </style>
+    </head>
+
+    <apex:variable value="0" var="counter"/>
+    <apex:repeat value="{!InvoiceWrappers}" var="invoiceWrapper">
+        <apex:variable var="counter" value="{!VALUE(counter) + 1}"/>
+        <body class="{!IF(!invoiceWrapper.isApproved && invoiceWrapper.docType == 'Sales Invoice', '', '')}">
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="alignCenter i b mt20 fs10">
+                {!IF(!invoiceWrapper.isApproved && invoiceWrapper.docType == 'Sales Invoice', 'THIS IS A DRAFT DOCUMENT!', 'THANK YOU FOR THE OPPORTUNITY TO SERVE YOU.')}
+            </div>
+            <div class="fs6 mt10">
+                INTEREST CHARGES OF 1.5% PER MONTH (18% PER YEAR) WILL ACCRUE ON ALL PAST DUE AMOUNTS, ON UNPAID
+                AMOUNTS, INTEREST AND ALL EXPENSES OF
+                COLLECTIONS INCLUDING A REASONABLE ATTORNEY FEE IN AN AMOUNT OF 20% WILL BE CHARGED.
+            </div>
+            <div class="fs8 alignRight b">
+                Page <span class="pagenumber"/> of <span class="pagecount"/>
+            </div>
+        </div>
+
+        <!-----Header Start----->
+        <div class="header" style="{!IF(VALUE(counter) > 1, 'page-break-before: always;', '')}">
+            <div class="divWrap counterReset">
+                <div class="mt10">
+                    <div>
+                        <table class="w100" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="75%" class="fs7 b">
+                                    <div>
+                                        <table class="w100" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="20%" height="99px" class="valignTop alignLeft" style="padding-bottom:100px;padding-left:0px;">
+                                                    <div>
+                                                        <img src="{!invoiceWrapper.logoUrl}" width="230px" height="66px"/>
+                                                        <!--
+                                                        <apex:outputField value="{!invoiceWrapper.companyLogo.Company_Logo__c}" rendered="{!invoiceWrapper.companyLogo != null}" />
+                                                        {!invoiceWrapper.companyLogo.Company_Logo__c}
+                                                        <apex:outputField value="{!invoiceWrapper.serviceCenterLogo.Logo__c}" rendered="{!invoiceWrapper.serviceCenterLogo != null}"/>
+                                                        <apex:outputField value="{!invoiceWrapper.contractLogo.Logo__c}" rendered="{!invoiceWrapper.contractLogo != null}"/>
+                                                        -->
+                                                        <div class="ml20 fs7">
+                                                            {!invoiceWrapper.websiteUrl}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div>
+                                        <div class="b fs10">
+                                            SOLD TO:
+                                        </div>
+                                        <div class="n fs9 mt10 ml60">
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Contact__r.Name}
+                                            </div>
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Bill_to_Customer__r.Name}
+                                            </div>
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Street__c}
+                                            </div>
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.City__c}, {!invoiceWrapper.SalesInvoice.State__c} {!invoiceWrapper.SalesInvoice.Postal_Code__c}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="25%" class="b valignTop alignRight">
+                                    <div>
+                                        <div class="fs16">
+                                            {!IF(!invoiceWrapper.isApproved && invoiceWrapper.docType == 'Sales Invoice', 'Draft', invoiceWrapper.documentType)}
+                                            <sup><span class="fs10">NO.: </span></sup><span
+                                                    class="fs9 ml5">{!invoiceWrapper.SalesInvoice.Name}</span>
+                                        </div>
+
+                                        <div class="mt20 fs10">
+                                            {!invoiceWrapper.documentDate}:&nbsp;
+                                            <apex:outputText value="{0,date,M/d/yyyy}" >
+                                                <apex:param value="{!IF(invoiceWrapper.SalesInvoice.Credit_Memo__c == true, invoiceWrapper.SalesInvoice.Posting_Date__c, invoiceWrapper.SalesInvoice.Invoice_Date__c)}"/>
+                                            </apex:outputText>
+                                        </div>
+                                        <div class="fs10">
+                                            Last Service Date:&nbsp;
+                                            <apex:outputText value="{0,date,M/d/yyyy}" >
+                                                <apex:param value="{!invoiceWrapper.LastServiceDate}"/>
+                                            </apex:outputText>
+                                        </div>
+                                        <div class="b fs10" style="margin-top:70px;">
+                                            JOB LOCATION
+                                        </div>
+                                        <div class="n mt10 fs9">
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Site_Name__c}
+                                            </div>
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Site_Street__c}
+                                            </div>
+                                            <div>
+                                                {!invoiceWrapper.SalesInvoice.Site_City__c}, {!invoiceWrapper.SalesInvoice.Site_State__c} {!invoiceWrapper.SalesInvoice.Site_Postal_Code__c}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt5 content">
+                    <table class="w100" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="fs10 b">
+                                <div>
+                                    Job Description: {!invoiceWrapper.SalesInvoice.Sales_Order__r.CMR_Description__c}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="w100 mt5 fs9 b" cellspacing="0" cellpadding="2">
+                        <tr>
+                            <td width="25%" class="border1 valignTop">
+                                <div>
+                                    SALES ORDER NO.
+                                </div>
+                                <div class="">
+                                    {!invoiceWrapper.SalesInvoice.Sales_Order__r.Name}
+                                </div>
+                            </td>
+                            <td width="15%" class="border1 valignTop">
+                                <div>
+                                    CUSTOMER NO.
+                                </div>
+                                <div class="">
+                                    {!invoiceWrapper.SalesInvoice.Bill_to_Customer__r.Sage_Customer_No__c}
+                                </div>
+                            </td>
+                            <td width="22%" class="border1 valignTop">
+                                <div>
+                                    PURCHASE ORDER NO.
+                                </div>
+                                <div class="">
+                                    <apex:outputText value="{0}" rendered="{!ISBLANK(invoiceWrapper.SalesInvoice.Corrected_Customer_PO_No__c)}"> <!-- 14507 -->
+                                        <apex:param value="{!invoiceWrapper.SalesInvoice.Customer_PO_No__c}"/>
+                                    </apex:outputText>
+                                    <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(invoiceWrapper.SalesInvoice.Corrected_Customer_PO_No__c))}">
+                                        <apex:param value="{!invoiceWrapper.SalesInvoice.Corrected_Customer_PO_No__c}"/>
+                                    </apex:outputText>
+                                </div>
+                            </td>
+                            <td width="13%" class="border1 valignTop">
+                                <div>
+                                    TERMS
+                                </div>
+                                <div class="mt5">
+                                    &nbsp;{!invoiceWrapper.SalesInvoice.Payment_Term__r.Name}
+                                </div>
+                            </td>
+                            <td width="25%" class="border1 valignTop">
+                                <div>
+                                    PAYMENT DUE DATE
+                                </div>
+                                <div class="mt5">
+                                    &nbsp;
+                                    <apex:outputText value="{0,date,M/d/yyyy}" >
+                                        <apex:param value="{!invoiceWrapper.SalesInvoice.Due_Date__c}"/>
+                                    </apex:outputText>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--job task-->
+        <div class="content">
+            <table class="w100">
+                <apex:repeat value="{!invoiceWrapper.TaskWrappers}" var="taskWrapper">
+                    <tr style="{!if(taskWrapper.Amount == 0, 'display:none;','')}">
+                        <td width="80%" class="alignLeft">
+                            <apex:outputPanel rendered="{!invoiceWrapper.SalesInvoice.Misc_Invoice__c != true}">
+                                <div class="w100 fs9" style="display: block">
+                                    TASK - {!taskWrapper.JobTask.Name}
+                                    <span style="{!if(taskWrapper.JobTask.Billing_Type__c == 'Fixed Price', 'padding-left:60px;', 'display:none;')}">
+                                        <u>{!taskWrapper.JobTask.Billing_Pct__c}%</u> Invoiced
+                                    </span>
+                                </div>
+                            </apex:outputPanel>
+                        </td>
+                        <td class="alignRight">
+                            <!--ticket 19127-->
+                            <!--
+                            <apex:outputPanel rendered="{!invoiceWrapper.TaskWrappers.size > 1 && InvoiceType =='TM Summary'}">
+                                <span style="{!if(taskWrapper.JobTask.Billing_Type__c == 'Fixed Price', 'margin-right: 20px', 'display:none;')}">Amount: </span>
+                                <span style="border-bottom: black solid 0.5px;">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.JobTask.Billing_Type__c == 'Fixed Price'}">
+                                        <apex:param value="{!taskWrapper.Amount}"/>
+                                    </apex:outputText>
+                                </span>
+                            </apex:outputPanel>
+                            -->
+                            <!--ticket 19127-->
+                        </td>
+                    </tr>
+                    <tr style="{!if(taskWrapper.Amount == 0, 'display:none;','')}">
+                        <td colspan="2">
+                            <!--ticket 19127-->
+                            <!--<apex:outputPanel rendered="{!InvoiceType =='TM Detail' || InvoiceType =='TM Lump Sum'}">-->
+
+                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Invoice_Format__c =='Detail'}">
+                            <!--ticket 19127-->
+                                <table class="fs9 w100" cellspacing="0" cellpadding="2">
+                                    <thead>
+                                    <tr>
+                                        <th width="15%" class="alignLeft">
+                                            Date
+                                        </th>
+                                        <th width="30%" class="alignLeft">
+                                            Description
+                                        </th>
+                                        <th width="15%" class="alignLeft">
+                                            Manifest
+                                        </th>
+                                        <th width="10%" class="alignLeft">
+                                            Billing
+                                            <div>
+                                                QTY
+                                            </div>
+                                        </th>
+                                        <th width="10%" class="alignLeft">
+                                            Billing
+                                            <div>
+                                                UOM
+                                            </div>
+                                        </th>
+                                        <th width="10%" class="alignRight">
+                                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                Rate
+                                            </apex:outputPanel>
+                                        </th>
+                                        <th width="10%" class="alignRight">
+                                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                Amount
+                                            </apex:outputPanel>
+                                            <!--ticket 19127-->
+                                            <!--<apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c == 'Fixed Price' && InvoiceType != 'TM Summary'}">-->
+                                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c == 'Fixed Price' && taskWrapper.JobTask.Invoice_Format__c != 'Summary'}">
+                                            <!--ticket 19127-->
+                                                Amount
+                                            </apex:outputPanel>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <apex:repeat value="{!taskWrapper.LinesWrappers}" var="linesWrapper">
+                                        <apex:repeat value="{!linesWrapper.InvoiceLines}" var="invoiceLine">
+                                            <tr>
+                                                <td class="alignLeft">
+                                                    <apex:outputText value="{0,date,M/d/yyyy}" >
+                                                        <apex:param value="{!invoiceLine.Scheduled_Date__c}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td style="overflow: hidden">
+                                                    {!invoiceLine.Description__c}
+                                                </td>
+                                                <td style="overflow: hidden">
+                                                    {!invoiceLine.BOL_Manifest__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    <apex:outputText value="{!invoiceLine.Qty_to_Display__c}" />
+                                                    <!--
+                                                    <apex:outputText value="{!invoiceLine.Qty_to_Display__c}" rendered="{!invoiceLine.Category__c != 'Waste Disposal' || (invoiceLine.Category__c == 'Waste Disposal' && (invoiceLine.Min_Sell_Qty__c == null || invoiceLine.Recorded_Qty__c == null))}" />
+                                                    <apex:outputText value="{!invoiceLine.Qty_to_Display__c}" rendered="{!invoiceLine.Category__c == 'Waste Disposal' && invoiceLine.Min_Sell_Qty__c != null && invoiceLine.Recorded_Qty__c != null && invoiceLine.Min_Sell_Qty__c <= invoiceLine.Recorded_Qty__c}" />
+                                                    <apex:outputText value="{!invoiceLine.Recorded_Qty__c}" rendered="{!invoiceLine.Category__c == 'Waste Disposal' && invoiceLine.Min_Sell_Qty__c != null && invoiceLine.Recorded_Qty__c != null && invoiceLine.Min_Sell_Qty__c > invoiceLine.Recorded_Qty__c}" />
+
+                                                    <span style="font-size: 8px">
+                                                        <apex:outputText value="{!invoiceLine.Qty_to_Display__c}" rendered="{!invoiceLine.Category__c == 'Waste Disposal' && invoiceLine.Min_Sell_Qty__c != null && invoiceLine.Recorded_Qty__c != null && invoiceLine.Min_Sell_Qty__c > invoiceLine.Recorded_Qty__c}">
+                                                            <br />Min.
+                                                        </apex:outputText>
+                                                    </span>
+                                                    -->
+                                                </td>
+                                                <td class="alignLeft">
+                                                    <apex:outputField value="{!invoiceLine.Unit_of_Measure__r.Name}" rendered="{!invoiceLine.Cost_Method__c == null}" />
+                                                    <apex:outputField value="{!invoiceLine.Container_Size__r.Name}" rendered="{!invoiceLine.Cost_Method__c == 'Container'}" />
+                                                    <apex:outputField value="{!invoiceLine.Unit_Weight_Vol__r.Name}" rendered="{!invoiceLine.Cost_Method__c == 'Unit_Weight_Vol'}" />
+                                                </td>
+                                                <td class="alignRight">
+                                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                        <apex:param value="{!invoiceLine.Unit_Price__c}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td class="alignRight">
+                                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                        <apex:param value="{!invoiceLine.Line_Amount__c}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+
+                            <!--ticket 19127-->
+                            <!--<apex:outputPanel rendered="{!InvoiceType =='TM Summary' && taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">-->
+                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Invoice_Format__c =='Summary' && taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                            <!--ticket 19127-->
+                                <table class="w100 fs10" cellspacing="0" cellpadding="3">
+                                    <tbody>
+                                    <apex:repeat value="{!taskWrapper.LinesWrappers}" var="linesWrapper">
+                                        <tr>
+                                            <td width="55%" class="b">
+                                                <!--ticket 19127-->
+                                                <!--
+                                                {!CASE(linesWrapper.Category,
+                                                'Demurrage', 'Transportation, Demurrage and Fees',
+                                                linesWrapper.Category)}
+                                                -->
+                                                {!CASE(linesWrapper.Category,
+                                                'Demurrage', 'Transportation, Demurrage and Fees',
+                                                'Bundled', 'Bundled',
+                                                linesWrapper.Category)}
+                                                <!--ticket 19127-->
+                                            </td>
+                                            <td class="alignRight">
+                                                <apex:outputText value="{0, Number, $#,##0.00}" >
+                                                    <apex:param value="{!linesWrapper.Amount}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+
+                            <!--ticket 19127-->
+                            <!--<apex:outputPanel rendered="{!InvoiceType =='TM by Date by Category'}">-->
+                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Invoice_Format__c =='By Date by Category'}">
+                            <!--ticket 19127-->
+                                <table class="w100 fs9 mt10">
+                                    <thead>
+                                    <tr>
+                                        <th width="45%" class="alignLeft">
+                                            Description
+                                        </th>
+                                        <th width="15%" class="alignLeft">
+                                            Manifest
+                                        </th>
+                                        <th width="10%" class="alignLeft">
+                                            Billing
+                                            <div>
+                                                QTY
+                                            </div>
+                                        </th>
+                                        <th width="10%" class="alignLeft">
+                                            Billing
+                                            <div>
+                                                UOM
+                                            </div>
+                                        </th>
+                                        <th width="10%" class="alignRight">
+                                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                Rate
+                                            </apex:outputPanel>
+                                        </th>
+                                        <th width="10%" class="alignRight">
+                                            <apex:outputPanel rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                Amount
+                                            </apex:outputPanel>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <apex:repeat value="{!taskWrapper.LinesWrappers}" var="linesWrapper">
+                                        <tr>
+                                            <td colspan="6" class="b">
+                                                <!--ticket 19127-->
+                                                <!--
+                                                {!CASE(linesWrapper.Category,
+                                                'Demurrage', 'Transportation, Demurrage and Fees',
+                                                linesWrapper.Category)} -&nbsp;
+                                                -->
+                                                {!CASE(linesWrapper.Category,
+                                                'Demurrage', 'Transportation, Demurrage and Fees',
+                                                'Bundled', 'Bundled',
+                                                linesWrapper.Category)} -&nbsp;
+                                                <!--ticket 19127-->
+                                                <apex:outputText value="{0, date, full}">
+                                                    <apex:param value="{!linesWrapper.ScheduledDate}"/>
+                                                </apex:outputText>
+                                            </td>
+                                        </tr>
+                                        <apex:repeat value="{!linesWrapper.InvoiceLines}" var="line">
+                                            <tr>
+                                                <td class="alignLeft">
+                                                    {!line.Description__c}
+                                                </td>
+                                                <td class="alignLeft">
+                                                    {!line.BOL_Manifest__c}
+                                                </td>
+                                                <td class="alignCenter">
+                                                    {!line.Qty_to_Display__c}
+                                                </td>
+                                                <td class="alignLeft">
+                                                    <apex:outputField value="{!line.Unit_of_Measure__r.Name}" rendered="{!line.Cost_Method__c == null}" />
+                                                    <apex:outputField value="{!line.Container_Size__r.Name}" rendered="{!line.Cost_Method__c == 'Container'}" />
+                                                    <apex:outputField value="{!line.Unit_Weight_Vol__r.Name}" rendered="{!line.Cost_Method__c == 'Unit_Weight_Vol'}" />
+                                                </td>
+                                                <td class="alignRight">
+                                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                        <apex:param value="{!line.Unit_Price__c}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                                <td  width="10%" class="alignRight">
+                                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.JobTask.Billing_Type__c != 'Fixed Price'}">
+                                                        <apex:param value="{!line.Line_Amount__c}"/>
+                                                    </apex:outputText>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    <!--task totals-->
+                    <tr style="{!if(taskWrapper.Amount == 0, 'display:none;','')}">
+                        <td></td>
+                        <td style="padding-top:10px;padding-bottom:10px;">
+                            <!--ticket 19127-->
+                            <!--<apex:outputPanel rendered="{!invoiceWrapper.SalesInvoice.Misc_Invoice__c != true && (taskWrapper.JobTask.Billing_Type__c != 'Fixed Price' && invoiceWrapper.taskWrappers.size > 1)}">-->
+                            <apex:outputPanel rendered="{!invoiceWrapper.SalesInvoice.Misc_Invoice__c != true && invoiceWrapper.taskWrappers.size > 1}">
+                                <!--ticket 19127-->
+                                <table class="fs9" cellspacing="0" cellpadding="0" align="right" style="page-break-inside: avoid;">
+                                    <tr>
+                                        <td class="alignRight">
+                                            Amount:
+                                        </td>
+                                        <td class="alignRight" style="padding-left: 25px;">
+                                            <apex:outputText value="{0, Number, $#,##0.00}" >
+                                                <apex:param value="{!taskWrapper.Amount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="alignRight">
+                                            Tax:
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $#,##0.00}" >
+                                                <apex:param value="{!taskWrapper.Tax}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{!invoiceWrapper.SalesInvoice.Surcharge_Type__c}:" rendered="{!taskWrapper.SurchargeAmount != 0}" />
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!taskWrapper.SurchargeAmount != 0}">
+                                                <apex:param value="{!taskWrapper.SurchargeAmount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="alignRight">
+                                            Subtotal:
+                                        </td>
+                                        <td class="alignRight">
+                                            <apex:outputText value="{0, Number, $#,##0.00}">
+                                                <apex:param value="{!taskWrapper.Amount + taskWrapper.Tax + taskWrapper.SurchargeAmount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel>
+                            <!--ticket 19127-->
+                            <!--
+                            <apex:outputPanel rendered="{!invoiceWrapper.SalesInvoice.Misc_Invoice__c != true && taskWrapper.JobTask.Billing_Type__c == 'Fixed Price' && invoiceWrapper.taskWrappers.size > 1 && InvoiceType != 'TM Summary'}">
+                                <table class="fs9" cellspacing="0" cellpadding="0" align="right">
+                                    <tr>
+                                        <td class="alignRight" style="border-bottom: black solid 0.5px;">
+                                            <apex:outputText value="{0, Number, $#,##0.00}" >
+                                                <apex:param value="{!taskWrapper.Amount}"/>
+                                            </apex:outputText>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel>
+                            -->
+                            <!--ticket 19127-->
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </table>
+        </div>
+        <!-- invoice totals -->
+        <div class="w100 mt50">
+            <table class="w100 fs9" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;page-break-before:auto;">
+                <tr>
+                    <td class="valignBottom" width="70%">
+                        <div style="border: black solid 1px; margin: 2px; max-width: 400px;">
+                            Note: <br />
+                            <apex:outputText value="{!SUBSTITUTE(JSENCODE(invoiceWrapper.SalesInvoice.Invoice_Note__c),'\n','<br/>')}" escape="false"/>
+                        </div>
+                        <apex:outputPanel rendered="{!invoiceWrapper.SalesInvoice.Misc_Invoice__c != true}">
+                            TM No.: {!invoiceWrapper.TMNames}
+                        </apex:outputPanel>
+                    </td>
+                    <td width="30%" style="text-align: right;">
+                        <table class="w100" cellspacing="0" cellpadding="2">
+                            <tr>
+                                <td class="alignRight">
+                                    Net Billing Package:
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" >
+                                        <apex:param value="{!invoiceWrapper.Amount}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="alignRight">
+                                    Sales Tax:
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" >
+                                        <apex:param value="{!invoiceWrapper.Tax}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="alignRight">
+                                    <apex:outputText value="{!invoiceWrapper.SalesInvoice.Surcharge_Type__c}:" rendered="{!invoiceWrapper.SurchargeAmount != 0}" />
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!invoiceWrapper.SurchargeAmount != 0}">
+                                        <apex:param value="{!invoiceWrapper.SurchargeAmount}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="alignRight">
+                                    <apex:outputText value="Amount Due:" rendered="{!invoiceWrapper.RetainageAmount == 0}" />
+                                    <apex:outputText value="Invoice Total:" rendered="{!invoiceWrapper.RetainageAmount != 0}" />
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}">
+                                        <apex:param value="{!invoiceWrapper.Amount + invoiceWrapper.Tax + invoiceWrapper.SurchargeAmount}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="Retainage Amount" rendered="{!invoiceWrapper.RetainageAmount != 0}" />
+                                    <apex:outputText value="({0, Number,##0.00}%):" rendered="{!invoiceWrapper.RetainageAmount != 0}">
+                                        <apex:param value="{!invoiceWrapper.SalesInvoice.Retainage_Pct__c}"/>
+                                    </apex:outputText>
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!invoiceWrapper.RetainageAmount != 0}">
+                                        <apex:param value="{!invoiceWrapper.RetainageAmount}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="Amount Due:" rendered="{!invoiceWrapper.RetainageAmount != 0}" />
+                                </td>
+                                <td class="alignRight">
+                                    <apex:outputText value="{0, Number, $#,##0.00}" rendered="{!invoiceWrapper.RetainageAmount != 0}">
+                                        <apex:param value="{!invoiceWrapper.Amount + invoiceWrapper.SurchargeAmount - invoiceWrapper.RetainageAmount }"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </body>
+    </apex:repeat>
+</apex:page>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Carrier --></label>
+        <name>Carrier__c</name>
+        <picklistValues>
+            <masterLabel>ATT</masterLabel>
+            <translation><!-- ATT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BeeLine</masterLabel>
+            <translation><!-- BeeLine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CallOne</masterLabel>
+            <translation><!-- CallOne --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Comcast</masterLabel>
+            <translation><!-- Comcast --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cox Business</masterLabel>
+            <translation><!-- Cox Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FairPoint</masterLabel>
+            <translation><!-- FairPoint --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Frontier</masterLabel>
+            <translation><!-- Frontier --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lightpath</masterLabel>
+            <translation><!-- Lightpath --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Optimum</masterLabel>
+            <translation><!-- Optimum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Verizon</masterLabel>
+            <translation><!-- Verizon --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Zayo</masterLabel>
+            <translation><!-- Zayo --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

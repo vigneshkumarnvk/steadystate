@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Permitted Company --></label>
+        <name>Permitted_Company__c</name>
+        <picklistValues>
+            <masterLabel>ACV Environmental Svc</masterLabel>
+            <translation><!-- ACV Environmental Svc --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Allstate Power Vac</masterLabel>
+            <translation><!-- Allstate Power Vac --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Clean Venture</masterLabel>
+            <translation><!-- Clean Venture --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cycle Chem</masterLabel>
+            <translation><!-- Cycle Chem --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Envirotech</masterLabel>
+            <translation><!-- Envirotech --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

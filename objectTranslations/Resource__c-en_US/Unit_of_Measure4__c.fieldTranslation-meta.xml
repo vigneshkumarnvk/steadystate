@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Unit of Measure4 --></label>
+        <name>Unit_of_Measure4__c</name>
+        <relationshipLabel><!-- Resources (Unit of Measure4) --></relationshipLabel>
+    </CustomFieldTranslation>

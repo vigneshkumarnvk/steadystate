@@ -1,0 +1,61 @@
+<apex:page id="RefreshTimesheetConfirmation" standardController="Timesheet__c" recordSetVar="" extensions="TimesheetController">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Refresh Timesheet" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection id="thePageBlockSection" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Service Center:</apex:outputPanel>
+                    <apex:inputField label="Service Center:" value="{!theUser.Service_Center__c}">
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:inputField id="theWeekNo" value="{!theTS.Week_No__c}">
+                    <apex:actionSupport event="onchange" action="{!validateWeekNo}"
+                                        reRender="thePageBlockSection" status="loadingstatus"/>
+                </apex:inputField>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week Start Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekStartingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekStartingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week End Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekEndingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekEndingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theOpenTimesheetBlock" collapsible="true" title="Open Timesheet">
+                <apex:pageBlockTable id="theOpenTimesheetTable" value="{!timesheets}" var="ts">
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Name.Label}">
+                        <apex:outputLink value="/apex/Timesheet?Id={!ts.Id}" target="_blank">{!ts.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Employee_No__c.Label}">
+                        <apex:outputField value="{!ts.Employee_No__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Resource_Name__c.Label}">
+                        <apex:outputField value="{!ts.Resource_Name__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Total_Hours_Submitted__c.Label}">
+                        <apex:outputField value="{!ts.Total_Hours_Submitted__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Status__c.Label}">
+                        <apex:outputField value="{!ts.Status__c}" />
+                    </apex:column>
+                    <apex:column headerValue="Reopen Reason">
+                        <apex:outputText value="{!ts.Status_Message__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons >
+                <!--<apex:commandButton value="Create Payroll" rendered="{!!payrollCreated}" action="{!CreatePayroll}" reRender="thePageBlock" status="loadingstatus"/>-->
+                <apex:commandButton value="Refresh Timesheets" action="{!refreshTimesheets}" reRender="thePageBlock" status="loadingstatus" />
+                <!--<apex:commandButton value="Return" action="{!returnToPayrollList}"/>-->
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

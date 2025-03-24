@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bid_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Bid Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>RSES Atlantic Bid</fullName>
+                <default>false</default>
+                <label>RSES Atlantic Bid</label>
+            </value>
+            <value>
+                <fullName>RSES National Bid</fullName>
+                <default>false</default>
+                <label>RSES National Bid</label>
+            </value>
+            <value>
+                <fullName>RSES Pacific Bid</fullName>
+                <default>false</default>
+                <label>RSES Pacific Bid</label>
+            </value>
+            <value>
+                <fullName>RSES Central Bid</fullName>
+                <default>false</default>
+                <label>RSES Central Bid</label>
+            </value>
+            <value>
+                <fullName>RSES Gulf Bid</fullName>
+                <default>false</default>
+                <label>RSES Gulf Bid</label>
+            </value>
+            <value>
+                <fullName>Onsite Services</fullName>
+                <default>false</default>
+                <label>Onsite Services</label>
+            </value>
+            <value>
+                <fullName>Total Waste Management</fullName>
+                <default>false</default>
+                <label>Total Waste Management</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

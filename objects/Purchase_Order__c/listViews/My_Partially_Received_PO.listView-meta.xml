@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Partially_Received_PO</fullName>
+    <columns>NAME</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Received_Qty__c</columns>
+    <columns>Received_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>equals</operation>
+        <value>Partially Received</value>
+    </filters>
+    <label>My Partially Received PO</label>
+</ListView>

@@ -1,0 +1,15 @@
+<apex:page standardController="Purchase_Receipt__c" extensions="PurchaseReceiptController">
+    <apex:sectionHeader title="Clone Purchase Receipt" subtitle="{!title}?"/>
+    <apex:form id="theForm">                                  
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>         
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Clone Purchase Receipt" action="{!clonePR}"/>                            
+                <apex:commandButton value="Return to Purchase Receipt" action="{!returnBack}"/>                
+            </apex:pageBlockButtons>  
+        </apex:pageBlock>          
+    </apex:form>  
+</apex:page>

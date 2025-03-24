@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AP_Inquiries</fullName>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>AP_Category__c</columns>
+    <columns>AP_Assigned_To__c</columns>
+    <columns>NAME</columns>
+    <columns>CASES.SUBJECT</columns>
+    <columns>CASES.STATUS</columns>
+    <columns>CASES.CREATED_DATE_DATE_ONLY</columns>
+    <columns>CASES.PRIORITY</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <filterScope>Queue</filterScope>
+    <filters>
+        <field>AP_Assigned_To__c</field>
+        <operation>contains</operation>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>equals</operation>
+        <value>New,Open,In Progress,In Transit,Need Approval,On Hold,Escalated</value>
+    </filters>
+    <label>AP Inquiries</label>
+    <queue>AP_Inquiries</queue>
+</ListView>

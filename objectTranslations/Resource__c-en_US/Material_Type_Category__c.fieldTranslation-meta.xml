@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Material Type Category --></label>
+        <name>Material_Type_Category__c</name>
+        <picklistValues>
+            <masterLabel>Absorbent</masterLabel>
+            <translation><!-- Absorbent --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Absorbent Boom</masterLabel>
+            <translation><!-- Absorbent Boom --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Absorbent Materials</masterLabel>
+            <translation><!-- Absorbent Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Air Bottles</masterLabel>
+            <translation><!-- Air Bottles --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bio Haz</masterLabel>
+            <translation><!-- Bio Haz --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bio Haz Liner</masterLabel>
+            <translation><!-- Bio Haz Liner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Blaster Materials</masterLabel>
+            <translation><!-- Blaster Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CUYD Box</masterLabel>
+            <translation><!-- CUYD Box --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DOT Shipping Containers</masterLabel>
+            <translation><!-- DOT Shipping Containers --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Degreaser/Disinfectant</masterLabel>
+            <translation><!-- Degreaser/Disinfectant --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Degreasers &amp; Neutralizing Agents</masterLabel>
+            <translation><!-- Degreasers &amp; Neutralizing Agents --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Draeger Materials</masterLabel>
+            <translation><!-- Draeger Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Drum Accessories</masterLabel>
+            <translation><!-- Drum Accessories --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dry Ice</masterLabel>
+            <translation><!-- Dry Ice --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dump Trailer Liner</masterLabel>
+            <translation><!-- Dump Trailer Liner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dump Truck Tarp</masterLabel>
+            <translation><!-- Dump Truck Tarp --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FBIN Liner</masterLabel>
+            <translation><!-- FBIN Liner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Testing Materials</masterLabel>
+            <translation><!-- Field Testing Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fill</masterLabel>
+            <translation><!-- Fill --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Filter Liner</masterLabel>
+            <translation><!-- Filter Liner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Filter Media</masterLabel>
+            <translation><!-- Filter Media --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Filtration Media</masterLabel>
+            <translation><!-- Filtration Media --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HEPA Filter</masterLabel>
+            <translation><!-- HEPA Filter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hand Tool/Construction Accessories</masterLabel>
+            <translation><!-- Hand Tool/Construction Accessories --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hand Tools</masterLabel>
+            <translation><!-- Hand Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health &amp; Safety</masterLabel>
+            <translation><!-- Health &amp; Safety --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hoses/Pipe</masterLabel>
+            <translation><!-- Hoses/Pipe --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine</masterLabel>
+            <translation><!-- Marine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine Equipment</masterLabel>
+            <translation><!-- Marine Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine PPE</masterLabel>
+            <translation><!-- Marine PPE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mercury Filter</masterLabel>
+            <translation><!-- Mercury Filter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Miscellaneous</masterLabel>
+            <translation><!-- Miscellaneous --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Neutralizer</masterLabel>
+            <translation><!-- Neutralizer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PPE</masterLabel>
+            <translation><!-- PPE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pipe</masterLabel>
+            <translation><!-- Pipe --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pipe Fitiings</masterLabel>
+            <translation><!-- Pipe Fitiings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pump Hose</masterLabel>
+            <translation><!-- Pump Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rags</masterLabel>
+            <translation><!-- Rags --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Respirator</masterLabel>
+            <translation><!-- Respirator --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Respirator Materials</masterLabel>
+            <translation><!-- Respirator Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rolloff Materials</masterLabel>
+            <translation><!-- Rolloff Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rope</masterLabel>
+            <translation><!-- Rope --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sampling And Lab Supplies</masterLabel>
+            <translation><!-- Sampling And Lab Supplies --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sampling Materials</masterLabel>
+            <translation><!-- Sampling Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Saw Blades</masterLabel>
+            <translation><!-- Saw Blades --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Specialty Equipment</masterLabel>
+            <translation><!-- Specialty Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tape</masterLabel>
+            <translation><!-- Tape --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tolls</masterLabel>
+            <translation><!-- Tolls --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacbox Liner</masterLabel>
+            <translation><!-- Vacbox Liner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vactor Hose</masterLabel>
+            <translation><!-- Vactor Hose --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Waste Disposal</masterLabel>
+            <translation><!-- Waste Disposal --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

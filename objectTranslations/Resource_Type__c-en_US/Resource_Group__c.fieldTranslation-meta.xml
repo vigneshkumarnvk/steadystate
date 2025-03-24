@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Resource Group --></label>
+        <name>Resource_Group__c</name>
+        <picklistValues>
+            <masterLabel>Absorbent Materials</masterLabel>
+            <translation><!-- Absorbent Materials --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DOT Shipping Containers</masterLabel>
+            <translation><!-- DOT Shipping Containers --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Degreasers &amp; Neutralizing Agents</masterLabel>
+            <translation><!-- Degreasers &amp; Neutralizing Agents --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Analytical</masterLabel>
+            <translation><!-- Field Analytical --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Field Personnel</masterLabel>
+            <translation><!-- Field Personnel --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hand Tool/Construction Accessories</masterLabel>
+            <translation><!-- Hand Tool/Construction Accessories --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health &amp; Safety</masterLabel>
+            <translation><!-- Health &amp; Safety --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Heavy Duty Trucks</masterLabel>
+            <translation><!-- Heavy Duty Trucks --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hoses/Pipe</masterLabel>
+            <translation><!-- Hoses/Pipe --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Light Duty Truck/Response Equipment</masterLabel>
+            <translation><!-- Light Duty Truck/Response Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marine Equipment</masterLabel>
+            <translation><!-- Marine Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Miscellaneous</masterLabel>
+            <translation><!-- Miscellaneous --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Per Diem</masterLabel>
+            <translation><!-- Per Diem --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Power Tools</masterLabel>
+            <translation><!-- Power Tools --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pressure Washing Equipment</masterLabel>
+            <translation><!-- Pressure Washing Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pumping</masterLabel>
+            <translation><!-- Pumping --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sampling And Lab Supplies</masterLabel>
+            <translation><!-- Sampling And Lab Supplies --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Site Support</masterLabel>
+            <translation><!-- Site Support --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Specialty Equipment</masterLabel>
+            <translation><!-- Specialty Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yellow Iron</masterLabel>
+            <translation><!-- Yellow Iron --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

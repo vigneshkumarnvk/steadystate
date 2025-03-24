@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoice_Backup_Documents__c</fullName>
+    <externalId>false</externalId>
+    <label>Invoice Backup Documents</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>INVOICE</fullName>
+                <default>false</default>
+                <label>Invoice</label>
+            </value>
+            <value>
+                <fullName>MANIFEST_WEIGHT_TICKET</fullName>
+                <default>false</default>
+                <label>Disposal Manifest/Weight Ticket</label>
+            </value>
+            <value>
+                <fullName>TM</fullName>
+                <default>false</default>
+                <label>T&amp;M</label>
+            </value>
+            <value>
+                <fullName>CERTIFIED_PAYROLL</fullName>
+                <default>false</default>
+                <label>Certified Payroll</label>
+            </value>
+            <value>
+                <fullName>SPILL_REPORT_WITH_PICTURES</fullName>
+                <default>false</default>
+                <label>Spill Report w/ Pictures</label>
+            </value>
+            <value>
+                <fullName>MARK_UP_VENDOR_INVOICE_OR_RECEIPT</fullName>
+                <default>false</default>
+                <label>Mark-Up Vendor Invoice/Receipt</label>
+            </value>
+            <value>
+                <fullName>CUSTOMER_SPECIFIC_DOCUMENTATION</fullName>
+                <default>false</default>
+                <label>Customer Specific Documentation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

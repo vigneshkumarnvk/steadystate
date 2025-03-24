@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Allow Zero Unit Cost at T&amp;M Confirmation --></label>
+        <name>Allow_Zero_Unit_Cost_at_TM_Confirmation__c</name>
+    </CustomFieldTranslation>

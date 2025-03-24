@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X15_Purch_POs</fullName>
+    <columns>NAME</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Approved_Amount__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>contains</operation>
+        <value>15-IT</value>
+    </filters>
+    <label>15-Purch POs</label>
+</ListView>

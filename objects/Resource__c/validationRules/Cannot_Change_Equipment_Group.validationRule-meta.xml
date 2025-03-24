@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_Equipment_Group</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISCHANGED(Equipment_Group__c),AND($Profile.Name != 'System Administrator', $Profile.Name != 'Purchase Order + Vehicle/Permit'))</errorConditionFormula>
+    <errorDisplayField>Equipment_Group__c</errorDisplayField>
+    <errorMessage>You do not have sufficient privileges to change Equipment Group.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Invoice Format --></label>
+        <name>Invoice_Format__c</name>
+        <picklistValues>
+            <masterLabel>By Date by Category</masterLabel>
+            <translation><!-- By Date by Category --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Detail</masterLabel>
+            <translation><!-- Detail --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Summary</masterLabel>
+            <translation><!-- Summary --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

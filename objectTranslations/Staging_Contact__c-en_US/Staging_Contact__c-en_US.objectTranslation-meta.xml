@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Staging Contact</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Staging Contacts</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <layouts>
+        <layout>Staging Contact Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Import_Contacts --></label>
+        <name>Import_Contacts</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_Contact_Update_Request_Emails --></label>
+        <name>Send_Contact_Update_Request_Emails</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Sync_Contact --></label>
+        <name>Sync_Contact</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Sync_Contacts --></label>
+        <name>Sync_Contacts</name>
+    </webLinks>
+</CustomObjectTranslation>

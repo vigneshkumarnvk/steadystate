@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Time_Type_Code__c</fullName>
+    <externalId>false</externalId>
+    <label>Time Type Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Time_Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Time_Rate_Code</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>Job Time</controllingFieldValue>
+            <controllingFieldValue>Travel Time</controllingFieldValue>
+            <controllingFieldValue>Prevailing Wage</controllingFieldValue>
+            <controllingFieldValue>Shop Time</controllingFieldValue>
+            <valueName>DBT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Job Time</controllingFieldValue>
+            <controllingFieldValue>Travel Time</controllingFieldValue>
+            <controllingFieldValue>Prevailing Wage</controllingFieldValue>
+            <controllingFieldValue>Shop Time</controllingFieldValue>
+            <valueName>O/T</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Job Time</controllingFieldValue>
+            <controllingFieldValue>Travel Time</controllingFieldValue>
+            <controllingFieldValue>Prevailing Wage</controllingFieldValue>
+            <controllingFieldValue>Shop Time</controllingFieldValue>
+            <valueName>REG</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Travel Time</controllingFieldValue>
+            <valueName>UTRV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PTO</controllingFieldValue>
+            <valueName>PTO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Shop Time</controllingFieldValue>
+            <valueName>SHP</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>BP</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>MLS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>PDL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>SPA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>STB</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Flat Pay</controllingFieldValue>
+            <valueName>TRP</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <valueName>BER</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <valueName>HOL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <valueName>JUR</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Vendor Account --></label>
+        <name>Buy_from_Vendor__c</name>
+        <relationshipLabel><!-- Purchase Orders (Buy-from Vendor) --></relationshipLabel>
+    </CustomFieldTranslation>

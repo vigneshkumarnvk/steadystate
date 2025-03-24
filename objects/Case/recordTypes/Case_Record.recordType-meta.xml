@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Case_Record</fullName>
+    <active>true</active>
+    <businessProcess>Cases</businessProcess>
+    <compactLayoutAssignment>IT_Support</compactLayoutAssignment>
+    <label>Salesforce Support</label>
+    <picklistValues>
+        <picklist>AP_Assigned_To__c</picklist>
+        <values>
+            <fullName>Louis Galasso</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tami Sitman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Vipin Chackonal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>AP_Category__c</picklist>
+        <values>
+            <fullName>Payment Inquiry</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Category__c</picklist>
+        <values>
+            <fullName>General</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Junk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Network</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Software</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Certificate_of_Insurance__c</picklist>
+        <values>
+            <fullName>NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>IT_Support_Tier__c</picklist>
+        <values>
+            <fullName>Tier 1 %2830 minutes%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 2 %28Research Phase%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tier 3 %28Higher Level Support%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LabpackQuote__c</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote Requested</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Received%2FIn Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Requires Additional Info</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Labpack_Assigned__c</picklist>
+        <values>
+            <fullName>SC73 - Dan Valentine</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SC74 - Joe Peifer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SC75 - Joe Peifer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SC77 - Noah Scudere-Weiss</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Origin</picklist>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email-SF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason</picklist>
+        <values>
+            <fullName>Change Workflow Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Create User</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>EQAI-WO Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Login Issues</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MDN</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Report%2FDashboard</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sync Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Training</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Update%2FCreate Data</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Error</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Subcategory__c</picklist>
+        <values>
+            <fullName>Account Ownership</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Approval Tree</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Assets</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Billing Rule</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Compliance Tasks</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contract Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Contracts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coupa Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Customer Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email Alerts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Equipment Resources</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Job Task Templates</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Labor Resources</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Leads</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MDN Regression</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Material Resources</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Move SO%2FT%26M</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Onboarding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Opportunities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pay Rule</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Price%2FCost</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>QtC Batch Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>QtC Modification</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rate Sheets</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Remove Surcharge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ring DNA Sequences</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales Order Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Subcategory</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User Permissions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waste Resources</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Feature Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Question</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>W9__c</picklist>
+        <values>
+            <fullName>Attached</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Requested</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

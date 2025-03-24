@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NJ_Pay_Rules</fullName>
+    <columns>CSID__c</columns>
+    <columns>NAME</columns>
+    <columns>Pay_Holiday__c</columns>
+    <columns>Pay_Travel_Time__c</columns>
+    <columns>Type__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>NAME</field>
+        <operation>startsWith</operation>
+        <value>PW-NJ</value>
+    </filters>
+    <filters>
+        <field>NAME</field>
+        <operation>contains</operation>
+        <value>H&amp;HWY,FAM</value>
+    </filters>
+    <label>NJ Pay Rules</label>
+</ListView>

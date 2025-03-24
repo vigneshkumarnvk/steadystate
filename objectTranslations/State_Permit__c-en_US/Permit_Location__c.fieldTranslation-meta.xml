@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Permit Location --></label>
+        <name>Permit_Location__c</name>
+        <picklistValues>
+            <masterLabel>Linden Branch</masterLabel>
+            <translation><!-- Linden Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MA Branch</masterLabel>
+            <translation><!-- MA Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NJ Branch</masterLabel>
+            <translation><!-- NJ Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>New York Branch</masterLabel>
+            <translation><!-- New York Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Northern PA</masterLabel>
+            <translation><!-- Northern PA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pennsylvania Branch</masterLabel>
+            <translation><!-- Pennsylvania Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Rahway Branch</masterLabel>
+            <translation><!-- Rahway Branch --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Transportation</masterLabel>
+            <translation><!-- Transportation --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

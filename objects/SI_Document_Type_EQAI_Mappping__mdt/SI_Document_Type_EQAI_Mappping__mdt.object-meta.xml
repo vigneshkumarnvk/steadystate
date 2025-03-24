@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Mapping Salesforce field values to EQAI Table-Field values.</description>
+    <label>SI Document Type EQAI Mappping</label>
+    <pluralLabel>SI Document Type EQAI Mapppings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

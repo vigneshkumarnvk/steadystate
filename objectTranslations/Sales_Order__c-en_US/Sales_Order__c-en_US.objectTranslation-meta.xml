@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Quote/Order</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Quotes/Orders</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- SalesOrderFieldSet --></label>
+        <name>SalesOrderFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Sales Order Layout</layout>
+        <sections>
+            <label><!-- Billing Information --></label>
+            <section>Billing Information</section>
+        </sections>
+        <sections>
+            <label><!-- Cost and Profit --></label>
+            <section>Cost and Profit</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Sales Quote Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Approval Information --></label>
+            <section>Approval Information</section>
+        </sections>
+        <sections>
+            <label><!-- Billing Information --></label>
+            <section>Billing Information</section>
+        </sections>
+        <sections>
+            <label><!-- Cost and Profit --></label>
+            <section>Cost and Profit</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+        <sections>
+            <label><!-- Surcharge Information --></label>
+            <section>Surcharge Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Sys Admin Sales Order Layout</layout>
+        <sections>
+            <label><!-- Approval Information --></label>
+            <section>Approval Information</section>
+        </sections>
+        <sections>
+            <label><!-- Billing Information --></label>
+            <section>Billing Information</section>
+        </sections>
+        <sections>
+            <label><!-- Cost and Profit --></label>
+            <section>Cost and Profit</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Job Information --></label>
+            <section>Job Information</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Sys Admin Sales Quote Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Approval Information --></label>
+            <section>Approval Information</section>
+        </sections>
+        <sections>
+            <label><!-- Billing Information --></label>
+            <section>Billing Information</section>
+        </sections>
+        <sections>
+            <label><!-- Cost and Profit --></label>
+            <section>Cost and Profit</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Site Information --></label>
+            <section>Site Information</section>
+        </sections>
+        <sections>
+            <label><!-- Surcharge Information --></label>
+            <section>Surcharge Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Approval Status --></label>
+        <name>Approval_Status</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Billing Info --></label>
+        <name>Billing_Info</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Clone --></label>
+        <name>CloneAura</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Create T&amp;M --></label>
+        <name>Create_TM</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Details --></label>
+        <name>Details</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Instructions --></label>
+        <name>Instructions</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Job Details --></label>
+        <name>Job_Details</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Details --></label>
+        <name>SO_Details</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- SPO Next Steps --></label>
+        <name>SPO_Next_Steps</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Site Info --></label>
+        <name>Site_Details</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- Site Information --></label>
+        <name>Site_information</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- System Details --></label>
+        <name>System_Details</name>
+    </quickActions>
+    <recordTypes>
+        <description><!-- Sales Order --></description>
+        <label><!-- Sales Order --></label>
+        <name>Sales_Order</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Sales Quote --></description>
+        <label><!-- Sales Quote --></label>
+        <name>Sales_Quote</name>
+    </recordTypes>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Customer does not have a account number. --></errorMessage>
+        <name>Customer_No_Cannot_be_blank</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Cannot create a Sales Order for an Inactive customer. --></errorMessage>
+        <name>Inactive_Customer</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Description must not exceed 50 chars. --></errorMessage>
+        <name>Order_Type_Description_Length</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You do not have sufficient privileges to create/edit --></errorMessage>
+        <name>Prevent_User_from_creating_SO</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Sales Order Type is Blocked. Please select an active sales order type --></errorMessage>
+        <name>Sales_Order_Type_Invalid</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You can only create a Sales Order for a Republic Services Subsidiary --></errorMessage>
+        <name>Subsidiary_Not_Valid</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Prevailing Wage Job must be checked when Certified PW Job is checked. --></errorMessage>
+        <name>Validate_Prevailing_Wage_Job</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Billing_Edit --></label>
+        <name>Billing_Edit</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Billing_Worksheet --></label>
+        <name>Billing_Worksheet</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Clone --></label>
+        <name>Clone</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Close --></label>
+        <name>Close</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Convert_Quote_to_Order --></label>
+        <name>Convert_Quote_to_Order</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Misc_Credit_Memo --></label>
+        <name>Create_Misc_Credit_Memo</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_T_M --></label>
+        <name>Create_T_M</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Edit_Classic --></label>
+        <name>Edit_Classic</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Email_Sales_Quote --></label>
+        <name>Email_Sales_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mark_Related_TMs_as_PW_Job --></label>
+        <name>Mark_Related_TMs_as_PW_Job</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Print_Sales_Quote --></label>
+        <name>Print_Sales_Quote</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Process_Signature --></label>
+        <name>Process_Signature</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Reopen --></label>
+        <name>Reopen</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Schedule_Days --></label>
+        <name>Schedule_Days</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Submit_for_Approval_vf --></label>
+        <name>Submit_for_Approval_vf</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Update_Pricing --></label>
+        <name>Update_Pricing</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Update_TM_Price --></label>
+        <name>Update_TM_Price</name>
+    </webLinks>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</CustomObjectTranslation>

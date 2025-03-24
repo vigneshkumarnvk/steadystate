@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Inter_Company_Resource__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND(ISNULL(Service_Center__c) == FALSE,AND(Service_Center__c != Sales_Invoice__r.Service_Center__c,Service_Center__r.Temporary__c != TRUE))</formula>
+    <label>Inter Company Resource</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

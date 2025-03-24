@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+        <picklistValues>
+            <masterLabel>Account Approved</masterLabel>
+            <translation><!-- Account Approved --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Approved</masterLabel>
+            <translation><!-- Approved --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Accounting Approval</masterLabel>
+            <translation><!-- Pending Accounting Approval --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pending Purchasing Approval</masterLabel>
+            <translation><!-- Pending Purchasing Approval --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Purchasing Approved</masterLabel>
+            <translation><!-- Purchasing Approved --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Subsidiary Company --></label>
+        <name>Subsidiary_Company__c</name>
+        <picklistValues>
+            <masterLabel>1-ACV ENVIRO</masterLabel>
+            <translation><!-- 1-ACV ENVIRO --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2-CYCLE CHEM., INC.</masterLabel>
+            <translation><!-- 2-CYCLE CHEM., INC. --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3-DEEP GREEN</masterLabel>
+            <translation><!-- 3-DEEP GREEN --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4-ENVIROTECH CONSULTANTS LLC</masterLabel>
+            <translation><!-- 4-ENVIROTECH CONSULTANTS LLC --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

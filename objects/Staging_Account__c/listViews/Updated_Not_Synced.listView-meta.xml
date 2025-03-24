@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Updated_Not_Synced</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Verify_Information__c</columns>
+    <columns>Last_Updated_By__c</columns>
+    <columns>Last_Updated_Date__c</columns>
+    <columns>Error_Text__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Is_Updated__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>Is_Synced__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>Pending Update from Customers</label>
+</ListView>

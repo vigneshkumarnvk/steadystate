@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tax_Jurisdiction__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Tax Jurisdiction</label>
+    <referenceTo>Tax_Jurisdiction__c</referenceTo>
+    <relationshipLabel>GL Entry Fix</relationshipLabel>
+    <relationshipName>GL_Entry_Fix</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

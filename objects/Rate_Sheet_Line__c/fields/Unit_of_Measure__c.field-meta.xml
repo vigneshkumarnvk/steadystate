@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_of_Measure__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Unit of Measure</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Unit_of_Measure__c.Blocked__c</field>
+            <operation>notEqual</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Unit_of_Measure__c</referenceTo>
+    <relationshipLabel>Rate Sheet Lines (Unit of Measure)</relationshipLabel>
+    <relationshipName>Rate_Sheet_Lines1</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

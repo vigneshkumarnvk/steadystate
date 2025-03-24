@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- D365 LOB --></label>
+        <name>D365_LOB__c</name>
+        <picklistValues>
+            <masterLabel>3010</masterLabel>
+            <translation><!-- 3010 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3020</masterLabel>
+            <translation><!-- 3020 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3030</masterLabel>
+            <translation><!-- 3030 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3040</masterLabel>
+            <translation><!-- 3040 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3060</masterLabel>
+            <translation><!-- 3060 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4000</masterLabel>
+            <translation><!-- 4000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4010</masterLabel>
+            <translation><!-- 4010 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5000</masterLabel>
+            <translation><!-- 5000 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5010</masterLabel>
+            <translation><!-- 5010 --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

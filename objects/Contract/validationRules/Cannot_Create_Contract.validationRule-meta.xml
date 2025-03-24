@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Create_Contract</fullName>
+    <active>true</active>
+    <description>Use this rule to deny contract creation for non-admin. Contract Manager</description>
+    <errorConditionFormula>AND(
+
+  OR(ISNEW() ,
+ ISCHANGED( Status )), 
+ $Profile.Id  &lt;&gt; "00ef4000000Dizy",
+ $User.Contract_Manager__c !=true
+
+
+)</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to create/edit a contract.</errorMessage>
+</ValidationRule>

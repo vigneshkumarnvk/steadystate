@@ -1,0 +1,54 @@
+<apex:page id="SalesInvoiceApprovalConfirmation" standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+    <!--
+        Ticket#16912
+            add approval comment
+        Ticket#21357
+            block approval process for invoice with blocked/inactive contact.
+    -->
+    <apex:sectionHeader title="Submit Record for Approval" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel rendered="{!isApproved != true && SI.Document_Status__c == 'Open' && SI.Contact__r.Blocked__c != true}">
+                Are you sure to submit record for approval?<br/>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isApproved == true}">
+                This record is already approved!
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!SI.Document_Status__c != 'Open'}">
+                You can only submit invoice with Open status for approval!
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!SI.Contact__r.Blocked__c == true}">
+                You cannot submit this record for approval because invoice contact has been blocked/inactive.
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1" rendered="{!isApproved != true && SI.Document_Status__c == 'Open' && SI.Contact__r.Blocked__c != true}" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Sales Invoice"/>
+                    <apex:outputField value="{!SI.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Customer"/>
+                    <apex:outputField value="{!SI.Bill_to_Customer__r.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Amount"/>
+                    <apex:outputField value="{!SI.Invoice_Amt_Incl_Tax__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Profit %"/>
+                    <apex:outputField value="{!SI.Invoice_Profit_prct__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Approval Comments" />
+                    <apex:inputTextarea value="{!approvalComment}" style="width:30%; height: 100px"/>
+                </apex:pageBlockSectionItem>                
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Submit for Approval" action="{!saveAndSubitForApproval}"
+                                    reRender="thePageBlock" status="loadingstatus" rendered="{!isApproved != true && SI.Document_Status__c == 'Open' && SI.Contact__r.Blocked__c != true}" />
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

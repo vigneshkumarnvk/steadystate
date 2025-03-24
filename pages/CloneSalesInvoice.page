@@ -1,0 +1,17 @@
+<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceController">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Clone Sales Invoice" subtitle="{!title}?"/>
+    <apex:form id="theForm">                                  
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <!--{!finishWOMessage}-->
+            </apex:outputPanel>           
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rerender="thePageBlock" value="Clone Sales Invoice" action="{!cloneSalesInvoice}"/>
+                <apex:commandButton value="Return to Invoice" action="{!returnBack}"/>                
+            </apex:pageBlockButtons>  
+        </apex:pageBlock>          
+    </apex:form>  
+</apex:page>

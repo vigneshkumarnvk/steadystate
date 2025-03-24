@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Custom_Compact_Layout</fullName>
+    <fields>Name</fields>
+    <fields>WAN_IP__c</fields>
+    <fields>Account_Number__c</fields>
+    <fields>Speed__c</fields>
+    <fields>Cost__c</fields>
+    <fields>LAN_IP__c</fields>
+    <label>Custom Compact Layout</label>
+</CompactLayout>

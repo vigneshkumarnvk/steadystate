@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Renewal_Request</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+
+Under_Review__c = true,
+
+ ISBLANK(Text(Renewal_Requested__c)) 
+
+
+
+)</errorConditionFormula>
+    <errorMessage>"Renewal Requested" cannot be blank when "Under Review" is checked</errorMessage>
+</ValidationRule>

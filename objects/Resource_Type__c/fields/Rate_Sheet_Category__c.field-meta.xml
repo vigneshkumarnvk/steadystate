@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rate_Sheet_Category__c</fullName>
+    <externalId>false</externalId>
+    <label>Rate Sheet Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>After Cooler</fullName>
+                <default>false</default>
+                <label>After Cooler</label>
+            </value>
+            <value>
+                <fullName>Berm</fullName>
+                <default>false</default>
+                <label>Berm</label>
+            </value>
+            <value>
+                <fullName>Blaster</fullName>
+                <default>false</default>
+                <label>Blaster</label>
+            </value>
+            <value>
+                <fullName>Blaster Accessories</fullName>
+                <default>false</default>
+                <label>Blaster Accessories</label>
+            </value>
+            <value>
+                <fullName>Boat</fullName>
+                <default>false</default>
+                <label>Boat</label>
+            </value>
+            <value>
+                <fullName>Bobcat</fullName>
+                <default>false</default>
+                <label>Bobcat</label>
+            </value>
+            <value>
+                <fullName>Bobcat/Skid Steer</fullName>
+                <default>false</default>
+                <label>Bobcat/Skid Steer</label>
+            </value>
+            <value>
+                <fullName>Bobcat/Skid Steer Attachment</fullName>
+                <default>false</default>
+                <label>Bobcat/Skid Steer Attachment</label>
+            </value>
+            <value>
+                <fullName>Compressor</fullName>
+                <default>false</default>
+                <label>Compressor</label>
+            </value>
+            <value>
+                <fullName>Containment Boom</fullName>
+                <default>false</default>
+                <label>Containment Boom</label>
+            </value>
+            <value>
+                <fullName>CSE</fullName>
+                <default>false</default>
+                <label>CSE</label>
+            </value>
+            <value>
+                <fullName>CSE Safety</fullName>
+                <default>false</default>
+                <label>CSE Safety</label>
+            </value>
+            <value>
+                <fullName>Cusco/Guzzler</fullName>
+                <default>false</default>
+                <label>Cusco/Guzzler</label>
+            </value>
+            <value>
+                <fullName>Dewatering Box</fullName>
+                <default>false</default>
+                <label>Dewatering Box</label>
+            </value>
+            <value>
+                <fullName>Dozer</fullName>
+                <default>false</default>
+                <label>Dozer</label>
+            </value>
+            <value>
+                <fullName>Draeger Equipment</fullName>
+                <default>false</default>
+                <label>Draeger Equipment</label>
+            </value>
+            <value>
+                <fullName>Drum Accessories</fullName>
+                <default>false</default>
+                <label>Drum Accessories</label>
+            </value>
+            <value>
+                <fullName>Drum Loader</fullName>
+                <default>false</default>
+                <label>Drum Loader</label>
+            </value>
+            <value>
+                <fullName>Dry Ice Blaster</fullName>
+                <default>false</default>
+                <label>Dry Ice Blaster</label>
+            </value>
+            <value>
+                <fullName>Dump Truck</fullName>
+                <default>false</default>
+                <label>Dump Truck</label>
+            </value>
+            <value>
+                <fullName>Dust Mask</fullName>
+                <default>false</default>
+                <label>Dust Mask</label>
+            </value>
+            <value>
+                <fullName>Electric Tools</fullName>
+                <default>false</default>
+                <label>Electric Tools</label>
+            </value>
+            <value>
+                <fullName>Excavator</fullName>
+                <default>false</default>
+                <label>Excavator</label>
+            </value>
+            <value>
+                <fullName>Excavator Attachment</fullName>
+                <default>false</default>
+                <label>Excavator Attachment</label>
+            </value>
+            <value>
+                <fullName>Field Sampling Equipment</fullName>
+                <default>false</default>
+                <label>Field Sampling Equipment</label>
+            </value>
+            <value>
+                <fullName>Field Testing Equipment</fullName>
+                <default>false</default>
+                <label>Field Testing Equipment</label>
+            </value>
+            <value>
+                <fullName>Filtration System</fullName>
+                <default>false</default>
+                <label>Filtration System</label>
+            </value>
+            <value>
+                <fullName>Fork Lift</fullName>
+                <default>false</default>
+                <label>Fork Lift</label>
+            </value>
+            <value>
+                <fullName>Forklift Attachment</fullName>
+                <default>false</default>
+                <label>Forklift Attachment</label>
+            </value>
+            <value>
+                <fullName>Frac Tank</fullName>
+                <default>false</default>
+                <label>Frac Tank</label>
+            </value>
+            <value>
+                <fullName>Generator</fullName>
+                <default>false</default>
+                <label>Generator</label>
+            </value>
+            <value>
+                <fullName>Hand Tools</fullName>
+                <default>false</default>
+                <label>Hand Tools</label>
+            </value>
+            <value>
+                <fullName>HEPA Vac</fullName>
+                <default>false</default>
+                <label>HEPA Vac</label>
+            </value>
+            <value>
+                <fullName>Hose</fullName>
+                <default>false</default>
+                <label>Hose</label>
+            </value>
+            <value>
+                <fullName>Hydrovac/Rodder</fullName>
+                <default>false</default>
+                <label>Hydrovac/Rodder</label>
+            </value>
+            <value>
+                <fullName>Intermodal</fullName>
+                <default>false</default>
+                <label>Intermodal</label>
+            </value>
+            <value>
+                <fullName>Labor</fullName>
+                <default>false</default>
+                <label>Labor</label>
+            </value>
+            <value>
+                <fullName>Loader</fullName>
+                <default>false</default>
+                <label>Loader</label>
+            </value>
+            <value>
+                <fullName>Loader Attachments</fullName>
+                <default>false</default>
+                <label>Loader Attachments</label>
+            </value>
+            <value>
+                <fullName>Marine</fullName>
+                <default>false</default>
+                <label>Marine</label>
+            </value>
+            <value>
+                <fullName>Marine PPE</fullName>
+                <default>false</default>
+                <label>Marine PPE</label>
+            </value>
+            <value>
+                <fullName>Mercury Vacuum</fullName>
+                <default>false</default>
+                <label>Mercury Vacuum</label>
+            </value>
+            <value>
+                <fullName>Meter</fullName>
+                <default>false</default>
+                <label>Meter</label>
+            </value>
+            <value>
+                <fullName>Mini Excavator</fullName>
+                <default>false</default>
+                <label>Mini Excavator</label>
+            </value>
+            <value>
+                <fullName>Mini Excavator Attachment</fullName>
+                <default>false</default>
+                <label>Mini Excavator Attachment</label>
+            </value>
+            <value>
+                <fullName>Pallet Jack</fullName>
+                <default>false</default>
+                <label>Pallet Jack</label>
+            </value>
+            <value>
+                <fullName>Pneumatic Tools</fullName>
+                <default>false</default>
+                <label>Pneumatic Tools</label>
+            </value>
+            <value>
+                <fullName>Power Tools</fullName>
+                <default>false</default>
+                <label>Power Tools</label>
+            </value>
+            <value>
+                <fullName>Pressure Washer</fullName>
+                <default>false</default>
+                <label>Pressure Washer</label>
+            </value>
+            <value>
+                <fullName>Pump</fullName>
+                <default>false</default>
+                <label>Pump</label>
+            </value>
+            <value>
+                <fullName>Pump Hose</fullName>
+                <default>false</default>
+                <label>Pump Hose</label>
+            </value>
+            <value>
+                <fullName>Respirator</fullName>
+                <default>false</default>
+                <label>Respirator</label>
+            </value>
+            <value>
+                <fullName>Rolloff Container</fullName>
+                <default>false</default>
+                <label>Rolloff Container</label>
+            </value>
+            <value>
+                <fullName>Rolloff Truck</fullName>
+                <default>false</default>
+                <label>Rolloff Truck</label>
+            </value>
+            <value>
+                <fullName>Sampling Equipment</fullName>
+                <default>false</default>
+                <label>Sampling Equipment</label>
+            </value>
+            <value>
+                <fullName>Sand Blaster</fullName>
+                <default>false</default>
+                <label>Sand Blaster</label>
+            </value>
+            <value>
+                <fullName>Saw</fullName>
+                <default>false</default>
+                <label>Saw</label>
+            </value>
+            <value>
+                <fullName>Sea Container</fullName>
+                <default>false</default>
+                <label>Sea Container</label>
+            </value>
+            <value>
+                <fullName>Site Support</fullName>
+                <default>false</default>
+                <label>Site Support</label>
+            </value>
+            <value>
+                <fullName>Skimmers</fullName>
+                <default>false</default>
+                <label>Skimmers</label>
+            </value>
+            <value>
+                <fullName>Supplied Air</fullName>
+                <default>false</default>
+                <label>Supplied Air</label>
+            </value>
+            <value>
+                <fullName>Tank</fullName>
+                <default>false</default>
+                <label>Tank</label>
+            </value>
+            <value>
+                <fullName>Tractor</fullName>
+                <default>false</default>
+                <label>Tractor</label>
+            </value>
+            <value>
+                <fullName>Trailer</fullName>
+                <default>false</default>
+                <label>Trailer</label>
+            </value>
+            <value>
+                <fullName>Transporter</fullName>
+                <default>false</default>
+                <label>Transporter</label>
+            </value>
+            <value>
+                <fullName>Vac Box</fullName>
+                <default>false</default>
+                <label>Vac Box</label>
+            </value>
+            <value>
+                <fullName>Vac Hose</fullName>
+                <default>false</default>
+                <label>Vac Hose</label>
+            </value>
+            <value>
+                <fullName>Vactor Hose</fullName>
+                <default>false</default>
+                <label>Vactor Hose</label>
+            </value>
+            <value>
+                <fullName>Vacuum Trailer</fullName>
+                <default>false</default>
+                <label>Vacuum Trailer</label>
+            </value>
+            <value>
+                <fullName>Vacuum Truck</fullName>
+                <default>false</default>
+                <label>Vacuum Truck</label>
+            </value>
+            <value>
+                <fullName>Vehicle</fullName>
+                <default>false</default>
+                <label>Vehicle</label>
+            </value>
+            <value>
+                <fullName>Yellow Iron</fullName>
+                <default>false</default>
+                <label>Yellow Iron</label>
+            </value>
+            <value>
+                <fullName>Field Analytical</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Field Analytical</label>
+            </value>
+            <value>
+                <fullName>Hand Tool/Construction Accessories</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Hand Tool/Construction Accessories</label>
+            </value>
+            <value>
+                <fullName>Health &amp; Safety</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Health &amp; Safety</label>
+            </value>
+            <value>
+                <fullName>Heavy Duty Trucks</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Heavy Duty Trucks</label>
+            </value>
+            <value>
+                <fullName>Hoses/Pipe</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Hoses/Pipe</label>
+            </value>
+            <value>
+                <fullName>Light Duty Truck/Response Equipment</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Light Duty Truck/Response Equipment</label>
+            </value>
+            <value>
+                <fullName>Marine Equipment</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Marine Equipment</label>
+            </value>
+            <value>
+                <fullName>Miscellaneous</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Miscellaneous</label>
+            </value>
+            <value>
+                <fullName>Pressure Washing Equipment</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pressure Washing Equipment</label>
+            </value>
+            <value>
+                <fullName>Pumping</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pumping</label>
+            </value>
+            <value>
+                <fullName>Specialty Equipment</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Specialty Equipment</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

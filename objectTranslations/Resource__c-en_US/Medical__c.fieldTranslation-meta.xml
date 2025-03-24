@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- ACV portion of premium paid for employee health insurance coverage (Medical, Dental and/or Vision) --></help>
+        <label><!-- Medical --></label>
+        <name>Medical__c</name>
+    </CustomFieldTranslation>

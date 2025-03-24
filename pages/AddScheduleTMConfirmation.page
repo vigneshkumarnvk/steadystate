@@ -1,0 +1,105 @@
+<apex:page controller="AddScheduleTMConfirmationController" id="thePage"
+           sidebar="false" lightningStyleSheets="true">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js"/>
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js"/>
+        <script>
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="{!IF(ActionType=='clone', 'Clone T&M', 'Schedule T&Ms')}"/>
+    <apex:form id="theForm">    
+        <c:LoadingStatus />                    
+        <apex:pageBlock id="thePageBlock" >
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable width="100%" columnClasses="fixedCol" value="{!theTMList}" var="line"
+                                     id="theTMTable" rendered="{!NOT(ISNULL(theTMList))}">
+                    <apex:column headerValue="No." >
+                        <apex:outputText value="{!line.Name}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Sales_Order__r.Name}" headerValue="Sales Order">
+                        <apex:outputField value="{!line.Sales_Order__r.Name}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Bill_to_Customer__r.Name}" headerValue="Bill-to Customer">
+                        <apex:outputField value="{!line.Bill_to_Customer__r.Name}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Desired_Scheduled_Date__c}" width="20%" headerValue="Desired Scheduled Date">
+                        <apex:outputField value="{!line.Desired_Scheduled_Date__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Site_Name__c}" headerValue="Site Name">
+                        <apex:outputField value="{!line.Site_Name__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Site_Street__c}" headerValue="Site Street">
+                        <apex:outputField value="{!line.Site_Street__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Site_City__c}" headerValue="Site City">
+                        <apex:outputField value="{!line.Site_City__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Site_State__c}" headerValue="Site State">
+                        <apex:outputField value="{!line.Site_State__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Site_Postal_Code__c}" headerValue="Site Postal Code">
+                        <apex:outputField value="{!line.Site_Postal_Code__c}"/>
+                    </apex:column>
+                    <apex:column title="{!line.Day_of_Job__c}" headerValue="Day of Job">
+                        <apex:outputField value="{!line.Day_of_Job__c}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection rendered="{!AND(SetStatusTo != 'Closed', SetStatusTo != 'Ready to Bill')}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Scheduled Date</apex:outputLabel>
+                    <apex:outputPanel layout="block" styleClass="requiredBlock requiredInput">
+                        <apex:outputPanel layout="block"/>
+                        <span class="inputputrequired"/>
+                        <apex:inputText value="{!scheduledDateValue}" id="scheduledDate" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection rendered="{!SetStatusTo == 'Closed'}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Note:</apex:outputLabel>
+                    <apex:outputPanel layout="block" styleClass="requiredBlock requiredInput">
+                        <apex:outputPanel layout="block"/>
+                        <span class="inputputrequired"/>
+                        <apex:inputText value="{!ClosingNote}" id="closingNote" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Schedule"
+                                    action="{!changeStatusToSchedule}"
+                                    reRender="thePageBlock"
+                                    status="loadingstatus"
+                                    rendered="{!AND(SetStatusTo != 'Closed', SetStatusTo != 'Ready to Bill', ActionType !='clone')}"/>
+
+                <apex:commandButton value="Close T&M" action="{!manuallyCloseTM}"
+                                    reRender="thePageBlock"
+                                    status="loadingstatus"
+                                    rendered="{!SetStatusTo == 'Closed'}"/>
+
+                <apex:commandButton value="Open T&M" action="{!openTM}"
+                                    reRender="thePageBlock"
+                                    status="loadingstatus"
+                                    rendered="{!SetStatusTo == 'Ready to Bill'}" />
+                <apex:commandButton value="Clone & Schedule T&M"
+                                    action="{!cloneAndScheduleTM}"
+                                    reRender="thePageBlock"
+                                    status="loadingstatus"
+                                    rendered="{!ActionType == 'clone'}"
+                                    />
+                <apex:commandButton value="Return" action="{!returnToOpenTMs}"/>                 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form> 
+    <script>
+        $(document).ready(function () {
+            $("[id$='scheduledDate']").datepicker({});
+        });
+        function setFocusOnLoad() {}
+    </script>
+</apex:page>

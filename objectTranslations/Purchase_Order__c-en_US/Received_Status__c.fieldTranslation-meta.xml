@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Received Status --></label>
+        <name>Received_Status__c</name>
+        <picklistValues>
+            <masterLabel>Fully Received</masterLabel>
+            <translation><!-- Fully Received --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partially Received</masterLabel>
+            <translation><!-- Partially Received --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

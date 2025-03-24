@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Misc. Charge Resource --></label>
+        <name>Misc_Charge_Resource__c</name>
+        <relationshipLabel><!-- Flat Rate Type --></relationshipLabel>
+    </CustomFieldTranslation>

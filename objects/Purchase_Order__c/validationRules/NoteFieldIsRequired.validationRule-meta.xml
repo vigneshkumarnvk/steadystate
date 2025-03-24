@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NoteFieldIsRequired</fullName>
+    <active>true</active>
+    <errorConditionFormula>LEN(Note__c) == 0</errorConditionFormula>
+    <errorMessage>Note field cannot be blank!</errorMessage>
+</ValidationRule>

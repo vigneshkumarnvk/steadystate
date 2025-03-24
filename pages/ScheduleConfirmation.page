@@ -1,0 +1,19 @@
+<apex:page standardController="TM__c" extensions="TMController">
+    <apex:sectionHeader title="Create TM" subtitle="{!title}?"/>    
+    <apex:form id="theForm">    
+        <c:LoadingStatus />                    
+        <apex:pageBlock id="thePageBlock" >
+            <!--<apex:actionFunction name="CreateTMfromSO" action="{!CreateTMfromSO}" immediate="true"
+                                 reRender="theForm" status="loadingstatus">
+            </apex:actionFunction>-->
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>        
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Schedule" reRender="thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!returnBack}"/>                 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>  
+</apex:page>

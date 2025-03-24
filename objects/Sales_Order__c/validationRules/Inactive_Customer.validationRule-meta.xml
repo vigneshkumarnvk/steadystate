@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Inactive_Customer</fullName>
+    <active>false</active>
+    <errorConditionFormula>TEXT( Bill_to_Customer_No__r.Customer_Status__c ) ="Inactive"
+
+&amp;&amp;
+
+ RecordTypeId = "012f4000000FaYE"</errorConditionFormula>
+    <errorMessage>Cannot create a Sales Order for an Inactive customer.</errorMessage>
+</ValidationRule>

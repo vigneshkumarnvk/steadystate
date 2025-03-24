@@ -1,0 +1,291 @@
+<apex:page standardController="Account" extensions="AccountController" Id="pg">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+        <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    </head>
+    
+    <script>
+
+        /////////////////NOT USED//////////////    
+        var newWin = null;
+
+        function SalesOrderTypelkup(targetID, targetNameId) {
+            var Sobj = 'Sales_Order_Type__c';
+            var fSet = 'SalesOrderTypeFieldSet';
+            var filter = '&LinkFieldName=Name&LookupType=ID&fltr1=true&fltr2=true&fltr3=true&fltr4=true&fltr5=true&fltr6=true&fltr7=true&ValidateFunction=SetSalesOrderType';
+            openLookupPopup(Sobj, fSet, targetID, targetNameId, filter);
+        }
+
+
+        function openLookupPopup(Sobject, fieldset, targetID, targetNameId, filter) {
+
+            var url = "/apex/CustomLookupPage?LookupObject=" + Sobject + "&FieldSetName=" + fieldset + "&ElementId=" + targetID + "&LookupNameId=" + targetNameId;
+
+            if (filter != '') url = url + filter;
+
+            newWin = window.open(url, 'Popup', 'height=500,width=1200,left=100,top=100,resizable=no,scrollbars=yes,toolbar=no,status=no');
+
+            if (window.focus) {
+                newWin.focus();
+            }
+            return false;
+
+        }
+
+        function closeLookupPopup(fieldName, newval, lineNo, hdnparname, runvld, func) {
+            var el = hdnparname + fieldName;
+            document.getElementById(el).value = newval;
+            if (func == 'SetSalesOrderType') SetSalesOrderType();
+            if (null != newWin) newWin.close(); //closing popup window
+
+        }
+        /////////////////NOT USED//////////////
+
+        $ = jQuery.noConflict();
+
+        $(document).ready(function () {
+            $("[id$='planWorkDay']").datepicker(
+                {
+                    defaultDate: "+1w",
+                    changeMonth: true,
+                    changeYear: true,
+                    numberOfMonths: 1,
+                    dateFormat: "mm/dd/yy",
+                    altFormat: "yy-mm-dd",
+                    showAnim: "slide",
+                    showOn: "button"
+                })
+        });
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theItem' || fieldName == 'theUOM' || fieldName == 'theLineServiceCenter'
+                || fieldName == 'theLineSalesOrder' || fieldName == 'targetNameWH' || fieldName == 'targetOwner' || fieldName == 'targetContract') {
+                if (fieldThatChanged.value.trim() == '') {
+                    var newFieldValue = '';
+                } else {
+                    var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+                }
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+            validateField(fieldName, newFieldValue, lineNo);
+        }  
+        // Ticket#13807 AES-394 >>
+        function showWarning(input) {
+            if(input.checked){
+                window.alert('You are creating an Emergency Sales Quote/Order for an unapproved Account. Please contact the Account Receivables Department');
+            }
+        }
+        // Ticket#13807 AES-394 <<
+
+    </script>
+    <apex:sectionHeader title="Create Sales Quote"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:actionFunction name="validateField" action="{!validateField}" immediate="true"
+                             reRender="thePLTable,PLTotal,message,message2,theOwner, theContract" status="loadingstatus"
+                             oncomplete="document.getElementById(focuselmnt).focus();">
+            <apex:param value="" name="fieldName"/>
+            <apex:param value="" name="newFieldValue"/>
+            <apex:param value="" name="lineNo"/>
+        </apex:actionFunction>      
+        <apex:actionFunction name="SetSalesOrderType" action="{!SetSalesOrderType}" rerender="theForm"
+                             status="loadingstatus"/>
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/>
+                    <br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <BR/>
+            <BR/>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1" id="pgscn">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Service Center</apex:outputLabel>
+                    <apex:inputField id="theServiceCenter" value="{!theUser.Service_Center__c}">
+                        <apex:actionSupport event="onchange" action="{!SetCompany}"
+                                            reRender="theCompany" status="loadingstatus"/>
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Company</apex:outputLabel>
+                    <apex:outputText id="theCompany" value="{!SCompany}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageblockSectionItem id="pgscnsotyp">
+                    <!--<apex:outputLabel >Sales Quote Type</apex:outputLabel>
+                    <apex:outputPanel id="theSOT">
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;" id="LPNL">
+                            <apex:inputText size="20" value="{!SalesOrderType}" id="targetNameWH" disabled="{false}"/>
+                            <apex:inputhidden value="{!SalesOrderTypeId}" id="targetIdWH"/>
+                            <a href="#"
+                               onclick="SalesOrderTypelkup('{!$Component.targetNameWH}','{!$Component.targetIdWH}'); return false"><img
+                                        src="{!URLFOR($Resource.GoldFinch, '/img/s.gif')}" class="lookupIcon"/></a>
+                        </apex:panelGrid>
+                    </apex:outputPanel>-->
+                    
+                    <apex:outputLabel >Sales Order Type</apex:outputLabel>
+                    <apex:outputPanel id="theSOT">                                                     
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;" id="LPNL">
+                                    <c:CustomLookup componentId="{!$Component.thePLTable}:targetNameWH"
+                                                    styleClass="input-lookup" style="width: 200px" useSOSL="false"
+                                                    minSearchLength="1"
+                                                    filterClause="Blocked__c = false"
+                                                    sObjectType="Sales_Order_Type__c"
+                                                    sObject="{!SOType}"
+                                                    sObjectField="Name"
+                                                    SObjectTypeSearch="Sales_Order_Type__c"
+                                                    secondaryDisplayField="Code__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Sales_Order_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="SalesOrderTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="Id"
+
+                                                    ValidateFunction="validateFieldInList"
+
+                                                    FilterName1="Blocked__c"
+                                                    FilterNameValue1="false"
+                                                    FilterOperation1="Blocked__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Blocked__c"
+                                                    FilterTypeValue1="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                        </apex:panelGrid>
+                    </apex:outputPanel>
+                </apex:pageblockSectionItem>
+                <apex:pageblockSectionItem id="pgchangeOwner">
+                    <apex:outputLabel >Owner</apex:outputLabel>
+                    <apex:outputPanel id="theOwner">
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;" id="LPNL1"> <!-- AES-404 -->
+                            <c:CustomLookup componentId="{!$Component.thePLTable}:targetOwner"
+                                            styleClass="input-lookup" style="width: 200px" useSOSL="false"
+                                            minSearchLength="1"
+                                            filterClause="IsActive=true"
+                                            sObjectType="User"
+                                            sObject="{!ownerUsr}"
+                                            sObjectField="Name"
+                                            SObjectTypeSearch="User"
+                                            secondaryDisplayField="LastName"
+                                            onchange="validateFieldInList(this);"
+                                            LookupObject="User"
+                                            LinkFieldName="Id"
+                                            FieldSetName="UserFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateFieldInList"
+
+                                            FilterName1="IsActive"
+                                            FilterNameValue1="true"
+                                            FilterOperation1="IsActive"
+                                            FilterOperationValue1="="
+                                            FilterType1="IsActive"
+                                            FilterTypeValue1="Boolean"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputPanel>
+                </apex:pageblockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Contract</apex:outputLabel>
+                    <apex:outputpanel id="theContract">
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                            <c:CustomLookup componentId="{!$Component.thePLTable}:targetContract"
+                                            styleClass="input-lookup"
+                                            style="width: 150px; height:18px;"
+                                            useSOSL="false"
+                                            minSearchLength="1"
+                                            sObjectType="Contract"
+                                            secondaryDisplayField=""
+                                            sObject="{!theContract}"
+                                            sObjectField="ContractNumber"
+                                            SObjectTypeSearch="Name"
+                                            onchange="validateFieldInList(this);"
+                                            LookupObject="Contract"
+                                            LinkFieldName="Id"
+                                            FieldSetName="ContractFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateFieldInList"
+
+                                            FilterName1Special="AccountId"
+                                            FilterNameValue1Special="{!Account.Id+','+Account.ParentId}"
+                                            FilterOperation1Special="AccountId"
+                                            FilterOperationValue1Special="="
+                                            FilterType1Special="AccountId"
+                                            FilterTypeValue1Special="string"
+
+                                            calledFrom="SalesOrder"
+                                            calledFor="ContractLookUp"
+                                            isSpecialScenario="true"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Pricing Group</apex:outputLabel>
+                    <apex:outputText id="theCompany" value="{!account.Pricing_Group__c}"/>
+                </apex:pageBlockSectionItem>
+                <!-- //Ticket#14268 -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Surcharge Type</apex:outputLabel>
+                    <apex:selectList id="theSurchargeType" value="{!surchargeType}" multiSelect="false" size="1">
+                        <apex:selectOptions value="{!items}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <!-- // Ticket#13807 AES-394 >> -->
+                <apex:pageBlockSectionItem rendered="{!ISBLANK(Account.AccountNumber) && Account.Emergency__c == false && Account.Type == 'Customer'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Emergency__c.Label}" />
+                    <apex:inputCheckbox id="isERCustomer" value="{!isERCustomer}" onChange="showWarning(this)" rendered="{!Account.Emergency__c == false}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!ISBLANK(Account.AccountNumber) && Account.Emergency__c == true && Account.Type == 'Customer'}">
+                    <apex:outputLabel value="{!$ObjectType.Account.fields.Emergency__c.Label}" />
+                    <apex:inputCheckbox id="isERCustomerTxt" value="{!isERCustomer}" rendered="{!Account.Emergency__c == true}" disabled="true" />
+                </apex:pageBlockSectionItem>
+                <!-- // Ticket#13807 AES-394 >> -->
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Create" action="{!CreateSQ}" reRender="thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

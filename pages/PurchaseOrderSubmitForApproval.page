@@ -1,0 +1,7 @@
+<!--
+ - Created by Steven on 3/6/2018.
+ -->
+
+<apex:page id="PurchaseOrderSubmitForApproval" standardController="Purchase_Order__c" extensions="PurchOrderController" action="{!submitForApproval}">
+
+</apex:page>

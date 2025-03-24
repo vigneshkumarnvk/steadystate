@@ -1,0 +1,27 @@
+<apex:page standardController="Contract_Request__c" lightningStylesheets="true"  >
+    <apex:form >
+        <apex:pageBlock title="New Contract Request">
+            <apex:pageBlockSection columns="1">
+              
+               
+                <apex:inputField value="{!Contract_Request__c.Account__c}"/>
+                <apex:inputField value="{!Contract_Request__c.Contract_Request_Reason__c}"/>
+                <apex:inputField value="{!Contract_Request__c.Contract_Type__c}"/>
+                <apex:inputField value="{!Contract_Request__c.Comments__c}"/>
+                <apex:inputField value="{!Contract_Request__c.Contract__c}"/>
+                
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+                <apex:commandButton action="{!cancel}" id="cancelButton" value="Cancel"/>
+            </apex:pageBlockButtons>
+            <font color="red">
+             <div> <B>**PLEASE UPLOAD ALL REQUIRED DOCUMENTS UPON SAVING**</B></div>
+            
+             
+        
+    </font>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

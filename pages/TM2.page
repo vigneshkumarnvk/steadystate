@@ -1,0 +1,454 @@
+<!-- <apex:page language="{!$CurrentPage.parameters.lang}" standardController="TM__c" extensions="TMController" id="thePage" -->
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="TM__c" id="thePage" sidebar="false">
+    <!--
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js">
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js">
+    </script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <head>
+        <style>
+
+            .tmLineWrap input[type="text"], .slds-scope input[type="text"] {
+                max-width: 100px;
+            }
+
+            body td.actionColumn:before, .slds-scope td.actionColumn:before {
+                display: none;
+            }
+
+            body .list .actionColumn, .slds-scope .list .actionColumn {
+                padding-left: 0px;
+            }
+
+            .tmLineWrap {
+                overflow: scroll;
+            }
+        </style>
+    </head>
+    <script>
+        $ = jQuery.noConflict();
+
+        $(document).ready(function () {
+            $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").sortable().on("sortstart", function (event, ui) {
+            }).on("sortstop", function (event, ui) {
+            }).on("sortchange", function (event, ui) {
+            }).on("sortupdate", function (event, ui) {
+                var elements = $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").find('tr').find('td').find('input');
+                var j = 0;
+                for (var i = 0; i < elements.length; i++) {
+                    if (elements[i].id.indexOf(":theLineNo") > 0) {
+                        j++;
+                        elements[i].value = j * 10;
+                    }
+                }
+            });
+
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            //$(".tmLineWrap").css("max-width", (screen.width-100));
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        function confirmCopyTime(lineType) {
+            var result = confirm("Are you sure to copy times to other T&M " + lineType + " lines?");
+            if (!result) {
+                return false;
+            }
+
+            return true;
+        }
+
+        var focuselmnt;
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theJobPosition' || fieldName == 'theServiceCenter' || fieldName == 'theEServiceCenter' || fieldName == 'theUOM' || fieldName == 'theMResource' ||
+                fieldName == 'theLResource' || fieldName == 'theEResource' || fieldName == 'theSResource' || fieldName == 'theFResource' || fieldName == 'theWResource' ||
+                fieldName == 'theDResource' || fieldName == 'theLUOM' || fieldName == 'theMUOM' || fieldName == 'theEUOM' || fieldName == 'theSUOM'
+                || fieldName == 'theFUOM' || fieldName == 'theWUOM' || fieldName == 'theDUOM' || fieldName == 'theLumpUOM' || fieldName == 'theMiscUOM' ||
+                fieldName == 'theEquipment' || fieldName == 'theLContractLine' || fieldName == 'theEContractLine' || fieldName == 'theMContractLine' ||
+                fieldName == 'theLumpSumResourceType' || fieldName == 'theLumpSumContractLine' || fieldName == 'theTaxArea') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else if (fieldName == 'theUsePremiumRate' || fieldName == 'theBillSiteTime' || fieldName == 'theLBillasLumpSum' || fieldName == 'theEBillasLumpSum') {
+                var newFieldValue = document.getElementById(elemenetIdForField).checked;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+            //alert (fieldName +"/" + newFieldValue + "/" + lineNo);
+            setFocusElement(fieldName, elemenetIdForField);
+            if(fieldName == 'theTaxArea') {
+                lineNo = -1;
+                validateTaxArea(fieldName, newFieldValue, lineNo);
+            } else {
+                validateField(fieldName, newFieldValue, lineNo);
+            }
+        }
+
+        function setFocusElement(fieldName, elemenetIdForField) {
+            switch (fieldName) {
+                case "theJobPosition":
+                    focuselmnt = elemenetIdForField.replace('theJobPosition', 'theLResource');
+                    break;
+                case "theLResource":
+                    focuselmnt = elemenetIdForField.replace('theLResource', 'theDescription');
+                    break;
+                case "theDescription":
+                    focuselmnt = elemenetIdForField.replace('theDescription', 'theJobStartTime');
+                    break;
+                case "theJobStartTime":
+                    focuselmnt = elemenetIdForField.replace('theJobStartTime', 'theSiteStartTime');
+                    break;
+                case "theSiteStartTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteStartTime', 'theSiteEndTime');
+                    break;
+                case "theSiteEndTime":
+                    focuselmnt = elemenetIdForField.replace('theSiteEndTime', 'theJobEndTime');
+                    break;
+                case "theJobEndTime":
+                    focuselmnt = elemenetIdForField.replace('theJobEndTime', 'theLunchStartTime');
+                    break;
+                case "theLunchStartTime":
+                    focuselmnt = elemenetIdForField.replace('theLunchStartTime', 'theLunchEndTime');
+                    break;
+                case "theLunchEndTime":
+                    focuselmnt = elemenetIdForField.replace('theLunchEndTime', 'theLunch');
+                    break;
+                case "theLunch":
+                    focuselmnt = elemenetIdForField.replace('theLunch', 'theBillSiteTime');
+                    break;
+            }
+        }
+
+        function setFocus() {
+            document.getElementById(focuselmnt).focus();
+        }
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function insertColon(ctrl, evt) {
+            var anc = ctrl;
+            //if(ctrl.value.length == 2 && evt.keyCode != 8) {
+            //    ctrl.value = ctrl.value + ':';
+            //}
+
+            if (ctrl.value.length >= 3 && ctrl.value.indexOf(':') < 0) {
+                switch(ctrl.value.length) {
+                    case 3:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+                        break;
+                    default:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, ctrl.value.length - 2);
+                        break;
+                }
+            }
+        }
+
+        function validateStartTime(ctrl) {
+            validateStartTime();
+        }
+
+        function setWidth() {
+            $(".tmLineWrap").css("max-width", (screen.width - 100));
+        }
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="T&M" subtitle="{!TM__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Quick Save" rendered="{!!afterInvoiced}" action="{!quicksave}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+            <apex:actionFunction name="validateField" action="{!validateField}" oncomplete="setWidth();setFocus();"
+                                 reRender="thePageBlock,theLaborSection, theMessage,theMessage2"
+                                 immediate="true" status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+            <apex:pageBlockSection title="TM Information" collapsible="true" id="thePageBlockSection">
+                <apex:outputField value="{!TM.Name}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection id="theLaborSection" columns="1" title="Labor Lines" collapsible="true">
+                <apex:pageMessages id="theMessage"></apex:pageMessages>
+                <apex:outputPanel styleClass="tmLineWrap" layout="block">
+                    <apex:pageBlockTable id="theTMLLaborTable" value="{!TMLListLabor}" var="line"
+                                         rendered="{!NOT(ISNULL(TMLListLabor))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" disabled="{!afterConfirmed}" onclick="if(!confirmDelete()){return false};"
+                                                oncomplete="setWidth();" action="{!deleteLine}"
+                                                reRender="theTMLLaborTable">
+                                <apex:param id="objectType" name="objectType" value="TMLine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Labor"/>
+                            </apex:commandButton>
+                            <apex:commandButton value="Copy Time" disabled="{!afterConfirmed}" onclick="if(!confirmCopyTime('Labor')){return false};"
+                                                oncomplete="setWidth();" action="{!copyTime}"
+                                                reRender="theTMLLaborTable, theMessage">
+                                <apex:param id="objectTypeCopy" name="objectType" value="TMLine"/>
+                                <apex:param id="displayIdCopy" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineTypeCopy" name="lineType" value="Labor"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Labor Type">
+                            <apex:outputpanel rendered="{!!afterConfirmed}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theJobPosition"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Resource_Type__c}" rendered="{!afterConfirmed}"/>
+                        </apex:column>
+                        <apex:column headerValue="SC">
+                            <apex:outputpanel rendered="{!!afterConfirmed}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theServiceCenter"
+                                                    styleClass="input-lookup"
+                                                    style="width: 50px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Service_Center__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Service_Center__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ServiceCenterFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Service_Center__c}" rendered="{!afterConfirmed}"/>
+                        </apex:column>
+                        <apex:column headerValue="Labor">
+                            <apex:outputpanel rendered="{!!afterConfirmed}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theTMLLaborTable}:theLResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    FilterName3="Resource_Type__c"
+                                                    FilterNameValue3="{!line.Resource_Type__c}"
+                                                    FilterOperation3="Resource_Type__c"
+                                                    FilterOperationValue3="="
+                                                    FilterType3="Resource_Type__c"
+                                                    FilterTypeValue3="String"
+
+                                                    FilterName4="Service_Center__c"
+                                                    FilterNameValue4="{!line.Service_Center__c}"
+                                                    FilterOperation4="Service_Center__c"
+                                                    FilterOperationValue4="="
+                                                    FilterType4="Service_Center__c"
+                                                    FilterTypeValue4="String"
+
+                                                    FilterName5="Status__c"
+                                                    FilterNameValue5="Active"
+                                                    FilterOperation5="Status__c"
+                                                    FilterOperationValue5="="
+                                                    FilterType5="Status__c"
+                                                    FilterTypeValue5="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Resource__c}" rendered="{!afterConfirmed}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="Labor Name">
+                            <apex:inputField id="theResourceName" value="{!line.Resource_Name__c}" rendered="{!line.Resource__r.Employee_No__c == null}"/>
+                            <apex:outputText value="{!line.Resource_Name__c}" rendered="{!line.Resource__r.Employee_No__c != null}" />
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Job_Start_Time__c.Label}">
+                            <apex:inputField id="theJobStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Site_Start_Time__c.Label}">
+                            <apex:inputField id="theSiteStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Site_End_Time__c.Label}">
+                            <apex:inputField id="theSiteEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Site_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Job_End_Time__c.Label}">
+                            <apex:inputField id="theJobEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Job_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_Start_Time__c.Label}">
+                            <apex:inputField id="theLunchStartTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Lunch_Start_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Lunch_End_Time__c.Label}">
+                            <apex:inputField id="theLunchEndTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Lunch_End_Time__c}"/>
+                        </apex:column>
+                        <apex:column rendered="{!!afterConfirmed}" headerValue="{!$ObjectType.TM_Line__c.fields.Lunch__c.Label}">
+                            <apex:inputField id="theLunch" value="{!line.Lunch__c}"
+                                             onchange="validateFieldInList(this);"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Total_Job_Hours__c.Label}">
+                            <apex:outputField id="theTotalJobHours" value="{!line.Total_Job_Hours__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Total_Site_Hours__c.Label}">
+                            <apex:outputField id="theTotalSiteHours" value="{!line.Total_Site_Hours__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.TM_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" disabled="{!afterConfirmed}" action="{!addLine}" oncomplete="setWidth();"
+                                    reRender="theLaborSection,theMessage">
+                    <apex:param name="ObjectType" value="TMLine"/>
+                    <apex:param name="LineCategory" value="Labor"/>
+                </apex:commandButton>
+            </apex:outputPanel>
+            <div style="clear:both;">
+
+            </div>
+            <script>
+                $(".tmLineWrap").css("max-width", (screen.width - 100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+    -->
+</apex:page>

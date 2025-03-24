@@ -1,0 +1,39 @@
+<apex:page standardController="Staging_Account__c" extensions="StagingAccountController" recordSetVar="" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="Import Salesforce Accounts"/>
+        <apex:pageMessages />        
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Import" action="{!ImportAccounts}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            
+            <apex:pageBlockSection columns="1" title="New Process Parameters">
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:inputCheckbox value="{!ResetLoginExpirationDate}"/>
+                    <apex:outputLabel >Reset expiration date - <ul><li>If checked, system will reset the login expiration date (5 days from today) for all customers, including the customers who have received the email from the last import. </li><li>If not checked, system will only create logins for the new Salesforce accounts that are created after the last import.</li></ul></apex:outputLabel>
+                </apex:pageBlockSectionItem>
+                -->
+                <apex:pageBlockSectionItem >
+                    <apex:inputCheckbox value="{!ResetUpdateRequestEmailSentFlag}"/>                
+                    <apex:outputLabel >Start a new process <ul><li>If checked, system will process all accounts.</li><li>If not checked, system will only process the new accounts that are created after the last import.</li></ul></apex:outputLabel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" title="Please note">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputLabel >
+                        <ul>
+                            <li>The import process runs in the background. You will receive an email confirmation after the import process completes importing the accounts.</li>
+                            <li>The import process prepares the staging accounts and the portal logins. It will NOT send the emails. </li>
+                            <li>You will send the emails using the Send Account Update Request Emails button from a staging accounts list view after the import process is completed.</li>
+                        </ul>
+                    </apex:outputLabel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Trade_Show</fullName>
+    <active>true</active>
+    <description>Require 'Trade Show' field when Lead Source is set to 'Trade Show'</description>
+    <errorConditionFormula>AND(
+				ISPICKVAL(LeadSource, "Trade Show"),
+				ISBLANK(Trade_Show__c)  
+)</errorConditionFormula>
+    <errorDisplayField>Trade_Show__c</errorDisplayField>
+    <errorMessage>Enter the name of the Trade Show you attended</errorMessage>
+</ValidationRule>

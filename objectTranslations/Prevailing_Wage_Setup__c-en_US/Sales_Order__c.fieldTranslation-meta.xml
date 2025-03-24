@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Sales Order --></label>
+        <lookupFilter>
+            <errorMessage><!-- Selected Sales Order is not a Prevailing Wage Sales Order! --></errorMessage>
+        </lookupFilter>
+        <name>Sales_Order__c</name>
+        <relationshipLabel><!-- Prevailing Wage Setups --></relationshipLabel>
+    </CustomFieldTranslation>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Product Catalog</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Product Catalogs</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <fieldSets>
+        <label><!-- PurchasePriceFieldSet --></label>
+        <name>PurchasePriceFieldSet</name>
+    </fieldSets>
+    <layouts>
+        <layout>Purchase Price Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- Create_PO --></label>
+        <name>Create_PO</name>
+    </webLinks>
+</CustomObjectTranslation>

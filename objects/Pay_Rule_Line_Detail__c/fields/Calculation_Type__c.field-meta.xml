@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Calculation_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Calculation Type</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Hour_Based</fullName>
+                <default>false</default>
+                <label>Hour_Based</label>
+            </value>
+            <value>
+                <fullName>Day_Based</fullName>
+                <default>false</default>
+                <label>Day_Based</label>
+            </value>
+            <value>
+                <fullName>Time_Based</fullName>
+                <default>false</default>
+                <label>Time_Based</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

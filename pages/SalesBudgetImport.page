@@ -1,0 +1,51 @@
+<apex:page standardController="Sales_Budget__c" extensions="SalesBudgetController" sidebar="true" recordSetVar="" lightningStylesheets="true">
+    <script language="javascript">
+        function confirmImport() {
+            var files = document.getElementsByClassName('inputFile');
+            if (!files[0].value) {
+                alert('You must choose a file.');
+                return false;
+            }
+            return true;
+        }   
+    </script>
+
+    <apex:form enctype="multipart/form-data">
+    <apex:sectionHeader title="Sales Budget Import"/>
+        <apex:pageMessages />  
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!Import}" value="Import" style="width:70px;" onclick="return confirmImport()"/>            
+                <apex:commandButton action="{!Cancel}" value="Cancel" style="width:70px;" immediate="true"/>            
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Year"/>
+                    <apex:selectList value="{!Year}" size="1" multiselect="false">
+                        <apex:selectOptions value="{!YearList}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Ignore Non-Existent Customers"/>
+                    <apex:inputCheckbox value="{!IgnoreBadCustomers}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="File"/>
+                    <apex:inputFile styleClass="inputFile" value="{!data}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+       </apex:pageBlock>
+       <apex:pageBlock title="Import Errors" rendered="{!ErrorCount > 0}"> 
+            <apex:pageBlockTable value="{!ErrorList}" var="err" >
+                <apex:column headerValue="Line Number" value="{!err.LineNumber}"/>
+                <apex:column headerValue="Error Description" value="{!err.ErrorMessage}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>            
+        <apex:pageBlock title="Invalid Customers" rendered="{!InvalidCustomerCount > 0}">
+             <apex:pageBlockTable value="{!InvalidCustomerList}" var="err" >
+                <apex:column headerValue="Line Number" value="{!err.LineNumber}"/>
+                <apex:column headerValue="Error Description" value="{!err.ErrorMessage}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>       
+    </apex:form>   
+</apex:page>

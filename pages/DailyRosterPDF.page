@@ -1,0 +1,296 @@
+<apex:page standardController="TM__c" extensions="TMController" action="{!selectTmList}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardStylesheets="false">
+    <head>
+        <style>
+            body, table, div {
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+            }
+
+            div.header {
+                display: block;
+                position: running(header);
+            }
+
+            @page {
+                margin-top: 2cm;
+                margin-bottom: 3cm;
+                size:landscape;
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+
+            .pagenumber:before { content: counter(page); }
+            .pagecount:before { content: counter(pages); }
+
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+
+            .ml5 {
+                margin-left: 5px;
+            }
+
+            .ml10 {
+                margin-left: 10px;
+            }
+
+            .ml15 {
+                margin-left: 15px;
+            }
+
+            .ml20 {
+                margin-left: 20px;
+            }
+
+            .ml25 {
+                margin-left: 25px;
+            }
+
+            .mr5 {
+                margin-right: 5px;
+            }
+
+            .mr10 {
+                margin-right: 10px;
+            }
+
+            .mr15 {
+                margin-right: 15px;
+            }
+
+            .mr20 {
+                margin-right: 20px;
+            }
+
+            .mr25 {
+                margin-right: 25px;
+            }
+
+            .mt5 {
+                margin-top: 5px;
+            }
+
+            .mt10 {
+                margin-top: 10px;
+            }
+
+            .mt15 {
+                margin-top: 15px;
+            }
+
+            .mt20 {
+                margin-top: 20px;
+            }
+
+            .mt25 {
+                margin-top: 25px;
+            }
+
+            .mt30 {
+                margin-top: 30px;
+            }
+
+            .w100 {
+                width: 100%;
+            }
+
+            .w50 {
+                width: 50%;
+            }
+
+            .noBorder {
+                border: none;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .i {
+                font-style: italic;
+            }
+
+            .u {
+                text-decoration: underline;
+            }
+
+            .border1 {
+                border: 1px solid black;
+            }
+
+            .alignCenter {
+                text-align: center;
+            }
+
+            .alignLeft {
+                text-align: left;
+            }
+
+            .alignRight {
+                text-align: right;
+            }
+
+            .valignTop {
+                vertical-align: top;
+            }
+
+            .valignBottom {
+                vertical-align: bottom;
+            }
+
+            .fs6 {
+                font-size: 6pt;
+            }
+
+            .fs7 {
+                font-size: 7pt;
+            }
+
+            .fs8 {
+                font-size: 8pt;
+            }
+
+            .fs9 {
+                font-size: 9pt;
+            }
+
+            .fs10 {
+                font-size: 10pt;
+            }
+
+            .fs11 {
+                font-size: 11pt;
+            }
+
+            .fs12 {
+                font-size: 12pt;
+            }
+
+            .fs14 {
+                font-size: 14pt;
+            }
+
+            .fs16 {
+                font-size: 16pt;
+            }
+
+            th, td{
+                vertical-align: top;
+                white-space:wrap;
+            }
+        </style>
+    </head>
+    <div class="header">
+        <table class="w100" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="65%" class="fs10 b">
+                    <div class="ml25">
+                        Daily Roster
+                    </div>
+                    <div class="mt5 ml25">
+                        Service Center {!theSCId}
+                    </div>
+                </td>
+                <td width="35%" class="alignCenter fs10 b valignTop">
+                    <div class="alignRight mr25">
+                        Page <span class="pagenumber"/> of <span class="pagecount"/>
+                    </div>
+                    <div class="mt5 alignRight mr25">
+                        <apex:outputText value="{0, date, full}">
+                            <apex:param value="{!dateScheduledDate}"/>
+                        </apex:outputText>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <div>
+        <table class="w100 fs9" border="1" cellspacing="0" cellpadding="2">
+            <tr>
+                <th>
+                    TM No.
+                </th>
+                <th>
+                    Bill-to Name
+                </th>
+                <th>
+                    Sales Order
+                </th>
+                <th>
+                    Site Name
+                </th>
+                <th>
+                    Site Address
+                </th>
+                <th>
+                    Labor
+                </th>
+                <th>
+                    Equipment
+                </th>
+                <th>
+                    TM Status
+                </th>
+                <th>
+                    Project Manager
+                </th>
+                <th>
+                    Start Time
+                </th>
+            </tr>
+            <apex:repeat value="{!theTMWrapList}" var="line">
+                <tr>
+                    <td>
+                        {!line.theTM.Name}
+                    </td>
+                    <td>
+                        {!line.theTM.Bill_to_Customer__r.Name}
+                    </td>
+                    <td>
+                        {!line.theTM.Sales_Order__r.Name}
+                    </td>
+                    <td>
+                        {!line.theTM.Site_Name__c}
+                    </td>
+                    <td>
+                        {!line.theTM.Site_Street__c},
+                        <div>
+                            {!line.theTM.Site_City__c},
+                        </div>
+                        <div>
+                            {!line.theTM.Site_State__c}, {!line.theTM.Site_Postal_Code__c}
+                        </div>
+                    </td>
+                    <td>
+                        <apex:outputPanel >
+                            <apex:dataTable value="{!line.labor}" var="v">
+                                <apex:column >{!v}</apex:column>
+                            </apex:dataTable>
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        <apex:outputPanel >
+                            <apex:dataTable value="{!line.equipment}" var="v">
+                                <apex:column >{!v}</apex:column>
+                            </apex:dataTable>
+                        </apex:outputPanel>
+                    </td>
+                    <td>
+                        {!line.theTM.Status__c}
+                    </td>
+                    <td>
+                        {!line.theTM.Project_Coordinator__r.Name}
+                    </td>
+                    <td>
+                        {!line.startTime}
+                    </td>
+                </tr>
+            </apex:repeat>
+        </table>
+    </div>
+</apex:page>

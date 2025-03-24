@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Fields_when_Cross_Sell</fullName>
+    <active>true</active>
+    <description>Require Cross Sell field to require when Lead Source is set to 'Cross Sell'</description>
+    <errorConditionFormula>AND(
+				ISPICKVAL(LeadSource, "Republic Services Referral"),
+				$RecordType.DeveloperName = "Sales",
+    OR(
+        ISPICKVAL(Referring_Vertical__c, ""),
+								ISBLANK(Republic_Rep_Name__c),
+        ISBLANK(Republic_Rep_Email__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>The Lead Source you have selected requires additional information in order to save</errorMessage>
+</ValidationRule>

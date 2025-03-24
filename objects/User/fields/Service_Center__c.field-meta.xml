@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Center__c</fullName>
+    <externalId>false</externalId>
+    <label>Service Center</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>02</fullName>
+                <default>false</default>
+                <label>SC02 Republic Services – Clayton</label>
+            </value>
+            <value>
+                <fullName>04</fullName>
+                <default>false</default>
+                <label>SC04 Republic Services – Baltimore</label>
+            </value>
+            <value>
+                <fullName>07</fullName>
+                <default>false</default>
+                <label>SC07 Republic Services – Norfolk</label>
+            </value>
+            <value>
+                <fullName>15</fullName>
+                <default>false</default>
+                <label>SC15 Republic Services – Avenel</label>
+            </value>
+            <value>
+                <fullName>16</fullName>
+                <default>false</default>
+                <label>SC16 Republic Services – Skowhegan</label>
+            </value>
+            <value>
+                <fullName>17</fullName>
+                <default>false</default>
+                <label>SC17 Republic Services – Middletown New York</label>
+            </value>
+            <value>
+                <fullName>19</fullName>
+                <default>false</default>
+                <label>SC19 Republic Services – Windsor Locks</label>
+            </value>
+            <value>
+                <fullName>20</fullName>
+                <default>false</default>
+                <label>SC20 Republic Services - Nashua</label>
+            </value>
+            <value>
+                <fullName>21</fullName>
+                <default>false</default>
+                <label>SC21 Republic Services – Bridgeport</label>
+            </value>
+            <value>
+                <fullName>22</fullName>
+                <default>false</default>
+                <label>SC22 Republic Services – Griffith</label>
+            </value>
+            <value>
+                <fullName>24</fullName>
+                <default>false</default>
+                <label>SC24 Republic Services – Pulaski</label>
+            </value>
+            <value>
+                <fullName>25</fullName>
+                <default>false</default>
+                <label>SC25 Republic Services – Lewisberry</label>
+            </value>
+            <value>
+                <fullName>27</fullName>
+                <default>false</default>
+                <label>SC27 Republic Services – Albany</label>
+            </value>
+            <value>
+                <fullName>28</fullName>
+                <default>false</default>
+                <label>SC28 Republic Services - Essex Junction</label>
+            </value>
+            <value>
+                <fullName>29</fullName>
+                <default>false</default>
+                <label>SC29 Republic Services - Hopewell Junction</label>
+            </value>
+            <value>
+                <fullName>30</fullName>
+                <default>false</default>
+                <label>SC30 Republic Services - Imperial</label>
+            </value>
+            <value>
+                <fullName>31</fullName>
+                <default>false</default>
+                <label>SC31 Republic Services – Rahway</label>
+            </value>
+            <value>
+                <fullName>32</fullName>
+                <default>false</default>
+                <label>SC32 Republic Services – Brooklyn</label>
+            </value>
+            <value>
+                <fullName>33</fullName>
+                <default>false</default>
+                <label>SC33 Republic Services – Aston</label>
+            </value>
+            <value>
+                <fullName>40</fullName>
+                <default>false</default>
+                <label>SC40 Republic Services -Rensselaer</label>
+            </value>
+            <value>
+                <fullName>41</fullName>
+                <default>false</default>
+                <label>SC41 Republic Services - Hydro, PA and NJ</label>
+            </value>
+            <value>
+                <fullName>64</fullName>
+                <default>false</default>
+                <label>SC64 Republic Services – Greensboro</label>
+            </value>
+            <value>
+                <fullName>65</fullName>
+                <default>false</default>
+                <label>SC65 Republic Services – Lexington</label>
+            </value>
+            <value>
+                <fullName>66</fullName>
+                <default>false</default>
+                <label>SC66 Republic Services – Americus</label>
+            </value>
+            <value>
+                <fullName>73</fullName>
+                <default>false</default>
+                <label>SC73 Republic Services - Metro Lab Pack</label>
+            </value>
+            <value>
+                <fullName>74</fullName>
+                <default>false</default>
+                <label>SC74 Republic Services - Baltimore Lab Pack</label>
+            </value>
+            <value>
+                <fullName>75</fullName>
+                <default>false</default>
+                <label>SC75 Republic Services - Pennsylvania Lab Pack</label>
+            </value>
+            <value>
+                <fullName>77</fullName>
+                <default>false</default>
+                <label>SC77 Republic Services – Woonsocket Lab Pack</label>
+            </value>
+            <value>
+                <fullName>96</fullName>
+                <default>false</default>
+                <label>SC96 Republic Services - National Services</label>
+            </value>
+            <value>
+                <fullName>98</fullName>
+                <default>false</default>
+                <label>SC98 Republic Services - ER Events</label>
+            </value>
+            <value>
+                <fullName>80</fullName>
+                <default>false</default>
+                <label>SC80 Central Dispatch</label>
+            </value>
+            <value>
+                <fullName>200</fullName>
+                <default>false</default>
+                <label>SC200, Houston, TX Ops</label>
+            </value>
+            <value>
+                <fullName>USE</fullName>
+                <default>false</default>
+                <label>USE</label>
+            </value>
+            <value>
+                <fullName>Vendor Labor</fullName>
+                <default>false</default>
+                <label>Vendor Labor</label>
+            </value>
+            <value>
+                <fullName>Deep Green</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Deep Green</label>
+            </value>
+            <value>
+                <fullName>01</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC01 Elizabeth, NJ Ops</label>
+            </value>
+            <value>
+                <fullName>03</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC03 Bayonne, NJ Ops</label>
+            </value>
+            <value>
+                <fullName>SC03</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC03 Brooklyn, NY ConEd</label>
+            </value>
+            <value>
+                <fullName>05</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC05 Transportation</label>
+            </value>
+            <value>
+                <fullName>08</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC08 Republic Services – Elizabeth Facility</label>
+            </value>
+            <value>
+                <fullName>09</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC09 Republic Services – Lewisberry Facility</label>
+            </value>
+            <value>
+                <fullName>10</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC10 Bethesda, MD NIH</label>
+            </value>
+            <value>
+                <fullName>SC100</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC100</label>
+            </value>
+            <value>
+                <fullName>11</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC11 Envirotech</label>
+            </value>
+            <value>
+                <fullName>14</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC14 Quantico, MD Ops</label>
+            </value>
+            <value>
+                <fullName>18</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC18 Ashland, VA Ops</label>
+            </value>
+            <value>
+                <fullName>23</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC23 Williamsport, PA Ops</label>
+            </value>
+            <value>
+                <fullName>26</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC26 - Ohio</label>
+            </value>
+            <value>
+                <fullName>34</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC34 Linden, NJ Ops</label>
+            </value>
+            <value>
+                <fullName>42</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC42 Hydro, MD and VA</label>
+            </value>
+            <value>
+                <fullName>43</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC43 Hydro, Wisconsin</label>
+            </value>
+            <value>
+                <fullName>44</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC44 Hydro, Michigan</label>
+            </value>
+            <value>
+                <fullName>45</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC45 Hydro, Other</label>
+            </value>
+            <value>
+                <fullName>50</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC50 Wash Bay</label>
+            </value>
+            <value>
+                <fullName>52</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC52</label>
+            </value>
+            <value>
+                <fullName>57</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC57 Northboro, MA Real Estate</label>
+            </value>
+            <value>
+                <fullName>62</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC62 Long Island, NY Ops</label>
+            </value>
+            <value>
+                <fullName>63</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC63 York, PA Ops</label>
+            </value>
+            <value>
+                <fullName>SC70 Corporate Lab Pac</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC70 Corporate Lab Pac</label>
+            </value>
+            <value>
+                <fullName>70</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC70 Republic Services - Avenel Lab Pack</label>
+            </value>
+            <value>
+                <fullName>71</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC71 Alnylam Onsite</label>
+            </value>
+            <value>
+                <fullName>72</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC72 Southern NJ  Lab Pack</label>
+            </value>
+            <value>
+                <fullName>76</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC76 Pennsylvania (Lewisberry) Lab Pack</label>
+            </value>
+            <value>
+                <fullName>78</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC78 Sewer Lining</label>
+            </value>
+            <value>
+                <fullName>79</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC79 Underground</label>
+            </value>
+            <value>
+                <fullName>87</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC87 Emergency Ops Center</label>
+            </value>
+            <value>
+                <fullName>88</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC88 Republic Services – Elizabeth</label>
+            </value>
+            <value>
+                <fullName>89</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC89 Republic Services - Lewisberry</label>
+            </value>
+            <value>
+                <fullName>91</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC91 Sales</label>
+            </value>
+            <value>
+                <fullName>97</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>SC97 UI English Station</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

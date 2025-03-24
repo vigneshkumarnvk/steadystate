@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Internal_Call__c</fullName>
+    <externalId>false</externalId>
+    <formula>LEN(  Phone__c ) = 4</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Internal Call</label>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,143 @@
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController" action="{!createTemporaryTmList}" sideBar="true">
+    <head>
+        <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"  />
+        <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.js" />
+        <apex:includeScript value="https://code.jquery.com/ui/1.10.3/jquery-ui.js" />
+        
+        <script>
+        	$(document).ready(function(){
+                $("[id$='startingDate']").datepicker({                    
+                });
+                
+                $("[id$='endingDate']").datepicker({                    
+                });
+            });
+        	
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if(charCode == 13){
+                    createTemporaryTms();
+                    return false;                    
+                }
+                
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+        
+        	function createTemporaryTms() {
+                if($("[id$='startingDate']").val() != '') {
+                    createTemporaryTmList();
+                }
+            }
+        
+        	function renderDate() {
+                $("[id$='startingDate']").datepicker({                    
+                });
+                                   
+                $("[id$='endingDate']").datepicker({                    
+                });
+            }
+
+            function validateCustomer() {
+                if ({!salesOrder.Bill_to_Customer_No__r.Credit_Hold__c}) {
+                    if (confirm("Customer No. {!salesOrder.Bill_to_Customer_No__r.Name} is on credit hold.\ Are you sure you want to continue?")) {
+                        CreateTM();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    CreateTM();
+                }
+            }
+
+            function CreateTM() {
+                CreateTM();
+            }
+        
+        	function setFocusOnLoad() {}
+        </script>
+    </head>
+    <apex:sectionHeader title="Schedule Multi-Days T&Ms" />
+    <apex:form id="theForm">    
+        <c:LoadingStatus />                    
+        <apex:pageBlock id="thePageBlock" >
+            <apex:actionFunction name="CreateTM" action="{!CreateTM}" immediate="false"
+                                 reRender="theForm" status="thePageBlock,loadingstatus">
+            </apex:actionFunction>
+            <apex:actionFunction name="createTemporaryTmList" action="{!createTemporaryTmList}" reRender="thePageBlock, pgButtons,ScheduledDates, theTMTable" immediate="false" oncomplete="renderDate();" />
+            <apex:outputPanel >
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/>
+                    <br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isApproved != true}">
+                <p>This {!salesOrder.Document_Type__c} is not approved. The Schedule TM function is disabled!</p>
+            </apex:outputPanel>
+            <BR/>
+            <BR/>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection rendered="{!isApproved == true}">
+                <apex:pageBlockSectionItem rendered="{!allowToCreateTM}">
+                    <apex:outputLabel >Starting Date</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputText value="{!startingDateValue}" onchange="createTemporaryTms();" id="startingDate">
+                            
+                        </apex:inputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem rendered="{!allowToCreateTM}">
+                    <apex:outputLabel >Ending Date</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputText value="{!endingDateValue}" onchange="createTemporaryTms();" id="endingDate">
+                            
+                        </apex:inputText>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem rendered="{!allowToCreateTM}">
+                    <apex:outputLabel >No. of T&amp;M Per Day</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputText onblur="createTemporaryTms();" onkeypress="return isNumber(event);" value="{!tmCount}"/>                                                  
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem rendered="{!allowToCreateTM}">
+                    <apex:outputLabel >Include Weekend</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputCheckbox value="{!includeWeekend}" onchange="createTemporaryTms();"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection id="ScheduledDates" title="" collapsible="false" columns="1" rendered="{!isApproved == true}">
+                <apex:pageBlockTable columnClasses="fixedCol" value="{!TMWrapList}" var="line" id="theTMTable" rendered="{!NOT(ISNULL(TMWrapList))}">
+                    <apex:column headerValue="Desired Scheduled Dates">
+                         <apex:outputText value="{0,date,MM/dd/yyyy}"> 
+                             <apex:param value="{!line.ScheduledDate}" /> 
+                        </apex:outputText>
+                        
+                    </apex:column>
+                    <apex:column headerValue="Description">
+                        {!line.Description}
+                    </apex:column>
+                    <apex:column headerValue="Site Scope">
+                        <apex:inputText value="{!line.siteScope}" />
+                        
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons id="pgButtons" >
+                <!--apex:commandButton value="Create Multi-Day T&Ms" reRender="thePageBlock" onclick="return validateCustomer();"
+                                    status="loadingstatus" rendered="{!NOT(ISNULL(TMWrapList)) && TMWrapList.size > 0 && allowToCreateTM}"/>-->
+                <apex:commandButton value="Create Multi-Day T&Ms" reRender="thePageBlock" action="{!CreateTM}"
+                                    status="loadingstatus" rendered="{!NOT(ISNULL(TMWrapList)) && TMWrapList.size > 0 && allowToCreateTM && isApproved == true}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" />                 
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

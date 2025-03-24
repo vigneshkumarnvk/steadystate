@@ -1,0 +1,856 @@
+<!-- <apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardController="TM__c" extensions="TMController" id="thePage"> -->
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" standardController="TM__c" id="thePage">
+    <!--
+    <html>
+        <head>
+            <style>
+                html * {
+                  font-size: 9pt;
+                  font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                }
+                
+                @page {
+                    margin-top: 4cm;
+                    margin-bottom: 2cm;                
+                    @top-left {
+                    content: element(header);
+                  }
+                    @bottom-center {
+                    content: element(footer);
+                  }
+                }
+                
+                .pagenumber:before {
+                  content: counter(page);
+                }
+                
+                .pagecount:before {
+                  content: counter(pages);
+                }
+                
+                div.header {
+                  position: running(header);
+                  padding: 0px;
+                  width: 300%;
+                  display: inline-block;
+                  opacity: 0.7;
+                }
+                
+                div.footer {
+                  position: running(footer);
+                  display: block;
+                }
+                
+                .pageNumber{
+                    text-align:right;
+                }
+                
+                .title{
+                    font-size:14px;
+                    font-weight:bold;
+                    text-align: center;
+                }
+                
+                .w100{
+                    width:100%;
+                }
+                
+                .w50{
+                    width:50%;
+                }
+                
+                .tblOuterBorder{
+                    border:1px solid black;
+                }
+                
+                .tblInsideGeneral tbody tr td:nth-child(2){
+                    font-weight:bold;
+                }
+                
+                body{
+                    font-size:12px;
+                }
+                
+                .b{
+                    font-weight:bold;
+                }
+                
+                .alignRight{
+                    text-align:right;
+                }
+                
+                .alignCenter{
+                    text-align:center;
+                }
+                
+                .alignLeft{
+                    text-align:left;
+                }
+                
+                .bottomBorder{
+                    border-bottom: 1px solid black;
+                }
+                
+                
+                .tblInnerBorders {
+                    border-collapse: collapse;
+                }
+                
+                .tblInnerBorders th {
+                    background-color: #D3D3D3;
+                }
+                .tblInnerBorders td, .tblInnerBorders th {
+                    border: 1px solid black;
+                    padding: 2px 3px;
+                }
+                .tblInnerBorders tr:first-child th {
+                    border-top: 0;
+                }
+                .tblInnerBorders tr:last-child td {
+                    border-bottom: 0;
+                }
+                .tblInnerBorders tr td:first-child,
+                .tblInnerBorders tr th:first-child {
+                    border-left: 0;
+                }
+                .tblInnerBorders tr td:last-child,
+                .tblInnerBorders tr th:last-child {
+                    border-right: 0;
+                }
+                
+                .tblHeading{
+                    padding:4px 2px;
+                }
+                
+                .chkbx {
+                    border: 0.5pt solid #000;
+                    font-size: 6pt;
+                    margin: 3px 4px;
+                }
+                
+                .vaTop{
+                    vertical-align: top;
+                }
+                
+                .mt5{
+                    margin-top:5px;
+                }
+                
+                .mt10{
+                    margin-top:10px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <table class="w100">
+                    <tr>
+                        <td>                            
+                            Billing T&amp;M &nbsp;&nbsp;&nbsp;&nbsp;{!theTM.Name}
+                            <div class="mt10">
+                                <apex:outputField value="{!CompanySetup.Company_Logo__c}" />
+                            </div>
+                        </td>
+                        <td class="pageNumber vaTop">
+                            Page <span class="pagenumber"/> of <span class="pagecount"/>
+                        </td>
+                    </tr>           
+                </table>
+                <div class="title">
+                    T &amp; M: {!theTM.Name}
+                </div>
+            </div>
+            <div>
+                <div>
+                    <table class="w100  tblGeneral">
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Customer Name
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Bill_To_Customer__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Job Number
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Sales_Order__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Customer Account No.
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Bill_To_Customer__r.AccountNumber}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Desired Scheduled Date
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Desired_Scheduled_Date__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site Name
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Site_Name__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Project Manager
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Project_Coordinator__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site Address
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Site_Street__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Account Executive
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Account_Executive__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site City/State/Zip
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Site_City__c}/{!theTM.Site_State__c}/{!theTM.Site_Postal_Code__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Contract Name
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Contract__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site Contact
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Contact__r.Name}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            PO/Reference Number
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Customer_PO_No__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site Phone
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Site_Phone_No__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            
+                                        </td>
+                                        <td class="w50 b">
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Site Email Address
+                                        </td>
+                                        <td class="w50 b">
+                                            {!theTM.Site_Email_Address__c}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                            Prevailing Wage
+                                        </td>
+                                        <td class="w50 b">
+                                            <apex:outputText value="{!checkbxUrl[theTM.Prevailing_Wage_Job__c]}" escape="false"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="w50">
+                                        </td>
+                                        <td class="w50 b">
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <div>
+                    <table class="w100 tblGeneral">
+                        <tr>
+                            <td class="b">
+                                BO - Boat Operator
+                            </td>
+                            <td class="b">
+                                C = Chemist
+                            </td>
+                            <td class="b">
+                                CT = Chemical Technician
+                            </td>
+                            <td class="b">
+                                D = Driver
+                            </td>
+                            <td class="b">
+                                EO = Equipment Operator
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="b">
+                                F = Foreman
+                            </td>
+                            <td class="b">
+                                ML = Marine Laborer
+                            </td>
+                            <td class="b">
+                                SO = Safety Officer
+                            </td>
+                            <td class="b">
+                                PM = Project Mgr
+                            </td>
+                            <td class="b">
+                                S = Supervisor
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+
+                <div id="divLabor" class="tblOuterBorder">
+                    <div class="b bottomBorder tblHeading">
+                        LABOR
+                    </div>
+                    <table id="tblLabor" class="tblInnerBorders w100">
+                        <thead>
+                            <th>
+                                Name
+                            </th>
+                            <th class="alignCenter">
+                                Title
+                            </th>
+                            <th class="alignCenter">
+                                Lunch Start Time
+                            </th>
+                            <th class="alignCenter">
+                                Lunch End Time
+                            </th>
+                            <th class="alignCenter">
+                                Lunch
+                            </th>
+                            <th class="alignCenter">
+                                Start Time
+                            </th>
+                            <th class="alignCenter">
+                                Begin Site Time
+                            </th>
+                            <th class="alignCenter">
+                                End Site Time
+                            </th>
+                            <th class="alignCenter">
+                                Time Off
+                            </th>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!TMLListLabor}" var="tml">
+                                <tr>
+                                    <td>
+                                        {!tml.Resource__r.Description__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Resource_Type__r.Name}
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Lunch_Start_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Lunch_End_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Lunch__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_Start_Time__c}" />
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Site_Start_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Site_End_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_End_Time__c}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br/>
+
+                <div id="divMaterials" class="tblOuterBorder">
+                    <div class="b bottomBorder tblHeading">
+                        MATERIALS
+                    </div>
+                    <table id="tblMaterials" class="tblInnerBorders w100">
+                        <thead>
+                            <th>
+                                Name
+                            </th>
+                            <th class="alignCenter">
+                                Quantity
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!TMLListMaterials}" var="tml">
+                                <tr>
+                                    <td style="width:35%">
+                                        {!tml.Resource__r.Description__c}
+                                    </td>
+                                    <td class="alignCenter" style="width:10%">
+                                        {!tml.Quantity__c}
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr>
+                                <td style="width:35%">&nbsp;</td>
+                                <td style="width:10%"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width:35%">&nbsp;</td>
+                                <td style="width:10%"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width:35%">&nbsp;</td>
+                                <td style="width:10%"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="width:35%">&nbsp;</td>
+                                <td style="width:10%"></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br/>
+
+                <div id="divEquipment" class="tblOuterBorder">
+                    <div class="b bottomBorder tblHeading">
+                        EQUIPMENT
+                    </div>
+                    <table id="tblEquipment" class="tblInnerBorders w100">
+                        <thead>
+                            <th>
+                                Name
+                            </th>
+                            <th class="alignCenter">
+                                Type
+                            </th>
+                            <th class="alignCenter">
+                                Start Time
+                            </th>
+                            <th class="alignCenter">
+                                Begin Site Time
+                            </th>
+                            <th class="alignCenter">
+                                End Site Time
+                            </th>
+                            <th class="alignCenter">
+                                Time Off
+                            </th>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!TMLListEquipment}" var="tml">
+                                <tr>
+                                    <td>
+                                        {!tml.Resource__r.Description__c}
+
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Resource_Type__r.Name}
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_Start_Time__c}" />
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Site_Start_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Site_End_Time__c}"/>
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_End_Time__c}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+                <br/>
+
+                <div id="divSubContractors" class="tblOuterBorder">
+                    <div class="b bottomBorder tblHeading">
+                        SUBCONTRACTORS
+                    </div>
+                    <table id="tblSubContractors" class="tblInnerBorders w100">
+                        <thead>
+                            <th style="width:35%">
+                                Name
+                            </th>
+                            <th class="alignCenter" style="width:10%">
+                                Time On
+                            </th>
+                            <th class="alignCenter" style="width:10%">
+                                Time Off
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!TMLListSubcontractors}" var="tml">
+                                <tr>
+                                    <td>
+                                        {!tml.Resource__r.Description__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_Start_Time__c}" />
+                                    </td>
+                                    <td class="alignCenter">
+                                        <apex:outputField value="{!tml.Job_End_Time__c}" />
+                                    </td>
+                                    <td class="alignCenter">
+                                        
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+                <br/>
+
+                <div id="divWasteDisposal" class="tblOuterBorder">
+                    <div class="b bottomBorder tblHeading">
+                        WASTE DISPOSAL
+                    </div>
+                    <table id="tblWasteDisposal" class="tblInnerBorders w100">
+                        <thead>
+                            <th>
+                                Name
+                            </th>
+                            <th class="alignCenter">
+                                Unit
+                            </th>
+                            <th class="alignCenter">
+                                Quantity
+                            </th>
+                            <th class="alignCenter">
+                                Facility Name
+                            </th>
+                            <th class="alignCenter">
+                                BOL/Manifest
+                            </th>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!TMLListWasteDisposal}" var="tml">
+                                <tr>
+                                    <td>
+                                        {!tml.Resource__r.Description__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Unit_of_Measure__r.Name}
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Quantity__c}
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.Facility__r.Name}
+                                    </td>
+                                    <td class="alignCenter">
+                                        {!tml.BOL_Manifest__c}
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br/>
+                <div>
+                    <table class="w100 tblOuterBorder tblGeneral" style="height:50px;">
+                        <tr>
+                            <td >
+                                Scope of Work
+                                {!theTM.Site_Scope__c}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <div>
+                    <table class="w100  tblGeneral" cellspacing="20">
+                        <tr>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="b">
+                                            Customer Print Name:
+                                        </td>
+                                        <td class="w50" style="border-bottom: 1px solid black;">
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="w50">
+                                <table width="100%" class="tblInsideGeneral">
+                                    <tr>
+                                        <td class="b">
+                                            Customer Signature:
+                                        </td>
+                                        <td class="w50" style="border-bottom: 1px solid black;">
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <div style="border:1px solid black;">
+                    <div class="b" style="height:60px;padding:10px;">
+                        Field Notes:
+                    </div>
+                    
+                    <div style="height:20px;border-top:1px solid black;">
+                        
+                    </div>
+                    <div style="height:20px;border-top:0.5px solid black;">
+                        
+                    </div>
+                    <div style="height:20px;border-top:0.5px solid black;">
+                        
+                    </div>
+                    <div style="height:25px;border-top:1px solid black;">
+                        
+                    </div>
+                </div>
+                <span>White - Billing Copy</span>
+                <span style="margin-left:60px;">Yellow - Dispatch Copy</span>
+                <span style="margin-left:60px;">Pink- Customer Copy</span>
+            </div>        
+        </body>
+    </html>
+    -->
+</apex:page>

@@ -1,0 +1,42 @@
+<!--ticket 21113-->
+<!--
+<apex:page standardController="TM__c" extensions="SignatureRequestController" action="{!processSignatureAndEmail}" showHeader="true" sideBar="true" lightningStylesheets="true">
+    <apex:form >
+        <apex:sectionHeader title="{!TM.Name}" subTitle="Process Signature"/>
+        <apex:pageMessages />
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+-->
+<apex:page controller="SignatureProcessController" showHeader="true" sideBar="true" lightningStylesheets="true">
+    <apex:form id="form">
+        <apex:sectionHeader title="Process Signatures Submitted by Customer"/>
+        <apex:pageMessages id="messages"/>
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Process Signature" action="{!processSignatures}" reRender="form" rendered="{!signatureRequests.size > 0}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel rendered="{!signatureRequests.size > 0}">
+                <apex:pageBlockTable value="{!signatureRequests}" var="signatureRequest">
+                    <apex:column value="{!signatureRequest.Print_Name__c}"/>
+                    <apex:column value="{!signatureRequest.Email__c}"/>
+                    <apex:column value="{!signatureRequest.Signed__c}"/>
+                    <apex:column value="{!signatureRequest.Declined__c}"/>
+                    <apex:column value="{!signatureRequest.Customer_PO_No__c}"/>
+                    <apex:column value="{!signatureRequest.Customer_Comment__c}"/>
+                    <apex:column value="{!signatureRequest.Processed__c}"/>
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!signatureRequests.size == 0}">
+                There is nothing to process. Customer has not signed.
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+<!--ticket 21113-->

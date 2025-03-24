@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Software__c</fullName>
+    <externalId>false</externalId>
+    <label>Software</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <controllingField>Title_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Email ($20/mo)</fullName>
+                <default>false</default>
+                <label>Email ($20/mo)</label>
+            </value>
+            <value>
+                <fullName>Enviroware</fullName>
+                <default>false</default>
+                <label>Enviroware</label>
+            </value>
+            <value>
+                <fullName>NAV (Limited access)</fullName>
+                <default>false</default>
+                <label>NAV (Limited access)</label>
+            </value>
+            <value>
+                <fullName>Purchase Orders (Coupa)</fullName>
+                <default>false</default>
+                <label>Purchase Orders (Coupa)</label>
+            </value>
+            <value>
+                <fullName>Salesforce</fullName>
+                <default>false</default>
+                <label>Salesforce</label>
+            </value>
+            <value>
+                <fullName>Samsara</fullName>
+                <default>false</default>
+                <label>Samsara</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Email ($20/mo)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Purchase Orders (Coupa)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Salesforce</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Enviroware</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Samsara</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>NAV (Limited access)</valueName>
+        </valueSettings>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

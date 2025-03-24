@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- E&amp;I Surcharge Exempted --></label>
+        <name>E_I_Surcharge_Exempted__c</name>
+    </CustomFieldTranslation>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- D365 Account Revenue --></label>
+        <name>D365_Account_Revenue__c</name>
+        <picklistValues>
+            <masterLabel>63010</masterLabel>
+            <translation><!-- 63010 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63030</masterLabel>
+            <translation><!-- 63030 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63040</masterLabel>
+            <translation><!-- 63040 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63050</masterLabel>
+            <translation><!-- 63050 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63060</masterLabel>
+            <translation><!-- 63060 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63080</masterLabel>
+            <translation><!-- 63080 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63110</masterLabel>
+            <translation><!-- 63110 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63130</masterLabel>
+            <translation><!-- 63130 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63140</masterLabel>
+            <translation><!-- 63140 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>63150</masterLabel>
+            <translation><!-- 63150 --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

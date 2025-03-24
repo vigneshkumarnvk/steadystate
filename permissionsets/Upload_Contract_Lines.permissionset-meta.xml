@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Enable users with the ability to upload contract lines.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Upload Contract Lines</label>
+    <classAccesses>
+        <apexClass>BatchDataUpload</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>DataUploadHandler</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Upload_Contract_Lines</name>
+    </customPermissions>
+</PermissionSet>

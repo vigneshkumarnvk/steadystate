@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- Does not include: Bereavement, Jury Duty, Paid Time Off, Shop Time --></help>
+        <label><!-- Total Job Hours --></label>
+        <name>Total_Job_Hours__c</name>
+    </CustomFieldTranslation>

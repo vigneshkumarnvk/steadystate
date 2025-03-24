@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Labor_and_Equipment_Resource_Types</fullName>
+    <columns>NAME</columns>
+    <columns>Category__c</columns>
+    <columns>Description__c</columns>
+    <columns>Unit_of_Measure__c</columns>
+    <columns>Blocked__c</columns>
+    <columns>Fleet_No_Required__c</columns>
+    <columns>Rental_Resource_Type__c</columns>
+    <columns>Silver_Rate__c</columns>
+    <columns>Silver_ER_Rate__c</columns>
+    <columns>Gold_Rate__c</columns>
+    <columns>Gold_ER_Rate__c</columns>
+    <columns>Platinum_Rate__c</columns>
+    <columns>Platinum_ER_Rate__c</columns>
+    <columns>Equipment_Group__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Blocked__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Labor,Equipment</value>
+    </filters>
+    <filters>
+        <field>Unit_of_Measure__c</field>
+        <operation>equals</operation>
+        <value>DAY</value>
+    </filters>
+    <label>Labor and Equipment Resource Types</label>
+</ListView>

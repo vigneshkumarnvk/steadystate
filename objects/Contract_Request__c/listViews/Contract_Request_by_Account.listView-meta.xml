@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Request_by_Account</fullName>
+    <columns>NAME</columns>
+    <columns>Account__c</columns>
+    <columns>Contract__c</columns>
+    <columns>Contract_Request_Reason__c</columns>
+    <columns>Contract_Type__c</columns>
+    <columns>Status__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Contract_Start_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Account__c</field>
+        <operation>contains</operation>
+        <value>Howard</value>
+    </filters>
+    <label>Contract Request by Account</label>
+</ListView>

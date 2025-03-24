@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Fixed Price Surcharge Option --></label>
+        <name>Fixed_Price_Surcharge_Option__c</name>
+        <picklistValues>
+            <masterLabel>Fixed Price Does Not Include Surcharge</masterLabel>
+            <translation><!-- Fixed Price Does Not Include Surcharge --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Fixed Price Includes Surcharge</masterLabel>
+            <translation><!-- Fixed Price Includes Surcharge --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

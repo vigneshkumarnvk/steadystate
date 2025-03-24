@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DIESEL_DIRECT_MID_ATLANTIC_Vendor</fullName>
+    <columns>OWNER.ALIAS</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Subsidiary_Company__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Buy_from_Vendor__c</field>
+        <operation>startsWith</operation>
+        <value>AEROTEK ENVIRONMENTAL</value>
+    </filters>
+    <label>DIESEL DIRECT MID ATLANTIC (Vendor)</label>
+</ListView>

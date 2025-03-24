@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Reg hrs + OT hrs + DT hrs &lt; 8 --></label>
+        <name>Reg_hrs_OT_hrs_DT_hrs_8__c</name>
+    </CustomFieldTranslation>

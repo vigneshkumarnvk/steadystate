@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- PO Number Type --></label>
+        <name>PO_Number_Type__c</name>
+        <picklistValues>
+            <masterLabel>Alphanumerical</masterLabel>
+            <translation><!-- Alphanumerical --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name of Contact</masterLabel>
+            <translation><!-- Name of Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Numerical</masterLabel>
+            <translation><!-- Numerical --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Status__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(TEXT(Document_Status__c) == 'Void', '',
+IF(ROUND(Amount_Paid__c,2) == ROUND(Invoice_Amt_Incl_Tax__c,2), 'Fully Paid', 
+IF(Amount_Paid__c == 0, 'Unpaid', 'Partially Paid')))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Payment Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

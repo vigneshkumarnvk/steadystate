@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Approval Routing --></label>
+        <name>Order_Type__c</name>
+        <picklistValues>
+            <masterLabel>CapEx</masterLabel>
+            <translation><!-- CapEx --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Regular</masterLabel>
+            <translation><!-- Regular --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

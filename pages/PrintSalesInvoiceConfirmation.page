@@ -1,0 +1,80 @@
+<apex:page standardController="Sales_Invoice__c" extensions="PrintSalesInvoiceConfirmationController" lightningStylesheets="true">
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Billing Package" subtitle="{!title}?"/>    
+    <apex:form id="theForm">    
+        <c:LoadingStatus />
+        <!--
+        <apex:pageBlock id="thePageBlock2" rendered="{!Sales_Invoice__c.Document_Type__c == 'Sales Invoice' && Sales_Invoice__c.Approval_Status__c != 'Approved'}">
+            Print document is disabled for draft, pending approval and rejected invoices.
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Return" action="{!cancel}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock id="thePageBlock" rendered="{!(Sales_Invoice__c.Document_Type__c == 'Sales Invoice' && Sales_Invoice__c.Approval_Status__c == 'Approved') || Sales_Invoice__c.Document_Type__c != 'Sales Invoice'}">
+        -->
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1">
+                <!--invoice format by job task-->
+                <apex:pageBlockSectionitem >
+                    <apex:outputLabel >Invoice Format</apex:outputLabel>
+                    <apex:outputPanel >
+                        <div style="display: inline-block;">
+                        <table style="border-radius:.25rem;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 4px;">Job Task</th>
+                                    <th style="padding: 4px;">Print Order</th>
+                                    <th style="padding: 4px;">Format</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!jobTasks}" var="jobTask">
+                                    <tr>
+                                        <!-- <td style="padding: 4px;vertical-align: middle;">{!jobTask.Task_No__c}</td> -->
+                                        <td style="padding: 4px;vertical-align: middle;">{!jobTask.Name}</td>
+                                        <td style="padding: 4px;vertical-align: middle;"><apex:inputField value="{!jobTask.Print_Order__c}" style="width:100px" /></td>
+                                        <td style="padding: 4px;vertical-align: middle;">
+
+                                            <!--19758-->
+                                            <!--
+                                            <apex:selectList size="1" value="{!jobTask.Invoice_Format__c}">
+                                                <apex:selectOption itemLabel="Detail" itemValue="Detail"/>
+                                                <apex:selectOption itemLabel="Summary" itemValue="Summary"/>
+                                                <apex:selectOption itemLabel="By Date by Category" itemValue="By Date by Category"/>
+                                            </apex:selectList>
+                                            -->
+                                            <apex:selectList size="1" value="{!jobTask.Invoice_Format__c}" rendered="{!salesInvoice.Approval_Status__c == 'Approved'}">
+                                                <apex:selectOption itemLabel="Detail" itemValue="Detail"/>
+                                                <apex:selectOption itemLabel="Summary" itemValue="Summary"/>
+                                                <apex:selectOption itemLabel="By Date by Category" itemValue="By Date by Category"/>
+                                            </apex:selectList>
+                                            <apex:selectList size="1" value="{!jobTask.Invoice_Format__c}" rendered="{!salesInvoice.Approval_Status__c != 'Approved'}">
+                                                <apex:selectOption itemLabel="Draft Detail" itemValue="Detail"/>
+                                                <apex:selectOption itemLabel="Draft Summary" itemValue="Summary"/>
+                                                <apex:selectOption itemLabel="Draft By Date by Category" itemValue="By Date by Category"/>
+                                                <apex:selectOption itemLabel="Draft Cost" itemValue="Detail with Cost"/>
+                                            </apex:selectList>
+                                            <!--19758-->
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                        </table>
+                        </div>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionitem>
+                <!--invoice format by job task-->
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <!--job task-->
+                <!--
+                <apex:commandButton value="Print (Old)" reRender="thePageBlock" action="{!PrintSalesInvoice}" status="loadingstatus" />
+                -->
+                <apex:commandButton value="Print" reRender="thePageBlock" action="{!PrintNewSalesInvoice}" status="loadingstatus" />
+                <!--job task-->
+                <apex:commandButton value="Return" action="{!cancel}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

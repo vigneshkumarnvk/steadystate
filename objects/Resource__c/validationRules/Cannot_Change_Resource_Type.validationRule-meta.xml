@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_Resource_Type</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISCHANGED(Resource_Type__c),AND($Profile.Name != 'System Administrator', $Profile.Name != 'Vehicle/Permit'))</errorConditionFormula>
+    <errorDisplayField>Resource_Type__c</errorDisplayField>
+    <errorMessage>You do not have sufficient privileges to change Resource Type.</errorMessage>
+</ValidationRule>

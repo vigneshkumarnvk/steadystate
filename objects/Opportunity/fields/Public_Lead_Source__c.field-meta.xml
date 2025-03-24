@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Public_Lead_Source__c</fullName>
+    <externalId>false</externalId>
+    <label>Public Lead Source</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Lead_Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Envirobidnet</fullName>
+                <default>false</default>
+                <label>Envirobidnet</label>
+            </value>
+            <value>
+                <fullName>BidNet Direct</fullName>
+                <default>false</default>
+                <label>BidNet Direct</label>
+            </value>
+            <value>
+                <fullName>BidSync</fullName>
+                <default>false</default>
+                <label>BidSync</label>
+            </value>
+            <value>
+                <fullName>Governmentbids</fullName>
+                <default>false</default>
+                <label>Governmentbids</label>
+            </value>
+            <value>
+                <fullName>NYS Contract Reporter</fullName>
+                <default>false</default>
+                <label>NYS Contract Reporter</label>
+            </value>
+            <value>
+                <fullName>Bonfire</fullName>
+                <default>false</default>
+                <label>Bonfire</label>
+            </value>
+            <value>
+                <fullName>State/County/City Portal</fullName>
+                <default>false</default>
+                <label>State/County/City Portal</label>
+            </value>
+            <value>
+                <fullName>Other – Not Listed</fullName>
+                <default>false</default>
+                <label>Other – Not Listed</label>
+            </value>
+            <value>
+                <fullName>Bid Ocean</fullName>
+                <default>false</default>
+                <label>Bid Ocean</label>
+            </value>
+            <value>
+                <fullName>GSA ebuy</fullName>
+                <default>false</default>
+                <label>GSA ebuy</label>
+            </value>
+            <value>
+                <fullName>SAM.gov</fullName>
+                <default>false</default>
+                <label>SAM.gov</label>
+            </value>
+            <value>
+                <fullName>CIS- Construction Information Systems, Inc</fullName>
+                <default>false</default>
+                <label>CIS- Construction Information Systems, Inc</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>Envirobidnet</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>BidNet Direct</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>BidSync</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>Governmentbids</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>NYS Contract Reporter</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>Bonfire</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>State/County/City Portal</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>Other – Not Listed</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>Bid Ocean</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>GSA ebuy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>SAM.gov</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Public</controllingFieldValue>
+            <valueName>CIS- Construction Information Systems, Inc</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

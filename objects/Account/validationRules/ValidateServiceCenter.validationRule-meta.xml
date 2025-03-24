@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ValidateServiceCenter</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF (AND(Service_Center__c != null, Subsidiary_Company__c !=  Service_Center__r.Subsidiary_Company__c), true, false)</errorConditionFormula>
+    <errorMessage>The subsidiary company does not match service center setup.</errorMessage>
+</ValidationRule>

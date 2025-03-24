@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC_Budget_Forecast__c</fullName>
+    <externalId>false</externalId>
+    <label>Service Center</label>
+    <referenceTo>Service_Center__c</referenceTo>
+    <relationshipLabel>SC Budget/Forecasting</relationshipLabel>
+    <relationshipName>SC_Budget_Forecasting</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

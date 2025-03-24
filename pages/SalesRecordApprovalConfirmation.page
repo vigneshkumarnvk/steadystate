@@ -1,0 +1,86 @@
+<!--
+    Ticket#21357 -add quote status error message.
+-->
+<apex:page id="SalesRecordApprovalConfirmation" standardController="Sales_Order__c" extensions="SalesOrderController">
+    <apex:sectionHeader title="Submit Record for Approval" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        
+        <apex:actionFunction name="returnToRecord" action="{!returnBack}" />
+        <apex:actionFunction name="setWarningTrue" action="{!setWarningResponse}"/>
+
+        <apex:pageBlock id="warningDiv" rendered="{!isWarning == true}">
+            <apex:includeLightning />    
+            <div id="lwc" />               
+            <script>
+            document.addEventListener("getLWCResult", function(event) {
+                 var pageBlock = document.getElementById('thePageBlock');
+                if (event.detail.result == false) {
+                    returnToRecord();
+                } else {
+                    setWarningTrue();              
+                }
+            });
+            
+            $Lightning.use("c:lwcvf", function() {
+                $Lightning.createComponent("c:QuoteOrder_LOA_Reminder", { }, "lwc", function(cmp) {
+                    
+                });
+            });
+            </script>
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="thePageBlock" rendered="{!isWarning == false}">
+            <apex:outputPanel rendered="{!isApproved != true && validForApproval == true}">
+                Are you sure to submit record for approval?<br />
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isApproved == true}">
+                <apex:outputText value="Your Sales Quote is Approved" rendered="{!salesOrder.Contract__c == null || (salesOrder.Contract__c != null && salesOrder.Contract__r.Status == 'Activated')}" />
+                <apex:outputText value="Linked contract is not activated!" rendered="{!salesOrder.Contract__c != null && salesOrder.Contract__r.Status != 'Activated'}"/>
+                <br />
+                <!-- Your Sales Quote is Approved.<br /> -->
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!validForApproval != true && salesOrder.Quote_Contact__r.Blocked__c != true &&
+                                            salesOrder.Bill_to_Contact__r.Blocked__c != true &&
+                                            salesOrder.Site_Contact_2__r.Blocked__c != true}">
+                Quote Expired.
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!salesOrder.Quote_Contact__r.Blocked__c == true}">
+                You cannot submit this document for approval because quote contact has been blocked/inactive. <br />
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!salesOrder.Bill_to_Contact__r.Blocked__c == true}">
+                You cannot submit this document for approval because bill-to contact has been blocked/inactive. <br />
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!salesOrder.Site_Contact_2__r.Blocked__c == true}">
+                You cannot submit this document for approval because site contact has been blocked/inactive. <br />
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection columns="1" rendered="{!isApproved != true && validForApproval == true}" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="{!if(salesOrder.Document_Type__c == 'Sales Order', 'Sales Order', 'Sales Quote')}"/>
+                    <apex:outputField value="{!salesOrder.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Customer"/>
+                    <apex:outputField value="{!salesOrder.Bill_to_Customer_No__r.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Amount"/>
+                    <!--
+                    <apex:outputField value="{!salesOrder.Total_Amount_Incl_Tax__c}" />
+                    -->
+                    <apex:outputField value="{!salesOrder.Order_Total_Amount_Incl_Tax__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Profit %"/>
+                    <apex:outputField value="{!salesOrder.Total_Profit_Pct__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Submit for Approval" action="{!saveAndSubmit}"
+                                    reRender="thePageBlock" status="loadingstatus" rendered="{!isApproved != true && validForApproval == true}" />
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>        
+    </apex:form>
+</apex:page>

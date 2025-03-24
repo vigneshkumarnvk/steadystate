@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_of_Measure2_Lookup__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Unit of Measure2 Lookup</label>
+    <referenceTo>Unit_of_Measure__c</referenceTo>
+    <relationshipLabel>T&amp;M Lines (Unit of Measure2 Lookup)</relationshipLabel>
+    <relationshipName>T_M_Lines2</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

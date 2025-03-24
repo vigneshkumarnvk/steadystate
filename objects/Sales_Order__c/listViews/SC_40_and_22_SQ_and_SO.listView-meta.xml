@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC_40_and_22_SQ_and_SO</fullName>
+    <columns>Bill_to_Customer_No__c</columns>
+    <columns>NAME</columns>
+    <columns>Document_Status__c</columns>
+    <columns>OWNER.FIRST_NAME</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Sales_Order_Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>22,40</value>
+    </filters>
+    <label>SC 40 and 22 SQ and SO</label>
+</ListView>

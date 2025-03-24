@@ -1,0 +1,18 @@
+<apex:page id="ExportWorkdayFileConfirmation" recordSetVar="pr" standardController="Payroll__c" extensions="PayrollController">
+    <style>
+
+    </style>
+    <apex:sectionHeader title="Export Flat Pay for Workday"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:pageMessages id="theMessage"></apex:pageMessages>
+            </apex:outputPanel>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rendered="{!errMsg == '' || errMsg == null}" action="{!ExportWorkdayDataToCSV}" rerender="thePageBlock" value="Export Flat Pay"/>
+                <apex:commandButton value="Return to Payrolls" action="{!returnToPayrollList}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

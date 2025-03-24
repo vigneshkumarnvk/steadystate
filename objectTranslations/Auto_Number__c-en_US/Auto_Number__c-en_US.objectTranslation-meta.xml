@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Auto Number</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Auto Numbers</value>
+    </caseValues>
+    
+    
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Name must be unique --></errorMessage>
+        <name>Unique_Auto_Numbering_Name</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Public Lead Source --></label>
+        <name>Public_Lead_Source__c</name>
+        <picklistValues>
+            <masterLabel>Bid Ocean</masterLabel>
+            <translation><!-- Bid Ocean --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BidNet Direct</masterLabel>
+            <translation><!-- BidNet Direct --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BidPrime</masterLabel>
+            <translation><!-- BidPrime --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BidSync</masterLabel>
+            <translation><!-- BidSync --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bonfire</masterLabel>
+            <translation><!-- Bonfire --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CIS- Construction Information Systems, Inc</masterLabel>
+            <translation><!-- CIS- Construction Information Systems, Inc --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Envirobidnet</masterLabel>
+            <translation><!-- Envirobidnet --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GSA ebuy</masterLabel>
+            <translation><!-- GSA ebuy --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Governmentbids</masterLabel>
+            <translation><!-- Governmentbids --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NYS Contract Reporter</masterLabel>
+            <translation><!-- NYS Contract Reporter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other – Not Listed</masterLabel>
+            <translation><!-- Other – Not Listed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SAM.gov</masterLabel>
+            <translation><!-- SAM.gov --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>State/County/City Portal</masterLabel>
+            <translation><!-- State/County/City Portal --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

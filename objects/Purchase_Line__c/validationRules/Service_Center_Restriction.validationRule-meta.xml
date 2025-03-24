@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Center_Restriction</fullName>
+    <active>false</active>
+    <errorConditionFormula>Purchase_Order__r.Service_Center__c != Service_Center__c &amp;&amp; $User.Allow_Creating_POs_with_Multiple_SCs__c != true</errorConditionFormula>
+    <errorDisplayField>Service_Center__c</errorDisplayField>
+    <errorMessage>Header Service Center needs to match the line item Service Center</errorMessage>
+</ValidationRule>

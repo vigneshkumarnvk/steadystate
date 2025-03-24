@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC_Changed</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISCHANGED ( Subsidiary_Company__c )   &amp;&amp; 
+ TEXT(Type
+) = "Customer"
+
+&amp;&amp;
+ $Profile.Id != "00ef4000000Dizy"</errorConditionFormula>
+    <errorMessage>Subsidiary Company cannot be changed.</errorMessage>
+</ValidationRule>

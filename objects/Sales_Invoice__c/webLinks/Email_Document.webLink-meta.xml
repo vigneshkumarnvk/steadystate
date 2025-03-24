@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Document</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Email Document_DNU</masterLabel>
+    <openType>sidebar</openType>
+    <page>EmailSalesInvoicePreview</page>
+    <protected>false</protected>
+</WebLink>

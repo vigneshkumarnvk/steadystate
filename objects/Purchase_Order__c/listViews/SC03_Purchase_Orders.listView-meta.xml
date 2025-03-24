@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC03_Purchase_Orders</fullName>
+    <columns>NAME</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Approved_Amount__c</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Closed__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>03</value>
+    </filters>
+    <label>SC03 Purchase Orders</label>
+</ListView>

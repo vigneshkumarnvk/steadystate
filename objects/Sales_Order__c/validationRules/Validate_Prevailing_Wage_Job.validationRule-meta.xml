@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validate_Prevailing_Wage_Job</fullName>
+    <active>false</active>
+    <errorConditionFormula>Certified_PW_Job__c = true &amp;&amp;  Prevailing_Wage_Job__c &lt;&gt; true</errorConditionFormula>
+    <errorDisplayField>Prevailing_Wage_Job__c</errorDisplayField>
+    <errorMessage>Prevailing Wage Job must be checked when Certified PW Job is checked.</errorMessage>
+</ValidationRule>

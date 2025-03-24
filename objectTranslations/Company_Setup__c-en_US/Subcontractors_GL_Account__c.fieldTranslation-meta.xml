@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Subcontractors GL Account --></label>
+        <name>Subcontractors_GL_Account__c</name>
+        <relationshipLabel><!-- Company Setup (Subcontractors GL Account) --></relationshipLabel>
+    </CustomFieldTranslation>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Jetstream_of_Houston_Corp_Vendor</fullName>
+    <columns>NAME</columns>
+    <columns>Vendor_SKU__c</columns>
+    <columns>Vendor_Description__c</columns>
+    <columns>Account__c</columns>
+    <columns>Unit_of_Measure__c</columns>
+    <columns>Unit_Cost__c</columns>
+    <columns>Status__c</columns>
+    <columns>Default_Direct_G_L_Account__c</columns>
+    <columns>Default_Indirect_G_L_Account__c</columns>
+    <columns>NAV_Item_No__c</columns>
+    <columns>Name_Char_Count__c</columns>
+    <columns>Show_Direct_Accouts__c</columns>
+    <columns>Show_Indirect_Account__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>Jetstream of Houston Corp (Vendor)</label>
+</ListView>

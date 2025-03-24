@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Non_Standard_Terms__c</fullName>
+    <externalId>false</externalId>
+    <label>Non-Standard Terms</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Diverse Spend Reporting Required</fullName>
+                <default>false</default>
+                <label>Diverse Spend Reporting Required</label>
+            </value>
+            <value>
+                <fullName>Liquidated Damages</fullName>
+                <default>false</default>
+                <label>Liquidated Damages</label>
+            </value>
+            <value>
+                <fullName>Insurance</fullName>
+                <default>false</default>
+                <label>Insurance</label>
+            </value>
+            <value>
+                <fullName>Indemnity</fullName>
+                <default>false</default>
+                <label>Indemnity</label>
+            </value>
+            <value>
+                <fullName>EEOC Reporting</fullName>
+                <default>false</default>
+                <label>EEOC Reporting</label>
+            </value>
+            <value>
+                <fullName>Legal Document Retainage (Years)</fullName>
+                <default>false</default>
+                <label>Legal Document Retainage (Years)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,55 @@
+<!--<apex:page standardController="Sales_Order__c" action="{!validateCustomer}" extensions="SalesOrderController">-->
+<apex:page standardController="Sales_Order__c" extensions="SalesOrderController">
+    <head>
+        <script>
+            function validateCustomer() {
+                if ({!salesOrder.Bill_to_Customer_No__r.Credit_Hold__c}) {
+                    if (confirm("Customer No. {!salesOrder.Bill_to_Customer_No__r.Name} is on credit hold.\ Are you sure you want to continue?")) {
+                        CreateTMfromSO();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    CreateTMfromSO();
+                }
+            }
+
+            function CreateTMfromSO() {
+                CreateTMfromSO();
+            }
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Create TM" subtitle="{!title}?"/>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:actionFunction name="CreateTMfromSO" action="{!CreateTMfromSO}" immediate="true"
+                                 reRender="theForm" status="loadingstatus">
+            </apex:actionFunction>
+            <apex:outputPanel >
+                <apex:repeat value="{!messages}" var="message" id="theRepeat">
+                    <apex:outputText value="{!message}" id="theValue"/>
+                    <br/>
+                </apex:repeat>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!isApproved != true}">
+                <p>This {!salesOrder.Document_Type__c} is not approved. The Create TM function is disabled!</p>
+            </apex:outputPanel>
+            <Br/>
+            <BR/>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <!--<apex:commandButton value="Create T&M" onclick="return validateCustomer();" reRender="thePageBlock"
+                                    status="loadingstatus" rendered="{!allowToCreateTM}"/>-->
+                <apex:commandButton value="Create T&M" reRender="thePageBlock" action="{!CreateTMfromSO}"
+                                    status="loadingstatus" rendered="{!allowToCreateTM && isApproved}"/>
+                <!-- AES-379 -->
+                <apex:commandButton value="Create Blank T&M" reRender="thePageBlock" action="{!CreateBlankTM}"
+                                    status="loadingstatus" rendered="{!allowToCreateTM && isApproved}"/>
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+                <!-- AES-379 -->
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

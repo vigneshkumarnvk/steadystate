@@ -1,0 +1,69 @@
+<apex:page controller="PayrollController">
+    <head>
+        <script>
+            function isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    return false;
+                }
+                return true;
+            }
+        </script>
+    </head>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Create Payrolls" />
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>                
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockSection id="thePageBlockSection" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Service Center:</apex:outputPanel>
+                    <apex:inputField label="Service Center:" value="{!theUser.Service_Center__c}">
+                    </apex:inputField>
+                </apex:pageBlockSectionItem>
+                <apex:inputField id="theWeekNo" value="{!thePayroll.Week_Number__c}">
+                    <apex:actionSupport event="onchange" action="{!validateWeekNo}"
+                                        reRender="thePageBlockSection" status="loadingstatus"/>
+                </apex:inputField>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week Start Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekStartingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekStartingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputPanel >Week End Date:</apex:outputPanel>
+                    <apex:outputText id="theWeekEndingDate" value="{0, date, M/d/yyyy}"><apex:param value="{!weekEndingDate}"/></apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theOpenTimesheetBlock" collapsible="true" title="Open Timesheet">
+                <apex:pageBlockTable id="theOpenTimesheetTable" value="{!openTimesheetList}" var="openTS">
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Name.Label}">
+                        <!-- Ticket#13789 -->
+                        <apex:outputLink value="/Timesheet?id={!openTS.Id}">{!openTS.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Employee_No__c.Label}">
+                        <apex:outputField value="{!openTS.Employee_No__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Resource_Name__c.Label}">
+                        <apex:outputField value="{!openTS.Resource_Name__c}" />
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Timesheet__c.fields.Total_Hours_Submitted__c.Label}">
+                        <apex:outputField value="{!openTS.Total_Hours_Submitted__c}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons >
+                <!--<apex:commandButton value="Create Payroll" rendered="{!!payrollCreated}" action="{!CreatePayroll}" reRender="thePageBlock" status="loadingstatus"/>-->
+                <apex:commandButton value="Check Timesheet" action="{!listOpenTimesheet}" reRender="thePageBlock" status="loadingstatus" />
+                <apex:commandButton value="Create Payroll" action="{!CreatePayroll}" reRender="thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

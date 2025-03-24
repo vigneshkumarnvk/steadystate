@@ -1,0 +1,1044 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" showHeader="false" applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" controller="FieldTMPDFController">
+    <html>
+    <head>
+        <style>
+            html * {
+                font-size: 8pt;
+                font-family: "Trebuchet MS", Verdana, sans-serif !important;
+                margin: 0px;
+            }
+
+            @page {
+                size: A4;
+                margin-top: 2.5cm;
+                margin-bottom: 1cm;
+                margin-left: .5cm;
+                margin-right: .5cm;
+                @top-left {
+                    content: element(header);
+                }
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+
+            .counterReset {
+                -fs-page-sequence: start;
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            div.header {
+                position: running(header);
+                padding: 0px;
+                width: 300%;
+                display: inline-block;
+                opacity: 0.7;
+                margin-top: 0px;
+            }
+
+            div.footer {
+                position: running(footer);
+                display: block;
+            }
+
+            .pageNumber {
+                text-align: right;
+            }
+
+            .title {
+                font-size: 14px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .w100 {
+                width: 100%;
+            }
+
+            .w40 {
+                width: 40%;
+            }
+
+            .w45 {
+                width: 45%;
+            }
+
+            .w49 {
+                width: 49%;
+            }
+
+            .w50 {
+                width: 50%;
+            }
+
+            .w30 {
+                width: 30%;
+            }
+
+            .w70 {
+                width: 70%;
+            }
+
+            .w38 {
+                width: 35%;
+            }
+
+            .w62 {
+                width: 65%;
+            }
+
+            .tblOuterBorder {
+                /*border: 1px solid black;*/
+            }
+
+            .tblInsideGeneral tbody tr td:nth-child(2) {
+                font-weight: bold;
+            }
+
+            body {
+                font-size: 12px;
+                margin: 0px;
+            }
+
+            .b {
+                font-weight: bold;
+            }
+
+            .u {
+                text-decoration: underline;
+            }
+
+            .i {
+                font-style: italic;
+            }
+
+            .alignRight {
+                text-align: right;
+            }
+
+            .alignCenter {
+                text-align: center;
+            }
+
+            .alignLeft {
+                text-align: left;
+            }
+
+            .bottomBorder {
+                border-bottom: 1px solid black;
+            }
+
+            .tblInnerBorders {
+                border-collapse: collapse;
+                border-spacing: 0;
+                -fs-table-paginate: paginate;
+                border: .5px solid black;
+            }
+
+            .tblInnerBorders thead tfoot {
+                display:table-header-group;
+                page-break-inside: avoid !important;
+            }
+
+            .tblInnerBorders tr {
+                page-break-inside: avoid !important;
+            }
+
+            .tblInnerBorders th {
+                background-color: #D3D3D3;
+                border: .5px solid black;
+                padding: 4px 3px;
+                text-align: center;
+                font-size: 8pt;
+            }
+
+            .tblInnerBorders td {
+                border: .5px solid black;
+                padding: 4px 1px;
+                padding-bottom: 1px !important;
+                vertical-align: bottom;
+                font-size: 8pt !important;
+                page-break-inside: avoid !important;
+            }
+
+            /*
+            .tblInnerBorders tr:first-child th {
+                border-top: 0;
+            }
+
+            .tblInnerBorders tr:last-child td {
+                border-bottom: 0;
+            }
+
+            .tblInnerBorders tr td:first-child,
+            .tblInnerBorders tr th:first-child {
+                border-left: 0;
+            }
+
+            .tblInnerBorders tr td:last-child,
+            .tblInnerBorders tr th:last-child {
+                border-right: 0;
+            }
+            */
+
+            .tblHeading {
+                padding-bottom: 2px;
+            }
+
+            .vaTop {
+                vertical-align: top;
+            }
+
+            .ml20 {
+                margin-left: 20px;
+            }
+
+            .mr10 {
+                margin-right: 10px;
+            }
+
+            .mt3 {
+                margin-top: 3px;
+            }
+
+            .mt5 {
+                margin-top: 5px;
+            }
+
+            .mt20 {
+                margin-top: 20px;
+            }
+
+            .fs7 {
+                font-size: 7px;
+            }
+
+            .fs8 {
+                font-size: 8px;
+            }
+
+            .fs9 {
+                font-size: 9px;
+            }
+
+            .fs10 {
+                font-size: 10px;
+            }
+
+            .fs11 {
+                font-size: 11px;
+            }
+
+            .fs12 {
+                font-size: 12px;
+            }
+
+            p {
+                margin-top: 0px !important;
+                margin-bottom: 0px !important;
+            }
+
+            /*#tblLabor tbody tr td{
+                height:15px;
+            }*/
+        </style>
+    </head>
+    <body>
+        <apex:variable value="0" var="tmCount"/>
+        <apex:repeat value="{!FieldTMWrappers}" var="fieldTMWrapper">
+            <apex:variable var="tmCount" value="{!VALUE(tmCount) + 1}"/>
+
+            <div class="counterReset" style="{!IF(VALUE(tmCount) > 1, 'page-break-before: always;', '')}">
+                <apex:variable value="0" var="taskCount"/>
+                <apex:repeat value="{!fieldTMWrapper.TMTaskWrappers}" var="fieldTMTaskWrapper">
+                    <apex:variable var="taskCount" value="{!VALUE(taskCount) + 1}"/>
+                    <div style="{!IF(VALUE(taskCount) > 1, 'page-break-before: always;', '')}">
+                        <div class="header">
+                            <table class="w100">
+                                <tr>
+                                    <td width="30%">
+                                        <div class="ml20">
+                                            <!--
+                                                Ticket#21540 - add Service Center logo override ability
+                                            -->
+                                            <!-- Ticket#23989
+                                            <apex:outputField value="{!CompanySetup.Company_Logo__c}" rendered="{!fieldTMWrapper.companySetupLogo != null}" />
+                                            <apex:outputField value="{!fieldTMWrapper.serviceCenterSetupLog.Logo__c}" rendered="{!fieldTMWrapper.serviceCenterSetupLog != null}" />
+                                            <apex:outputField value="{!fieldTMWrapper.contractSetupLogo.Logo__c}" rendered="{!fieldTMWrapper.contractSetupLogo != null}" />
+                                            -->
+                                            <img src="{!fieldTMWrapper.LogoUrl}" />
+                                            <!-- Ticket#23989 -->
+                                        </div>
+                                    </td>
+                                    <td class="vaTop alignCenter">
+                                        INDUSTRIAL / ENVIRONMENTAL SERVICES
+                                        <div class="b alignCenter">
+                                            800-7-SPILLS
+                                        </div>
+                                    </td>
+                                    <td class="pageNumber vaTop " width="30%">
+                                        <div style="float:right;" class="mr10">
+                                            <table>
+                                                <tr>
+                                                    <td class="alignRight" style="white-space: nowrap;">
+                                                        T&amp;M #&nbsp;
+                                                    </td>
+                                                    <td colspan="3" class="alignCenter"
+                                                        style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Name}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="alignRight" style="white-space: nowrap;">
+                                                        TASK #{!fieldTMTaskWrapper.JobTask.Task_No__c}&nbsp;
+                                                    </td>
+                                                    <td colspan="3" class="alignCenter"
+                                                        style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                                        {!fieldTMTaskWrapper.JobTask.Name}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="alignRight" style="white-space: nowrap;">
+                                                        Page&nbsp;
+                                                    </td>
+                                                    <td class="alignCenter" style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                                        <span class="pagenumber"/>
+                                                    </td>
+                                                    <td>
+                                                        of
+                                                    </td>
+                                                    <td class="alignCenter" style="padding: 1px 3px;border-bottom: 1px solid black;">
+                                                        <span class="pagecount"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="footer">
+                            <div style="border-top:1px solid black;">
+                                <table class="w100">
+                                    <tr>
+                                        <td>
+                                            <div class="i fs7">
+                                                OPS-FM-115B-IDS
+                                            </div>
+                                        </td>
+                                        <td class="pageNumber vaTop alignRight">
+                                            <div class="i fs7">
+                                                Revised: May 2018
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!--content start-->
+                        <div class="mt20">
+                            <div>
+                                <table class="w100  tblGeneral" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td class="w50">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        DATE
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        <apex:outputText value="{0, date, MM/dd/yyyy}">
+                                                            <apex:param value="{!fieldTMWrapper.TM.Scheduled_Date__c}"/>
+                                                        </apex:outputText>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td class="w45">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        SALES ORDER #
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Sales_Order__r.Name}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w50">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        CUSTOMER NAME
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Bill_To_Customer__r.Name}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td class="w45">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        CONTACT NAME
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Site_Contact_2__r.Name}
+                                                        {!IF(AND(fieldTMWrapper.TM.Site_Contact_2__r.Name != null, fieldTMWrapper.TM.Site_Phone_No__c != null), ' - ' + fieldTMWrapper.TM.Site_Phone_No__c, fieldTMWrapper.TM.Site_Phone_No__c)}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w50">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        CUSTOMER PO #
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Customer_PO_No__c}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td class="w45">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        SITE LOCATION
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!IF(fieldTMWrapper.TM.Print_Site_Name__c == true,
+                                                        fieldTMWrapper.TM.Site_Name__c,
+                                                        fieldTMWrapper.TM.Site_Street__c)}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w50">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                        BILLING ADDRESS
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Bill_to_Customer__r.BillingStreet}, {!fieldTMWrapper.TM.Bill_to_Customer__r.BillingCity}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td class="w45">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                    </td>
+                                                    <td colspan="2" style="border-bottom: 1px solid black;">
+                                                        {!IF(fieldTMWrapper.TM.Print_Site_Name__c == true,
+                                                        fieldTMWrapper.TM.Site_Street__c + ', ' + fieldTMWrapper.TM.Site_City__c + ', ' + fieldTMWrapper.TM.Site_State__c + ' ' + fieldTMWrapper.TM.Site_Postal_Code__c,
+                                                        fieldTMWrapper.TM.Site_City__c + ', ' + fieldTMWrapper.TM.Site_State__c + ' ' + fieldTMWrapper.TM.Site_Postal_Code__c)}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="w50">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="w30 b">
+                                                    </td>
+                                                    <td class="w70" style="border-bottom: 1px solid black;">
+                                                        {!fieldTMWrapper.TM.Bill_to_Customer__r.BillingState}
+                                                        , {!fieldTMWrapper.TM.Bill_to_Customer__r.BillingCountry}
+                                                        , {!fieldTMWrapper.TM.Bill_to_Customer__r.BillingPostalCode}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td class="w45 vaTop">
+                                            <table width="100%" class="tblInsideGeneral">
+                                                <tr>
+                                                    <td class="vaTop" style="font-size:10px;">
+                                                        <div style="font-size:10px;padding:2px;">
+                                                            <apex:outputText value="{!CheckboxUrl[false]}" escape="false"/>
+                                                            Job Complete
+                                                        </div>
+                                                        <div style="font-size:10px;padding:2px;">
+                                                            <apex:outputText value="{!CheckboxUrl[fieldTMWrapper.TM.Prevailing_Wage_Job__c]}"
+                                                                             escape="false"/>
+                                                            Prevailing Wage
+                                                        </div>
+                                                    </td>
+                                                    <td class="vaTop" style="font-size:10px;">
+                                                        <div style="font-size:10px;padding:2px;">
+                                                            <apex:outputText value="{!CheckboxUrl[false]}" escape="false"/>
+                                                            Job Incomplete
+                                                        </div>
+                                                        <div style="font-size:10px;padding:2px;">
+                                                            <apex:outputText value="{!CheckboxUrl[false]}" escape="false"/>
+                                                            Per Diem, If Yes How Many?_____
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- begin of lines -->
+
+                            <div class="fs12 b tblHeading">
+                                TASK {!fieldTMTaskWrapper.JobTask.Task_No__c} - {!fieldTMTaskWrapper.JobTask.Name}
+                            </div>
+
+                            <!-- Labor Begin -->
+                            <!--
+                            <div class="fs12 b tblHeading">
+                                LABOR
+                            </div>
+                            -->
+                            <apex:outputPanel rendered="{!fieldTMWrapper.TM.Bill_to_Customer__r.Print_TM_Time_Detail__c == true && fieldTMWrapper.TM.Sales_Order__r.Sales_Order_Type__r.Name != 'Virus Decon'}">
+                                <div id="divLabor" class="tblOuterBorder">
+                                    <table class="w100" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="width:80%;">
+                                                <table id="tblLabor" class="tblInnerBorders w100">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                LABOR NAME
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                TITLE
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                FLEET ID
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                JOB START
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                SITE START
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                SITE END
+                                                            </th>
+                                                            <th class="alignCenter">
+                                                                JOB END
+                                                            </th>
+                                                            <th class="alignCenter" width="15%">
+                                                                NOTES
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.LaborLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td style="min-width:100px">
+                                                                {!lineWrapper.TMLine.Resource_Name__c}&nbsp;
+                                                            </td>
+                                                            <td class="alignLeft">
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.TMLine.Description__c) < 30 && ISBLANK(lineWrapper.ContractLineDescription)}">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.TMLine.Description__c) >= 30 && ISBLANK(lineWrapper.ContractLineDescription)}" style="font-size:6pt">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.ContractLineDescription) < 30 && NOT(ISBLANK(lineWrapper.ContractLineDescription))}">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.ContractLineDescription) >= 30 && NOT(ISBLANK(lineWrapper.ContractLineDescription))}" style="font-size:6pt">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td class="alignLeft">
+                                                                {!lineWrapper.TMLine.Fleet_No__c}
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Job_Start_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.JobStartTime}"/>
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Site_Start_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.SiteStartTime}"/>
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Site_End_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.SiteEndTime}"/>
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Job_End_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.JobEndTime}"/>
+                                                            </td>
+                                                            <td class="alignLeft b">
+                                                                <apex:outputText value="{!lineWrapper.Note}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+
+                            <!-- <apex:outputPanel rendered="{!fieldTMWrapper.TM.Sales_Order__r.Sales_Order_Type__r.Name == 'Virus Decon'}"> -->
+                            <apex:outputPanel rendered="{!fieldTMWrapper.TM.Bill_to_Customer__r.Print_TM_Time_Detail__c != true || fieldTMWrapper.TM.Sales_Order__r.Sales_Order_Type__r.Name == 'Virus Decon'}">
+                                <div id="divLabor" class="tblOuterBorder">
+                                    <table class="w100" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="width:80%;">
+                                                <table id="tblLabor" class="tblInnerBorders w100">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            NAME
+                                                        </th>
+                                                        <th class="alignCenter">
+                                                            TITLE
+                                                        </th>
+                                                        <th class="alignCenter">
+                                                            FLEET ID
+                                                        </th>
+                                                        <th class="alignCenter">
+                                                            START TIME
+                                                        </th>
+                                                        <th class="alignCenter">
+                                                            END TIME
+                                                        </th>
+                                                        <th class="alignCenter" width="15%">
+                                                            NOTES
+                                                        </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="break-inside: avoid;">
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.LaborLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td style="min-width:100px">
+                                                                {!lineWrapper.TMLine.Resource_Name__c}&nbsp;
+                                                            </td>
+                                                            <td class="alignLeft">
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.TMLine.Description__c) < 30 && ISBLANK(lineWrapper.ContractLineDescription)}">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.TMLine.Description__c) >= 30 && ISBLANK(lineWrapper.ContractLineDescription)}" style="font-size:6pt">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.ContractLineDescription) < 30 && NOT(ISBLANK(lineWrapper.ContractLineDescription))}">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!LEN(lineWrapper.ContractLineDescription) >= 30 && NOT(ISBLANK(lineWrapper.ContractLineDescription))}" style="font-size:6pt">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td class="alignLeft">
+                                                                {!lineWrapper.TMLine.Fleet_No__c}
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Job_Start_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.JobStartTime}"/>
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--
+                                                                <apex:outputField value="{!lineWrapper.TMLine.Job_End_Time__c}"/>
+                                                                -->
+                                                                <apex:outputText value="{!lineWrapper.JobEndTime}"/>
+                                                            </td>
+                                                            <td class="alignLeft b">
+                                                                <apex:outputText value="{!lineWrapper.Note}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </apex:outputPanel>
+
+                            <!-- Labor End -->
+                            <div class="w100 mt3">
+                                <table class="w100" style="border-collapse: collapse;" cellpadding="0">
+                                    <tr>
+                                        <td style="width:57%;" class="vaTop">
+                                            <!-- Equipment Begin -->
+                                            <div id="divEquipment" class="tblOuterBorder">
+                                                <table id="tblEquipment" class="tblInnerBorders w100">
+                                                    <thead>
+                                                    <th>
+                                                        EQUIPMENT
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        QTY
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        UOM
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        ID#
+                                                    </th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.EquipmentLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td style="width:49%">
+                                                                <apex:outputText value="{0}" rendered="{!ISBLANK(lineWrapper.ContractLineDescription)}">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(lineWrapper.ContractLineDescription))}">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td class="alignCenter" style="width:13%">
+                                                                <!--ticket 19982-->
+                                                                <!--
+                                                                <apex:outputText value="{0, Number, ##0.00}"
+                                                                                 rendered="{!lineWrapper.TMLine.Quantity__c != null && lineWrapper.TMLine.Quantity__c != 0}">
+                                                                -->
+                                                                <apex:outputText value="{0, Number, ##0.00##}"
+                                                                                 rendered="{!lineWrapper.TMLine.Quantity__c != null && lineWrapper.TMLine.Quantity__c != 0}">
+                                                                <!--ticket 19982-->
+                                                                    <apex:param value="{!lineWrapper.TMLine.Quantity__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText rendered="{!lineWrapper.TMLine.Quantity__c == null || lineWrapper.TMLine.Quantity__c == 0}">
+                                                                    &nbsp;
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td class="alignCenter" style="width:13%">
+                                                                {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                {!lineWrapper.TMLine.Resource__r.Fleet_Number__c}
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <!-- Equipment End -->
+                                        </td>
+                                        <td style="width:1%;"></td>
+                                        <td style="width:42%;" class="vaTop">
+                                            <!-- Materials Begin -->
+                                            <div id="divMaterials" class="tblOuterBorder">
+                                                <table id="tblMaterials" class="tblInnerBorders w100">
+                                                    <thead>
+                                                    <th>
+                                                        MATERIALS
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        QTY
+                                                    </th>
+                                                    <th>
+                                                        UOM
+                                                    </th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.MaterialLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td>
+                                                                <apex:outputText value="{0}" rendered="{!ISBLANK(lineWrapper.ContractLineDescription)}">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Description__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText value="{0}" rendered="{!NOT(ISBLANK(lineWrapper.ContractLineDescription))}">
+                                                                    <apex:param value="{!lineWrapper.ContractLineDescription}"/>
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td class="alignCenter" style="width:15%">
+                                                                <!--ticket 19982-->
+                                                                <!--
+                                                                <apex:outputText value="{0, Number, ##0.00}"
+                                                                                 rendered="{!lineWrapper.TMLine.Quantity__c != null && lineWrapper.TMLine.Quantity__c != 0}">
+                                                                -->
+                                                                <apex:outputText value="{0, Number, ##0.00##}"
+                                                                                 rendered="{!lineWrapper.TMLine.Quantity__c != null && lineWrapper.TMLine.Quantity__c != 0}">
+                                                                <!--ticket 19982-->
+                                                                    <apex:param value="{!lineWrapper.TMLine.Quantity__c}"/>
+                                                                </apex:outputText>
+                                                                <apex:outputText rendered="{!lineWrapper.TMLine.Quantity__c == null || lineWrapper.TMLine.Quantity__c == 0}">
+                                                                    &nbsp;
+                                                                </apex:outputText>
+                                                            </td>
+                                                            <td style="width:17%">
+                                                                {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- Materials End -->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="mt3" style="border:1px solid black;">
+                                <div class="b alignCenter" style="padding:.5px;font-size:7.4pt;background-color: #D3D3D3;">
+                                    JOB DESCRIPTION / COMMENTS
+                                </div>
+                                <div style="min-height:70px;border-top:1px solid black">
+                                    <div style="margin: 5px 5px 5px 5px; overflow-wrap: break-word; word-wrap: break-word;">
+                                        <!--{!fieldTMWrapper.TM.Site_Scope__c}-->
+                                        <apex:outputText value="{!SUBSTITUTE(SUBSTITUTE(JSENCODE(fieldTMWrapper.TM.Site_Scope__c) & '\n' & JSENCODE(fieldTMWrapper.TM.Customer_Comments__c), '\r\n', '\n'),'\n','<br/>')}" escape="false" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt3 w100">
+                                <table class="w100" style="border-collapse: collapse;" cellpadding="0">
+                                    <tr>
+                                        <td style="width:53%;" class="vaTop">
+                                            <!-- Waste Disposal Begin-->
+                                            <div id="divWasteDisposal" class="tblOuterBorder">
+                                                <table id="tblWasteDisposal" class="tblInnerBorders w100">
+                                                    <thead>
+                                                    <th>
+                                                        MANIFEST #
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        WASTE DESCRIPTION
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        QTY
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        UOM
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        FACILITY
+                                                    </th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.WasteDisposalLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td style="width:25%">
+                                                                {!lineWrapper.TMLine.BOL_Manifest__c}
+                                                            </td>
+                                                            <td class="alignCenter" style="width:30%">
+                                                                {!lineWrapper.TMLine.Description__c}&nbsp;
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                <!--ticket 19982-->
+                                                                <!--
+                                                                {!lineWrapper.TMLine.Quantity__c}
+                                                                -->
+                                                                <apex:outputText value="{0, Number, ##0.00##}">
+                                                                    <apex:param value="{!lineWrapper.TMLine.Quantity__c}"/>
+                                                                </apex:outputText>
+                                                                <!--ticket 19982-->
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                {!lineWrapper.TMLine.Unit_of_Measure__r.Name}
+                                                            </td>
+                                                            <td class="alignCenter">
+                                                                {!lineWrapper.TMLine.Facility__r.Name}
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- Waste Disposal End-->
+                                        </td>
+                                        <td style="width:1%;"></td>
+                                        <td style="width:46%;" class="vaTop">
+                                            <!-- Subcontractors Begin -->
+                                            <div id="divSubContractors" class="tblOuterBorder">
+                                                <table id="tblSubContractors" class="tblInnerBorders w100">
+                                                    <thead>
+                                                    <th>
+                                                        SUBCONTRACTOR
+                                                    </th>
+                                                    <th class="alignCenter">
+                                                        DESCRIPTION
+                                                    </th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <apex:repeat value="{!fieldTMTaskWrapper.SubcontractorLineWrappers}" var="lineWrapper">
+                                                        <tr>
+                                                            <td class="w50">
+                                                                &nbsp;
+                                                                <!--{!tml.Resource__r.Name}-->
+                                                            </td>
+                                                            <td class="w50 alignCenter">
+                                                                {!lineWrapper.TMLine.Description__c}&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                    </apex:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- Subcontractors End -->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!--content end-->
+
+                        <div class="mt5">
+                            <!--signatures section-->
+                            <table class="w100 tblGeneral" style="page-break-inside: avoid;">
+                                <tr>
+                                    <td width="33%">SUPERVISOR SIGNATURE</td>
+                                    <td width="34%">CUSTOMER SIGNATURE</td>
+                                    <td width="34%">CUSTOMER SIGNATURE</td>
+                                </tr>
+                                <tr style="min-height: 45px;">
+                                    <td valign="bottom">
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            X
+                                            <apex:outputPanel rendered="{!fieldTMWrapper.SupervisorSignatureFileId != null}">
+                                                <!--
+                                                <apex:image url="/servlet/servlet.FileDownload?file={!fieldTMWrapper.SupervisorSignatureFileId}" style="width:100px;height:45px;" />
+                                                -->
+                                                <apex:image url="{!URLFOR($Action.Attachment.Download, fieldTMWrapper.SupervisorSignatureFileId)}" style="width:100px;height:45px;" />
+                                            </apex:outputPanel>
+                                        </div>
+                                    </td>
+
+                                    <td valign="bottom">
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            <span style="display: inline-block;width: 140px;">
+                                                X
+                                                <!--signature request-->
+                                                <!--
+                                                <apex:outputPanel rendered="{!CustomerANotAvailable == true}">
+                                                    <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                                </apex:outputPanel>
+                                                -->
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerANotAvailable == true}">
+                                                    <apex:outputPanel rendered="{!fieldTMWrapper.CustomerARequestingSignature == true}">
+                                                        <apex:outputLabel >&nbsp;Requesting Signature</apex:outputLabel>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!fieldTMWrapper.CustomerARequestingSignature != true}">
+                                                        <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                                    </apex:outputPanel>
+                                                </apex:outputPanel>
+                                                <!--signature request-->
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerANotAvailable != true && fieldTMWrapper.CustomerASignatureFileId != null}">
+                                                    <!--
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!fieldTMWrapper.CustomerASignatureFileId}" style="width:100px;height:45px;" />
+                                                    -->
+                                                    <apex:image url="{!URLFOR($Action.Attachment.Download, fieldTMWrapper.CustomerASignatureFileId)}" style="width:100px;height:45px;" />
+                                                </apex:outputPanel>
+                                            </span>
+
+                                            <span style="display: inline-block;">
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerANotAvailable != true}">
+                                                    <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                                        <apex:param value="{!fieldTMWrapper.CustomerASignatureDate}"/>
+                                                    </apex:outputText>
+                                                </apex:outputPanel>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <td valign="bottom">
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            <span style="display: inline-block; width: 140px;">
+                                                X
+                                                <!--signature request-->
+                                                <!--
+                                                <apex:outputPanel rendered="{!CustomerBNotAvailable == true}">
+                                                    <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                                </apex:outputPanel>
+                                                -->
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerBNotAvailable == true}">
+                                                    <apex:outputPanel rendered="{!fieldTMWrapper.CustomerBRequestingSignature == true}">
+                                                        <apex:outputLabel >&nbsp;Requesting Signature</apex:outputLabel>
+                                                    </apex:outputPanel>
+                                                    <apex:outputPanel rendered="{!fieldTMWrapper.CustomerBRequestingSignature != true}">
+                                                        <apex:outputLabel >&nbsp;Customer Not Available</apex:outputLabel>
+                                                    </apex:outputPanel>
+                                                </apex:outputPanel>
+                                                <!--signature request-->
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerBNotAvailable != true && fieldTMWrapper.CustomerBSignatureFileId != null}">
+                                                    <!--
+                                                    <apex:image url="/servlet/servlet.FileDownload?file={!fieldTMWrapper.CustomerBSignatureFileId}" style="width:100px;height:45px;" />
+                                                    -->
+                                                    <apex:image url="{!URLFOR($Action.Attachment.Download, fieldTMWrapper.CustomerBSignatureFileId)}" style="width:100px;height:45px;" />
+                                                </apex:outputPanel>
+                                            </span>
+
+                                            <span style="display: inline-block;">
+                                                <apex:outputPanel rendered="{!fieldTMWrapper.CustomerBNotAvailable != true}">
+                                                    <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                                        <apex:param value="{!fieldTMWrapper.CustomerBSignatureDate}"/>
+                                                    </apex:outputText>
+                                                </apex:outputPanel>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            {!fieldTMWrapper.SupervisorName}&nbsp;
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            {!fieldTMWrapper.CustomerAName}&nbsp;
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="border-bottom: 1px solid black; width: 80%;">
+                                            {!fieldTMWrapper.CustomerBName}&nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="3" style="text-align: center;">
+                                        Signature is client's acceptance of labor, equipment, inventory, and general terms and conditions as stated on the reverse side.
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </apex:repeat>
+            </div>
+        </apex:repeat>
+    </body>
+    </html>
+</apex:page>

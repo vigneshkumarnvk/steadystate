@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PC_Changed</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISCHANGED ( Salesperson__c  )   &amp;&amp; 
+ TEXT(Type
+) = "Customer"
+
+&amp;&amp;
+ $Profile.Id != "00ef4000000Dizy"</errorConditionFormula>
+    <errorMessage>Project Manager cannot be changed.</errorMessage>
+</ValidationRule>

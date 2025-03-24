@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Registered By --></label>
+        <name>Registered__c</name>
+        <picklistValues>
+            <masterLabel>ACV</masterLabel>
+            <translation><!-- ACV --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>APV</masterLabel>
+            <translation><!-- APV --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CVI</masterLabel>
+            <translation><!-- CVI --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ENV</masterLabel>
+            <translation><!-- ENV --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

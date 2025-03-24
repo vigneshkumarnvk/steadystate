@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>SC_Budget_Forecast__c</columns>
+    <columns>Budget_Month__c</columns>
+    <columns>Month__c</columns>
+    <columns>Budget_Amount__c</columns>
+    <columns>Revenue__c</columns>
+    <columns>GM_Forecast__c</columns>
+    <columns>WIP_Forecast__c</columns>
+    <columns>MHT_Forecast__c</columns>
+    <columns>Opportunity_Forecast__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Budget_Month__c</field>
+        <operation>equals</operation>
+        <value>THIS_MONTH</value>
+    </filters>
+    <label>All</label>
+</ListView>

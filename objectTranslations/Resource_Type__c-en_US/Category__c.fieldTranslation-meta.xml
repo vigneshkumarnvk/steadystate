@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Category --></label>
+        <name>Category__c</name>
+        <picklistValues>
+            <masterLabel>Bundled</masterLabel>
+            <translation><!-- Bundled --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Equipment</masterLabel>
+            <translation><!-- Equipment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Labor</masterLabel>
+            <translation><!-- Labor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lump Sum</masterLabel>
+            <translation><!-- Lump Sum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Per Diem</masterLabel>
+            <translation><!-- Per Diem --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

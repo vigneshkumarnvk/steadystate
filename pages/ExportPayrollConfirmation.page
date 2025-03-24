@@ -1,0 +1,18 @@
+<apex:page recordSetVar="pr" standardController="Payroll__c" extensions="PayrollController">
+    <style>
+        
+    </style>
+    <apex:sectionHeader title="Export Payroll"/>
+    <apex:form id="theForm">                                  
+        <apex:pageBlock id="thePageBlock" >
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+                <apex:pageMessages id="theMessage"></apex:pageMessages>
+            </apex:outputPanel>           
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" rendered="{!errMsg == '' || errMsg == null}" action="{!ExportToCSV}" rerender="thePageBlock" value="Export Payroll"/>
+                <apex:commandButton value="Return to Payrolls" action="{!returnToPayrollList}"/>                
+            </apex:pageBlockButtons>  
+        </apex:pageBlock>          
+    </apex:form>  
+</apex:page>

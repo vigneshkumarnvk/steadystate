@@ -1,0 +1,31 @@
+<!--job task-->
+<!--<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceController">-->
+<apex:page standardController="Sales_Invoice__c" extensions="ReverseInvoiceController">
+<!--job task-->
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Reverse Sales Invoice" subtitle="{!Sales_Invoice__c.Name}?"/>
+    <apex:form id="theForm">
+
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages />
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Credit Memo Reason Code: "/>
+                    <apex:inputField value="{!salesInvoice.Credit_Memo_Reason_Code__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Credit Memo Note: "/>
+                    <apex:inputTextarea value="{!creditMemoNote}" style="width:30%; height: 100px"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton status="loadingstatus" reRender="thePageBlock" value="Reverse Sales Invoice" action="{!reverseSalesInvoice}"/>
+                <apex:commandButton value="Return to Sales Invoice" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,19 @@
+<apex:page showHeader="false" standardStylesheets="false">
+    <apex:slds />
+    <apex:includeLightning />
+    
+    <div id="container" style="width:100 vw;height:100vh"/>
+    
+    <script>
+       $Lightning.use("c:CustomerPortalApp", function() {
+           //Write a function that creates the component on the page
+           $Lightning.createComponent("c:CustomerPortal",
+               {},
+               "container",
+               function(cmp) {
+                   
+               }
+           );
+        });
+     </script>
+</apex:page>

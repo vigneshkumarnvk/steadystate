@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CadenceAction_ID__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Action ID</label>
+    <referenceTo>RDNACadence__CadenceAction__c</referenceTo>
+    <relationshipLabel>Sequence Actions</relationshipLabel>
+    <relationshipName>Sequence_Actions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

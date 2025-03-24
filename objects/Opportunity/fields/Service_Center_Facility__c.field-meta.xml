@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Center_Facility__c</fullName>
+    <externalId>false</externalId>
+    <label>Service Center/Facility</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Aston, PA</fullName>
+                <default>false</default>
+                <label>Aston, PA</label>
+            </value>
+            <value>
+                <fullName>Baltimore, MD</fullName>
+                <default>false</default>
+                <label>Baltimore, MD</label>
+            </value>
+            <value>
+                <fullName>Clayton, NJ</fullName>
+                <default>false</default>
+                <label>Clayton, NJ</label>
+            </value>
+            <value>
+                <fullName>Envirotech</fullName>
+                <default>false</default>
+                <label>Envirotech</label>
+            </value>
+            <value>
+                <fullName>Facility - Deep Green</fullName>
+                <default>false</default>
+                <label>Facility - Deep Green</label>
+            </value>
+            <value>
+                <fullName>Facility - Elizabeth</fullName>
+                <default>false</default>
+                <label>Facility - Elizabeth</label>
+            </value>
+            <value>
+                <fullName>Facility - Lewisberry</fullName>
+                <default>false</default>
+                <label>Facility - Lewisberry</label>
+            </value>
+            <value>
+                <fullName>Hydro - Indiana</fullName>
+                <default>false</default>
+                <label>Hydro - Indiana</label>
+            </value>
+            <value>
+                <fullName>Hydro - MD and VA</fullName>
+                <default>false</default>
+                <label>Hydro - MD and VA</label>
+            </value>
+            <value>
+                <fullName>Hydro - PA and NJ</fullName>
+                <default>false</default>
+                <label>Hydro - PA and NJ</label>
+            </value>
+            <value>
+                <fullName>Hydro - Wisconsin</fullName>
+                <default>false</default>
+                <label>Hydro - Wisconsin</label>
+            </value>
+            <value>
+                <fullName>Major Events</fullName>
+                <default>false</default>
+                <label>Major Events</label>
+            </value>
+            <value>
+                <fullName>Metro - Brooklyn, NY</fullName>
+                <default>false</default>
+                <label>Metro - Brooklyn, NY</label>
+            </value>
+            <value>
+                <fullName>Metro - Elizabeth, NJ</fullName>
+                <default>false</default>
+                <label>Metro - Elizabeth, NJ</label>
+            </value>
+            <value>
+                <fullName>Metro - Rahway</fullName>
+                <default>false</default>
+                <label>Metro - Rahway</label>
+            </value>
+            <value>
+                <fullName>Metro - Transportation</fullName>
+                <default>false</default>
+                <label>Metro - Transportation</label>
+            </value>
+            <value>
+                <fullName>N. PA - Harrisburg</fullName>
+                <default>false</default>
+                <label>N. PA - Harrisburg</label>
+            </value>
+            <value>
+                <fullName>N. PA - New Castle</fullName>
+                <default>false</default>
+                <label>N. PA - New Castle</label>
+            </value>
+            <value>
+                <fullName>N. PA - Williamsport</fullName>
+                <default>false</default>
+                <label>N. PA - Williamsport</label>
+            </value>
+            <value>
+                <fullName>New England - Maine</fullName>
+                <default>false</default>
+                <label>New England - Maine</label>
+            </value>
+            <value>
+                <fullName>New England - Mass</fullName>
+                <default>false</default>
+                <label>New England - Mass</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

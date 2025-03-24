@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC24_POs</fullName>
+    <columns>NAME</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Pending_Approval_From__c</columns>
+    <columns>Order_Date__c</columns>
+    <columns>Document_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>contains</operation>
+        <value>24</value>
+    </filters>
+    <filters>
+        <field>Document_Status__c</field>
+        <operation>equals</operation>
+        <value>Pending Approval</value>
+    </filters>
+    <label>SC24 POs</label>
+</ListView>

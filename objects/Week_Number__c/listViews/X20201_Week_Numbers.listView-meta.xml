@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X20201_Week_Numbers</fullName>
+    <columns>NAME</columns>
+    <columns>Year__c</columns>
+    <columns>Week_Start_Date__c</columns>
+    <columns>Week_End_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Year__c</field>
+        <operation>equals</operation>
+        <value>2021</value>
+    </filters>
+    <label>2021 Week Numbers</label>
+</ListView>

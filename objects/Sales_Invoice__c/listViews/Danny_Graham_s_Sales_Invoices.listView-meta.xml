@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Danny_Graham_s_Sales_Invoices</fullName>
+    <columns>Bill_to_Customer__c</columns>
+    <columns>Sales_Order__c</columns>
+    <columns>No__c</columns>
+    <columns>Invoice_Date__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Customer_PO_No__c</columns>
+    <columns>Invoice_Amt_Incl_Tax__c</columns>
+    <columns>Reversed_from_SI__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Salesperson__c</field>
+        <operation>equals</operation>
+        <value>Danny Graham</value>
+    </filters>
+    <label>Danny Graham's Sales Invoices</label>
+</ListView>

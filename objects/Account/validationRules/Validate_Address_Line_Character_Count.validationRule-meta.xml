@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validate_Address_Line_Character_Count</fullName>
+    <active>true</active>
+    <errorConditionFormula>IF(CONTAINS(BillingStreet, SUBSTITUTE($Label.LineBreak, "-", "")),
+OR(
+LEN(LEFT(BillingStreet, FIND(SUBSTITUTE($Label.LineBreak, "-", ""), BillingStreet, 0) - 1)) &gt; 50, 
+LEN(RIGHT(BillingStreet, LEN(BillingStreet) - FIND(SUBSTITUTE($Label.LineBreak, "-", ""), BillingStreet, 0) - 1)) &gt; 50
+),
+LEN(BillingStreet) &gt; 50)</errorConditionFormula>
+    <errorDisplayField>BillingStreet</errorDisplayField>
+    <errorMessage>2 address lines allowed and each address line must not exceed 50 characters.</errorMessage>
+</ValidationRule>

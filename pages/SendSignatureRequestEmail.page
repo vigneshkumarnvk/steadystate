@@ -1,0 +1,89 @@
+<apex:page id="SendSignatureRequestEmail" standardController="TM__c" extensions="SignatureRequestController" showHeader="true" sideBar="true" lightningStylesheets="true">
+    <style>
+        .table-1 {
+        }
+
+        .table-1 thead > tr > th, tbody > tr > td {
+            padding: 4px;
+        }
+    </style>
+    <apex:form id="theForm">
+        <c:LoadingStatus />
+        <apex:pageMessages />
+        <apex:sectionHeader title="{!TM.Name}" subTitle="Signature Request"/>
+
+        <apex:pageBlock id="thePageBlock" rendered="{!Signatures.size == 0}">
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+
+
+            <apex:outputPanel rendered="{!Signatures.size == 0}">
+                <apex:outputLabel style="font-size:20px">Customer has signed. There is nothing to request.</apex:outputLabel>
+            </apex:outputPanel>
+        </apex:pageBlock>
+
+        <apex:pageBlock id="thePageBlock2" rendered="{!Signatures.size > 0}">
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Request Signature" action="{!sendSignatureRequestEmail}" rendered="{!Signatures.size > 0}" status="loadingstatus" reRender="thePageBlock2"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+
+            <!--
+            <apex:outputLabel >
+                Please note system will issue a new expiration date for the listed recipients to access the signature page when the request email is sent.
+            </apex:outputLabel>
+            -->
+
+            <table style="width: 100%" class="table-1">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Customer Name</th>
+                    <th>Email</th>
+                    <th>Last Requested Date</th>
+                    <th>Access Token Expires On</th>
+                </tr>
+                </thead>
+                <tbody>
+                <apex:repeat value="{!Signatures}" var="signature">
+                    <tr>
+                        <td>
+                            <apex:outputPanel rendered="{!signature.Signer_Role__c == 'Customer A'}">Signature One</apex:outputPanel>
+                            <apex:outputPanel rendered="{!signature.Signer_Role__c == 'Customer B'}">Signature Two</apex:outputPanel>
+                        </td>
+                        <td>
+                            <apex:outputPanel rendered="{!signature.Request_Signature__c == true}">{!signature.Print_Name__c}</apex:outputPanel>
+                            <apex:inputField label="" value="{!signature.Print_Name__c}" style="width:250px;" rendered="{!signature.Request_Signature__c != true}" required="true"/>
+                        </td>
+                        <td>
+                            <apex:outputPanel rendered="{!signature.Request_Signature__c == true}">{!signature.Email__c}</apex:outputPanel>
+                            <apex:inputField label="" value="{!signature.Email__c}" style="width:500px;" rendered="{!signature.Request_Signature__c != true}" required="true"/>
+                        </td>
+                        <td><apex:inputField value="{!signature.Signature_Request_Date__c}"/></td>
+                        <td><apex:inputField value="{!signature.Token_Expiration_Date__c}"/></td>
+                    </tr>
+                </apex:repeat>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+
+        <apex:pageBlock id="thePageBlock3" rendered="{!PendingSignatures.size > 0}">
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Attach Signature" action="{!processSignatureAndEmail}" rendered="{!PendingSignatures.size > 0}" style="loadingstatus" reRender="thePageBlock3"/>
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel rendered="{!PendingSignatures.size > 0}">
+                <apex:pageBlockSection title="Customer has signed. Please click the Attach Signature button to attach the signatures to the T&M." columns="1">
+                    <apex:pageBlockTable value="{!PendingSignatures}" var="signature">
+                        <apex:column headerValue="Customer Name" value="{!signature.Print_Name__c}"/>
+                        <apex:column headerValue="Email" value="{!signature.Email__c}"/>
+                        <apex:column headerValue="Signed" value="{!signature.Signature_Request__r.Signed__c}"/>
+                        <apex:column headerValue="Signature Date" value="{!signature.Signature_Request__r.Signature_Date__c}"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

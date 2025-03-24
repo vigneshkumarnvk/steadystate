@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Contract Request</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Contract Request</value>
+    </caseValues>
+    <layouts>
+        <layout>Contract Request Layout</layout>
+        <sections>
+            <label><!-- Contract Manager - Fill out prior to approving a new contract --></label>
+            <section>Contract Manager - Fill out prior to approving a new contract</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- You do not have sufficient privileges to edit Contact Request Form. --></errorMessage>
+        <name>Cannot_Edit_CR_with_Status</name>
+    </validationRules>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</CustomObjectTranslation>

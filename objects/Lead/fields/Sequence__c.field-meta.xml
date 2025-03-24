@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sequence__c</fullName>
+    <externalId>false</externalId>
+    <label>Sequence</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ConEd Lost Customers</fullName>
+                <default>false</default>
+                <label>ConEd Lost Customers</label>
+            </value>
+            <value>
+                <fullName>Lost Customer Campaign</fullName>
+                <default>false</default>
+                <label>Lost Customer Campaign</label>
+            </value>
+            <value>
+                <fullName>New Program</fullName>
+                <default>false</default>
+                <label>New Program</label>
+            </value>
+            <value>
+                <fullName>New Prospect Campaign 2020</fullName>
+                <default>false</default>
+                <label>New Prospect Campaign 2020</label>
+            </value>
+            <value>
+                <fullName>New Prospect Campaign 2020 with Email</fullName>
+                <default>false</default>
+                <label>New Prospect Campaign 2020 with Email</label>
+            </value>
+            <value>
+                <fullName>New Prospect Campaign 2020 without Email</fullName>
+                <default>false</default>
+                <label>New Prospect Campaign 2020 without Email</label>
+            </value>
+            <value>
+                <fullName>Utility Industry</fullName>
+                <default>false</default>
+                <label>Utility Industry</label>
+            </value>
+            <value>
+                <fullName>Wednesday Leads</fullName>
+                <default>false</default>
+                <label>Wednesday Leads</label>
+            </value>
+            <value>
+                <fullName>Wes Mason</fullName>
+                <default>false</default>
+                <label>Wes Mason</label>
+            </value>
+            <value>
+                <fullName>Wes New Program</fullName>
+                <default>false</default>
+                <label>Wes New Program</label>
+            </value>
+            <value>
+                <fullName>new sequence</fullName>
+                <default>false</default>
+                <label>new sequence</label>
+            </value>
+            <value>
+                <fullName>2022 Lead without Email</fullName>
+                <default>false</default>
+                <label>2022 Lead without Email</label>
+            </value>
+            <value>
+                <fullName>2022 Lead with Email</fullName>
+                <default>false</default>
+                <label>2022 Lead with Email</label>
+            </value>
+            <value>
+                <fullName>Test</fullName>
+                <default>false</default>
+                <label>Test</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

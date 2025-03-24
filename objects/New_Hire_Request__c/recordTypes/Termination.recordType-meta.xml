@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Termination</fullName>
+    <active>true</active>
+    <label>Termination</label>
+    <picklistValues>
+        <picklist>ADP_Title__c</picklist>
+        <values>
+            <fullName>Chemist - Waste Specialist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chemist I</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Confined Space Rescue Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Depack Chemist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver Operator - B Dry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver%2FOperator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver%2FOperator A Dry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver%2FOperator A Wet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Service Project Mgmt%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Service Sales Specialist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Services Foreman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Services Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Household Waste Days</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydrovac Driver%2FOperator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laborer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plant Technician</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Equipment_Supplies__c</picklist>
+        <values>
+            <fullName>Business Cards %28%2440%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cell Phone Stipend %28%2440%2Fmo%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Company Cell Phone iPhone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Company Credit Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Desktop Computer %28%241%2C000%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fuel Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hotel %2F CLC Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laptop Computer %28%242%2C100%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monitor%28s%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Polycom %28Desk%29 Add New %28%24300%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Polycom %28Desk%29 Re-Use</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security Badge %28Metro Only%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>iPad %28for Drivers Only%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Software__c</picklist>
+        <values>
+            <fullName>Email %28%2420%2Fmo%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enviroware</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NAV %28Limited access%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Purchase Orders %28Coupa%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Samsara</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Title_Category__c</picklist>
+        <values>
+            <fullName>Account Executive</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chemist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dispatcher</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Equipment Operator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Field Technician</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Foreman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Office Admin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Manager</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type__c</picklist>
+        <values>
+            <fullName>New Hire</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Coupa_POs</fullName>
+    <columns>NAME</columns>
+    <columns>Coupa_Status__c</columns>
+    <columns>Buy_from_Vendor__c</columns>
+    <columns>Vendor_Name__c</columns>
+    <columns>Coupa_Supplier_Number__c</columns>
+    <columns>Order_Cost__c</columns>
+    <columns>Order_Cost_Incl_Tax__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Coupa_Id__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>Buy_from_Vendor__c</field>
+        <operation>equals</operation>
+    </filters>
+    <label>Coupa POs</label>
+</ListView>

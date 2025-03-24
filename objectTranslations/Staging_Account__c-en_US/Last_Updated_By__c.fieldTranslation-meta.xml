@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Updated By Customer --></label>
+        <name>Last_Updated_By__c</name>
+        <relationshipLabel><!-- Staging Accounts --></relationshipLabel>
+    </CustomFieldTranslation>

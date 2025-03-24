@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <help><!-- Available Credit plus value of unbilled T&amp;M --></help>
+        <label><!-- AvlCredit_wUnbilledT&amp;M --></label>
+        <name>AvlCredit_wConfrimedScheduledTM__c</name>
+    </CustomFieldTranslation>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Unit Cost 05132019 --></label>
+        <name>Unit_Cost_05132019__c</name>
+    </CustomFieldTranslation>

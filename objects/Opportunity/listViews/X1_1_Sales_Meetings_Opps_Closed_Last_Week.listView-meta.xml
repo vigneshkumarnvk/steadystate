@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>X1_1_Sales_Meetings_Opps_Closed_Last_Week</fullName>
+    <columns>Service_Center_Name__c</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>Job_Type__c</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Stage_Change_Date__c</field>
+        <operation>greaterThan</operation>
+        <value>3/13/2022</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>equals</operation>
+        <value>Closed Lost,Closed Won,Customer Canceled,No Bid,No Progress</value>
+    </filters>
+    <label>1:1 Sales Meetings_Opps Closed Last Week</label>
+</ListView>

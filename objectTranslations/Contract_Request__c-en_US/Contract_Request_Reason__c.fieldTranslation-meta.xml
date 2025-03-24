@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Contract Request Reason --></label>
+        <name>Contract_Request_Reason__c</name>
+        <picklistValues>
+            <masterLabel>Billing Instructions</masterLabel>
+            <translation><!-- Billing Instructions --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contract Extension</masterLabel>
+            <translation><!-- Contract Extension --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contract Renewal</masterLabel>
+            <translation><!-- Contract Renewal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Documentation Only</masterLabel>
+            <translation><!-- Documentation Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Emergency Service Agreement</masterLabel>
+            <translation><!-- Emergency Service Agreement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>New Contract</masterLabel>
+            <translation><!-- New Contract --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Pricing Change</masterLabel>
+            <translation><!-- Pricing Change --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

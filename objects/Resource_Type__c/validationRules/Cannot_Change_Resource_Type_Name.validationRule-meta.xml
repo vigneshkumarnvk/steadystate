@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cannot_Change_Resource_Type_Name</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISCHANGED( Name ),$Profile.Name != 'System Administrator')</errorConditionFormula>
+    <errorMessage>You do not have sufficient privileges to change Resource Type Name.</errorMessage>
+</ValidationRule>

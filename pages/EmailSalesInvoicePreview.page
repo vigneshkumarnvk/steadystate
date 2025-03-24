@@ -1,0 +1,59 @@
+<apex:page standardController="Sales_Invoice__c" extensions="SalesInvoiceEmailing" >
+    <apex:sectionHeader title="Email Sales Invoice" subtitle="{!title}?"/>
+    <apex:form ><br/><br/>
+        <c:LoadingStatus />
+        <apex:pageBlock id="thePageBlock">
+            <apex:outputPanel >
+                Please review important messages below before you continue:<br/><br/>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:outputPanel rendered="{!showEmail}">
+
+                <apex:outputLabel value="Internal Only" /> <br />
+                <apex:inputCheckbox value="{!isTest}" />
+                <br/><br/>
+
+                <apex:outputLabel value="From" for="From" />: <br />
+                <apex:outputText value="{!$User.Email}" />
+                <br/><br/>
+
+                <apex:outputLabel value="To" for="To"/>: <br/>
+                <!--apex:inputTextarea value="{!theToAddresses}" id="to" rows="1" cols="150" /-->
+                <apex:inputText value="{!theToAddresses}" id="to" disabled="true" style="width:835px;"/>
+                <br/><br/>
+
+                <apex:outputLabel value="CC" for="cc"/>: <br/>
+                <apex:inputTextarea value="{!theCcAddresses}" id="cc" rows="1" cols="150" />
+                <br/><br/>
+
+                <apex:outputLabel value="Subject" for="Subject"/>: <br/>
+                <apex:inputTextarea value="{!theSubject}" id="Subject" rows="2" cols="150"/>
+                <br/><br/>
+
+                <apex:outputLabel value="Body" for="Body"/>: <br/>
+                <apex:inputTextarea value="{!theBody}" id="Body" rows="5" cols="150"/>
+                <br/><br/>
+
+                <apex:outputText value="Please select a file to attach"/><br/><br/>
+                <apex:outputLabel value="File" for="file"/>
+                <apex:inputFile value="{!file.body}" filename="{!file.Name}" id="file"/>
+                <br/><br/>
+
+                <apex:outputLabel >Invoice Type:</apex:outputLabel>
+                <apex:selectList id="InvoiceType" size="1" value="{!selInvoiceType}" >
+                    <apex:selectOptions value="{!lstInvoiceType}"/>
+                </apex:selectList>
+                <br/><br/>
+                <apex:outputLabel value="PDF" for="PDF"/>: <br/>
+
+                <iframe id="sipdf_preview" src="/apex/SalesInvoicePdf?id={!theSI.Id}&PrintCopy=None&InvoiceType=TM Detail" height="800px" width="800px" />
+                <br/><br/>
+            </apex:outputPanel>
+
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Send Email" action="{!EmailSI}" />
+                <apex:commandButton value="Return to Sales Invoice" action="{!returnBack}"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

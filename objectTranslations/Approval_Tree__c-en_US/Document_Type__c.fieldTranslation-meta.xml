@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Document Type --></label>
+        <name>Document_Type__c</name>
+        <picklistValues>
+            <masterLabel>Sales_Invoice</masterLabel>
+            <translation><!-- Sales_Invoice --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sales_Order</masterLabel>
+            <translation><!-- Sales_Order --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sales_Quote</masterLabel>
+            <translation><!-- Sales_Quote --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

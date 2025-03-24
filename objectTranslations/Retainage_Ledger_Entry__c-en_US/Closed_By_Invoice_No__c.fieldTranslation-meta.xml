@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Closed By Invoice No. --></label>
+        <name>Closed_By_Invoice_No__c</name>
+        <relationshipLabel><!-- Retainage Ledger Entries --></relationshipLabel>
+    </CustomFieldTranslation>

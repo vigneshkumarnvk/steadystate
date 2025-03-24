@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lunch_Test__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF((VALUE(LEFT(  Lunch_Start_24__c ,2)) &gt; VALUE(LEFT( Job_end_time_24_hrs__c , 2))), TRUE, 
+IF((VALUE(LEFT( Lunch_Start_24__c , 2)) = VALUE(LEFT( Job_end_time_24_hrs__c ,2))) &amp;&amp; 
+(VALUE(MID( Lunch_Start_24__c,4,2)) &gt; VALUE(MID( Job_end_time_24_hrs__c ,4,2))),TRUE, 
+FALSE))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Lunch Test</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

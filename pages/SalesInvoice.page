@@ -1,0 +1,2249 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Sales_Invoice__c"
+           extensions="SalesInvoiceController" id="thePage" sidebar="false">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <head>
+        <style>
+            .silWrap {
+                overflow: scroll;
+                max-height: 250px;
+            }
+        </style>
+    </head>
+    <script>
+        $(document).ready(function () {
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        var focuselmnt;
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            //alert (elemenetIdForField +"/" + lastColonPosition + "/" + secondToLastColonPosition);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theJobPosition' || fieldName == 'theServiceCenter' || fieldName == 'theEServiceCenter' || fieldName == 'theUOM' || fieldName == 'theMResource' ||
+                fieldName == 'theLResource' || fieldName == 'theEResource' || fieldName == 'theSResource' || fieldName == 'theFResource' || fieldName == 'theWResource' ||
+                fieldName == 'theDResource' || fieldName == 'theLUOM' || fieldName == 'theMUOM' || fieldName == 'theEUOM' || fieldName == 'theSUOM'
+                || fieldName == 'theFUOM' || fieldName == 'theWUOM' || fieldName == 'theDUOM' || fieldName == 'theLumpUOM' || fieldName == 'theMiscUOM' ||
+                fieldName == 'theEquipment' || fieldName == 'theLContractLine' || fieldName == 'theEContractLine' || fieldName == 'theMContractLine' ||
+                fieldName == 'theLumpSumResourceType' || fieldName == 'theLumpSumContractLine' || fieldName == 'theTaxArea' || fieldName == 'theMiscResourceType' || fieldName == 'theMiscResource' ||
+                fieldName == 'theAppliedToDocNo') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else if (fieldName == 'theUsePremiumRate' || fieldName == 'theBillSiteTime' || fieldName == 'theLBillasLumpSum' || fieldName == 'theEBillasLumpSum' ||
+                fieldName == 'theMBillasLumpSum' || fieldName == 'theSBillasLumpSum' || fieldName == 'theDBillasLumpSum' || fieldName == 'theMiscBillasLumpSum' ||
+                fieldName == 'theWBillasLumpSum' || fieldName == 'theLNonBillable' || fieldName == 'theENonBillable' || fieldName == 'theMNonBillable' ||
+                fieldName == 'theSNonBillable' || fieldName == 'theDNonBillable' || fieldName == 'theMiscNonBillable' || fieldName == 'theWNonBillable' ||
+                fieldName == 'theLumpNonBillable' || fieldName == 'theLumpBillasLumpSum') {
+                var newFieldValue = document.getElementById(elemenetIdForField).checked;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+
+            setFocusElement(fieldName, elemenetIdForField);
+            validateField(fieldName, newFieldValue, lineNo);
+        }
+
+        function setFocusElement(fieldName, elemenetIdForField) {
+            switch (fieldName) {
+                case "theResource":
+                    focuselmnt = elemenetIdForField.replace('theResource', 'theQuantity');
+                    break;
+                case "theQuantity":
+                    focuselmnt = elemenetIdForField.replace('theQuantity', 'theUnitPrice');
+                    break;
+            }
+        }
+
+        function validateBillToCustomer(ctrl) {
+            validateBillToCustomer();
+        }
+
+        function validateInvoiceDate(ctrl) {
+            validateInvoiceDate();
+        }
+
+        function validatePaymentTerm(ctrl) {
+            validatePaymentTerm();
+        }
+
+        function validateTaxArea(ctrl) {
+            validateTaxArea();
+        }
+
+        /*function validateContact(ctrl) {
+            validateContact();
+        }*/
+
+        function validateTaxLiable(ctrl) {
+            validateTaxLiable();
+        }
+
+        function setWidth() {
+            $(".silWrap").css("max-width", (screen.width - 100));
+        }
+
+        // AES-401
+        function validateContactCall(field){
+            var fieldId = field.id;
+            var contactId = document.getElementById(fieldId + "_lkid").value;
+            validateContact(fieldId, contactId);
+        }
+
+        function validateAppliedToInvoiceNoCall(field){
+            var fieldId = field.id;
+            var appliedToDocId = document.getElementById(fieldId + "_lkid").value;
+            validateAppliedToDocId(appliedToDocId);
+        }
+
+        function calcRetainageAmt(ctrl){
+            calcRetainageAmt();
+        }
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Sales Invoice" subtitle="{!Sales_Invoice__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"
+                                    rendered="{!NOT(Posted)}"/>
+                <!-- Ticket#13607 -->
+                <apex:commandButton value="Save" action="{!updatePostedSI}" rerender="theForm" status="loadingstatus"
+                                    rendered="{!Posted}"/>
+
+                <apex:commandButton value="Quick Save" action="{!quicksave}" rerender="theForm" status="loadingstatus"
+                                    rendered="{!NOT(Posted)}"/>
+                <apex:commandButton value="Save & Post" action="{!saveAndPost}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+
+            <apex:actionFunction name="validateBillToCustomer" action="{!validateBillToCustomer}"
+                                 reRender="thePageBlock" immediate="false" status="loadingstatus"/>
+            <!--<apex:actionFunction name="validateContact" action="{!validateContact}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>-->
+            <apex:actionFunction name="validateTaxArea" action="{!validateTaxArea}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateTaxLiable" action="{!validateTaxLiable}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateInvoiceDate" action="{!validateInvoiceDate}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validatePaymentTerm" action="{!validatePaymentTerm}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="calcRetainageAmt" action="{!calcRetainageAmt}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="reRender" reRender="thePageBlock" immediate="false"/>
+            <!--Ticket#14606 -->
+            <apex:actionFunction name="validateField" action="{!validateField}"
+                                 oncomplete="document.getElementById(focuselmnt).focus();"
+                                 reRender="theSILTable,SITotal,thePageBlock,theLaborSection,theMaterialsSection,
+                                    theEquipmentSection,theSubcontractorsSection, theFieldRemediationSection,
+                                    theWasteDisposalSection, theDemurrageSection, theLumpSumSection, theMiscSection,
+                                    theMessage,theMessage2,theMessage3"
+                                 immediate="false"
+                                 status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="lineNo"/>
+            </apex:actionFunction>
+            <!-- Ticket# AES-401 -->
+            <apex:actionFunction name="validateContact" action="{!validateContact}"
+                                 reRender="thePageBlockSection,thePageBlockSection-SI"
+                                 immediate="false">
+                <apex:param value="" name="fieldId"/>
+                <apex:param value="" name="contactId"/>
+            </apex:actionFunction>
+            <apex:actionFunction name="validateAppliedToDocId" action="{!validateAppliesToDoc}"
+                                 reRender="theSILTable,SITotal,thePageBlock,thePageBlockSection,thePageBlockSection-SI,
+                                            theMiscSection,theMessage,theMessage2,theMessage3"
+                                 immediate="false">
+                <apex:param value="" name="appliedToDocId"/>
+            </apex:actionFunction>
+            <apex:pageBlockSection title="General" collapsible="true" id="thePageBlockSection">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Bill_to_Customer__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Bill_to_Customer__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!SI.Document_Status__c}" rendered="{!allowDataOverride}"/>
+                <apex:outputField value="{!SI.Document_Status__c}" rendered="{!NOT(allowDataOverride)}"/>
+                <!-- Ticket# AES-401 -->
+                <apex:inputField value="{!SI.Contact__c}" rendered="{!NOT(Posted)}"/>
+                <!--
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Contact</apex:outputLabel>
+                    <apex:outputpanel >
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                            <c:CustomLookup componentId="theBTContact"
+                                            styleClass="input-lookup" style="width: 150px; height:18px;" useSOSL="false"
+                                            minSearchLength="1"
+                                            filterClause="Contact_Type__c=\'Billing\'"
+                                            sObjectType="Contact"
+                                            sObject="{!theBTContact}"
+                                            sObjectField="Name"
+                                            SObjectTypeSearch="Contact"
+                                            secondaryDisplayField="LastName"
+                                            onchange="validateContactCall(this);"
+                                            LookupObject="Contact"
+                                            LinkFieldName="Id"
+                                            FieldSetName="ContactFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateFieldInList"
+
+                                            FilterName1="AccountId"
+                                            FilterNameValue1="{!SI.Bill_to_Customer__c}"
+                                            FilterOperation1="AccountId"
+                                            FilterOperationValue1="="
+                                            FilterType1="AccountId"
+                                            FilterTypeValue1="String"
+
+                                            FilterName2="Contact_Type__c"
+                                            FilterNameValue2="Billing"
+                                            FilterOperation2="Contact_Type__c"
+                                            FilterOperationValue2="INCLUDES"
+                                            FilterType2="Contact_Type__c"
+                                            FilterTypeValue2="Includes"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                -->
+                <apex:outputField value="{!SI.Contact__c}" rendered="{!(Posted)}"/>
+                <apex:inputField value="{!SI.Customer_PO_No__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Customer_PO_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Street__c}" rendered="{!NOT(Posted)}" style="width:220px;"/>
+                <apex:outputField value="{!SI.Street__c}" rendered="{!Posted}"/> <!-- 14507 -->
+                <apex:inputField value="{!SI.Corrected_Customer_PO_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Invoice_Date__c}" onchange="validateInvoiceDate(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Invoice_Date__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.City__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.City__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Payment_Term__c}" onchange="validatePaymentTerm(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Payment_Term__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.State__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.State__c}" rendered="{!Posted}"/>
+                <apex:outputField value="{!SI.Due_Date__c}"/>
+                <apex:inputField value="{!SI.Postal_Code__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Postal_Code__c}" rendered="{!Posted}"/>
+                <!--<apex:inputField value="{!SI.Surcharge_Type__c}" rendered="{!NOT(Posted)}" />-->
+                <apex:outputField value="{!SI.Surcharge_Type__c}" />
+                <apex:inputField value="{!SI.Country__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Country__c}" rendered="{!Posted}"/>
+                <!--<apex:inputField value="{!SI.Surcharge_Pct__c}" rendered="{!$Profile.Name == 'System Administrator' && NOT(Posted)}" />-->
+                <!--<apex:outputField value="{!SI.Surcharge_Pct__c}" rendered="{!$Profile.Name != 'System Administrator' || Posted}" />-->
+                <apex:outputField value="{!SI.Surcharge_Pct__c}" />
+                <apex:outputField value="{!SI.Rental_Invoice__c}"/>
+                <apex:outputField value="{!SI.Misc_Invoice__c}"/>
+                <!-- Ticket#13607 -->
+                <apex:inputField value="{!SI.SPO_No__c}" rendered="{!Posted}" />
+                <!-- Ticket#13607 -->
+                <apex:outputField value="{!SI.Credit_Memo__c}"/>
+                <!-- Ticket#13607 -->
+                <apex:inputField value="{!SI.Expected_Payment_Date__c}" rendered="{!Posted}" />
+                <!-- Ticket#13607 -->
+                <apex:pageBlockSectionItem rendered="{!SI.Credit_Memo__c && NOT(ISNULL(SI.Reversed_from_SI__c)) && NOT(SI.Misc_Invoice__c)}">
+                    <apex:outputLabel >Reversed from SI No.</apex:outputLabel>
+                    <apex:outputField value="{!SI.Reversed_from_SI__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!SI.Credit_Memo__c && SI.Misc_Invoice__c == true}">
+                    <apex:outputLabel >Applies-to Invoice No.</apex:outputLabel>
+                    <!--                    <apex:outputpanel >-->
+
+                    <!--&lt;!&ndash;                                <apex:inputField value="{!SI.Reversed_from_SI__c}"/>&ndash;&gt;-->
+                    <!--                        -->
+                    <!--                    </apex:outputpanel>-->
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                                <c:CustomLookup componentId="theAppliedToDocNo"
+                                                styleClass="input-lookup" style="width: 150px; height:18px;" useSOSL="false"
+                                                minSearchLength="1"
+                                                filterClause="Bill_to_Customer__c = \'{!SI.Bill_to_Customer__c}\' AND Payment_Status__c != \'Fully Paid\' AND Document_Status__c = \'Posted\'
+                                                     AND Credit_Memo__c=false AND Customer_Ledger_Entry__c != null"
+                                                sObjectType="Sales_Invoice__c"
+                                                sObject="{!SI}"
+                                                sObjectField="Reversed_from_SI__c"
+                                                onchange="validateAppliedToInvoiceNoCall(this);"
+                                                SObjectTypeSearch="Sales_Invoice__c"
+                                                allowtoBlank="true"
+                                                LookupObject="Sales_Invoice__c"
+                                                LinkFieldName="Id"
+                                                FieldSetName="SalesInvoiceFieldSet"
+                                                RunValidation="True"
+                                                LookupType="Id"
+
+                                                ValidateFunction="validateAppliedToInvoiceNoCall"
+
+                                                FilterName1="Bill_to_Customer__c"
+                                                FilterNameValue1="{!SI.Bill_to_Customer__c}"
+                                                FilterOperation1="Bill_to_Customer__c"
+                                                FilterOperationValue1="="
+                                                FilterType1="Bill_to_Customer__c"
+                                                FilterTypeValue1="String"
+
+                                                FilterName2="Payment_Status__c"
+                                                FilterNameValue2="Fully Paid"
+                                                FilterOperation2="Payment_Status__c"
+                                                FilterOperationValue2="!="
+                                                FilterType2="Payment_Status__c"
+                                                FilterTypeValue2="String"
+
+                                                FilterName3="Document_Status__c"
+                                                FilterNameValue3="Posted"
+                                                FilterOperation3="Document_Status__c"
+                                                FilterOperationValue3="="
+                                                FilterType3="Document_Status__c"
+                                                FilterTypeValue3="String"
+
+                                                FilterName4="Credit_Memo__c"
+                                                FilterNameValue4="false"
+                                                FilterOperation4="Credit_Memo__c"
+                                                FilterOperationValue4="="
+                                                FilterType4="Credit_Memo__c"
+                                                FilterTypeValue4="Boolean"
+
+                                                FilterName5="Customer_Ledger_Entry__c"
+                                                FilterNameValue5=""
+                                                FilterOperation5="Customer_Ledger_Entry__c"
+                                                FilterOperationValue5="!="
+                                                FilterType5="Customer_Ledger_Entry__c"
+                                                FilterTypeValue5="String"
+
+                                                fltr1="true"
+                                                fltr2="true"
+                                                fltr3="true"
+                                                fltr4="true"
+                                                fltr5="true"
+                                                fltr6="true"
+                                                fltr7="true"
+                                />
+                            </apex:panelGrid>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(ISNULL(SI.Reversed_by_CM_No__c))}">
+                    <apex:outputLabel >Reversed by CM No.</apex:outputLabel>
+                    <apex:outputField value="{!SI.Reversed_by_CM_No__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!!posted && SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage %" />
+                    <apex:inputField value="{!SI.Retainage_Pct__c}" onchange="calcRetainageAmt(this)" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!posted && SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage %" />
+                    <apex:outputField value="{!SI.Retainage_Pct__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage Amount" />
+                    <apex:outputField value="{!SI.Retainage_Amount__c}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Site Information" collapsible="true" id="thePageBlockSection-SI">
+                <apex:inputField value="{!SI.Site_Name__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Name__c}" rendered="{!Posted}"/>
+                <apex:inputField label="Site Contact" value="{!SI.Site_Contact__c}" rendered="{!NOT(Posted)}" />
+                <apex:outputField label="Site Contact" value="{!SI.Site_Contact__c}" rendered="{!Posted}" />
+                <!-- AES-401 -->
+                <!--
+                <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem rendered="{!NOT(posted)}">
+                    <apex:outputLabel >Site Contact</apex:outputLabel>
+                    <apex:outputpanel >
+                        <apex:panelGrid columns="3" cellspacing="1" style="margin-left:00px;">
+                            <c:CustomLookup componentId="theSiteContact"
+                                            styleClass="input-lookup" style="width: 150px; height:18px;" useSOSL="false"
+                                            minSearchLength="1"
+                                            filterClause="Contact_Type__c=\'Billing\'"
+                                            sObjectType="Contact"
+                                            sObject="{!theSiteContact}"
+                                            sObjectField="Name"
+                                            SObjectTypeSearch="Contact"
+                                            secondaryDisplayField="LastName"
+                                            onchange="validateContactCall(this);"
+                                            LookupObject="Contact"
+                                            LinkFieldName="Id"
+                                            FieldSetName="ContactFieldSet"
+                                            RunValidation="True"
+                                            LookupType="Id"
+
+                                            ValidateFunction="validateFieldInList"
+
+                                            FilterName1="AccountId"
+                                            FilterNameValue1="{!SI.Bill_to_Customer__c}"
+                                            FilterOperation1="AccountId"
+                                            FilterOperationValue1="="
+                                            FilterType1="AccountId"
+                                            FilterTypeValue1="String"
+
+                                            FilterName2="Contact_Type__c"
+                                            FilterNameValue2="Site"
+                                            FilterOperation2="Contact_Type__c"
+                                            FilterOperationValue2="INCLUDES"
+                                            FilterType2="Contact_Type__c"
+                                            FilterTypeValue2="Includes"
+
+                                            fltr1="true"
+                                            fltr2="true"
+                                            fltr3="true"
+                                            fltr4="true"
+                                            fltr5="true"
+                                            fltr6="true"
+                                            fltr7="true"
+                            />
+                        </apex:panelGrid>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!SI.Site_Contact_2__c}" rendered="{!posted}"/>
+                -->
+                <!-- AES-401 End-->
+                <apex:inputField value="{!SI.Site_Street__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Street__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Phone_No__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Phone_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_City__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_City__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Email_Address__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Email_Address__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_State__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_State__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Tax_Liable__c}" onchange="validateTaxLiable(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Tax_Liable__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Postal_Code__c}" />
+                <!--<apex:outputField value="{!SI.Site_Postal_Code__c}" rendered="{!Posted}"/>-->
+                <apex:inputField value="{!SI.Tax_Area__c}" onchange="validateTaxArea(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Tax_Area__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Tax_Area__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!SI.Site_Country__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Country__c}" rendered="{!Posted}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Instructions" collapsible="true" id="thePageBlockSectionScope">
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Site_Scope__c.Label}</apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!SI.Site_Scope__c}" style="width:100%; height: 60px"/>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Site_Scope__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputField value="{!SI.Site_Scope__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+
+                <!--
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Billing_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!SI.Billing_Instructions__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Billing_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Billing_Instructions__c}" style="width:100%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+                -->
+                
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Internal_Comments__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!SI.Internal_Comments__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Internal_Comments__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Internal_Comments__c}" rendered="{!Posted}" style="width:100%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Customer_Billing_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Customer_Billing_Instructions__c}" style="width:100%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Invoice Note" collapsible="true" id="thePageBlockSectionInvoiceNote">
+                <apex:inputTextarea value="{!SI.Invoice_Note__c}" style="width:100%" rows="5"/> <!-- 14507 -->
+            </apex:pageBlockSection>
+            <apex:pageMessages id="theMessage2"></apex:pageMessages>
+            <!-- Labor Lines-->
+            <apex:pageBlockSection id="theLaborSection" columns="1" title="Labor Lines" collapsible="true">
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILLaborTable" value="{!SILListLabor}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListLabor))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};"
+                                                oncomplete="setWidth();" action="{!deleteLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                reRender="theSILLaborTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Labor"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Labor Type">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null && !Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILLaborTable}:theJobPosition"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null|| Posted}">
+                                <apex:outputField value="{!line.Resource_Type__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Labor">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILLaborTable}:theLResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName3="Resource_Type__c"
+                                                    FilterNameValue3="{!line.Resource_Type__c}"
+                                                    FilterOperation3="Resource_Type__c"
+                                                    FilterOperationValue3="="
+                                                    FilterType3="Resource_Type__c"
+                                                    FilterTypeValue3="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theLQuantity" onchange="validateFieldInList(this);"
+                                             value="{!line.Quantity__c}" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c == true}"
+                                             styleClass="input-numeric"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theUnitPrice" value="{!line.Unit_Price__c}" style="width:60px"
+                                             rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c == true}"
+                                             onchange="validateFieldInList(this)" styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILLaborTable}:theLUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="ResourceType"
+                                                    FilterNameValue1Special="{!line.Resource_Type__c}"
+                                                    FilterOperation1Special="ResourceType"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="ResourceType"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="LUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px"
+                                             rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px"
+                                              rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputField id="theLineAmount" value="{!line.Line_Amount__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputField id="theLineAmountInclTax" value="{!line.Line_Amt_Incl_Tax__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theLBillasLumpSum" onchange="validateFieldInList(this)" value="{!line.Bill_as_Lump_Sum__c}"
+                                             rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theLNonBillable" onchange="validateFieldInList(this)" value="{!line.Non_Billable__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField id="theLineNo" value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                    reRender="theLaborSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Labor"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLLaborTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalLabor}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginLabor}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostLabor}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalLabor}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalLabor}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Labor Lines end------>
+
+            <!----- Equipment Lines--------------->
+            <apex:pageBlockSection id="theEquipmentSection" columns="1" title="Equipment Lines" collapsible="true" >
+                <!--<apex:pageMessages id="theMessage2"></apex:pageMessages>-->
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILEquipmentTable" value="{!SILListEquipment}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListEquipment))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILEquipmentTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Equipment"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Equipment Type">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILEquipmentTable}:theEquipment"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c=\'Equipment\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    allowtoBlank="true"
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Equipment"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource_Type__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Equipment">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILEquipmentTable}:theEResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c=\'Equipment\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Equipment"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName3="Resource_Type__c"
+                                                    FilterNameValue3="{!line.Resource_Type__c}"
+                                                    FilterOperation3="Resource_Type__c"
+                                                    FilterOperationValue3="="
+                                                    FilterType3="Resource_Type__c"
+                                                    FilterTypeValue3="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theEQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this);"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILEquipmentTable}:theEUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="ResourceType"
+                                                    FilterNameValue1Special="{!line.Resource_Type__c}"
+                                                    FilterOperation1Special="ResourceType"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="ResourceType"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="EUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theEUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theETaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theEBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theENonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                    reRender="theEquipmentSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Equipment"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLEquipmentTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalEquipment}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginEquipment}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostEquipment}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalEquipment}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalEquipment}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Equipment Lines end------>
+
+            <!----- Materials Lines--------------->
+            <apex:pageBlockSection id="theMaterialsSection" columns="1" title="Material Lines" collapsible="true">
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILMaterialsTable" value="{!SILListMaterials}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListMaterials))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILMaterialsTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Materials"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Material">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILMaterialsTable}:theMResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Materials\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="TM_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Materials"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Billing Description">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theMQuantity" onchange="validateFieldInList(this);" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             value="{!line.Quantity__c}"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILMaterialsTable}:theMUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="MUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theMUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theMTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theMBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theMNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}" reRender="theMaterialsSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Materials"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLMaterialsTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalMaterials}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginMaterials}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostMaterials}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalMaterials}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalMaterials}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Materials Lines end------>
+
+            <!----- Subcontractors Lines--------------->
+            <apex:pageBlockSection id="theSubcontractorsSection" columns="1"
+                                   title="Cost Plus Materials, Equipment, and Services"
+                                   collapsible="true">
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILSubcontractorsTable" value="{!SILListSubcontractors}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListSubcontractors))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILSubcontractorsTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Subcontractors"/>
+                            </apex:commandButton>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theSQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this);"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <!--Ticket#13820 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}" >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILSubcontractorsTable}:theSUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--Ticket#13820 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theSUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theSTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true)}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theSBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theSNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                    reRender="theSubcontractorsSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Subcontractors"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLSubcontractorsTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalSubcontractors}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginSubcontractors}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostSubcontractors}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalSubcontractors}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalSubcontractors}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Subcontractors Lines end------>
+
+            <!----- WasteDisposal Lines--------------->
+            <apex:pageBlockSection id="theWasteDisposalSection" columns="1" title="Waste Disposal Lines"
+                                   collapsible="true">
+                <!--<apex:pageMessages id="theMessage2"></apex:pageMessages>-->
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILWasteDisposalTable" value="{!SILListWasteDisposal}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListWasteDisposal))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILWasteDisposalTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Waste Disposal"/>
+                            </apex:commandButton>
+                        </apex:column>
+
+                        <apex:column headerValue="Waste Disposal">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILWasteDisposalTable}:theWResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Waste Disposal\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Waste Disposal"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theWQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this);"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <!-- Ticket#13820 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILWasteDisposalTable}:theWUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theWUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theWTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.BOL_Manifest__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.BOL_Manifest__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theWBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theWNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel rendered="{!Posted}">
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                    reRender="theWasteDisposalSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Waste Disposal"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-415 -->
+                    <apex:pageBlockSection id="SLWasteDisposalTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalWasteDisposal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginWasteDisposal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostWasteDisposal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalWasteDisposal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalWasteDisposal}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Waste Disposal Lines end------>
+
+            <!----- Demurrage Lines--------------->
+            <apex:pageBlockSection id="theDemurrageSection" columns="1" title="Transportation, Demurrage and Fees"
+                                   collapsible="true">
+                <!--<apex:pageMessages id="theMessage2"></apex:pageMessages>-->
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILDemurrageTable" value="{!SILListDemurrage}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListDemurrage))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILDemurrageTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Demurrage"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Service">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILDemurrageTable}:theDResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Demurrage\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Demurrage"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="Quantity">
+                            <apex:inputField id="theDQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this);"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false} || SI.Misc_Invoice__c != true"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILDemurrageTable}:theDUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="Resource"
+                                                    FilterNameValue1Special="{!line.Resource__c}"
+                                                    FilterOperation1Special="Resource"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="Resource"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="DUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theDUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theDTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this);" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theDBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theDNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}" reRender="theDemurrageSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Demurrage"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLDemurrageTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalDemurrage}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginDemurrage}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostDemurrage}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalDemurrage}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalDemurrage}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Demurrage Lines end------>
+
+            <!----- LumpSum Lines--------------->
+            <apex:pageBlockSection id="theLumpSumSection" columns="1" title="Lump Sum/Bundled Lines"
+                                   collapsible="true">
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILLumpSumTable" value="{!SILListLumpSum}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListLumpSum))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILLumpSumTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Bundled"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Resource Type">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null &&!Posted}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILLumpSumTable}:theLumpSumResourceType"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Bundled\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Bundled"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null||Posted}">
+                                <apex:outputField value="{!line.Resource_Type__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="Resource No.">
+                            <apex:outputField value="{!line.Resource__c}"/>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theLumpDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theLumpQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this)"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <!--Ticket#13820 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILLumpSumTable}:theLumpUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1Special="ResourceType"
+                                                    FilterNameValue1Special="{!line.Resource_Type__c}"
+                                                    FilterOperation1Special="ResourceType"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="ResourceType"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="TM"
+                                                    calledFor="LumpUOMLookUp"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theLumpUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theLumpTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theLumpNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <!--AES-437-->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputField value="{!line.Unit_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputField value="{!line.Line_Cost__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}" reRender="theLumpSumSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Bundled"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLLumpSumTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalLumpSum}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginLumpSum}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostLumpSum}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalLumpSum}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalLumpSum}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <!------------- Lump Sum end------>
+
+            <!----- Misc. Charges And Taxes Lines--------------->
+            <apex:pageBlockSection id="theMiscSection" columns="1" title="Miscellaneous Charges And Taxes Lines"
+                                   collapsible="true">
+                <apex:outputPanel styleClass="silWrap" layout="block">
+                    <apex:pageBlockTable id="theSILMiscTable" value="{!SILListMisc}" var="line"
+                                         rendered="{!NOT(ISNULL(SILListMisc))}">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete" onclick="if(!confirmDelete()){return false};" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"
+                                                action="{!deleteLine}" reRender="theSILMiscTable">
+                                <apex:param id="objectType" name="objectType" value="SILine"/>
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                                <apex:param id="lineType" name="lineType" value="Misc. Charges And Taxes"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <!--Ticket#13810 -->
+                        <apex:column headerValue="Services">
+                            <apex:outputpanel rendered="{!line.TM_Line__c == null && !Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILMiscTable}:theMiscResource"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Misc. Charges And Taxes\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Misc. Charges And Taxes"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!line.TM_Line__c != null || Posted || SI.Retainage_Invoice__c == true}">
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:inputField id="theMiscQuantity" value="{!line.Quantity__c}" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             onchange="validateFieldInList(this)"/>
+                            <apex:outputField value="{!line.Quantity__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}" >
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.theSILMiscTable}:theMiscUOM"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Sales_Invoice_Line__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Unit_of_Measure__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Unit_of_Measure__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="UOMFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}">
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:inputField id="theMiscUnitPrice" value="{!line.Unit_Price__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="UnitPrice input-numeric"/>
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:inputField id="theMiscTaxGroup" value="{!line.Tax_Group__c}"
+                                             onchange="validateFieldInList(this)" style="width:60px" rendered="{!NOT(Posted) && SI.Credit_Memo__c == true && SI.Misc_Invoice__c = true}"
+                                             styleClass="input-description"/>
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputField value="{!line.Bill_as_Lump_Sum__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theMiscBillasLumpSum" value="{!line.Bill_as_Lump_Sum__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c == true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputField value="{!line.Non_Billable__c}" rendered="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}"/>
+                            <apex:inputField id="theMiscNonBillable" value="{!line.Non_Billable__c}" onchange="validateFieldInList(this);" rendered="{!!Posted && SI.Credit_Memo__c == true && SI.Misc_Invoice__c == true}"/>
+                        </apex:column>
+                        <!--Ticket#13673 -->
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM_Line__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.TM_Line__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Last_Invoice_Date__c.Label}"
+                                     rendered="{!SI.Rental_Invoice__c}">
+                            <c:nodatelink >
+                                <apex:inputField id="theLastInvoiceDate" value="{!line.Last_Invoice_Date__c}"
+                                                 rendered="{!NOT(Posted)}"/>
+                            </c:nodatelink>
+                            <apex:outputField value="{!line.Last_Invoice_Date__c}" rendered="{!Posted}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Current_Invoice_Date__c.Label}"
+                                     rendered="{!SI.Rental_Invoice__c}">
+                            <c:nodatelink >
+                                <apex:inputField id="theCurrentInvoiceDate" value="{!line.Current_Invoice_Date__c}"
+                                                 rendered="{!NOT(Posted)}"/>
+                            </c:nodatelink>
+                            <apex:outputField value="{!line.Current_Invoice_Date__c}" rendered="{!Posted}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Rent_Billing_Amount__c.Label}"
+                                     rendered="{!SI.Rental_Invoice__c}">
+                            <apex:inputField id="theRentBillingAmount" style="width:60px"
+                                             styleClass="UnitPrice input-numeric"
+                                             value="{!line.Rent_Billing_Amount__c}" rendered="{!NOT(Posted)}"/>
+                            <apex:outputField value="{!line.Rent_Billing_Amount__c}" rendered="{!Posted}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Cost__c.Label}">
+                            <apex:outputText id="theUnitCost" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Unit_Cost__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Cost__c.Label}">
+                            <apex:outputText id="theLineCost" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Cost__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:outputPanel >
+                <apex:commandButton value="Add Lines" action="{!addLine}" disabled="{!Posted || SI.Credit_Memo__c == false || SI.Misc_Invoice__c != true}" reRender="theMiscSection,theMessage">
+                    <apex:param name="ObjectType" value="SILine"/>
+                    <apex:param name="LineCategory" value="Misc. Charges And Taxes"/>
+                </apex:commandButton>
+                <div style="float:right;width:750px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;"><!-- Ticket# AES-437 -->
+                    <apex:pageBlockSection id="SLMiscTotal" columns="5">
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotalMisc}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMarginMisc}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCostMisc}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotalMisc}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotalMisc}"/>
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+            <apex:pageMessages id="theMessage3"></apex:pageMessages>
+            <div style="clear:both;">
+
+            </div>
+            <apex:outputPanel >
+                <div style="margin-left:auto;margin-right:30px;width:1100px;font-size:120%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold;">
+                    <apex:pageBlockSection id="SILTotal" columns="8" title="Invoice Totals" collapsible="false">
+                        <!-- AES-438 -->
+                        <apex:outputText value="Surcharge Amount: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SurchargeAmount}"/>
+                        </apex:outputText>
+
+                        <apex:outputText value="SubTotal: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILSubtotal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Profit Margin: {0, number, ###,##0.00}%" style="color:#4a4a56;">
+                            <apex:param value="{!SILProfitMargin}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total Cost: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTotalCost}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Tax: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILTaxTotal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Total: {0, number, ###,##0.00}" style="color:#4a4a56;">
+                            <apex:param value="{!SILtotal}"/>
+                        </apex:outputText>
+                        <apex:outputText value="Retainage: {0, number, ###,##0.00}" style="color:#4a4a56;" rendered="{!RetainageAmount > 0}">
+                            <apex:param value="{!SI.Retainage_Amount__c}" />
+                        </apex:outputText>
+                        <apex:outputText value="Due This Invoice: {0, number, ###,##0.00}" style="color:#4a4a56;" rendered="{!RetainageAmount > 0}">
+                            <apex:param value="{!SILtotal - SI.Retainage_Amount__c}" />
+                        </apex:outputText>
+                    </apex:pageBlockSection>
+                </div>
+            </apex:outputPanel>
+
+            <!--/apex:pageBlock>-->
+            <div style="clear:both;">
+
+            </div>
+            <br/>
+            <br/>
+            <script>
+                $(".silWrap").css("max-width", (screen.width - 100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

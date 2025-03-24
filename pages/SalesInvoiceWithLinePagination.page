@@ -1,0 +1,366 @@
+<apex:page language="{!$CurrentPage.parameters.lang}" standardController="Sales_Invoice__c" extensions="SalesInvoiceWithPaginationController" id="thePage2" sidebar="false">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <script>
+        $(document).ready(function () {
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        function setFocusOnLoad() {
+        }
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        var focuselmnt;
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            focuselmnt = elemenetIdForField.replace('theItem', 'theQuantity');
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var lineNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            if (fieldName == 'theResource' || fieldName == 'theItem' || fieldName == 'theUOM' || fieldName == 'thePromotionDiscount' || fieldName == 'theBroker') {
+                var newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else {
+                var newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+
+            setFocusElement(fieldName, elemenetIdForField);
+            validateField(fieldName, newFieldValue, lineNo);
+        }
+
+        function setFocusElement(fieldName, elemenetIdForField) {
+            switch (fieldName) {
+                case "theResource":
+                    focuselmnt = elemenetIdForField.replace('theResource', 'theQuantity');
+                    break;
+                case "theQuantity":
+                    focuselmnt = elemenetIdForField.replace('theQuantity', 'theUnitPrice');
+                    break;
+            }
+        }
+
+        function validateBillToCustomer(ctrl) {
+            validateBillToCustomer();
+        }
+
+        function validateInvoiceDate(ctrl) {
+            validateInvoiceDate();
+        }
+
+        function validatePaymentTerm(ctrl) {
+            validatePaymentTerm();
+        }
+
+        function validateTaxArea(ctrl) {
+            validateTaxArea();
+        }
+
+        function validateContact(ctrl) {
+            validateContact();
+        }
+
+        function validateTaxLiable(ctrl) {
+            validateTaxLiable();
+        }
+
+        function calcRetainageAmt(ctrl){
+            calcRetainageAmt();
+        }
+
+    </script>
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Sales Invoice" subtitle="{!Sales_Invoice__c.Name}"/>
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Quick Save" action="{!quickSaveForLinePaginationPage}" rerender="theForm" status="loadingstatus"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" rerender="theForm" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+
+            <apex:actionFunction name="validateBillToCustomer" action="{!validateBillToCustomer}"
+                                 reRender="thePageBlock" immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateContact" action="{!validateContact}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateTaxArea" action="{!validateTaxArea}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateTaxLiable" action="{!validateTaxLiable}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validateInvoiceDate" action="{!validateInvoiceDate}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="validatePaymentTerm" action="{!validatePaymentTerm}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+            <apex:actionFunction name="reRender" reRender="thePageBlock" immediate="false"/>
+            <apex:actionFunction name="calcRetainageAmt" action="{!calcRetainageAmt}" reRender="thePageBlock"
+                                 immediate="false" status="loadingstatus"/>
+
+            <apex:pageBlockSection title="General" collapsible="true" id="thePageBlockSection">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Bill_to_Customer__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Bill_to_Customer__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!SI.Document_Status__c}" rendered="{!allowDataOverride}"/>
+                <apex:outputField value="{!SI.Document_Status__c}" rendered="{!NOT(allowDataOverride)}"/>
+                <apex:inputField value="{!SI.Contact__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Contact__c}" rendered="{!(Posted)}"/>
+                <apex:inputField value="{!SI.Customer_PO_No__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Customer_PO_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Street__c}" rendered="{!NOT(Posted)}" style="width:220px;"/>
+                <apex:outputField value="{!SI.Street__c}" rendered="{!Posted}"/> <!-- 14507 -->
+                <apex:inputField value="{!SI.Corrected_Customer_PO_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Invoice_Date__c}" onchange="validateInvoiceDate(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Invoice_Date__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.City__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.City__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Payment_Term__c}" onchange="validatePaymentTerm(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Payment_Term__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.State__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.State__c}" rendered="{!Posted}"/>
+                <apex:outputField value="{!SI.Due_Date__c}"/>
+                <apex:inputField value="{!SI.Postal_Code__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Postal_Code__c}" rendered="{!Posted}"/>
+                <apex:outputField value="{!SI.Surcharge_Type__c}" />
+                <apex:inputField value="{!SI.Country__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Country__c}" rendered="{!Posted}"/>
+                <apex:outputField value="{!SI.Surcharge_Pct__c}" />
+                <apex:outputField value="{!SI.Rental_Invoice__c}"/>
+                <apex:outputField value="{!SI.Misc_Invoice__c}"/>
+                <apex:inputField value="{!SI.SPO_No__c}" rendered="{!Posted}" />
+                <apex:outputField value="{!SI.Credit_Memo__c}"/>
+                <apex:inputField value="{!SI.Expected_Payment_Date__c}" rendered="{!Posted}" />
+
+                <apex:pageBlockSectionItem rendered="{!!posted && SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage %" />
+                    <apex:inputField value="{!SI.Retainage_Pct__c}" onchange="calcRetainageAmt(this)" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!posted && SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage %" />
+                    <apex:outputField value="{!SI.Retainage_Pct__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!SI.Retainage_Invoice__c != true && SI.Credit_Memo__c != true}">
+                    <apex:outputLabel value="Retainage Amount" />
+                    <apex:outputField value="{!SI.Retainage_Amount__c}" />
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem rendered="{!SI.Credit_Memo__c && NOT(ISNULL(SI.Reversed_from_SI__c)) && NOT(SI.Misc_Invoice__c)}">
+                    <apex:outputLabel >Reversed from SI No.</apex:outputLabel>
+                    <apex:outputField value="{!SI.Reversed_from_SI__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!SI.Credit_Memo__c && SI.Misc_Invoice__c == true}">
+                    <apex:outputLabel >Applies-to Invoice No.</apex:outputLabel>
+                    <apex:inputField value="{!SI.Reversed_from_SI__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(ISNULL(SI.Reversed_by_CM_No__c))}">
+                    <apex:outputLabel >Reversed by CM No.</apex:outputLabel>
+                    <apex:outputField value="{!SI.Reversed_by_CM_No__c}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection title="Site Information" collapsible="true" id="thePageBlockSection-SI">
+                <apex:inputField value="{!SI.Site_Name__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Name__c}" rendered="{!Posted}"/>
+                <apex:inputField label="Site Contact" value="{!SI.Site_Contact__c}" rendered="{!NOT(Posted)}" />
+                <apex:outputField label="Site Contact" value="{!SI.Site_Contact__c}" rendered="{!Posted}" />
+                <apex:inputField value="{!SI.Site_Street__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Street__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Phone_No__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Phone_No__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_City__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_City__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Email_Address__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Email_Address__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_State__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_State__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Tax_Liable__c}" onchange="validateTaxLiable(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Tax_Liable__c}" rendered="{!Posted}"/>
+                <apex:inputField value="{!SI.Site_Postal_Code__c}" />
+                <apex:inputField value="{!SI.Tax_Area__c}" onchange="validateTaxArea(this);"
+                                 rendered="{!NOT(Posted)}"/>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Tax_Area__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Tax_Area__r.Name}"/>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!SI.Site_Country__c}" rendered="{!NOT(Posted)}"/>
+                <apex:outputField value="{!SI.Site_Country__c}" rendered="{!Posted}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Instructions" collapsible="true" id="thePageBlockSectionScope">
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Site_Scope__c.Label}</apex:outputLabel>
+                    <apex:outputpanel >
+                        <div class="requiredInput">
+                            <div class="requiredBlock"></div>
+                            <apex:inputField value="{!SI.Site_Scope__c}" style="width:100%; height: 60px"/>
+                        </div>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Site_Scope__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:outputField value="{!SI.Site_Scope__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Billing_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!SI.Billing_Instructions__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Billing_Instructions__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Billing_Instructions__c}" style="width:100%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem />
+
+                <apex:pageBlockSectionItem rendered="{!NOT(Posted)}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Internal_Comments__c.Label}</apex:outputLabel>
+                    <apex:outputPanel >
+                        <apex:inputField value="{!SI.Internal_Comments__c}" style="width:100%; height: 60px"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!Posted}">
+                    <apex:outputLabel >{!$ObjectType.Sales_Invoice__c.Fields.Internal_Comments__c.Label}</apex:outputLabel>
+                    <apex:outputField value="{!SI.Internal_Comments__c}" rendered="{!Posted}" style="width:100%; height: 60px"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Invoice Note" collapsible="true" id="thePageBlockSectionInvoiceNote">
+                <apex:inputTextarea value="{!SI.Invoice_Note__c}" style="width:100%" rows="5"/> <!-- 14507 -->
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="theSection" columns="1" title="Lines" collapsible="true">
+                <apex:pageMessages id="theMessage2"></apex:pageMessages>
+                <apex:outputPanel styleClass="silWrap" layout="block" style="overflow: scroll;">
+                    <apex:pageBlockTable id="theSILTable" value="{!SalesInvoiceLines}" var="line"
+                                         rendered="{!NOT(ISNULL(SalesInvoiceLines))}">
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Resource_Type__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Resource_Type__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Resource__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Resource__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Description__c.Label}">
+                            <apex:inputField id="theDescription" value="{!line.Description__c}"
+                                             styleClass="input-description" rendered="{!NOT(Posted)}"/>
+                            <apex:outputField value="{!line.Description__c}" styleClass="input-description"
+                                              rendered="{!Posted}"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Quantity__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Quantity__c}" style="width:50px"
+                                                  styleClass="Quantity input-numeric"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_of_Measure__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Unit_of_Measure__r.Name}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Unit_Price__c.Label}">
+                            <apex:outputField value="{!line.Unit_Price__c}" style="width:60px"
+                                              styleClass="UnitPrice input-numeric"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Tax_Group__c.Label}">
+                            <apex:outputField value="{!line.Tax_Group__c}" style="width:60px"/>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amount__c.Label}">
+                            <apex:outputText id="theLineAmount" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amount__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_Amt_Incl_Tax__c.Label}">
+                            <apex:outputText id="theAmtInclTax" value="{0, number, ###,##0.00}"
+                                             styleClass="LineCost output-numeric" style="width:60px">
+                                <apex:param value="{!line.Line_Amt_Incl_Tax__c}"/>
+                            </apex:outputText>
+                        </apex:column>
+                        <!--
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Category__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Category__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Scheduled_Date__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Scheduled_Date__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.BOL_Manifest__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.BOL_Manifest__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Bill_as_Lump_Sum__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Bill_as_Lump_Sum__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Non_Billable__c.Label}">
+                            <apex:outputpanel >
+                                <apex:outputField value="{!line.Non_Billable__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.TM__c.Label}">
+                            <apex:outputpanel rendered="{!Posted}">
+                                <apex:outputField value="{!line.TM__c}"/>
+                            </apex:outputpanel>
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Sales_Invoice_Line__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" style="width:50px"/>
+                        </apex:column>
+                        -->
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                <apex:outputPanel >
+                    <div style="padding-bottom: 4px;">
+                        Showing {!(setCon.pageNumber * size)+1-size}-{!IF((setCon.pageNumber * size)>noOfRecords, noOfRecords,
+                        (setCon.pageNumber * size))} of {!noOfRecords} &nbsp;&nbsp;
+                        <div style="float:right;">
+                            <apex:commandButton action="{!previous}" disabled="{!NOT(hasPrevious)}"
+                                                value="<< Previous"/>
+                            <apex:commandButton action="{!next}" disabled="{!NOT(hasNext)}" value="Next >>"/>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <div style="float:right;width:600px;font-size:150%;">
+                <apex:pageBlockSection id="SITotal" columns="3">
+                    <apex:outputText label="SubTotal: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!SILSubtotal}"/>
+                    </apex:outputText>
+                    <apex:outputText label="Tax: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!SILTaxTotal}"/>
+                    </apex:outputText>
+                    <apex:outputText label="Total: " value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                        <apex:param value="{!SILtotal}"/>
+                    </apex:outputText>
+                </apex:pageBlockSection>
+            </div>
+            <br/>
+            <br/>
+            <script>
+                $(".silWrap").css("max-width", (screen.width - 100));
+            </script>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

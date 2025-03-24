@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Bid Type --></label>
+        <name>Bid_Type__c</name>
+        <picklistValues>
+            <masterLabel>Onsite Services</masterLabel>
+            <translation><!-- Onsite Services --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSES Atlantic Bid</masterLabel>
+            <translation><!-- RSES Atlantic Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSES Central Bid</masterLabel>
+            <translation><!-- RSES Central Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSES Gulf Bid</masterLabel>
+            <translation><!-- RSES Gulf Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSES National Bid</masterLabel>
+            <translation><!-- RSES National Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RSES Pacific Bid</masterLabel>
+            <translation><!-- RSES Pacific Bid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Total Waste Management</masterLabel>
+            <translation><!-- Total Waste Management --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Equipment_Supplies__c</fullName>
+    <externalId>false</externalId>
+    <label>Equipment / Supplies</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <controllingField>Title_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Business Cards ($40)</fullName>
+                <default>false</default>
+                <label>Business Cards ($40)</label>
+            </value>
+            <value>
+                <fullName>Hotel / CLC Card</fullName>
+                <default>false</default>
+                <label>Hotel / CLC Card</label>
+            </value>
+            <value>
+                <fullName>Cell Phone Stipend ($40/mo)</fullName>
+                <default>false</default>
+                <label>Cell Phone Stipend ($40/mo)</label>
+            </value>
+            <value>
+                <fullName>Company Cell Phone iPhone</fullName>
+                <default>false</default>
+                <label>Company Cell Phone iPhone</label>
+            </value>
+            <value>
+                <fullName>Desktop Computer ($1,000)</fullName>
+                <default>false</default>
+                <label>Desktop Computer ($1,000)</label>
+            </value>
+            <value>
+                <fullName>Company Credit Card</fullName>
+                <default>false</default>
+                <label>Company Credit Card</label>
+            </value>
+            <value>
+                <fullName>Laptop Computer ($2,100)</fullName>
+                <default>false</default>
+                <label>Laptop Computer ($2,100)</label>
+            </value>
+            <value>
+                <fullName>Fuel Card</fullName>
+                <default>false</default>
+                <label>Fuel Card</label>
+            </value>
+            <value>
+                <fullName>iPad (for Drivers Only)</fullName>
+                <default>false</default>
+                <label>iPad (for Drivers Only)</label>
+            </value>
+            <value>
+                <fullName>Monitor(s)</fullName>
+                <default>false</default>
+                <label>Monitor(s)</label>
+            </value>
+            <value>
+                <fullName>Security Badge (Metro Only)</fullName>
+                <default>false</default>
+                <label>Security Badge (Metro Only)</label>
+            </value>
+            <value>
+                <fullName>Polycom (Desk) Re-Use</fullName>
+                <default>false</default>
+                <label>Polycom (Desk) Re-Use</label>
+            </value>
+            <value>
+                <fullName>Polycom (Desk) Add New ($300)</fullName>
+                <default>false</default>
+                <label>Polycom (Desk) Add New ($300)</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Business Cards ($40)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Hotel / CLC Card</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Cell Phone Stipend ($40/mo)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <controllingFieldValue>Field Technician</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Company Cell Phone iPhone</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Desktop Computer ($1,000)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Company Credit Card</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Laptop Computer ($2,100)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Polycom (Desk) Re-Use</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Account Executive</controllingFieldValue>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Polycom (Desk) Add New ($300)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Foreman</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Fuel Card</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Equipment Operator</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>iPad (for Drivers Only)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Project Manager</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Monitor(s)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Chemist</controllingFieldValue>
+            <controllingFieldValue>Dispatcher</controllingFieldValue>
+            <controllingFieldValue>Office Admin</controllingFieldValue>
+            <valueName>Security Badge (Metro Only)</valueName>
+        </valueSettings>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

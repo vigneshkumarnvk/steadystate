@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Company Setup</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Company Setup</value>
+    </caseValues>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <layouts>
+        <layout>Company Setup Layout</layout>
+        <sections>
+            <label><!-- Accounting Posting Setup --></label>
+            <section>Accounting Posting Setup</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Fringe Benefits --></label>
+            <section>Fringe Benefits</section>
+        </sections>
+        <sections>
+            <label><!-- Payroll Setup --></label>
+            <section>Payroll Setup</section>
+        </sections>
+        <sections>
+            <label><!-- Remittance Defaults --></label>
+            <section>Remittance Defaults</section>
+        </sections>
+        <sections>
+            <label><!-- Resource Defaults --></label>
+            <section>Resource Defaults</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Name you entered already exists. --></errorMessage>
+        <name>MakeSureNameIsUnique</name>
+    </validationRules>
+</CustomObjectTranslation>

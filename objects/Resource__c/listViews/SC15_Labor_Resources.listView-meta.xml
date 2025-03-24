@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SC15_Labor_Resources</fullName>
+    <columns>NAME</columns>
+    <columns>Resource_Type__c</columns>
+    <columns>Description__c</columns>
+    <columns>Start_Date__c</columns>
+    <columns>End_Date__c</columns>
+    <columns>Kronos_Time_Punch_Start_Date__c</columns>
+    <columns>FLSA__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Pay_Rule__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Labor</value>
+    </filters>
+    <filters>
+        <field>Service_Center__c</field>
+        <operation>equals</operation>
+        <value>15</value>
+    </filters>
+    <filters>
+        <field>NAME</field>
+        <operation>notContain</operation>
+        <value>TW</value>
+    </filters>
+    <label>SC15 Labor Resources</label>
+</ListView>

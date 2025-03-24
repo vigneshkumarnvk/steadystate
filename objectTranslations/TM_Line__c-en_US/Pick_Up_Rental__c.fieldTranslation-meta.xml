@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Pick Up Rental --></label>
+        <name>Pick_Up_Rental__c</name>
+    </CustomFieldTranslation>

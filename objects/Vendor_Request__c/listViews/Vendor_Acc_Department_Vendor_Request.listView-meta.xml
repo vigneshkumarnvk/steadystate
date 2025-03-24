@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vendor_Acc_Department_Vendor_Request</fullName>
+    <filterScope>Queue</filterScope>
+    <label>Accounting Department</label>
+    <queue>Vendor_Acc_Department</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

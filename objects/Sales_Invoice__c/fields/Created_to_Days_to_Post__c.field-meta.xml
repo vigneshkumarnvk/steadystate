@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Created_to_Days_to_Post__c</fullName>
+    <externalId>false</externalId>
+    <formula>SysPostedDate__c -    DATEVALUE(CreatedDate )</formula>
+    <inlineHelpText>Count days to post using sys posting date minus invoice created date</inlineHelpText>
+    <label>Days to Send to EQAI</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

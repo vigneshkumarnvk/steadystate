@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Compliance</fullName>
+    <active>false</active>
+    <compactLayoutAssignment>Compliance</compactLayoutAssignment>
+    <label>Compliance</label>
+    <picklistValues>
+        <picklist>Activity_Reason__c</picklist>
+        <values>
+            <fullName>Account is with Legal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bank and Trade References Submitted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Collection - Follow up with Customer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Collection - Internal Support request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Collection - Receipt Confirmation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Application Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Application Denied%2FIncomplete</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Check for Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Customer Statement Sent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>D%26B Report Initiated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Demand Letter for Payment Sent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Incorrect Price</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Issue- Billing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Missing Documents</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Customer Account Created</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Commitment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Postal Mail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Processed Credit Card Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Vendor Form Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Activity_Type__c</picklist>
+        <values>
+            <fullName>Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Environmental%2FRegulatory</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Health %26 Safety</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transportation%2FMileage</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Call_Outcome__c</picklist>
+        <values>
+            <fullName>Call Succesful</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Left Voicemail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Out of Service</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Confirm_Task__c</picklist>
+        <values>
+            <fullName>Accepted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Frequency__c</picklist>
+        <values>
+            <fullName>10 Years</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2 Years</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3 Years</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5 Years</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Annually</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bi-annually</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Biennially</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bimonthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quarterly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Semi-Annually</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Weekly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Interaction_Type__c</picklist>
+        <values>
+            <fullName>E-Mail</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Face to Face</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone Call</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Normal</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Purpose_of_Call__c</picklist>
+        <values>
+            <fullName>Cold Call</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Check In</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Issue - Billing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Issue - Collections</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Issue - Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Work on opportunity</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Service_Center__c</picklist>
+        <values>
+            <fullName>Albany NY%2C SC27</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aston PA%2C SC33</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baltimore MD%2C SC04</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bayonne%2C NJ SC03</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bridgeport CT%2C SC21</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brooklyn NY%2C SC32</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chicago IL%2C SC22</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Clayton%2C NJ SC02</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Corp%2C SC15</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ER Events%2C SC99</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Elizabeth - TSDF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Elizabeth%2C NJ SC01</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Harrisburg%2C PA SC25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hartford CT%2C SC19</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro%2C IN SC40</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hydro%2C PA SC41</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Labpack-Metro%2C SC73</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Labpack-New England%2C SC77</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lewisberry - TSDF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Long Island%2C NY SC62</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Maint%2C SC52</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Metro LP%2C NJ SC73</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mid Atlantic LP%2C SC74</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nashua NH%2C SC20</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New England LP%2C SC77</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Windsor%2C NY SC17</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Norfolk MA%2C SC07</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pulaski PA%2C SC24</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rahway NJ%2C SC31</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>S%2E NJ LP%2C SC72</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Skowhegan ME%2C SC16</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trans%2C NJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trans%2C PA</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status</picklist>
+        <values>
+            <fullName>Closed- Incomplete</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Open</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Subject</picklist>
+        <values>
+            <fullName>Fuel Detail Usage Report</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fuel Truck Log</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ISN Site Tracker</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monthly Training</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NCMS Online Subscription Review</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>OSHA Statistic Calculation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Safety Stat Charts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Vehicle Registration</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Task_Status__c</picklist>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Open</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>E-Mail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Face to Face</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone Call</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ringdna__Call_Direction__c</picklist>
+        <values>
+            <fullName>Inbound</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Outbound</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ringdna__Call_Disposition__c</picklist>
+        <values>
+            <fullName>Contacted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DO NOT CALL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Left Voicemail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Non Answer%2FNo Message</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Set Appointment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wrong Number</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ringdna__Call_Status__c</picklist>
+        <values>
+            <fullName>Busy</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Connected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Failed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Missed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Answer</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Diesel_Direct</fullName>
+    <columns>No__c</columns>
+    <columns>Sales_Order__c</columns>
+    <columns>Invoice_Date__c</columns>
+    <columns>Document_Status__c</columns>
+    <columns>Service_Center__c</columns>
+    <columns>Invoice_Amt_Incl_Tax__c</columns>
+    <columns>Invoice_Profit_prct__c</columns>
+    <columns>Posting_Date__c</columns>
+    <columns>Payment_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Bill_to_Customer__c</field>
+        <operation>equals</operation>
+        <value>Diesel Direct</value>
+    </filters>
+    <label>Diesel Direct SI</label>
+</ListView>

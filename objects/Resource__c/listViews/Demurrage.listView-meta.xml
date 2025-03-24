@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Demurrage</fullName>
+    <columns>NAME</columns>
+    <columns>Description__c</columns>
+    <columns>Silver_Rate__c</columns>
+    <columns>Gold_Rate__c</columns>
+    <columns>Platinum_Rate__c</columns>
+    <columns>Silver_ER_Rate__c</columns>
+    <columns>Gold_ER_Rate__c</columns>
+    <columns>Platinum_ER_Rate__c</columns>
+    <columns>Unit_of_Measure__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Category__c</field>
+        <operation>equals</operation>
+        <value>Demurrage</value>
+    </filters>
+    <label>Demurrage</label>
+</ListView>

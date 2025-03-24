@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Customer Type --></label>
+        <name>Customer_Type__c</name>
+        <picklistValues>
+            <masterLabel>AGR</masterLabel>
+            <translation><!-- AGR --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AUTOMOBILE</masterLabel>
+            <translation><!-- AUTOMOBILE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CHEMICAL</masterLabel>
+            <translation><!-- CHEMICAL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CONSTRUCTION</masterLabel>
+            <translation><!-- CONSTRUCTION --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CONSULTANT-ENGINEER</masterLabel>
+            <translation><!-- CONSULTANT-ENGINEER --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CONTRACTOR</masterLabel>
+            <translation><!-- CONTRACTOR --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Environmental</masterLabel>
+            <translation><!-- Environmental --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GOVERNMENT</masterLabel>
+            <translation><!-- GOVERNMENT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GSA</masterLabel>
+            <translation><!-- GSA --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HOSPITAL</masterLabel>
+            <translation><!-- HOSPITAL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>I/C</masterLabel>
+            <translation><!-- I/C --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>INSURANCE</masterLabel>
+            <translation><!-- INSURANCE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LAB</masterLabel>
+            <translation><!-- LAB --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MANU</masterLabel>
+            <translation><!-- MANU --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MARINE</masterLabel>
+            <translation><!-- MARINE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OIL &amp; GAS</masterLabel>
+            <translation><!-- OIL &amp; GAS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OIL AND GAS</masterLabel>
+            <translation><!-- OIL AND GAS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OTHER</masterLabel>
+            <translation><!-- OTHER --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PETROLEUM</masterLabel>
+            <translation><!-- PETROLEUM --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PHARMACEUTICAL</masterLabel>
+            <translation><!-- PHARMACEUTICAL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PROPERTY</masterLabel>
+            <translation><!-- PROPERTY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>REFINERY</masterLabel>
+            <translation><!-- REFINERY --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>REMEDIATION</masterLabel>
+            <translation><!-- REMEDIATION --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RESIDENCE</masterLabel>
+            <translation><!-- RESIDENCE --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SCHOOLS</masterLabel>
+            <translation><!-- SCHOOLS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>STEEL</masterLabel>
+            <translation><!-- STEEL --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TRANS</masterLabel>
+            <translation><!-- TRANS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UTILITIES</masterLabel>
+            <translation><!-- UTILITIES --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>

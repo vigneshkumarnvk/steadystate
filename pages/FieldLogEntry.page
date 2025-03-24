@@ -1,0 +1,239 @@
+<apex:page id="FieldLogEntry" standardController="Field_Activity_Log__c" extensions="FieldLogActivityController" sidebar="false">
+    <apex:stylesheet value="{!URLFOR($Resource.GoldFinch, '/css/style.css')}"/>
+    <apex:stylesheet value="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js">
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js">
+    </script>
+    <script src="{!URLFOR($Resource.Typeahead, '/typeahead.bundle.min.js')}"></script>
+    <script>
+        $ = jQuery.noConflict();
+
+        $(document).ready(function () {
+            $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").sortable().on("sortstart", function (event, ui) {
+            }).on("sortstop", function (event, ui) {
+            }).on("sortchange", function (event, ui) {
+            }).on("sortupdate", function (event, ui) {
+                var elements = $(document.getElementById("{!$Component.theForm.thePageBlock.theSection.theSILTable}")).find("tbody").find('tr').find('td').find('input');
+                var j = 0;
+                for (var i = 0; i < elements.length; i++) {
+                    if (elements[i].id.indexOf(":theLineNo") > 0) {
+                        j++;
+                        elements[i].value = j * 10;
+                    }
+                }
+            });
+
+            $("input").keypress(function (event) {
+                if (event.keyCode == 13) {
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function () {
+        });
+
+        function confirmDelete(a) {
+            a || (a = LC.getLabel("Global", "are_you_sure"));
+            return Modal.confirm(a);
+        }
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function insertColon(ctrl, evt) {
+            var anc = ctrl;
+
+            if (ctrl.value.length >= 3 && ctrl.value.indexOf(':') < 0) {
+                switch(ctrl.value.length) {
+                    case 3:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, 1);
+                        break;
+                    default:
+                        ctrl.value = ctrl.value.substr(0, 2) + ':' + ctrl.value.substr(2, ctrl.value.length - 2);
+                        break;
+                }
+            }
+        }
+
+        function validateFieldInList(fieldThatChanged) {
+            var elemenetIdForField = fieldThatChanged.id;
+            var lastColonPosition = elemenetIdForField.lastIndexOf(':');
+            var secondToLastColonPosition = elemenetIdForField.lastIndexOf(':', lastColonPosition - 1);
+            var fieldName = (elemenetIdForField.substr(lastColonPosition + 1));
+            var indexNo = (elemenetIdForField.substr(secondToLastColonPosition + 1, (lastColonPosition - secondToLastColonPosition) - 1));
+            var newFieldValue = '';
+            if (fieldName === 'theEquipment' || fieldName === 'resourceType') {
+                newFieldValue = document.getElementById(elemenetIdForField + "_lkid").value;
+            } else {
+                newFieldValue = document.getElementById(elemenetIdForField).value;
+            }
+            validateField(fieldName, newFieldValue,indexNo);
+        }
+
+    </script>
+
+    <c:LoadingStatus />
+    <apex:sectionHeader title="Field Activity Log" />
+    <apex:form id="theForm">
+        <apex:pageBlock id="thePageBlock">
+            <apex:pageMessages id="theMessage"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!save}" disabled="{!viewMode == true}" rerender="theForm, thePageBlock" status="loadingstatus"/>
+                <apex:commandButton value="Return to T&M" action="{!returnToTM}" rerender="theForm, thePageBlock" status="loadingstatus"/>
+            </apex:pageBlockButtons>
+            <apex:actionFunction name="validateField" action="{!validateField}"
+                                 oncomplete="document.getElementById(focuselmnt).focus();"
+                                 reRender="thePageBlock, theMessage, fieldActivityLogsTable"
+                                 immediate="true" status="loadingstatus">
+                <apex:param value="" name="fieldName"/>
+                <apex:param value="" name="newFieldValue"/>
+                <apex:param value="" name="indexNo" />
+            </apex:actionFunction>
+            <apex:outputPanel id="activityLogOutputPanel">
+                <apex:pageBlockSection id="activityLogSection" columns="1" title="Activity Log" collapsible="true">
+                    <apex:pageBlockTable styleClass="brdrTable" id="fieldActivityLogsTable" value="{!fieldActivityLogs}" var="line">
+                        <apex:column headerValue="Action" styleClass="actionColumn" style="width:60px">
+                            <apex:commandButton value="Delete"
+                                                onclick="if(!confirmDelete()){return false};"
+                                                oncomplete="setWidth();"
+                                                action="{!deleteLine}"
+                                                disabled="{!viewMode == true}"
+                                                reRender="fieldActivityLogsTable">
+                                <apex:param id="displayId" name="displayId" value="{!line.Line_No__c}"/>
+                            </apex:commandButton>
+                        </apex:column>
+                        <apex:column headerValue="Equipment">
+                            <apex:outputpanel rendered="{!viewMode == false}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.fieldActivityLogsTable}:theEquipment"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Field_Activity_Log__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Equipment__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateFieldInList"
+
+                                                    FilterName1Special="FALEquipment"
+                                                    FilterNameValue1Special="{!laborLine.TM__c}"
+                                                    FilterOperation1Special="FALEquipment"
+                                                    FilterOperationValue1Special="="
+                                                    FilterType1Special="FALEquipment"
+                                                    FilterTypeValue1Special="string"
+
+                                                    calledFrom="FieldActivityLog"
+                                                    calledFor="FALEquipmentLookup"
+                                                    isSpecialScenario="true"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"
+                                    />
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Equipment__c}" rendered="{!viewMode == true}" />
+                        </apex:column>
+
+                        <apex:column headerValue="{!$ObjectType.Field_Activity_Log__c.fields.Start_Time__c.Label}">
+                            <apex:inputField id="startTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.Start_Time__c}"
+                                            rendered="{!viewMode == false}"/>
+                            <apex:outputField value="{!line.Start_Time__c}" rendered="{!viewMode == true}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Field_Activity_Log__c.fields.End_Time__c.Label}">
+                            <apex:inputField id="endTime"
+                                             onkeyup="insertColon(this, event);"
+                                             onkeypress="return isNumber(event);"
+                                             value="{!line.End_Time__c}"
+                                            rendered="{!viewMode == false}"/>
+                            <apex:outputField value="{!line.End_Time__c}" rendered="{!viewMode == true}" />
+                        </apex:column>
+
+                        <apex:column headerValue="Resource Type">
+                            <apex:outputpanel rendered="{!viewMode == false}">
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <c:CustomLookup componentId="{!$Component.fieldActivityLogsTable}:resourceType"
+                                                    styleClass="input-lookup"
+                                                    style="width: 100px"
+                                                    filterClause="Blocked__c=false AND Category__c = \'Labor\'"
+                                                    secondaryDisplayField="Description__c"
+                                                    minSearchLength="1"
+                                                    stealFocus="true"
+                                                    sObjectType="Field_Activity_Log__c"
+                                                    sObject="{!line}"
+                                                    sObjectField="Resource_Type__c"
+                                                    onchange="validateFieldInList(this);"
+
+                                                    allowtoBlank="true"
+                                                    LookupObject="Resource_Type__c"
+                                                    LinkFieldName="Name"
+                                                    FieldSetName="ResourceTypeFieldSet"
+                                                    RunValidation="True"
+                                                    LookupType="ID"
+                                                    ValidateFunction="validateField"
+
+                                                    FilterName1="Category__c"
+                                                    FilterNameValue1="Labor"
+                                                    FilterOperation1="Category__c"
+                                                    FilterOperationValue1="="
+                                                    FilterType1="Category__c"
+                                                    FilterTypeValue1="String"
+
+                                                    FilterName2="Blocked__c"
+                                                    FilterNameValue2="false"
+                                                    FilterOperation2="Blocked__c"
+                                                    FilterOperationValue2="="
+                                                    FilterType2="Blocked__c"
+                                                    FilterTypeValue2="Boolean"
+
+                                                    fltr1="true"
+                                                    fltr2="true"
+                                                    fltr3="true"
+                                                    fltr4="true"
+                                                    fltr5="true"
+                                                    fltr6="true"
+                                                    fltr7="true"/>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputField value="{!line.Resource_Type__c}" rendered="{!viewMode == true}" />
+                        </apex:column>
+                        <apex:column headerValue="{!$ObjectType.Field_Activity_Log__c.fields.Line_No__c.Label}">
+                            <apex:outputField value="{!line.Line_No__c}" />
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+                <apex:outputPanel >
+                    <apex:commandButton value="Add Lines" action="{!addLine}" oncomplete="setWidth();"
+                                        disabled="{!viewMode == true}"
+                                        reRender="fieldActivityLogsTable,theMessage">
+                    </apex:commandButton>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

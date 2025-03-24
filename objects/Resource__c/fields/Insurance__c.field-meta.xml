@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance__c</fullName>
+    <externalId>false</externalId>
+    <label>Insurance</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Private Passenger</fullName>
+                <default>false</default>
+                <label>Private Passenger</label>
+            </value>
+            <value>
+                <fullName>Light Truck</fullName>
+                <default>false</default>
+                <label>Light Truck - Trucks GVW &lt; 10,000 lbs</label>
+            </value>
+            <value>
+                <fullName>Medium Truck</fullName>
+                <default>false</default>
+                <label>Medium Truck - Trucks GVW: 10,001 - 20,000 lbs</label>
+            </value>
+            <value>
+                <fullName>Heavy Truck</fullName>
+                <default>false</default>
+                <label>Heavy Truck - Trucks GVW: 20,001 - 45,000 lbs</label>
+            </value>
+            <value>
+                <fullName>Extra-Heavy Truck</fullName>
+                <default>false</default>
+                <label>Extra-Heavy Truck - Trucks GVW: &gt; 45,000 lbs</label>
+            </value>
+            <value>
+                <fullName>Extra-Heavy Truck Tractor</fullName>
+                <default>false</default>
+                <label>Extra-Heavy Truck Tractor - Truck-Tractor GVW &gt;45,000 lbs</label>
+            </value>
+            <value>
+                <fullName>Trailer</fullName>
+                <default>false</default>
+                <label>Trailer - Any trailer with load capacity &gt; 2,000 lbs</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

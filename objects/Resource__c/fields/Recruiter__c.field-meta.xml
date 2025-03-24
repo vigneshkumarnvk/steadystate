@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recruiter__c</fullName>
+    <externalId>false</externalId>
+    <label>Recruiter</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ECOFLO</fullName>
+                <default>false</default>
+                <label>ECOFLO</label>
+            </value>
+            <value>
+                <fullName>Eliry Rodriguez</fullName>
+                <default>false</default>
+                <label>Eliry Rodriguez</label>
+            </value>
+            <value>
+                <fullName>Katie Yutes</fullName>
+                <default>false</default>
+                <label>Katie Yutes</label>
+            </value>
+            <value>
+                <fullName>Kelly Johnson</fullName>
+                <default>false</default>
+                <label>Kelly Johnson</label>
+            </value>
+            <value>
+                <fullName>Kerrie Hamilton</fullName>
+                <default>false</default>
+                <label>Kerrie Hamilton</label>
+            </value>
+            <value>
+                <fullName>Mike Gaudin</fullName>
+                <default>false</default>
+                <label>Mike Gaudin</label>
+            </value>
+            <value>
+                <fullName>Miriame Clemente</fullName>
+                <default>false</default>
+                <label>Miriame Clemente</label>
+            </value>
+            <value>
+                <fullName>Noah Scudere-Weiss</fullName>
+                <default>false</default>
+                <label>Noah Scudere-Weiss</label>
+            </value>
+            <value>
+                <fullName>Tomas Quinones</fullName>
+                <default>false</default>
+                <label>Tomas Quinones</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Referral</fullName>
+                <default>false</default>
+                <label>Referral</label>
+            </value>
+            <value>
+                <fullName>Rehire</fullName>
+                <default>false</default>
+                <label>Rehire</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

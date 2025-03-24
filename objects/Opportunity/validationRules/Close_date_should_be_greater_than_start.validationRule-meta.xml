@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Close_date_should_be_greater_than_start</fullName>
+    <active>false</active>
+    <description>Opportunity Close Date cannot be less than Opportunity start Date</description>
+    <errorConditionFormula>Estimated_Start_Date__c  &gt;  CloseDate</errorConditionFormula>
+    <errorMessage>Estimated Close Date cannot be less than  Estimated Start Date.</errorMessage>
+</ValidationRule>

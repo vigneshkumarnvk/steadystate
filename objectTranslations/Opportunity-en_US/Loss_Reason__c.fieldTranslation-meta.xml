@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+        <label><!-- Loss Reason --></label>
+        <name>Loss_Reason__c</name>
+        <picklistValues>
+            <masterLabel>Competitor - Logistical Advantage</masterLabel>
+            <translation><!-- Competitor - Logistical Advantage --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Competitor - Pricing</masterLabel>
+            <translation><!-- Competitor - Pricing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Competitor - Technical</masterLabel>
+            <translation><!-- Competitor - Technical --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Competitor - Unknown</masterLabel>
+            <translation><!-- Competitor - Unknown --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Expired - No Activity</masterLabel>
+            <translation><!-- Expired - No Activity --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Progress</masterLabel>
+            <translation><!-- No Progress --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Subcontractor - Prime lost bid</masterLabel>
+            <translation><!-- Subcontractor - Prime lost bid --></translation>
+        </picklistValues>
+    </CustomFieldTranslation>
