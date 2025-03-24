@@ -1,0 +1,57 @@
+<aura:component extends="c:MobileTMLineBase" description="MobileTMMaterialLine">
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card class="slds-card_boundary">
+        <aura:set attribute="title">
+            <lightning:layout>
+                <lightning:layoutItem>
+                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!v.tmLine.Selected}" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem>
+                    {!v.tmLine.Description__c}
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete" iconName="utility:delete" onclick="{!c.doDelete}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <lightning:layout>
+            <lightning:layoutItem padding="around-small" size="4">
+                <c:LookupInput label="Material" value="{!v.tmLine.Resource__r}"
+                               SObjectName="Resource__c" pill="{iconName: 'standard:product', fieldName: 'Description__c'}"
+                               columns="[{label: 'Name', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}, {label: 'No.', fieldName: 'Name'}]"
+                               queryFields="['Name', 'Unit_of_Measure__r.Name']" filter="{!'Blocked__c!=TRUE AND Category__c=\'Materials\''}"
+                               onchange="{!c.handleResourceChange}" hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input label="Description" value="{!v.tmLine.Description__c}" oncommit="{!c.fireTMLineChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <lightning:input type="number" label="Quantity" value="{!v.tmLine.Quantity__c}" oncommit="{!c.fireTMLineChange}" required="{!v.tmLine.Resource__c != null}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <!--
+                <c:LookupInput  aura:id="unit-of-measure" label="Unit of Measure" value="{!v.tmLine.Unit_of_Measure__r}"
+                                SObjectName="Unit_of_Measure__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                                columns="[{label: 'No.', fieldName: 'Name'}]" queryFields="['Name']" filter="Blocked__c!=TRUE"
+                                onchange="{!c.handleUnitOfMeasureChange}"
+                                hideLookupGlass="true" datatable="true"/>
+                -->
+                <c:LookupInput  aura:id="unit-of-measure" label="Unit of Measure" value="{!v.tmLine.Unit_of_Measure__r}"
+                                SObjectName="ResourceUOMAssociation__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                                columns="[{label: 'Name', fieldName: 'Name'}]" queryFields="['Unit_of_Measure__r.Name']"
+                                filter="{!'Resource__c=\'' + v.tmLine.Resource__c + '\''}"
+                                onchange="{!c.handleUnitOfMeasureChange}"
+                                hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

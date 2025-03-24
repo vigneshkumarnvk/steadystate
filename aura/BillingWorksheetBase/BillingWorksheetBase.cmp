@@ -1,0 +1,11 @@
+<aura:component extends="c:BaseComponent" extensible="true" controller="BillingWorksheetController" implements="flexipage:availableForAllPageTypes" description="BillingWorksheetBase">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="Id" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="nextWorksheetLineNo" type="Integer" access="public"/>
+    <aura:attribute name="setupData" type="Object" access="public"/>
+    <aura:attribute name="jobTaskOptions" type="List" default="[]" access="public"/>
+    
+    <!--body-->
+    {!v.body}
+</aura:component>

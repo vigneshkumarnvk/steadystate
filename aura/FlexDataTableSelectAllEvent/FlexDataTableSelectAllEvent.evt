@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="FlexDataTableSelectAllEvent">
+    <aura:attribute name="name" type="String" access="public"/>
+    <aura:attribute name="checked" type="Boolean" access="public"/>
+</aura:event>

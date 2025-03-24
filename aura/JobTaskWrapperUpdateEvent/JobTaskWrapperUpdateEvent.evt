@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapperIndex" type="Integer" access="public"/>
+    <aura:attribute name="category" type="String" access="public"/>
+    <aura:attribute name="sourceComponent" type="String" access="public"/>
+</aura:event>

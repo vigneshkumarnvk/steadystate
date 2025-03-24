@@ -1,0 +1,117 @@
+<aura:component extends="c:BillingWorksheetBase" implements="lightning:isUrlAddressable,lightning:hasPageReference">
+    <aura:dependency resource="c:BillingWorksheetLine"/>
+    <aura:dependency resource="c:BillingWorksheetLineEdit"/>
+
+    <!--attributes-->
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="worksheets" type="List" access="public"/>
+    <aura:attribute name="activeWorksheets" type="List" default="[]" access="public"/>
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+    <aura:attribute name="unsavedChanges" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="lineTotals" type="List" default="[]" access="private"/>
+
+    <!--handles-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.handlePageChange}"/>
+    <aura:handler name="change" value="{!v.activeWorksheets}" action="{!c.handleWorksheetsChange}"/>
+    <aura:handler name="unsavedChangesEvent" event="c:UnsavedChangesEvent" action="{!c.handleUnsavedChangesEvent}"/>
+    <aura:handler name="worksheetUpdateEvent" event="c:BillingWorksheetUpdateEvent" action="{!c.handleWorksheetUpdateEvent}"/>
+    <aura:handler name="worksheetLinesMoveEvent" event="c:JobTaskLinesMoveEvent" action="{!c.handleWorksheetLinesMoveEvent}"/>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="title">
+            Billing Worksheet - {!v.salesOrder.Name} - {!v.salesOrder.Bill_to_Customer_No__r.Name}
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            <!--
+            <lightning:button label="Print Billing T&amp;M" variant="neutral" onclick="{!c.print}" disabled="{!v.activeWorksheets.length == 0 || v.unsavedChanges == true}"/>
+            -->
+            <!--
+            <lightning:button label="Create Invoice" variant="brand" onclick="{!c.createInvoice}" disabled="{!v.activeWorksheets.length == 0}"/>
+            <lightning:button label="Quick Save" variant="brand" onclick="{!c.quickSave}"/>
+            <lightning:button label="Save" variant="brand" onclick="{!c.save}"/>
+            -->
+        </aura:set>
+
+        <p class="slds-p-horizontal--small">
+            <c:DataTable items="{!v.worksheets}" var="worksheet" indexVar="index" onRowAction="{!c.handleRowAction}">
+                <aura:set attribute="template">
+                    <c:DataColumn label="" headerStyle="width:50px;">
+                        <span name="select">
+                            <lightning:input type="checkbox" variant="label-hidden" value="{!worksheet.SalesOrderJobTask.Id}" checked="{!worksheet.Selected}"/>
+                        </span>
+                    </c:DataColumn>
+                    <c:DataColumn label="Job Task" headerStyle="width:300px;" filterField="SalesOrderJobTask.Name">
+                        {#'Task ' + worksheet.SalesOrderJobTask.Task_No__c + ' - ' + worksheet.SalesOrderJobTask.Name}
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Billing Type" headerStyle="width:200px;">
+                        {!worksheet.SalesOrderJobTask.Billing_Type__c}
+                    </c:DataColumn>
+                    <c:DataColumn label="T&amp;Ms" headerStyle="min-width:200px; max-width:200px" cellStyle="min-width:200px; max-width:200px;">
+                        <ul class="slds-list_horizontal slds-has-dividers_right" style="flex-flow: wrap !important;">
+                            <aura:iteration items="{#worksheet.RelatedInfos}" var="relatedInfo">
+                                <li class="slds-item">
+                                    <lightning:formattedUrl label="{#relatedInfo.TM.Name}" value="{#'/' + relatedInfo.TM.Id}" target="_blank"/>
+                                    <aura:if isTrue="{#relatedInfo.FieldTMPDFUrl != null}">
+                                        <a href="{#relatedInfo.FieldTMPDFUrl}" target="_blank" class="slds-p-left--xx-small">
+                                            <lightning:icon iconName="doctype:pdf"/>
+                                        </a>
+                                    </aura:if>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </c:DataColumn>
+                    <c:DataColumn label="Bundled Lines" cellStyle="slds-cell-wrap">
+                        <ul class="slds-list_horizontal">
+                            <aura:iteration items="{#worksheet.LumpSumLines}" var="lumpSumLine" indexVar="index">
+                                <li class="slds-item slds-p-right--small">{#index + 1}) {#lumpSumLine.Description__c}</li>
+                            </aura:iteration>
+                        </ul>
+                    </c:DataColumn>
+                </aura:set>
+            </c:DataTable>
+
+        <p class="slds-p-top--medium">
+            <aura:if isTrue="{!v.activeWorksheets.length > 0}">
+                <lightning:card title="Profit &amp; Margin" iconName="standard:lightning_usage">
+                    <c:DataTable items="{!v.lineTotals}" var="lineTotal">
+                        <aura:set attribute="template">
+                            <c:DataColumn label="Category" headerStyle="width:25%">
+                                <lightning:formattedText label="Category" value="{!lineTotal.Category}" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Subtotal" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Subtotal" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Profit Margin" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Profit Margin" value="{!lineTotal.ProfitMargin}" style="percent" minimumFractionDigits="2" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Total Cost" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Total Cost" value="{!lineTotal.LineCost}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Tax" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Tax" value="{!lineTotal.Tax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Total" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Total" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                        </aura:set>
+                    </c:DataTable>
+                </lightning:card>
+            </aura:if>
+        </p>
+
+        <p class="slds-p-top--medium">
+            <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+                <aura:iteration items="{!v.activeWorksheets}" var="activeWorksheet" indexVar="index">
+                    <lightning:tab label="{!'Task ' + activeWorksheet.SalesOrderJobTask.Task_No__c + ' -' + activeWorksheet.SalesOrderJobTask.Name}" id="{!'tab' + index}" iconName="standard:task">
+                        <c:TestBillingWorksheetJobTaskLine aura:id="active-worksheet" salesOrderId="{!v.salesOrderId}" worksheetIndex="{!index}" worksheet="{#activeWorksheet}" nextWorksheetLineNo="{!v.nextWorksheetLineNo}" setupData="{#v.setupData}" jobTaskOptions="{!v.jobTaskOptions}"/>
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+        </p>
+        </p>
+    </lightning:card>
+</aura:component>

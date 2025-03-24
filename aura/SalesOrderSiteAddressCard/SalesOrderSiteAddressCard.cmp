@@ -1,0 +1,77 @@
+<aura:component extends="c:BaseComponent" controller="ACVSiteAddressController">
+    <!--attributes--> 
+    <aura:attribute name="record" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="createRecord" action="{!c.doSave}">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <lightning:card title="Create New Site Address">
+        <p class="slds-p-horizontal_small">
+            <aura:if isTrue="{!v.record != null}">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:LookupInput aura:id="customer" label="Account Name" value="{!v.record.Customer__r}" SObjectName="Account" pill="{iconName: 'standard:account', fieldName: 'Name'}" disabled="{!v.record.Customer__c != null}" required="true" messageWhenValueMissing="Complete this field."/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:LookupInput aura:id="tax-area" name="taxarea" label="Tax Area"
+                                       value="{!v.record.Tax_Area__r}"
+                                       SObjectName="Tax_Area__c"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                                       queryFields="['Name','Description__c']"
+                                       pill="{iconName: 'standard:picklist', fieldName: 'Name'}"
+                                       filter="Blocked__c!=TRUE"
+                                       onchange="{!c.handleTaxAreaChange}"
+                                       required="true"
+                                       messageWhenValueMissing="Complete this field."
+                        />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input aura:id="name" label="Site Name" value="{!v.record.Name}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:LookupInput name="contact" label="Contact" value="{!v.record.Contact__r}" SObjectName="Contact" queryFields="['Phone', 'Email']" pill="{iconName: 'standard:contact', fieldName: 'Name'}" filter="{!'AccountId=\'' + v.record.Customer__c + '\''}" onchange="{!c.handleContactChange}" disabled="{!v.record.Customer__c == null}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea aura:id="site-street" label="Street" value="{!v.record.Site_Street__c}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Email" value="{!v.record.Site_Email_Address__c}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input aura:id="site-city" label="City" value="{!v.record.Site_City__c}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Phone" value="{!v.record.Site_Phone_No__c}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <!--<c:PicklistInput label="State" value="{!v.record.Site_State__c}" SObjectName="State"/>-->
+                        <c:PicklistInput aura:id="site-state" label="State" value="{!v.record.Site_State__c}" SObjectName="Sales_Order__c" fieldName="Site_State__c" controllingValue="{!v.record.Site_Country__c}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:outputField />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:Input aura:id="site-postal-code" label="Postal Code" value="{!v.record.Site_Postal_Code__c}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:outputField />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <!--<c:PicklistInput label="Country" value="{!v.record.Site_Country__c}" SObjectName="Country"/>-->
+                        <c:PicklistInput aura:id="site-country" label="Country" value="{!v.record.Site_Country__c}" SObjectName="Sales_Order__c" fieldName="Site_Country__c" required="true"/>
+                    </lightning:layoutItem>
+                    <!-- Ticket#27399
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:Input label="Contact Name" value="{!v.record.Site_Contact__c}"/>
+                    </lightning:layoutItem>
+                    -->
+                </lightning:layout>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,7 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="action" type="String" access="public"/>
+    <aura:attribute name="name" type="String" access="public"/>
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="row" type="Object" access="public"/>
+    <aura:attribute name="target" type="Object" access="public"/>
+</aura:event>

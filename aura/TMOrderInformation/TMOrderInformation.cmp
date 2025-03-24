@@ -1,0 +1,42 @@
+<aura:component extends="c:TMBase">
+
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input type="date" label="Desired Scheduled Date" value="{!v.tm.Desired_Scheduled_Date__c}" dateStyle="short" autocomplete="off"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <!--
+            <c:TimeInput label="Start Time" value="{!v.tm.Start_Time__c}"/>
+            -->
+            <c:MilitaryTimeInput label="Start Time" value="{!v.tm.Start_Time__c}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input type="date" label="Scheduled Date" value="{!v.tm.Scheduled_Date__c}" dateStyle="short" autocomplete="off"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input type="number" label="Day of Job" value="{!v.tm.Day_of_Job__c}" step="1"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <c:LookupInput label="Project Manager" value="{!v.tm.Project_Coordinator__r}" SObjectName="Salesperson__c" columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]" filter="{!'Status__c=\'Active\''}" pill="{iconName: 'standard:user', fieldName: 'Name'}" fetchLimit="25"  onchange="{!c.handleProjectCoordinatorChange}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <c:LookupInput label="Account Executive" value="{!v.tm.Account_Executive__r}" SObjectName="Salesperson__c" columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]" filter="Status__c='Active' AND Account_Executive__c=TRUE" pill="{iconName: 'standard:user', fieldName: 'Name'}" fetchLimit="25" disabled="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input type="checkbox" variant="label-stacked" label="Prevailing Wage Job" value="{!v.tm.Prevailing_Wage_Job__c}" disabled="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <c:LookupInput label="Service Center" value="{!v.tm.Service_Center__r}" SObjectName="Service_Center__c"
+                           pill="{iconName: 'standard:household', fieldName: 'Name'}"
+                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                           queryFields="['Subsidiary_Company__c', 'Subsidiary_Company__r.Name']"
+                           disabled="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input type="checkbox" variant="label-stacked" label="Certified(PW) Job" value="{!v.tm.Certified_PW_Job__c}" disabled="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <c:LookupInput aura:id="subsidiary-company" label="Subsidiary Company" value="{!v.tm.Subsidiary_Company__r}" SObjectName="Subsidiary_Company__c" pill="{iconName: 'standard:store_group', fieldName: 'Name'}" disabled="true"/>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

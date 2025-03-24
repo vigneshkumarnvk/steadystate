@@ -1,0 +1,60 @@
+<aura:component extends="c:TMBase">
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Available Site"
+                               value="{!v.tm.Alternate_Site_Address__r}"
+                               SObjectName="Site_Address__c"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'City', fieldName: 'Site_City__c'}, {label: 'State', fieldName: 'Site_State__c'}]"
+                               queryFields="['Site_Contact__c', 'Contact__c', 'Contact__r.Name', 'Site_Street__c', 'Site_City__c', 'Site_State__c', 'Site_Postal_Code__c', 'Site_Country__c', 'Site_Phone_No__c', 'Site_Email_Address__c', 'Tax_Area__c', 'Tax_Area__r.Name', 'Print_Site_Name__c']"
+                               filter="{!'Customer__c=\'' + v.tm.Bill_to_Customer__c + '\''}"
+                               pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                               onchange="{!c.handleSiteAddressChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <!-- Ticket#21076 - add MobilePhone to query -->
+                <c:LookupInput label="Site Contact"
+                               value="{!v.tm.Site_Contact_2__r}"
+                               SObjectName="Contact"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                               queryFields="['MobilePhone']"
+                               filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Site\') AND Blocked__c !=TRUE'}"
+                               pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                               onchange="{!c.handleSiteContactChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Name" value="{!v.tm.Site_Name__c}" maxlength="80"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Phone No." value="{!v.tm.Site_Phone_No__c}" maxlength="30"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea label="Site Street" value="{!v.tm.Site_Street__c}" maxlength="255"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Email Address" value="{!v.tm.Site_Email_Address__c}" maxlength="80"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site City" value="{!v.tm.Site_City__c}" maxlength="30"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput aura:id="tax-area" label="Tax Area" value="{!v.tm.Tax_Area__r}" SObjectName="Tax_Area__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Blocked__c&lt;>TRUE" pill="{iconName: 'standard:picklist_type', expression: '{Name} - {Description__c}'}" fetchLimit="25" onchange="{!c.handleTaxAreaChange}" required="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Site State" value="{!v.tm.Site_State__c}" SObjectName="TM__c" fieldName="Site_State__c" controllingValue="{!v.tm.Site_Country__c}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Print Site Name" variant="label-stacked" checked="{!v.tm.Print_Site_Name__c}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Postal Code" value="{!v.tm.Site_Postal_Code__c}" maxlength="20"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Tax Liable" variant="label-stacked" checked="{!v.tm.Tax_Liable__c}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Site Country" value="{!v.tm.Site_Country__c}" SObjectName="TM__c" fieldName="Site_Country__c"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

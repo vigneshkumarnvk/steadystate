@@ -1,0 +1,281 @@
+<aura:component extends="c:BillingWorksheetLineBase">
+    <!--attributes-->
+    <aura:attribute name="SalesOrderJobTask" type="Object" access="public"/>
+    <aura:attribute name="relatedInfos" type="List" access="public"/>
+    <aura:attribute name="fields" type="Object" access="private"/>
+    <aura:attribute name="unitCostField" type="Object" access="private"/>
+
+    <!--events-->
+
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.worksheetLine}" action="{!c.handleWorksheetLineChange}"/>
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <!--body-->
+    <td class="fixed-column sticky-col-1" style="z-index: 5">
+        <span name="select">
+            <lightning:input aura:id="Selected" type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Selected}" onchange="{!c.selectLines}" disabled="{!v.fields.select.disabled}"/>
+        </span>
+    </td>
+    <td class="fixed-column sticky-col-2" style="z-index: 5">
+        <span name="delete" style="display: inline-block;">
+            <lightning:button variant="base" label="Del" onclick="{!c.deleteLine}" disabled="{!v.fields.delete.disabled}"/>
+        </span>
+        <span name="view" style="display: inline-block;" class="{!if(v.worksheetLine.Category__c != 'Bundled', 'slds-hide', '')}">
+            <span class="slds-p-horizontal--xx-small" style="display: inline-block;">|</span>
+            <lightning:button variant="base" label="Bundle" value="{!index}" onclick="{!c.viewLine}"/>
+        </span>
+    </td>
+    <td>
+        <lightning:select variant="label-hidden" value="{!v.worksheetLine.Status__c}" class="label-hidden">
+            <option></option>
+            <option label="Ready to Bill" value="Ready to Bill"/>
+            <option label="PM Review" value="PM Review"/>
+        </lightning:select>
+    </td>
+    <td class="fixed-column sticky-col-3" style="z-index: 5">
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.To_Invoice__c}" onchange="{!c.selectToInvoiceLines}"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.worksheetLine.TM__r != null}">
+            <c:FormattedDate value="{!v.worksheetLine.TM__r.Scheduled_Date__c}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.tm.disabled}">
+            {!v.worksheetLine.TM__r.Name}
+            <aura:set attribute="else">
+                <lightning:select variant="label-hidden" class="label-hidden" value="{!v.worksheetLine.TM__c}" onchange="{!c.handleTMChange}" disabled="{!v.fields.tm.disabled}">
+                    <option></option>
+                    <aura:iteration items="{!v.relatedInfos}" var="relatedInfo">
+                        <option value="{!relatedInfo.TM.Id}">{!relatedInfo.TM.Name}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </aura:set>
+        </aura:if>
+    </td>
+    <td class="fixed-column sticky-col-5" style="z-index: 5">
+        <span style="display: block;">
+            <span class="{!if(v.worksheetLine.Bundle_Line__r != null, 'slds-p-left--medium slds-cell-wrap', 'slds-cell-wrap')}">
+                <aura:if isTrue="{!v.fields.category.disabled == true}">
+                    <c:FormattedText value="{!v.worksheetLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;}"/>
+                    <aura:set attribute="else">
+                        <lightning:select variant="label-hidden" value="{!v.worksheetLine.Category__c}" class="label-hidden" onchange="{!c.handleCategoryChange}" disabled="{!v.fields.category.disabled}">
+                            <option></option>
+                            <option value="Labor">Labor</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Materials">Materials</option>
+                            <option value="Subcontractors">Cost Plus Materials, Equipment and Services</option>
+                            <option value="Waste Disposal">Waste Disposal</option>
+                            <option value="Demurrage">Transportation, Demurrage and Fees</option>
+                            <option value="Misc. Charges And Taxes">Misc. Charges And Taxes</option>
+                            <option value="Bundled" disabled="disabled">Bundled</option>
+                        </lightning:select>
+                    </aura:set>
+                </aura:if>
+            </span>
+        </span>
+        <aura:if isTrue="{!v.worksheetLine.errorText}">
+            <span class="boxed-error-message">
+                <aura:unescapedHtml value="{!v.worksheetLine.errorText}"/>
+            </span>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.serviceCenter.visible}">
+            <c:LookupInput name="service-center" variant="label-hidden" value="{!v.worksheetLine.Service_Center__r}" SObjectName="Service_Center__c"
+                           columns="[{label: 'Name', fieldName: 'Name'}]"
+                           queryFields="['Equipment_Fleet_No_Not_Required__c', 'Temporary__c']"
+                           filter="Temporary__c=TRUE"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleServiceCenterChange}" disabled="{!v.fields.serviceCenter.disabled}"/>
+        </aura:if>
+    </td>
+    <td class="fixed-column sticky-col-6" style="z-index: 5">
+        <aura:if isTrue="{!v.fields.resourceType.visible == true}">
+            <c:LookupInput label="" name="resource-type" variant="label-hidden" value="{!v.worksheetLine.Resource_Type__r}" SObjectName="Resource_Type__c"
+                           columns="[{label: 'Name', fieldName: 'Name', style: 'width:250px;'}]"
+                           pill="{fieldName: 'Name'}"
+                           queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Description__c', 'Fleet_No_Required__c']"
+                           filter="{!'Category__c=\'' + v.worksheetLine.Category__c + '\' AND Blocked__c!=TRUE'}"
+                           hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleResourceTypeChange}" disabled="{!v.fields.resourceType.disabled}"/>
+        </aura:if>
+    </td>
+    <td class="fixed-column sticky-col-7 fixed-column-right-border" style="z-index: 5">
+        <aura:if isTrue="{!v.fields.resource.visible}">
+            <aura:if isTrue="{!v.fields.resource.disabled}">
+                {!v.worksheetLine.Resource__r.Name}
+                <aura:set attribute="else">
+                    <c:LookupInput name="resource" label="" variant="label-hidden" value="{!v.worksheetLine.Resource__r}" SObjectName="Resource__c"
+                                   columns="[{label: 'Name', fieldName: 'Name', style: 'width:200px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;'}, {label: 'Service Center', fieldName: 'Service_Center__r.Name', style: 'width:100px;'}]"
+                                   pill="{fieldName: 'Name'}"
+                                   queryFields="['Service_Center__c', 'Service_Center__r.Temporary__c', 'Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Has_Weight_Volume__c', 'Has_Container__c']"
+                                   filter="{!'Blocked__c!=TRUE AND Category__c=\'' + v.worksheetLine.Category__c + '\'' +
+                                   if(v.worksheetLine.Category__c=='Labor' || v.worksheetLine.Category__c=='Equipment', ' AND Service_Center__r.Temporary__c=TRUE', '')}"
+                                   hideLookupGlass="true" datatable="true"
+                                   onchange="{!c.handleResourceChange}" disabled="{!v.fields.resource.disabled}"/>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.resourceName.visible}">
+            <lightning:input name="resource-name" variant="label-hidden" value="{!v.worksheetLine.Resource_Name__c}" disabled="{!v.fields.resourceName.disabled}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.description.visible}">
+            <aura:if isTrue="{!v.fields.description.disabled}">
+                {!v.worksheetLine.Description__c}
+                <aura:set attribute="else">
+                    <lightning:input name="description" variant="label-hidden" value="{!v.worksheetLine.Description__c}"/>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.billSiteTime.visible}">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Bill_Site_Time__c}" onchange="{!c.handleBillSiteTimeChange}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.includeLunchYN.visible}">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Include_Lunch_Y_N__c}" onchange="{!c.handleBillSiteTimeChange}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.billingStartTime.visible}">
+            <c:MilitaryTimeInput variant="label-hidden" value="{!v.worksheetLine.Billing_Start_Time__c}" datatable="true" onchange="{!c.handleBillingTimeChange}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.billingEndTime.visible}">
+            <c:MilitaryTimeInput variant="label-hidden" value="{!v.worksheetLine.Billing_End_Time__c}" defaultTime="{!v.worksheetLine.Billing_Start_Time__c}" datatable="true" onchange="{!c.handleBillingTimeChange}"/>
+        </aura:if>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Hour__c}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.quantity.visible}">
+            <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.Quantity__c}" step="0.01" oncommit="{!c.handleQuantityChange}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.unitOfMeasure.visible}">
+            <aura:if isTrue="{!v.worksheetLine.Resource_Type__c != null &amp;&amp; v.worksheetLine.Category__c != 'Subcontractors'}">
+                <c:LookupInput name="unit-of-measure-1" variant="label-hidden" value="{!v.worksheetLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource_Type__c=\'' + v.worksheetLine.Resource_Type__c + '\''}" pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange1}" disabled="{!v.fields.unitOfMeasure.disabled}"/>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.worksheetLine.Resource__c != null &amp;&amp; v.worksheetLine.Category__c != 'Subcontractors'}">
+                        <c:LookupInput name="unit-of-measure-1" variant="label-hidden" value="{!v.worksheetLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Name'}]" queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource__c=\'' + v.worksheetLine.Resource__c + '\''}" pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange1}" disabled="{!v.fields.unitOfMeasure.disabled}"/>
+                        <aura:set attribute="else">
+                            <c:LookupInput name="unit-of-measure-3" variant="label-hidden" value="{!v.worksheetLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}]" queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE" pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange3}" disabled="{!v.fields.unitOfMeasure.disabled}"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.unitPrice.visible}">
+            <aura:if isTrue="{!v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true}">
+                <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.xUnit_Price__c}" step="0.01" oncommit="{!c.handlexUnitPriceChange}"/>
+                <aura:set attribute="else">
+                    <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.Unit_Price__c}" step="0.01" oncommit="{!c.handleUnitPriceChange}"/>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </td>
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Non_Billable__c}" onchange="{!c.handleNonBillableChange}"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.billAsLumpSum.visible}">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Bill_as_Lump_Sum__c}" onchange="{!c.handleBillAsLumpSumChange}"/>
+        </aura:if>
+    </td>
+    <td class="slds-cell-wrap">
+        {!v.worksheetLine.Pricing_Source_2__c}
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xLine_Amount__c, v.worksheetLine.Line_Amount__c)}" style="currency" currencyCode="USD" class="line-total"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xLine_Amount__c + v.worksheetLine.xLine_Amount__c * v.worksheetLine.Tax_Pct__c / 100, v.worksheetLine.Line_Amt_Incl_Tax__c)}" style="currency" currencyCode="USD" class="line-total"/>
+    </td>
+    <td>
+        <!--
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xUnit_Cost__c, v.worksheetLine.Unit_Cost__c)}" style="currency" currencyCode="USD"/>
+        -->
+        <!--
+        <aura:if isTrue="{!v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true}">
+            <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.xUnit_Cost__c}" step="0.01" oncommit="{!c.handlexUnitCostChange}" disabled="{!v.unitCostField.disabled}"/>
+            <aura:set attribute="else">
+                <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.Unit_Cost__c}" step="0.01" oncommit="{!c.handleUnitCostChange}" disabled="{!v.unitCostField.disabled}"/>
+            </aura:set>
+        </aura:if>
+        -->
+        <lightning:input type="number" variant="label-hidden" value="{!v.worksheetLine.Unit_Cost__c}" step="0.01" oncommit="{!c.handleUnitCostChange}" disabled="{!v.unitCostField.disabled}"/>
+    </td>
+    <td>
+        <!--
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xLine_Cost__c, v.worksheetLine.Line_Cost__c)}" style="currency" currencyCode="USD" class="line-total"/>
+        -->
+        <lightning:formattedNumber value="{!v.worksheetLine.Line_Cost__c}" style="currency" currencyCode="USD" class="line-total"/>
+    </td>
+    <!--
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Profit_Pct__c / 100}" style="percent" maximumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Profit__c}" style="currency" currencyCode="USD" maximumFractionDigits="2"/>
+    </td>
+    -->
+    <td>
+        <aura:if isTrue="{!v.fields.jobStartTime.visible}">
+            <c:MilitaryTimeInput variant="label-hidden" value="{!v.worksheetLine.Job_Start_Time__c}" datatable="true" onchange="{!c.handleJobTimeChange}" disabled="{!v.fields.jobStartTime.disabled}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.jobEndTime.visible}">
+            <c:MilitaryTimeInput variant="label-hidden" value="{!v.worksheetLine.Job_End_Time__c}" defaultTime="{!if(v.worksheetLine.Category__c=='Labor', v.worksheetLine.Site_End_Time__c, v.worksheetLine.Job_Start_Time__c)}" datatable="true" onchange="{!c.handleJobTimeChange}" disabled="{!v.fields.jobEndTime.disabled}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.fields.jobHours.visible}">
+            <lightning:formattedNumber value="{!v.worksheetLine.Total_Job_Hours__c}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.worksheetLine.Contract_Line__c != null}">
+            <lightning:formattedUrl label="{!v.worksheetLine.Contract_Line__r.Name}" value="{!'/' + v.worksheetLine.Contract_Line__c}" target="_blank"/>
+        </aura:if>
+    </td>
+    <td>
+        <lightning:select variant="label-hidden" class="label-hidden" value="{!v.worksheetLine.Tax_Group__c}" onchange="{!c.handleTaxGroupChange}">
+            <option value=""></option>
+            <option value="NT">NT</option>
+            <option value="TX">TX</option>
+        </lightning:select>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Tax_Pct__c/100}" style="percent" maximumFractionDigits="3"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xLine_Amount__c * v.worksheetLine.Tax_Pct__c / 100, v.worksheetLine.Tax__c)}" style="currency" currencyCode="USD"/>
+    </td>
+    <td>{!v.worksheetLine.Line_No__c}</td>
+    <td>
+        {!v.worksheetLine.Parent_Line__r.Line_No__c}
+    </td>
+    <!--
+    <td>
+        {!v.worksheetLine.Costing_Source__c}
+    </td>
+    -->
+</aura:component>

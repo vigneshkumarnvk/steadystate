@@ -1,0 +1,21 @@
+<aura:component extends="c:BaseComponent" extensible="true" description="MobileTMLinesBase">
+    <!--attributes--> 
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="category" type="String" required="true" access="public"/>
+    <aura:attribute name="mode" type="String" default="edit" access="public"/> 
+    <aura:attribute name="jobTaskOptions" type="List" default="[]" access="public" description="for moving job task selection"/>
+    <aura:attribute name="nextTMLineNo" type="Integer" access="public"/>
+
+    <!--events-->
+    <aura:registerEvent name="unsavedChangesEvent" type="c:UnsavedChangesEvent"/>
+    <aura:registerEvent name="tmLinesMoveEvent" type="c:JobTaskLinesMoveEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="tmLineDeleteEvent" event="c:TMLineDeleteEvent" action="{!c.handleDeleteLineEvent}"/>
+    <aura:handler name="tmLineUpdateEvent" event="c:TMLineUpdateEvent" action="{!c.handleUpdateLineEvent}"/>
+    <aura:handler name="change" value="{!v.jobTaskWrapper.TMLines}" action="{!c.fireUnsavedChangesEvent}"/>
+
+    <!--body-->
+    {!v.body}
+</aura:component>

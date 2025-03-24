@@ -1,0 +1,201 @@
+<aura:component extends="c:SalesOrderBase" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <!--attributes-->
+    <aura:attribute name="tabs" type="List" default="['document-type', 'order-information', 'assumptions', 'billing-information', 'site-information', 'instructions', 'sales-lines']" access="private"/>
+    <!--<aura:attribute name="currentStep" type="Integer" default="1" access="private"/>-->
+    <aura:attribute name="stepName" type="String" default="document-type" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<aura:handler name="change" value="{!v.currentStep}" action="{!c.handleStepChange}"/>-->
+    <aura:handler name="change" value="{!v.stepName}" action="{!c.handleStepNameChange}"/>
+
+    <!--overlayLibrary-->
+    <aura:attribute name="modelCreatePromise" type="Aura.Component"/>
+    <lightning:overlayLibrary aura:id="overlayLibCreateSalesOrder" />
+    <lightning:messageChannel aura:id="messageChannel" type="GeneratorMessageChannelForCreate__c" scope="APPLICATION" onMessage="{!c.handleCreateSalesOrderMessage}" />
+    <!--  this tag sets modal width -->
+     
+    <!--body-->
+    <!--
+    <c:Modal aura:id="modal"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    -->
+
+    <!--control width the modal when open from quick action button-->
+    <aura:html tag="style">
+        .DESKTOP > .slds-modal > .slds-modal__container {
+        	min-width: 95vw;
+        	width: 95vw;
+        	min-height: 100vh;
+        	max-height: 100vh;
+        	/*top: 50%; ticket 19954 --disable, cause blurry font
+        	transform: translateY(-50%);*/
+            top: 0;
+            overscroll-behavior-y: contain;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content {
+            height: 100% !important;
+            max-height: 100% !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__header > .slds-modal__close {
+            display: none;
+        }
+        /*ticket 19130 */
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper {
+            max-height: 99%;
+        }
+
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel {
+            max-height: none !important;
+            /*height: inherit;*/
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel > .slds-modal__content {
+            max-height: none !important;
+            height: 100% !important;
+        }
+        /*ticket 19130*/
+    </aura:html>
+
+    <lightning:card title="Quote/Order Creation Wizard">
+        <div>
+            <lightning:progressIndicator currentStep="{!v.stepName}" type="path" variant="base">
+                <!--contract specific resource -->
+                <!--
+                <aura:if isTrue="{!v.userInfoWrapper != null}">
+                -->
+                <aura:if isTrue="{!v.setupData != null}">
+                    <!--contract specific resource -->
+                    <lightning:progressStep label="Document Type" value="document-type" onclick="{!c.moveToStep}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Document_Type__c != null}">
+                    <lightning:progressStep label="Order Information" value="order-information" onclick="{!c.moveToStep}"/>
+                    <lightning:progressStep label="Assumptions &amp; Contingencies" value="assumptions" onclick="{!c.moveToStep}"/>
+                    <lightning:progressStep label="Billing Address" value="billing-information" onclick="{!c.moveToStep}"/>
+                    <lightning:progressStep label="Site Information" value="site-information" onclick="{!c.moveToStep}"/>
+                    <lightning:progressStep label="Instructions" value="instructions" onclick="{!c.moveToStep}"/>
+                    <lightning:progressStep label="Sales Lines" value="sales-lines" onclick="{!c.moveToStep}"/>
+                </aura:if>
+            </lightning:progressIndicator>
+        </div>
+
+        <div class="slds-p-vertical--small">
+            <!--ticket 19130-->
+            <!--<div aura:id="container" style="overflow-y: auto; height: calc(100vh - 270px);">-->
+            <div aura:id="container" style="min-height: calc(100vh - 270px);">
+            <!--ticket 19130-->
+                <!--job task-->
+                <!--
+                <div aura:id="step-container" data-value="document-type" class="slds-show">
+                    <aura:if isTrue="{!v.userInfoWrapper != null}">
+                        <c:SalesOrderDocumentTypeSelection aura:id="step" name="document-type" title="{!if(v.salesOrder.Document_Type__c != null, 'New ' + v.salesOrder.Document_Type__c, 'Please choose a document type.')}" recordId="{!v.recordId}" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                    </aura:if>
+                </div>
+                <div aura:id="step-container" data-value="order-information" class="slds-hide">
+                    <c:SalesOrderOrderInformation aura:id="step" name="order-information" title="Order Information" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="assumptions" class="slds-hide">
+                    <c:SalesOrderAssumptions aura:id="step" name="assumptions" title="Assumptions &amp; Contingencies" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="billing-information" class="slds-hide">
+                    <c:SalesOrderBillingInformation aura:id="step" name="billing-information" title="Billing &amp; Address" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="site-information" class="slds-hide">
+                    <c:SalesOrderSiteInformation aura:id="step" name="site-information" title="Site Information" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="instructions" class="slds-hide">
+                    <c:SalesOrderInstructions aura:id="step" name="instructions" title="Instructions" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="sales-lines" class="slds-hide">
+                    <c:SalesLineList aura:id="sales-lines" name="sales-lines" title="Sales Lines" salesOrder="{!v.salesOrder}" salesLines="{!v.salesLines}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                -->
+
+                <!--contract specific resource-->
+                <!--
+                <div aura:id="step-container" data-value="document-type" class="slds-show">
+                    <aura:if isTrue="{!v.userInfoWrapper != null}">
+                        <c:SalesOrderDocumentTypeSelection aura:id="step" name="document-type" title="{!if(v.salesOrder.Document_Type__c != null, 'New ' + v.salesOrder.Document_Type__c, 'Please choose a document type.')}" recordId="{!v.recordId}" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                    </aura:if>
+                </div>
+                <div aura:id="step-container" data-value="order-information" class="slds-hide">
+                    <c:SalesOrderOrderInformation aura:id="step" name="order-information" title="Order Information" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="assumptions" class="slds-hide">
+                    <c:SalesOrderAssumptions aura:id="step" name="assumptions" title="Assumptions &amp; Contingencies" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="billing-information" class="slds-hide">
+                    <c:SalesOrderBillingInformation aura:id="step" name="billing-information" title="Billing &amp; Address" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="site-information" class="slds-hide">
+                    <c:SalesOrderSiteInformation aura:id="step" name="site-information" title="Site Information" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="instructions" class="slds-hide">
+                    <c:SalesOrderInstructions aura:id="step" name="instructions" title="Instructions" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" userInfoWrapper="{!v.userInfoWrapper}"/>
+                </div>
+                <div aura:id="step-container" data-value="sales-lines" class="slds-hide">
+                    <c:SalesLineList aura:id="sales-lines" name="sales-lines" title="Sales Lines" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextSalesLineNo="{!v.nextSalesLineNo}" userInfoWrapper="{!v.userInfoWrapper}" unsavedChanges="{!v.unsavedChanges}"/>
+                </div>
+                -->
+                <!-- Ticket#20977 -->
+                <aura:if isTrue="{!v.salesOrder.Service_Center__r.Subsidiary_Company__c != v.salesOrder.Bill_to_Customer_No__r.Subsidiary_Company__c}">
+                    <div class="slds-align_absolute-center">
+                        <lightning:icon iconName="utility:warning" size="medium" class="slds-p-right_x-small icon-color" />
+                        <span class="slds-text-heading_medium slds-text-color_error" style="font-weight: bold;">
+                        Service Center subsidiary company does not match to Bill-to Customer subsidiary!
+                    </span>
+                    </div>
+                </aura:if>
+                <!-- Ticket#20977 -->
+                <div aura:id="step-container" data-value="document-type" class="slds-show">
+                    <aura:if isTrue="{!v.setupData != null}">
+                        <c:SalesOrderDocumentTypeSelection aura:id="step" name="document-type" title="{!if(v.salesOrder.Document_Type__c != null, 'New ' + v.salesOrder.Document_Type__c, 'Please choose a document type.')}" recordId="{!v.recordId}" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                    </aura:if>
+                </div>
+                <div aura:id="step-container" data-value="order-information" class="slds-hide">
+                    <c:SalesOrderOrderInformation aura:id="step" name="order-information" title="Order Information" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}" accountExecutiveIds="{!v.accountExecutiveIds}"/>
+                </div>
+                <div aura:id="step-container" data-value="assumptions" class="slds-hide">
+                    <c:SalesOrderAssumptions aura:id="step" name="assumptions" title="Assumptions &amp; Contingencies" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </div>
+                <div aura:id="step-container" data-value="billing-information" class="slds-hide">
+                    <c:SalesOrderBillingInformation aura:id="step" name="billing-information" title="Billing &amp; Address" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </div>
+                <div aura:id="step-container" data-value="site-information" class="slds-hide">
+                    <c:SalesOrderSiteInformation aura:id="step" name="site-information" title="Site Information" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </div>
+                <div aura:id="step-container" data-value="instructions" class="slds-hide">
+                    <c:SalesOrderInstructions aura:id="step" name="instructions" title="Instructions" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </div>
+                <div aura:id="step-container" data-value="sales-lines" class="slds-hide">
+                    <c:SalesLineList aura:id="sales-lines" name="sales-lines" title="Sales Lines" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextSalesLineNo="{!v.nextSalesLineNo}" setupData="{!v.setupData}" unsavedChanges="{!v.unsavedChanges}"/>
+                </div>
+                <!--contract specific resource-->
+
+                <!--job task-->
+            </div>
+        </div>
+        
+        <aura:set attribute="footer">
+            <div style="float:right">
+                <lightning:buttonGroup>
+                    <lightning:button label="Cancel" iconName="utility:cancel" onclick="{!c.cancelCreation}"/>
+                    <aura:if isTrue="{!(v.stepName != 'sales-lines') &amp;&amp; (v.salesOrder.Document_Type__c)}">
+                        <lightning:button label="Next Step" iconName="utility:forward" variant="brand" onclick="{!c.moveToNextStep}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!(v.stepName == 'sales-lines') &amp;&amp; (v.salesOrder.Document_Type__c)}">
+                        <!--before-save calculation-->
+                        <!--
+                        <lightning:button label="Create" iconName="utility:save" variant="brand" onclick="{!c.createDocument}"/>
+                        -->
+                        <lightning:button label="Calculate" iconName="utility:check" variant="neutral" onclick="{!c.calculateAll}"/>
+                        <!--
+                        <lightning:button label="Create" iconName="utility:save" variant="brand" onclick="{!c.createDocument}"/>
+                        -->
+                        <lightning:button label="Create" iconName="utility:save" variant="brand" onclick="{!c.doSave}"/>
+                        <!--before-save calculation-->
+                    </aura:if>
+                </lightning:buttonGroup>
+            </div>
+        </aura:set>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,129 @@
+<!--  Ticket#19931
+        - Job times is not required for Resource Type with Rental Resource Type checked.
+-->
+<aura:component extends="c:MobileTMLineBase" description="MobileTMEquipmentLine">
+
+    <!--events-->
+    <aura:registerEvent name="copyTimeEvent" type="c:TMLineCopyTimeEvent"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card class="slds-card_boundary">
+        <aura:set attribute="title">
+            <lightning:layout>
+                <lightning:layoutItem>
+                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!v.tmLine.Selected}" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto">
+                    {!v.tmLine.Resource_Type__r.Name + if(v.tmLine.Resource_Name__c != null, ': ' + v.tmLine.Resource_Name__c, '') + if(v.tmLine.Total_Job_Hours__c, ' (' + v.tmLine.Total_Job_Hours__c + ' hours)', '')}
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete" iconName="utility:delete" onclick="{!c.doDelete}"/>
+                    <lightning:button label="Copy Time" iconName="utility:copy" onclick="{!c.doCopyTime}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        <!--
+            Ticket#19931
+                - add Rental_Resource_Type__c to the query field
+        -->
+        <lightning:layout>
+            <lightning:layoutItem padding="around-small" size="3">
+                <c:LookupInput label="Equipment Type" value="{!v.tmLine.Resource_Type__r}"
+                               SObjectName="Resource_Type__c"
+                               pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                               queryFields="['Description__c', 'Fleet_No_Required__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Rental_Resource_Type__c']"
+                               filter="Blocked__c!=TRUE AND Category__c='Equipment'" onchange="{!c.handleResourceTypeChange}"
+                               hideLookupGlass="true" datatable="false"
+                               required="{!v.tmLine.Resource__c != null}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <c:LookupInput label="Service Center" value="{!v.tmLine.Service_Center__r}"
+                               SObjectName="Service_Center__c"
+                               pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                               columns="[{label: 'No.', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                               onchange="{!c.handleServiceCenterChange}"
+                               hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+            <!--
+                Ticket#19931
+                    - add Rental_Resource_Type__c to the query field
+            -->
+            <lightning:layoutItem padding="around-small" size="4">
+                <!--
+                <aura:if isTrue="{!v.tmLine.Service_Center__r.Name != '99 - Temp'}">
+                    <c:LookupInput label="Equipment" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c" pill="{iconName: 'standard:people', fieldName: 'Description__c'}" columns="[{label: 'Name', fieldName: 'Description__c'}, {label: 'No.', fieldName: 'Name'}, {label: 'SC', fieldName: 'Service_Center__r.Name', style: 'width: 75px;'}]" queryFields="['Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\''}" onchange="{!c.handleResourceChange}" hideLookupGlass="true"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput label="Equipment" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c" pill="{iconName: 'standard:people', fieldName: 'Description__c'}" columns="[{label: 'Name', fieldName: 'Description__c'}, {label: 'No.', fieldName: 'Name'}, {label: 'SC', fieldName: 'Service_Center__r.Name', style: 'width: 75px;'}]" queryFields="['Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\' AND Service_Center__c=\'' + v.tmLine.Service_Center__c + '\''}" onchange="{!c.handleResourceChange}" hideLookupGlass="true"/>
+                    </aura:set>
+                </aura:if>
+                -->
+                <c:LookupInput label="Equipment" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c"
+                               pill="{iconName: 'standard:people', expression: '{Name} - {Description__c}'}"
+                               columns="[{label: 'Name', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}, {label: 'No.', fieldName: 'Name'}, {label: 'SC', fieldName: 'Service_Center__r.Name', style: 'width: 75px;'}]"
+                               queryFields="['Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c',
+                                        'Resource_Type__r.Name','Resource_Type__r.Description__c', 'Resource_Type__r.Fleet_No_Required__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c', 'Resource_Type__r.Rental_Resource_Type__c']"
+                               initialFilter="{!'Blocked__c!=TRUE AND Category__c=\'' + v.tmLine.Category__c + '\' AND Service_Center__c=\'' + v.tmLine.Service_Center__c + '\'' +
+                                    if(v.tmLine.Resource_Type__c != null, ' AND Resource_Type__c=\'' + v.tmLine.Resource_Type__c + '\'', '')}"
+                               filter="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\''}"
+                               onchange="{!c.handleResourceChange}" hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="3">
+                <aura:if isTrue="{!v.tmLine.Service_Center__r.Name == '99 - Temp'}">
+                    <lightning:input label="Equipment Name" value="{!v.tmLine.Resource_Name__c}" oncommit="{!c.fireTMLineChange}"/>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-small" size="3">
+                <c:LookupInput aura:id="labor-line" label="Equipment Operator" value="{!v.tmLine.Linked_Line__r}" SObjectName="TM_Line__c" pill="{iconName: 'standard:custom', fieldName: 'Resource_Name__c'}" columns="[{label: 'Resource Name', fieldName: 'Resource_Name__c'}]" queryFields="['Name', 'Job_Start_Time__c', 'Job_End_Time__c', 'Quantity__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Description__c', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'TM__c=\'' + v.tm.Id + '\' AND Category__c=\'Labor\''}" onchange="{!c.handleLaborLineChange}" hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <c:InputTime label="Job Start Time" value="{!v.tmLine.Job_Start_Time__c}" onchange="{!c.handleJobStartTimeChange}" required="{!v.tmLine.Resource_Type__r.Fleet_No_Required__c == true &amp;&amp; v.tmLine.Resource_Type__r.Rental_Resource_Type__c != true}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <c:InputTime label="Job End Time" value="{!v.tmLine.Job_End_Time__c}" onchange="{!c.handleJobEndTimeChange}" onfocus="{!c.handleJobEndTimeFocus}" required="{!v.tmLine.Resource_Type__r.Fleet_No_Required__c == true &amp;&amp; v.tmLine.Resource_Type__r.Rental_Resource_Type__c != true}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <lightning:input type="number" label="Quantity" value="{!v.tmLine.Quantity__c}" disabled="{!v.tmLine.Resource_Type__r.Fleet_No_Required__c &amp;&amp; v.tmLine.Resource_Type__r.Rental_Resource_Type__c != true}" oncommit="{!c.fireTMLineChange}" required="{!v.tmLine.Resource_Type__c != null}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" size="2">
+                <!--
+                <c:LookupInput  aura:id="unit-of-measure" label="Unit of Measure" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" columns="[{label: 'No.', fieldName: 'Name'}]" queryFields="['Name']" filter="Blocked__c!=TRUE" onchange="{!c.handleUnitOfMeasureChange}" disabled="true" hideLookupGlass="true" datatable="false"/>
+                -->
+                <aura:if isTrue="{!v.tmLine.Resource_Type__c != null}">
+                    <c:LookupInput label="UOM" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c"
+                                   columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']"
+                                   filter="{!'Resource_Type__c=\'' + v.tmLine.Resource_Type__c + '\''}"
+                                   pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="false"
+                                   onchange="{!c.handleUnitOfMeasure1Change}"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.v.tmLine.Resource__c != null}">
+                            <c:LookupInput label="UOM" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}]"
+                                           queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                                           filter="{!'Resource__c=\'' + v.tmLine.Resource__c + '\''}"
+                                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="false"
+                                           onchange="{!c.handleUnitOfMeasure1Change}"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput label="UOM" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c"
+                                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                                               queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE"
+                                               pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="false"
+                                               onchange="{!c.handleUnitOfMeasureChange}"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,45 @@
+<aura:component description="FileExplorer" extends="c:BaseComponent" controller="FileExplorerController" implements="force:hasRecordId,flexipage:availableForAllPageTypes" access="global">
+    <!--attributes-->
+    <aura:attribute name="childRelationshipName" type="String" access="public"/>
+    <aura:attribute name="files" type="List" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card title="Files" iconName="standard:file">
+        <p class="slds-p-horizontal--small">
+            <aura:if isTrue="{!v.files.length > 0}">
+                <div style="max-height: 300px;overflow-y: auto;">
+                    <!--ticket 20808-->
+                    <!--
+                    <c:FlexDataTable items="{!v.files}" var="file" indexVar="index" onrowaction="{!c.handleRowAction}" sorts="[{ fieldName: 'ScheduledDate', ascending: true},{ fieldName: 'CreatedDate', ascending: true}]">
+                    -->
+                    <c:DataTable items="{!v.files}" var="file" indexVar="index" onRowAction="{!c.handleRowAction}" sorts="[{ fieldName: 'ScheduledDate', ascending: true }]">
+                        <!--ticket 20808-->
+                        <aura:set attribute="template">
+                            <c:DataColumn label="Title">
+                                <span name="preview">
+                                    <lightning:button label="{!file.Title}" variant="base" value="{!file.DocumentId}"/>
+                                </span>
+                            </c:DataColumn>
+                            <c:DataColumn label="Type">
+                                {!file.Type}
+                            </c:DataColumn>
+                            <c:DataColumn label="Linked To">
+                                <aura:iteration items="{!file.LinkedEntities}" var="linkedEntity">
+                                    <div>
+                                        <lightning:formattedUrl label="{!linkedEntity.Name}" value="{!'/' + linkedEntity.Id}" target="_blank"/>
+                                    </div>
+                                </aura:iteration>
+                            </c:DataColumn>
+                            <c:DataColumn label="Scheduled Date" sortable="ScheduledDate">
+                                <c:FormattedDate value="{!file.ScheduledDate}" />
+                            </c:DataColumn>
+                        </aura:set>
+                    </c:DataTable>
+                </div>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

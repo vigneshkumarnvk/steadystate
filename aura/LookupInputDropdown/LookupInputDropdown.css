@@ -1,0 +1,17 @@
+.THIS .dropdown {
+    min-height:40px;
+    height: fit-content;
+    margin-top: 0px !important;
+    overscroll-behavior-y: contain;
+    width: auto;
+    top: auto; /*pop the dropdown under the controller*/
+    left: auto;  /*pop the dropdown under the controller*/
+    max-height: 250px;
+    overflow-y: visible;
+    overflow-x: hidden;
+}
+
+.THIS.slds-lookup__menu {
+    padding: 0px;
+    width: fit-content !important;
+}

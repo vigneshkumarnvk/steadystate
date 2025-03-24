@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="lineIndex" type="Integer"/>
+    <aura:attribute name="recordId" type="Id"/>
+</aura:event>

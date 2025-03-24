@@ -1,0 +1,184 @@
+<aura:component controller="Mobile_TMSearchController" extends="c:BaseComponent">
+    <!--cache-->
+    <aura:attribute name="version" type="String" access="public"/>
+    <!--cache-->
+    
+    <!--attributes-->
+    <aura:attribute name="data" type="Object[]" default="[]" access="private"/>
+    <aura:attribute name="columns" type="List" access="private"/>
+    <aura:attribute name="userInfo" type="User" access="private"/>
+    <aura:attribute name="barcode" type="String" access="private"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false" access="private"/>
+    <aura:attribute name="dateScopes" type="List" default="[{'label': 'Today', 'value': 'Today'}, {'label': 'All Scheduled', 'value': 'All'}]" access="private"/>
+    <aura:attribute name="dateScope" type="String" default="Today" access="private"/>
+    <aura:attribute name="userScopes" type="List" default="[{'label': 'My T&amp;Ms', 'value': 'My'}, {'label': 'All T&amp;Ms', 'value': 'All'}]" access="private"/>
+    <aura:attribute name="userScope" type="String" default="My" access="private"/>
+    <aura:attribute name="resources" type="List" default="[]" access="private"/>
+    <aura:attribute name="resource" type="String" access="private"/>
+    <aura:attribute name="scheduledDate" type="Date" access="private"/>
+    
+    <!--events-->
+    <aura:registerEvent name="tmNavigationEvent" type="c:TMNavigationEvent"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!--body-->    
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+	<div class="slds container" aura:id="container">    
+        <ui:scrollerWrapper aura:id="scroller" class="scroller-size">
+        	<!--cache-->
+            <!--<lightning:card title="T&amp;M HOME">-->
+            <lightning:card title="{!if(v.version != 'VERSION_ERROR', 'MOBILE T&amp;M (v' + v.version + ')', 'MOBILE T&amp;M')}">
+            <!--cache-->
+                
+            <aura:set attribute="actions">
+                <lightning:formattedText value="{!v.userInfo.Name}"/>
+            </aura:set>
+                <div>
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">&nbsp;</label>
+                                <div class="slds-form-element__control">
+                            		<lightning:radioGroup name="userScope" type="button" label="" variant="label-hidden" options="{!v.userScopes}" value="{!v.userScope}" onchange="{!c.handleUserScopeChange}"/>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">&nbsp;</label>
+                                <div class="slds-form-element__control">
+                            		<lightning:radioGroup name="dateScope" type="button" label="" variant="label-hidden" options="{!v.dateScopes}" value="{!v.dateScope}" onchange="{!c.handleDateScopeChange}"/>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <lightning:input type="date" label="Scheduled Date" value="{!v.scheduledDate}" onchange="{!c.handleScheduledDateChange}" dateStyle="short" autocomplete="off"/>
+                        </lightning:layoutItem>
+                        <!--
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <lightning:combobox label="Labor Resource" options="{!v.resources}" value="{!v.resource}" onchange="{!c.doSearch}"/>
+                        </lightning:layoutItem>
+						-->
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <lightning:input aura:id="searchbox" label="Keyword Search" value="{!v.barcode}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">&nbsp;</label>
+                                <div class="slds-form-element__control">
+                                    <lightning:layout>
+                                        <lightning:layoutItem>
+                                            <lightning:buttonIcon iconName="utility:search" onclick="{!c.doSearch}" alternativeText="Search"/>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem padding="horizontal-small">
+                                            <lightning:buttonIcon iconName="utility:clear" onclick="{!c.doClear}" alternativeText="Clear"/>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <!--
+                        <lightning:layoutItem padding="horizontal-small">
+                            <c:BarcodeScanner aura:Id="scanner" displayScanResult="false"/>
+                            <lightning:buttonIcon iconName="utility:photo" onclick="{!c.doScan}" alternativeText="Scan"/>
+                        </lightning:layoutItem>
+                        -->
+                    </lightning:layout>
+                </div>
+                <div>
+                    <!--cache-->
+                    <aura:if isTrue="{!v.version == 'VERSION_ERROR'}">
+                        <p class="slds-p-around--small">
+                            T&amp;M version has been updated. Please follow the instructions below to load the new version to this device.
+                        </p>
+                        <p class="slds-p-around--small">
+                            <ul>
+                                <ol>1. Tap the Menu icon (top-left corner), scroll down the menu and tap Settings.</ol>
+                                <ol>2. Tap Advanced.</ol>
+                                <ol>3. Tap Clear Cached Data.</ol>
+                                <ol>4. Tap the back arrow button.</ol>
+                                <ol>4. Tap Done.</ol>
+                                <ol>5. Scroll up the menu, and tap Mobile T&amp;M to load the new version.</ol>
+                            </ul>
+                        </p>
+                        <aura:set attribute="else">
+                            <!--cache-->
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                <thead class="slds-line-height_reset">
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="T&amp;M #">T&amp;M #</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="SCHEDULED DATE">Scheduled Ddate</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="STATUS">Status</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="Emergency T&amp;M">Emergency T&amp;M</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="CUSTOMER NAME">Customer Name</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="SALES ORDER #">Sales Order #</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="SERVICE CENTER">SC</div>
+                                    </th>
+                                    <th class="lds-text-title_caps" scope="col">
+                                        <div class="slds-truncate slds-text-heading_x-small slds-p-around_x-small" title="SITE LOCATION">Site Location</div>
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.data}" var="row">
+                                        <!--05.17.2019-->
+                                        <!--
+                                            <tr class="slds-hint-parent" data-id="{!row.Id}" data-name="{!row.Name}" data-service-center-id="{!row.ServiceCenterId}" onclick="{!c.doOpenTM}">
+                                            -->
+                                        <tr class="slds-hint-parent" data-id="{!row.Id}" onclick="{!c.doOpenTM}">
+                                            <!--05.17.2019-->
+                                            <td data-label="T&amp;M #" scope="row" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.Name}</div>
+                                            </td>
+                                            <td data-label="Scheduled Date" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.Scheduled_Date__c}</div>
+                                            </td>
+                                            <td data-label="Scheduled Date" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.Status__c}</div>
+                                            </td>
+                                            <td data-label="Scheduled Date" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">
+                                                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!row.Emergency_TM__c}" disabled="true"/>
+                                                </div>
+                                            </td>
+                                            <td data-label="Customer Name" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.CustomerName}</div>
+                                            </td>
+                                            <td data-label="Sales Order #" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.SalesOrderNumber}</div>
+                                            </td>
+                                            <td data-label="Service Center" class="slds-cell-wrap">
+                                                <div class="slds-truncate slds-p-around_x-small">{!row.ServiceCenterName}</div>
+                                            </td>
+                                            <td data-label="Site Location" class="slds-cell-wrap">
+                                                <div class="slds-p-around_x-small">{!row.SiteLocation}</div>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            <!--cache-->
+                        </aura:set> 
+                    </aura:if>
+                    <!--cache-->
+                </div>
+        </lightning:card>
+        </ui:scrollerWrapper>
+	</div>
+</aura:component>

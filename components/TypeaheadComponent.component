@@ -1,0 +1,375 @@
+<apex:component access="global" controller="Typeahead">
+    <!--link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/-->
+
+    <style>
+
+        .twitter-typeahead {
+            width: 100%;
+        }
+        .tt-search-box,
+        .tt-query,
+        .tt-hint {
+            display:inline-block;
+            font-size: inherit;
+            height: inherit;
+            padding: 2px 2px;
+            line-height: inherit;
+            border: 1px solid #ccc;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .tt-search-box:focus {
+            border: 1px solid #0097cf;
+        }
+
+        .tt-query {
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+
+        .tt-hint {
+            background-color: #000;
+            color: #999
+        }
+
+        input.refresh {}
+
+        .tt-dropdown-menu {
+            margin-top: 5px;
+            padding: 8px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+        }
+
+        .tt-suggestion {
+            padding: 3px 20px;
+            font-size: inherit;
+            line-height: 1.5em;
+        }
+
+        .tt-suggestion.tt-cursor {
+            color: #fff;
+            background-color: #0097cf;
+
+        }
+
+        .tt-suggestion p {
+            margin: 0;
+        }
+
+        span.lookupInput > a > img {
+            opacity: .5;
+            margin-top: 8px;
+            margin-left: -25px;
+            padding: 0px;
+            background-repeat: no-repeat;
+            background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTQwMTEzRTVEMTI3MTFFMkEyMzVBNzRFNEM2Qzk0RDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTQwMTEzRTZEMTI3MTFFMkEyMzVBNzRFNEM2Qzk0RDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNDAxMTNFM0QxMjcxMUUyQTIzNUE3NEU0QzZDOTRENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNDAxMTNFNEQxMjcxMUUyQTIzNUE3NEU0QzZDOTRENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PlVLNZ8AAAGlSURBVHjajFG/S0JRFL7vhyjqC5UExSSHCGnQJ8Kb4vXGJqeWpmhybWlsEJozctTBauyBiUFr/QGZbT6aBENr0Iyn+Kte3xWL96ShAx/3cu79zjnfdxgyj2AwuIXjABABD3AHnLZarXuyEMycsGe324sul4vYbDbCMAwZj8ek3++T0WhUBHHfTOJoB6fTee33+3VFUU5KpdJROp0+HwwGtUajscmyrIRCNV3XtR8SLwjCIUAkSTrLZrM5dGnTB8MwatPp9FNV1RzOY6TKv60SicRLMpnEHyOwODtyHlmWn2OxmGHOozu7NBM372ARzDDv0PZFdVpIPp/v0eSeJZCLQ9s6TLIUZCORyBW9OByOspmI+yo+X9AuoVDoxjIB5l5OpVKXzWZzu9vtUotrM4d4XvR6vbMVwPqPXq8nw/qnmeWZTGagadpDvV7XMUqA47gN7CuAFbSj0aiKQmvQLUDbLlZzC+tfGZNT1L0VwD1PDYF2Pp9XCoVCbjKZuDudTg/kOG9yiopt/2G7Sk9KDIfDb6IoDsl/AkR3pVLZqVarCu78twADAGO7tEttHGMPAAAAAElFTkSuQmCC);
+        }
+
+        span.lookupInput2 {
+            position: relative;
+            white-space: nowrap;
+            vertical-align: middle;
+            width: 100%;
+            display: block;
+        }
+
+        span.lookupInput2 > a {
+            position: absolute;
+            margin-left: -17px;
+        //margin-right: 25px;
+        }
+        span.lookupInput2 > a:hover {
+            position: absolute;
+        }
+        span.lookupInput2 > a > img {
+            position: absolute;
+            opacity: .5;
+            margin-top: 8px;
+            background-repeat: no-repeat;
+            background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTQwMTEzRTVEMTI3MTFFMkEyMzVBNzRFNEM2Qzk0RDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTQwMTEzRTZEMTI3MTFFMkEyMzVBNzRFNEM2Qzk0RDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNDAxMTNFM0QxMjcxMUUyQTIzNUE3NEU0QzZDOTRENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNDAxMTNFNEQxMjcxMUUyQTIzNUE3NEU0QzZDOTRENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PlVLNZ8AAAGlSURBVHjajFG/S0JRFL7vhyjqC5UExSSHCGnQJ8Kb4vXGJqeWpmhybWlsEJozctTBauyBiUFr/QGZbT6aBENr0Iyn+Kte3xWL96ShAx/3cu79zjnfdxgyj2AwuIXjABABD3AHnLZarXuyEMycsGe324sul4vYbDbCMAwZj8ek3++T0WhUBHHfTOJoB6fTee33+3VFUU5KpdJROp0+HwwGtUajscmyrIRCNV3XtR8SLwjCIUAkSTrLZrM5dGnTB8MwatPp9FNV1RzOY6TKv60SicRLMpnEHyOwODtyHlmWn2OxmGHOozu7NBM372ARzDDv0PZFdVpIPp/v0eSeJZCLQ9s6TLIUZCORyBW9OByOspmI+yo+X9AuoVDoxjIB5l5OpVKXzWZzu9vtUotrM4d4XvR6vbMVwPqPXq8nw/qnmeWZTGagadpDvV7XMUqA47gN7CuAFbSj0aiKQmvQLUDbLlZzC+tfGZNT1L0VwD1PDYF2Pp9XCoVCbjKZuDudTg/kOG9yiopt/2G7Sk9KDIfDb6IoDsl/AkR3pVLZqVarCu78twADAGO7tEttHGMPAAAAAElFTkSuQmCC);
+        }
+
+    </style>
+
+    <apex:attribute access="global" name="componentId" type="String" default="" description="" />
+    <apex:attribute access="global" name="styleClass" type="String" description="" />
+    <apex:attribute access="global" name="style" type="String" description="" />
+    <apex:attribute access="global" name="stealFocus" type="Boolean" default="false" description="Move the focus to the search box when the component is displayed." />
+
+    <apex:attribute access="global" name="sObjectType" type="String" description=""/>
+    <apex:attribute access="global" name="sObject" type="sObject" description=""/>
+    <apex:attribute access="global" name="sObjectField" type="String" description="" />
+    <apex:attribute access="global" name="controllingField" type="String" description=""/>
+    <apex:attribute access="global" name="controllingLookupFilterField" type="String" description=""/>
+    <apex:attribute access="global" name="SObjectTypeSearch" type="String" description="API name of object to search"/>
+
+    <apex:attribute access="global" name="primaryDisplayField" type="String" default="Name" description="" />
+    <apex:attribute access="global" name="secondaryDisplayField" type="String" default="" description="" />
+
+    <apex:attribute access="global" name="minSearchLength" type="Integer" default="2" description="Must be 2 or more." />
+    <apex:attribute access="global" name="searchGroup" type="String" default="ALL" description="options: ALL, NAME, EMAIL, PHONE, SIDEBAR" />
+    <apex:attribute access="global" name="filterClause" type="String" description="WHERE clause to filter records. Do not include WHERE." />
+    <apex:attribute access="global" name="orderBy" type="String" default="Name" description="Name of field to sort records by." />
+    <apex:attribute access="global" name="recordLimit" type="String" default="200" description="Maximum number of records to return to the list. " />
+    <apex:attribute access="global" name="nameField" type="String" default="Name" description="" />
+    <apex:attribute access="global" name="onchange" type="String" description=""/>
+    <apex:attribute access="global" name="useSOSL" type="Boolean" description="use SOSL or SOQL for search" default="true"/>
+    <apex:attribute access="global" name="freeText" type="Boolean" description="allow free text input" default="false"/>
+    <apex:attribute access="global" name="allowtoBlank" type="Boolean" description="allow to blank the input" default="false"/>
+    <apex:variable var="minSearchLength" value="{!IF(useSOSL && minSearchLength==1, 2, minSearchLength)}"/>
+    <apex:variable var="SObjectTypeSearch" value="{!IF(SObjectTypeSearch=='',$ObjectType[sObjectType].Fields[sObjectField].referenceTo[0].Name, $ObjectType[SObjectTypeSearch].Name)}"/>
+    <apex:variable var="freeText" value="{!IF($ObjectType[sObjectType].Fields[sObjectField].Type=='reference', false, freeText)}"/>
+
+    <script>
+
+        //var jq$ = jQuery.noConflict();
+        var soslRegex = /%3F|%26|%7C|%7B|%7D|%5B|%5D|%5E|%3A|%5C|%22|%2B|['!\(\)~\*-]/g;
+        var boxData;
+        var srchSrc;
+        var focusInputId;
+
+        if (!boxData) boxData = {};
+
+        boxData['{!componentId}'] = {
+            setSelectedValue :
+                    function(ctrl, id, name) {
+                        var input = $(ctrl).attr('value', name);
+                        var input = $(ctrl).parent('span').parent('span').parent('div').children('input[type="hidden"]:first').val(id);
+                        $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_lkid"]').val(id);
+                        $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_lkold"]').val(name);
+                        $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_mod"]').val(1);
+                    },
+
+            fieldList:
+                    ['{!primaryDisplayField}'],
+
+            boxQuery:
+                    function(queryString, typeaheadCallback) {
+                        //console.log('{!controllingField}');
+                        var filterClause = '{!filterClause}';
+                        var description = '{!JSENCODE(NameSpace)}' + '{!JSENCODE(secondaryDisplayField)}'; // #GFERP-819
+                        //controllingField = 'GFERP__' + controllingField;
+
+                        if ('{!controllingField}' != '' && '{!controllingLookupFilterField}' != '') {
+                            var controllingId = '{!LEFT(sObject[$ObjectType[sObjectType].Fields[controllingField].localName], 15)}';
+                            if (filterClause != '') {
+                                filterClause = filterClause + ' AND ';
+                                //filterClause &= ' AND ';
+                            }
+                            console.log("mdn filter 3 clause: " + JSON.stringify(filterClause));
+                            //filterClause = '{!controllingLookupFilterField}' + '=\'' + controllingId + '\'';
+                            filterClause = filterClause + '{!controllingLookupFilterField}' + '=\'' + controllingId + '\'';
+                            console.log("mdn filter 3 clause: " + JSON.stringify(filterClause));
+                        }
+
+                        Visualforce.remoting.Manager.invokeAction(
+                                '{!$RemoteAction.Typeahead.searchRecords}',
+                                queryString,
+                                '{!SObjectTypeSearch}',
+                                boxData['{!componentId}'].fieldList,
+                                '{!searchGroup}',
+                                filterClause,
+                                '{!orderBy}',
+                                {!recordLimit},
+                                {!useSOSL},
+                                function(result, event){
+                                    if (event.status) {
+                                        var dataList = [];
+                                        $.each(result, function(i, r) {
+                                            dataList.push({
+                                                id: r.Id,
+                                                value: r.{!primaryDisplayField} + ((description.length && r[description]) ? (' (' + r[description] + ')') : '')
+                                            });
+                                        });
+                                        typeaheadCallback(dataList);
+                                        $(".tt-suggestion").find('p').css('white-space', 'nowrap');
+                                    } else {
+                                        alert('Callout error: ' + event.message);
+                                        typeaheadCallback( [] );
+                                    }
+                                },
+                                {escape: false}
+                        );
+                    }
+        };
+
+        $(document).ready(function(){
+
+            var refObjectName = '';
+            var refObjectPrefix = '';
+
+            if('{!$ObjectType[sObjectType].Fields[sObjectField].Type}' == 'reference') {
+                refObjectName = '{!SObjectTypeSearch}';
+                refObjectPrefix = '{!$ObjectType[SObjectTypeSearch].keyPrefix}';
+            }
+
+            var id = '{!sObject[sObjectField]}';
+            //var name = '{!sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName].Name}';
+            //var name = '{!sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName][nameField]}';
+            var name = "{!IF($ObjectType[sObjectType].Fields[sObjectField].Type=='reference',
+                    IF($ObjectType[sObjectType].Fields[sObjectField].referenceTo[0].Name == 'Contact',
+                            sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName]['FirstName'] + ' ' + sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName]['LastName'],
+                            sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName]['Name']
+                            ),sObject[sObjectField])}";
+            console.log('*****' + '{!sObjectField}' + ' *** id = ' + id + '  *** name = ' + name);
+
+            $('[id="{!componentId}_lkid"]').val(id);
+            $('[id="{!componentId}_lktp"]').val(refObjectPrefix);
+
+            if(id=='' || id==null) { name = ''; }
+            $('[id="{!componentId}"]').val(name).css('white-space', 'nowrap');
+            $('[id="{!componentId}_lkold"]').val(name);
+            //if(name=='' || name==null){ name='a'; }
+            //$('[id="{!componentId}_lkid"]').prev().val(name);
+
+            var componentId = '{!componentId}';
+            var componentName = componentId.replace(/:/gi, '_') + '_Typeahead';
+            $('[id="' + componentId + '"]').typeahead({
+                        minLength: {!minSearchLength},
+                        hint: true,
+                        autoselect: false,
+                        highlight: true,
+                        tabAutocomplete: false
+                    },
+                    {
+                        source: boxData[componentId].boxQuery, // calls our remoting function
+                        name: componentName
+                    }).on('typeahead:opened', function(object, datum) {
+                //
+            }).on('typeahead:selected', function(object, datum) {
+                boxData[componentId].setSelectedValue(this, datum.id, datum.value);
+                if(srchSrc=='keypress') {
+                    {!onchange};
+                }
+
+                if ({!stealFocus}) {
+                    //$('[id="' + componentId + '"]').focus();
+                    focusInputId = componentId;
+                } else {
+                    //$('[id="{!componentId}"]').blur();
+                    focusInputId = '';
+                }
+
+                console.log('select');
+            }).on('typeahead:autocompleted', function (object, datum) {
+
+            }).on('typeahead:cursorchanged', function (object, datum) {
+                //
+            }).on('typeahead:closed', function (object, datum) {
+            }).on('keydown', function(evt) {
+                console.log('Keydown = ' + evt.which);
+                setSrc('keypress');
+                if (evt.which == 9) { //tab
+                    //boxData['{!componentId}'].setSelectedValue( this, null, null );
+                    if($('[id="{!componentId}"]').parent().find(".tt-dropdown-menu").is(":visible")) {
+                        console.log('New Event Captured==>');
+                        $('[id="{!componentId}"]').parent().find(".tt-suggestion:first-child", this).trigger('click');
+                    }
+                }
+            }).on('keyup', function(evt) {
+
+            }).on('change', function(evt) {
+
+                var ctrl = evt.target || evt.srcElement;
+                var id = $('[id="' + ctrl.name + '_lkid"]').val();
+                var name = $('[id="' + ctrl.name + '_lkold"]').val();
+
+                if({!!freeText}) {
+                    var input_value = $('[id="{!componentId}"]').val();
+                    if((input_value=='' || input_value==null) && {!allowtoBlank}) {
+                        updateField(ctrl, '', '');
+                        if(srchSrc=='keypress') {
+                            {!onchange};
+                        }
+                    } else {
+                        updateField(ctrl, id, name);
+                    }
+                } else {
+                    //boxData[componentId].setSelectedValue(this, $('[id="{!componentId}"]').val(), '');
+                    updateField(ctrl,$('[id="{!componentId}"]').val(),'');
+                    if(srchSrc=='keypress') {
+                        {!onchange};
+                    }
+                }
+
+                if(srchSrc=='lookupclick') {
+                    {!onchange}; //trigger event
+                }
+                console.log('change');
+            }).on('blur', function(evt) {
+                //
+            });
+
+            if ({!stealFocus} && focusInputId==componentId) {
+                $('[id="' + componentId + '"]').focus();
+            }
+
+            function updateField(ctrl, id, name) {
+                console.log('update Called==>');
+                var input1 = $(ctrl).attr('value', name);
+                var input2 = $(ctrl).parent('span').parent('span').parent('div').children('input[type="hidden"]:first').val(id);
+                //var input3 = $(ctrl).parent('span').parent('span').parent('div').children('input[type="hidden"]').eq(1).val(name);
+                //$(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_value"]').val(name);
+                $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_lkid"]').val(id);
+                $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_lkold"]').val(name);
+                $(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_mod"]').val(1);
+
+                //$(ctrl).parent('span').parent('span').parent('div').children('input[id="{!componentId}_mod"]').val(1);
+                //$(ctrl).parent('span').parent('span').parent('div').children('input[type="hidden"]:first').val(id);
+                //!important, sync input value with backend data
+                $('[id="' + ctrl.name + '"]').data('ttTypeahead').input.setQuery(name, true);
+            }
+
+            if ('{!secondaryDisplayField}'.length) {
+                boxData['{!componentId}'].fieldList.push('{!secondaryDisplayField}');
+            }
+        });
+        
+        function setSrc(input) {
+            srchSrc = input;
+        }
+    </script>
+
+    <div style="{!style}" class="{!styleClass}">
+        <span class="lookupInput2" >
+            <input type="Text"  id="{!componentId}" name="{!componentId}" maxlength="255" tabindex="-1"
+                   autocomplete="off" style="width: 100%;padding-left: 2px;padding-top: 2px;padding-bottom: 2px;height: 20px; padding-right: 2px;"   onclick="select();" onchange="console.log('x');" />
+            <a tabindex="-1" href="javascript: setSrc('lookupclick'); 
+                     openLookup(
+                        '/_ui/common/data/LookupPage?' +
+                        'lknm=' + escapeUTF('{!componentId}') + 
+                        '&lkfield=' + escapeUTF('{!LEFT(sObjectFieldId, 15)}') +
+                        '&lkent=' + escapeUTF('{!$ObjectType[sObjectType].keyPrefix}') + 
+                        '&lktp=' + escapeUTF('{!$ObjectType[SObjectTypeSearch].keyPrefix}') +
+                        '&dplp=' + escapeUTF('[') + null + escapeUTF(',') + '%22' + escapeUTF('{!LEFT(sObject[$ObjectType[sObjectType].Fields[controllingField].localName], 15)}') + '%22' + escapeUTF(']'), 
+                    670, 
+                    '1', 
+                    '&lksrch=' + escapeUTF(getElementByIdCS('{!componentId}').value.substring(0, 80))
+                );"
+            >
+                <img src="{!URLFOR($Resource.GoldFinch, '/img/s.gif')}" class="lookupIcon"  />
+            </a>
+        </span>
+
+        <apex:inputHidden value="{!sObject[sObjectField]}" />
+        <!--apex:inputHidden value="{!sObject[$ObjectType[sObjectType].Fields[sObjectField].relationshipName]['Name']}" /-->
+        <input type="hidden" id="{!componentId}_lkid" name="{!componentId}_lkid" />
+        <input type="hidden" id="{!componentId}_lkold" name="{!componentId}_lkold" />
+        <input type="hidden" id="{!componentId}_lktp" name="{!componentId}_lktp" />
+        <input type="hidden" id="{!componentId}_lspf" name="{!componentId}_lspf" value="0" />
+        <input type="hidden" id="{!componentId}_lspfsub" name="{!componentId}_lspfsub" value="0" />
+        <input type="hidden" id="{!componentId}_mod" name="{!componentId}_mod" value="0" />
+    </div>
+</apex:component>

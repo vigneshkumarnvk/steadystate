@@ -1,0 +1,326 @@
+<aura:component extends="c:BillingWorksheetBase">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="String" access="public"/>
+    <aura:attribute name="createNewBundleLine" type="Boolean" access="public"/>
+    <aura:attribute name="bundleLines" type="List" access="private"/>
+
+    <aura:attribute name="worksheet" type="Object" access="public"/>
+    <aura:attribute name="worksheetBundleLine" type="Object" access="public"/>
+    <aura:attribute name="nextWorksheetLineNo" type="Integer" access="public"/>
+    <aura:attribute name="worksheetLines" type="List" access="private"/>
+    <aura:attribute name="showBundledLinesOnly" type="Boolean" default="true" access="private"/>
+    
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="save" action="{!c.save}" access="public">
+        <aura:attribute name="callbackFunction" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:spinner aura:id="loading-spinner" size="large" variant="brand" alternativeText="loading table" />
+    <lightning:card>
+        <aura:set attribute="title">
+            <p class="slds-p-horizontal_small">
+                <lightning:formattedUrl label="{!v.salesOrder.Name}" value="{!'/' + v.salesOrder.Id}" target="_blank"/>
+            </p>
+        </aura:set>
+        <p class="slds-p-horizontal_small">
+            <aura:if isTrue="{!v.createNewBundleLine == true}">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" padding="horizontal-small">
+                        <c:FlexDataTable items="{!v.bundleLines}" var="bundleLine" indexVar="index"
+                                         onrowaction="{!c.handleBundleLineRowAction}"
+                                         sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]"
+                                         keyName="Line_No__c" linkedToKeyName="Bundle_Line__r.Line_No__c"
+                                         collapsed="true" collapsible="true" collapseButtonPosition="left">
+                            <aura:set attribute="template">
+                                <c:FlexDataTableColumn label="" style="width:2%;">
+                                    <span name="select">
+                                        <aura:if isTrue="{!bundleLine.Bundle_Line__r == null}">
+                                            <lightning:input type="checkbox" variant="label-hidden" checked="{!bundleLine.Selected}"/>
+                                        </aura:if>
+                                    </span>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Category" style="width:15%;">
+                                    <c:FormattedText value="{#bundleLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(bundleLine.Bundle_Line__r != null, 'slds-p-left--medium', '')}"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Quantity" style="width:6%;">
+                                    <lightning:formattedNumber value="{#bundleLine.Quantity__c}" minimumFractionDigits="2"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Resource Type" style="width:15%;">
+                                    {#bundleLine.Resource_Type__r.Name}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Resource" style="width:15%;">
+                                    {#bundleLine.Resource__r.Name}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Description" style="width:15%;">
+                                    {#bundleLine.Description__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="UOM" style="width:6%;">
+                                    {#bundleLine.Unit_of_Measure__r.Name}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="UOM Qty." style="width:6%;">
+                                    <lightning:formattedNumber value="{#bundleLine.UOM_Qty__c}" minimumFractionDigits="2"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Unit Price" style="width:6%;">
+                                    <lightning:formattedNumber value="{#if(bundleLine.Bundle_Line__r == null, bundleLine.Unit_Price__c, bundleLine.xUnit_Price__c)}" style="currency" currencyCode="USD"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Unit Cost" style="width:6%;">
+                                    <lightning:formattedNumber value="{#if(bundleLine.Bundle_Line__r == null, bundleLine.Unit_Cost__c, bundleLine.xUnit_Cost__c)}" style="currency" currencyCode="USD"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Line Amount" style="width:7%;">
+                                    <lightning:formattedNumber value="{#if(bundleLine.Bundle_Line__r == null, bundleLine.Line_Amount__c, bundleLine.xLine_Amount__c)}" style="currency" currencyCode="USD"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Line Cost" style="width:7%;">
+                                    <lightning:formattedNumber value="{#if(bundleLine.Bundle_Line__r == null, bundleLine.Line_Cost__c, bundleLine.xLine_Cost__c)}" style="currency" currencyCode="USD"/>
+                                </c:FlexDataTableColumn>
+                            </aura:set>
+                        </c:FlexDataTable>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <lightning:button label="Add New Bundle Line" variant="brand" onclick="{!c.addNewBundleLine}" disabled="{!v.worksheetBundleLine != null}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:if>
+        </p>
+
+        <p class="slds-p-around_small">
+            <aura:if isTrue="{!v.worksheetBundleLine != null}">
+                <lightning:card title="{!'Bundle Line #' + v.worksheetBundleLine.Line_No__c}">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:select aura:id="tm" label="T&amp;M" value="{!v.worksheetBundleLine.TM__c}" onchange="{!c.handleTMChange}" required="true" disabled="{!v.worksheetBundleLine.TM_Line__c}">
+                                <option></option>
+                                <aura:iteration items="{!v.worksheet.RelatedInfos}" var="relatedInfo">
+                                    <option value="{!relatedInfo.TM.Id}">{!relatedInfo.TM.Name}</option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input type="date" label="Scheduled Date" value="{!v.worksheetBundleLine.TM__r.Scheduled_Date__c}" dateStyle="short" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <c:LookupInput aura:id="resource-type" label="Resource Type" value="{!v.worksheetBundleLine.Resource_Type__r}"
+                                           SObjectName="Resource_Type__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}]"
+                                           pill="{fieldName: 'Name'}"
+                                           queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Description__c']"
+                                           filter="Category__c='Bundled' AND Blocked__c!=TRUE"
+                                           onchange="{!c.handleResourceTypeChange}"
+                                           required="true"
+                                           disabled="{!!v.worksheetBundleLine.TM__c || v.worksheetBundleLine.Sales_Bundle_Line__c != null}"/>
+                        </lightning:layoutItem>
+
+                        <!--
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <c:LookupInput aura:id="resource" label="Resource" value="{!v.worksheetBundleLine.Resource__r}"
+                                           SObjectName="Resource__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                                           queryFields="['Has_Container__c', 'Has_Weight_Volume__c']"
+                                           filter="{!'Category__c=\'' + v.worksheetBundleLine.Category__c + '\'' +
+                                                    if(v.worksheetBundleLine.Resource_Type__c != null, 'AND Resource_Type__c=\'' + v.worksheetBundleLine.Resource_Type__c + '\'', '') +
+                                                    ' AND Blocked__c!=TRUE'}"
+                                           pill="{iconName: 'custom:custom6', fieldName: 'Name'}"
+                                           onchange="{!c.handleResourceChange}"/>
+                        </lightning:layoutItem>
+                        -->
+
+                        <aura:if isTrue="{!v.salesOrder.Contract__c != null}">
+                            <lightning:layoutItem size="6" padding="horizontal-small">
+                                <c:LookupInput label="Contract Line" value="{!v.worksheetBundleLine.Contract_Line__r}"
+                                               SObjectName="Contract_Line__c"
+                                               columns="[{label: 'Resource Type', fieldName: 'Resource_Type__r.Name'}, {label: 'Customer Description', fieldName: 'Customer_Description__c'}, {label: 'Unit Price', fieldName: 'Unit_Price_Per_UOM__c'}]"
+                                               queryFields="['Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource__c', 'Resource__r.Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Regular_Rate__c', 'Overtime_Rate__c', 'Premium_Rate__c', 'Customer_Description__c']"
+                                               filter="{!'Category__c=\'' + v.worksheetBundleLine.Category__c + '\' AND Contract__c=\'' + v.salesOrder.Contract__c + '\''}"
+                                               pill="{iconName: 'standard:contract_line_item', expression: '{Name} - {Customer_Description__c}'}"
+                                               onchange="{!c.handleContractLineChange}"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input aura:id="description" label="Billing Description" value="{!v.worksheetBundleLine.Description__c}" required="true"/>
+                        </lightning:layoutItem>
+                        <!--
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <c:LookupInput label="Contract Line" value="{!v.worksheetBundleLine.Contract_Line__r}" SObjectName="Contract_Line__c" columns="[{label: 'Resource Type', fieldName: 'Resource_Type__r.Name'}, {label: 'Customer Description', fieldName: 'Customer_Description__c'}, {label: 'Unit Price', fieldName: 'Unit_Price_Per_UOM__c'}]" queryFields="['Resource_Type__c', 'Resource_Type__r.Name', 'Resource__c', 'Resource__r.Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Regular_Rate__c', 'Overtime_Rate__c', 'Premium_Rate__c', 'Customer_Description__c']" filter="{!'Category__c=\'' + v.worksheetBundleLine.Category__c + '\' AND Contract__c=\'' + v.salesOrder.Contract__c + '\''}" pill="{iconName: 'standard:contract_line_item', expression: '{Name} - {Customer_Description__c}'}" onchange="{!c.handleContractLineChange}" disabled="{!v.salesOrder.Contract__c == null}"/>
+                        </lightning:layoutItem>
+                        -->
+
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <aura:if isTrue="{!v.worksheetBundleLine.Resource_Type__c != null &amp;&amp; v.worksheetBundleLine.Category__c != 'Subcontractors'}">
+                                <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.worksheetBundleLine.Unit_of_Measure__r}"
+                                               SObjectName="Unit_of_Measure__c"
+                                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                                               queryFields="['Hours_UOM__c']"
+                                               filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceTypeUOMAssociation__c WHERE Resource_Type__c =\'' + v.worksheetBundleLine.Resource_Type__c + '\')&quot;,'
+                                                    + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource_Type__c WHERE Contract__c=\'' + v.salesOrder.Contract__c + '\' AND Resource_Type__c=\'' + v.worksheetBundleLine.Resource_Type__c + '\')&quot;]'}"
+                                               pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                               onchange="{!c.handleUnitOfMeasureChange1}"
+                                               required="true" disabled="{!!v.worksheetBundleLine.TM__c || v.worksheetBundleLine.Sales_Bundle_Line__c != null}"/>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!v.worksheetBundleLine.Resource__c != null &amp;&amp; v.worksheetBundleLine.Category__c != 'Subcontractors'}">
+                                        <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.worksheetBundleLine.Unit_of_Measure__r}"
+                                                       SObjectName="Unit_of_Measure__c"
+                                                       columns="[{label: 'Name', fieldName: 'Name'}]"
+                                                       queryFields="['Hours_UOM__c']"
+                                                       filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceUOMAssociation__c WHERE Resource__c =\'' + v.worksheetBundleLine.Resource__c + '\')&quot;,'
+                                                            + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource__c WHERE Contract__c=\'' + v.salesOrder.Contract__c + '\' AND Resource__c=\'' + v.worksheetBundleLine.Resource__c + '\')&quot;]'}"
+                                                       pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                                       onchange="{!c.handleUnitOfMeasureChange1}"
+                                                       required="true" disabled="{!!v.worksheetBundleLine.TM__c || v.worksheetBundleLine.Sales_Bundle_Line__c != null}"/>
+                                        <aura:set attribute="else">
+                                            <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.worksheetBundleLine.Unit_of_Measure__r}"
+                                                           SObjectName="Unit_of_Measure__c"
+                                                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}, {label: 'Container Size', fieldName: 'Container_Size__c'}]"
+                                                           queryFields="['Hours_UOM__c']" 
+                                                           filter="Blocked__c!=TRUE"
+                                                           pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                                           onchange="{!c.handleUnitOfMeasureChange2}"
+                                                           required="true" disabled="{!!v.worksheetBundleLine.TM__c || v.worksheetBundleLine.Sales_Bundle_Line__c != null}"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <c:LightningInput aura:id="quantity" type="number" label="Quantity" value="{!v.worksheetBundleLine.Quantity__c}" required="true" min="0.01" messageWhenRangeUnderflow="Quantity must be greater than zero." onchange="{!c.handleQuantityChange}" step="0.01"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input aura:id="unit-price" label="Unit Price" type="number" value="{!v.worksheetBundleLine.Unit_Price__c}" oncommit="{!c.handleUnitPriceChange}" formatter="currency" step="0.001" required="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:select aura:id="tax-group" label="Tax Group" value="{!v.worksheetBundleLine.Tax_Group__c}" onchange="{!c.handleTaxGroupChange}" required="true">
+                                <option value=""></option>
+                                <option value="NT">NT</option>
+                                <option value="TX">TX</option>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <!--
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:select aura:id="bundle-pricing-method" label="Bundle Pricing Method" value="{!v.worksheetBundleLine.Bundle_Pricing_Method__c}" required="true" onchange="{!c.handleBundlePricingMethodChange}">
+                                <option label="" value=""/>
+                                <option label="Bundled Per Unit Amount" value="Per Unit"/>
+                                <option label="Bundled Per Total Amount" value="Per Total"/>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        -->
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input type="number" label="Rolled-Up Bundled Line Amount(s)" value="{!v.worksheetBundleLine.Rolled_up_Unit_Price__c}" formatter="currency" disabled="true" step="0.001"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input label="Pricing Source" value="{!v.worksheetBundleLine.Pricing_Source_2__c}" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input type="number" label="Unit Cost" value="{!v.worksheetBundleLine.Unit_Cost__c}" oncommit="{!c.handleUnitCostChange}" step="0.001" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" padding="horizontal-small">
+                            <lightning:input type="number" label="Line Cost" value="{!v.worksheetBundleLine.Line_Cost__c}" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:card>
+
+        <p class="slds-p-around_small">
+            <lightning:card title="Bundled Resources" class="slds-card_boundary" iconName="standard:poll">
+                <aura:set attribute="actions">
+                    <lightning:input type="toggle" checked="{!v.showBundledLinesOnly}" messageToggleActive="Bundled" messageToggleInactive="All" onchange="{!c.refreshView}"/>
+                </aura:set>
+
+        <p class="slds-p-horizontal--small">
+            <c:DataTable items="{!v.worksheetLines}" var="worksheetLine" indexVar="rowIndex"
+                         onRowAction="{!c.handleRowAction}" onSelectAll="{!c.handleSelectAll}"
+                         prefilters="worksheetLine.visible != true"
+                         verticalScroll="true" height="300px">
+                <aura:set attribute="template">
+                    <c:DataColumn label="" selectAllCheckbox="Selected">
+                        <span name="select">
+                            <lightning:input type="checkbox" variant="label-hidden" checked="{!worksheetLine.Selected}" class="{!if(worksheetLine.visible == true, '', 'slds-hide')}"/>
+                        </span>
+                    </c:DataColumn>
+                    <!--
+                    <c:DataColumn label="Bundled">
+                        <lightning:input type="checkbox" variant="label-hidden" checked="{#worksheetLine.Bill_as_Lump_Sum__c}" disabled="true"/>
+                    </c:DataColumn>
+                    -->
+                    <c:DataColumn label="Scheduled Date">
+                        <c:FormattedDate value="{#worksheetLine.TM__r.Scheduled_Date__c}"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="T&amp;M #">
+                        {#worksheetLine.TM__r.Name}
+                    </c:DataColumn>
+                    <c:DataColumn label="Category">
+                        {!if(worksheetLine.Category__c=='Subcontractors', 'Cost Plus Materials, Equipment and Services', if(worksheetLine.Category__c == 'Bundled', 'Bundled', worksheetLine.Category__c))}
+                    </c:DataColumn>
+                    <c:DataColumn label="Quantity">
+                        <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{#worksheetLine.Quantity__c}" minimumFractionDigits="2"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Resource Type /Resource">
+                        <aura:if isTrue="{#worksheetLine.Resource_Type__c != null}">
+                            {#worksheetLine.Resource_Type__r.Name}
+                            <aura:set attribute="else">
+                                {#worksheetLine.Resource__r.Name}
+                            </aura:set>
+                        </aura:if>
+                    </c:DataColumn>
+                    <c:DataColumn label="Description">
+                        {#worksheetLine.Description__c}
+                    </c:DataColumn>
+                    <c:DataColumn label="Unit of Measure">
+                        {#worksheetLine.Unit_of_Measure__r.Name}
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Unit Price">
+                        <aura:if isTrue="{#worksheetLine.Bill_as_Lump_Sum__c != true}">
+                            <lightning:formattedNumber label="Unit Price" variant="label-hidden" value="{#worksheetLine.Unit_Price__c}" style="currency" currencyCode="USD"/>
+                            <aura:set attribute="else">
+                                <lightning:formattedNumber label="xUnit Price" variant="label-hidden" value="{#worksheetLine.xUnit_Price__c}" style="currency" currencyCode="USD"/>
+                            </aura:set>
+                        </aura:if>
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Line Amount">
+                        <aura:if isTrue="{#worksheetLine.Bill_as_Lump_Sum__c != true}">
+                            <lightning:formattedNumber label="Line Amount" variant="label-hidden" value="{#worksheetLine.Line_Amount__c}" style="currency" currencyCode="USD"/>
+                            <aura:set attribute="else">
+                                <lightning:formattedNumber label="xLine Amount" variant="label-hidden" value="{#worksheetLine.xLine_Amount__c}" style="currency" currencyCode="USD"/>
+                            </aura:set>
+                        </aura:if>
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Unit Cost">
+                        <!--
+                        <aura:if isTrue="{#worksheetLine.Bill_as_Lump_Sum__c != true}">
+                            <lightning:formattedNumber label="Unit Cost" variant="label-hidden" value="{#worksheetLine.Unit_Cost__c }" style="currency" currencyCode="USD"/>
+                            <aura:set attribute="else">
+                                <lightning:formattedNumber label="xUnit Cost" variant="label-hidden" value="{#worksheetLine.xUnit_Cost__c}" style="currency" currencyCode="USD"/>
+                            </aura:set>
+                        </aura:if>
+                        -->
+                        <lightning:formattedNumber label="Unit Cost" variant="label-hidden" value="{#worksheetLine.Unit_Cost__c }" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Line Cost">
+                        <!--
+                        <aura:if isTrue="{#worksheetLine.Bill_as_Lump_Sum__c != true}">
+                            <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{#worksheetLine.Line_Cost__c }" style="currency" currencyCode="USD"/>
+                            <aura:set attribute="else">
+                                <lightning:formattedNumber label="xLine Cost" variant="label-hidden" value="{#worksheetLine.xLine_Cost__c}" style="currency" currencyCode="USD"/>
+                            </aura:set>
+                        </aura:if>
+                        -->
+                        <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{#worksheetLine.Line_Cost__c }" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Line No.">
+                        <lightning:formattedNumber label="Line No." variant="label-hidden" value="{#worksheetLine.Line_No__c}"/>
+                    </c:DataColumn>
+                </aura:set>
+            </c:DataTable>
+        </p>
+    </lightning:card>
+    </p>
+    </aura:if>
+    </p>
+    </lightning:card>
+</aura:component>

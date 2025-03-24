@@ -1,0 +1,65 @@
+<aura:component controller="UserServiceCenterController" extends="c:BaseComponent" implements="lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes">
+    <!--attributes-->
+    <aura:attribute name="userId" type="Id" access="public"/>
+    <aura:attribute name="user" type="Object" access="private"/>
+    <aura:attribute name="userServiceCenters" type="List" default="[]" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--body-->
+    <lightning:card title="{!'User Service Centers - ' + v.user.Name}" class="slds-card_boundary" iconName="standard:groups">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button label="Back" iconName="utility:back" onclick="{!c.doCancel}" />
+                <lightning:button label="Add All SCs" variant="brand" iconName="utility:add" onclick="{!c.doAddAll}" />
+                <lightning:button label="Add New" variant="brand" iconName="utility:add" onclick="{!c.doNew}" />
+                <lightning:button label="Save" variant="brand" iconName="utility:save" onclick="{!c.doSave}" />
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <p class="slds-p-horizontal_small">
+            <!--
+            <c:DataTable items="{!v.userServiceCenters}" var="userServiceCenter" indexVar="index" onRowAction="{!c.handleRowAction}">
+                <aura:set attribute="template">
+                    <c:DataColumn label="Actions">
+                        <span name="delete">
+                            <lightning:button label="Delete" variant="base"/>
+                        </span>
+                    </c:DataColumn>
+                    <c:DataColumn label="Service Center">
+                        <c:LookupInput name="service-center" value="{!userServiceCenter.Service_Center__r}" SObjectName="Service_Center__c" columns="[{label: 'Name', fieldName: 'Name'}]" pill="{iconName: 'standard:groups', fieldName: 'Name'}"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Default">
+                        <span name="default">
+                            <lightning:input type="checkbox" label="User" variant="label-hidden" value="{!userServiceCenter.Default__c}" checked="{!userServiceCenter.Default__c}"/>
+                        </span>
+                    </c:DataColumn>
+                    <c:DataColumn label="Manager of SC">
+                        <span name="manager">
+                            <lightning:input type="checkbox" label="User" variant="label-hidden" checked="{!userServiceCenter.Manager_of_SC__c}"/>
+                        </span>
+                    </c:DataColumn>
+                </aura:set>
+            </c:DataTable>
+            -->
+
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered" aria-label="Example table of Opportunities with no row hovers">
+                <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">Actions</th>
+                    <th class="" scope="col">Service Center</th>
+                    <th class="" scope="col">Default</th>
+                    <th class="" scope="col">Manager of SC</th>
+                </tr>
+                </thead>
+                <tbody>
+                <aura:iteration items="{!v.userServiceCenters}" var="userServiceCenter" indexVar="index">
+                    <c:UserServiceCenter index="{!index}" userServiceCenters="{!v.userServiceCenters}" userServiceCenter="{!userServiceCenter}"/>
+                </aura:iteration>
+                </tbody>
+            </table>
+
+        </p>
+    </lightning:card>
+</aura:component>

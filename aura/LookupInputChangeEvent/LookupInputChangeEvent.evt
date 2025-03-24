@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="name" type="String" access="public" description="control name"/>
+    <aura:attribute name="records" type="Object[]" access="public" description="return a list of selected records"/>
+    <aura:attribute name="record" type="Object" access="public" description="return the first selected record"/>
+</aura:event>

@@ -1,0 +1,239 @@
+<aura:component extends="c:BillingWorksheetLineBase">
+    <!--attributes-->
+    <aura:attribute name="TMsOptionList" type="List" access="public"/>
+    <aura:attribute name="fields" type="Object" access="private"/>
+
+    <!--events-->
+
+    <!--handlers-->
+    <!--
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.worksheetLine}" action="{!c.handleWorksheetLineChange}"/>
+    -->
+
+    <!--body-->
+    <!--<td class="fixed-column sticky-col-1" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        <span name="select">
+            <lightning:input aura:id="Selected" name="Selected" type="checkbox" label="" variant="label-hidden" checked="{!v.worksheetLine.Selected}" onchange="{!c.selectLines}"/>
+        </span>
+    </td>
+    <!--<td class="fixed-column sticky-col-2" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        <span name="delete" style="display: block;">
+            <lightning:button variant="base" label="Del" value="{!index}" onclick="{!c.deleteLine}" disabled="{!v.fields.delete.disabled}"/>
+        </span>
+        <span name="view" style="display: block;" class="{#if(v.worksheetLine.Category__c != 'Bundled', 'slds-hide', '')}">
+            <!--<span class="slds-p-horizontal-xx-small" style="display: inline-block;">|</span>-->
+            <lightning:button variant="base" label="Bundle" value="{!index}"/>
+        </span>
+    </td>
+    <td>
+        {!v.worksheetLine.Status__c}
+    </td>
+    <!--<td class="fixed-column sticky-col-3" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        <span name="invoice" style="display: block;">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.To_Invoice__c}" onchange="{!c.selectToInvoiceLines}" disabled="{!v.fields.toInvoice.disabled}"/>
+        </span>
+    </td>
+    <td>
+        <c:FormattedDate value="{!v.worksheetLine.TM__r.Scheduled_Date__c}"/>
+    </td>
+    <td>
+        {!v.worksheetLine.TM__r.Name}
+    </td>
+    <!--<td class="fixed-column sticky-col-5" class="slds-cell-wrap"" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        <span style="display: block;">
+            <c:FormattedText value="{#v.worksheetLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(v.worksheetLine.Bundle_Line__r != null, 'slds-p-left--medium', '')}"/>
+        </span>
+        <aura:if isTrue="{!v.worksheetLine.errorText}">
+            <span class="boxed-error-message">
+                <aura:unescapedHtml value="{!v.worksheetLine.errorText}"/>
+            </span>
+        </aura:if>
+    </td>
+    <td>
+        {#v.worksheetLine.Service_Center__r.Name}
+    </td>
+    <!--<td class="fixed-column sticky-col-6" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Resource_Type__r.Name}
+    </td>
+    <!--<td class="fixed-column sticky-col-7 fixed-column-right-border slds-cell-wrap" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Resource__r.Name}
+    </td>
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Resource_Name__c}
+    </td>
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Description__c}
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:input type="checkbox" variant="label-hidden" checked="{#v.worksheetLine.Bill_Site_Time__c}" disabled="true" class="{#if(v.worksheetLine.Category__c == 'Labor', '', 'slds-hide')}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:input type="checkbox" variant="label-hidden" checked="{#v.worksheetLine.Include_Lunch_Y_N__c}" disabled="true" class="{#if(v.worksheetLine.Category__c == 'Labor', '', 'slds-hide')}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Billing_Start_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Billing_End_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#v.worksheetLine.Hour__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="2" class="{!if(v.worksheetLine.Category__c == 'Labor', 'slds-hide', '')}"/>
+    </td>
+    <td>
+        {#v.worksheetLine.Unit_of_Measure__r.Name}
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <aura:if isTrue="{!v.worksheetLine.Category__c == 'Labor'}">
+            {!v.worksheetLine.Regular_Hours__c}
+        </aura:if>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <aura:if isTrue="{!v.worksheetLine.Category__c == 'Labor'}">
+            {!v.worksheetLine.Overtime_Hours__c}
+        </aura:if>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <aura:if isTrue="{!v.worksheetLine.Category__c == 'Labor'}">
+            {!v.worksheetLine.Premium_Hours__c}
+        </aura:if>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xRegular_Rate__c, v.worksheetLine.Regular_Rate__c)}" style="currency" currencyCode="USD"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xOvertime_Rate__c, v.worksheetLine.Overtime_Rate__c)}" style="currency" currencyCode="USD"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xPremium_Rate__c, v.worksheetLine.Premium_Rate__c)}" style="currency" currencyCode="USD"/>
+    </td>
+    <td>
+        <!--
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xUnit_Price__c, v.worksheetLine.Unit_Price__c)}" style="currency" currencyCode="USD" class="{!if(v.worksheetLine.Category__c=='Labor', 'slds-hide', '')}"/>
+        -->
+        <lightning:formattedNumber value="{!v.worksheetLine.Unit_Price__c}" style="currency" currencyCode="USD" class="{!if(v.worksheetLine.Category__c=='Labor', 'slds-hide', '')}"/>
+
+    </td>
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Non_Billable__c}" disabled="true"/>
+    </td>
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.worksheetLine.Bill_as_Lump_Sum__c}" disabled="true"/>
+    </td>
+    <!--
+    <td>
+        {!v.worksheetLine.Markup_Option__c}
+    </td>
+    <td>
+        {!v.worksheetLine.Markup__c}
+    </td>
+    -->
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Pricing_Source_2__c}
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Line_Amount__c}" style="currency" currencyCode="USD" class="line-total"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Line_Amt_Incl_Tax__c}" style="currency" currencyCode="USD" class="line-total"/>
+    </td>
+    <td>
+        <!--
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xUnit_Cost__c, v.worksheetLine.Unit_Cost__c)}" style="currency" currencyCode="USD"/>
+        -->
+        <lightning:formattedNumber value="{!v.worksheetLine.Unit_Cost__c}" style="currency" currencyCode="USD"/>
+    </td>
+    <!--
+    <td>
+        <lightning:formattedNumber value="{!v.worksheetLine.Line_Cost__c}" style="currency" currencyCode="USD"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Job_Start_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Site_Start_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Site_End_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Job_End_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Lunch_Start_Time__c}"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <c:FormattedTime value="{#v.worksheetLine.Lunch_End_Time__c}"/>
+    </td>
+    -->
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#v.worksheetLine.Total_Job_Hours__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+    </td>
+    <td style="background-color:rgb(240,240,240)">
+        <lightning:formattedNumber value="{#v.worksheetLine.Total_Site_Hours__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:select variant="label-hidden" class="label-hidden" >
+            <option/>
+            <option label="1/2 Hour" value="1/2 Hour"/>
+        </lightning:select>
+    </td>
+    <!--
+    <td>
+        <c:FormattedText value="{#v.worksheetLine.Cost_Method__c}" options="{&quot;Unit_Weight_Vol&quot;:&quot;Unit Wi/Vol&quot;, &quot;Container&quot;:&quot;Container&quot;}"/>
+    </td>
+    <td>
+        {#v.worksheetLine.Unit_Weight_Vol__r.Name}
+    </td>
+    <td>
+        {#v.worksheetLine.Container_Size__r.Name}
+    </td>
+    <td>
+        {#v.worksheetLine.Facility__r.Name}
+    </td>
+    <td>
+        {#v.worksheetLine.BOL_Manifest__c}
+    </td>
+    <td>
+        <aura:if isTrue="{!v.worksheetLine.Contract_Line__c != null}">
+            <span name="contractLineLink">
+                <lightning:formattedUrl label="{!v.worksheetLine.Contract_Line__r.Name}" value="{!'/' + v.worksheetLine.Contract_Line__c}" target="_blank"/>
+            </span>
+        </aura:if>
+    </td>
+    -->
+    <td>
+        {#v.worksheetLine.Tax_Group__c}
+    </td>
+    <!--
+    <td>
+        <lightning:formattedNumber value="{#v.worksheetLine.Tax_Pct__c/100}" style="percent" maximumFractionDigits="3"/>
+    </td>
+
+    <td>
+        <lightning:formattedNumber value="{!if(v.worksheetLine.Bill_as_Lump_Sum__c == true || v.worksheetLine.Non_Billable__c == true, v.worksheetLine.xLine_Amount__c * v.worksheetLine.Tax_Pct__c / 100, v.worksheetLine.Tax__c)}" style="currency" currencyCode="USD"/>
+    </td>
+    -->
+    <!--<td class="fixed-column sticky-col-4" style="z-index:1">-->
+    <td class="slds-cell-wrap">
+        {#v.worksheetLine.Line_No__c}
+        <!--<lightning:formattedUrl label="{#v.worksheetLine.Line_No__c}" value="{#'/' + v.worksheetLine.Id}" target="_blank"/>-->
+    </td>
+    <td>
+        {!v.worksheetLine.Parent_Line__r.Line_No__c}
+    </td>
+    <!--
+    <td>
+        {!v.worksheetLine.Costing_Source__c}
+    </td>
+    -->
+</aura:component>

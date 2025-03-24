@@ -1,0 +1,181 @@
+<aura:component extends="c:BaseComponent" controller="JobTaskTemplateController" implements="lightning:hasPageReference,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickAction">
+    <!--attributes-->
+    <aura:attribute name="jobTaskTemplate" type="Object" access="public"/>
+    <aura:attribute name="jobTaskTemplateLines" type="List" access="public"/>
+    <aura:attribute name="nextTemplateLineNo" type="Integer" default="1" access="public"/>
+
+    <aura:attribute name="byPassJobTaskTemplateLinesChange" type="Boolean" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.handlePageChange}"/>
+    <aura:handler name="change" value="{!v.jobTaskTemplateLines}" action="{!c.handleTemplateLinesChange}"/>
+
+    <!--body-->
+    <lightning:card title="Job Task Template" iconName="standard:template">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button value="cancel" label="Cancel" onclick="{!c.doCancel}"/>
+                <lightning:button value="save" label="Save" variant="brand" onclick="{!c.doSave}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input aura:id="name" label="Name" value="{!v.jobTaskTemplate.Name}" required="true" autocomplete="off" maxlength="30"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:card title="Template Lines">
+                    <aura:set attribute="actions">
+                        <lightning:buttonGroup>
+                            <lightning:button value="addNewLine" label="New Line" variant="brand" iconName="utility:add" onclick="{!c.doAddNewLine}"/>
+                        </lightning:buttonGroup>
+                    </aura:set>
+
+                    <aura:if isTrue="{!v.jobTaskTemplate.Type__c == 'Wizard'}">
+                        <c:FlexDataTable name="templateLines" items="{!v.jobTaskTemplateLines}" var="templateLine" indexVar="rowIndex"
+                                         onrowaction="{!c.handleRowAction}"
+                                         sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]"
+                                         keyName="Line_No__c" linkedToKeyName="Parent_Line__r.Line_No__c" collapsed="true" collapsible="false" collapseButtonPosition="left">
+                            <aura:set attribute="template">
+                                <c:FlexDataTableColumn label="Actions" style="width:5%;">
+                                    <span style="display: inline-block;">
+                                        <lightning:button name="delete" label="Del" variant="base" disabled="{!templateLine.Parent_Line__r &amp;&amp; templateLine.Parent_Line__r.Line_No__c}"/>
+                                    </span>
+                                    <span style="display: inline-block;" class="slds-p-horizontal--xx-small">|</span>
+                                    <span style="display: inline-block;">
+                                        <lightning:button name="edit" label="Edit" variant="base"/>
+                                    </span>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Line No." style="width:5%;">
+                                    {!templateLine.Line_No__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Parent Line No." style="width:5%;">
+                                    {!templateLine.Parent_Line__r.Line_No__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Category" style="width:15%;">
+                                    <div class="{!if(templateLine.Parent_Line__r &amp;&amp; templateLine.Parent_Line__r.Line_No__c, 'slds-cell-wrap slds-p-left--small', 'slds-cell-wrap')}">
+                                        <aura:if isTrue="{!templateLine.Category__c == 'Subcontractors'}">Cost Plus Materials, Equipment and Services
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!templateLine.Category__c == 'Demurrage'}">Transportation, Demurrage and Fees
+                                                    <aura:set attribute="else">
+                                                        <aura:if isTrue="{!templateLine.Category__c == 'Bundled'}">Bundled
+                                                            <aura:set attribute="else">
+                                                                {!templateLine.Category__c}
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Resource Type/Resource" style="width:20%;">
+                                    <aura:if isTrue="{!templateLine.Category__c == null || templateLine.Category__c == 'Labor' || templateLine.Category__c == 'Equipment' || templateLine.Category__c == 'Bundled'}">
+                                        {!templateLine.Resource_Type__r.Name}
+                                        <aura:set attribute="else">
+                                            {!templateLine.Resource__r.Name}
+                                        </aura:set>
+                                    </aura:if>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Description" style="width:20%;">
+                                    {!templateLine.Description__c}
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Unit of Measure" style="width:10%;">
+                                    {!templateLine.Unit_of_Measure__r.Name}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Question" style="width:20%;">
+                                    {!templateLine.Question__c}
+                                </c:FlexDataTableColumn>
+                            </aura:set>
+                        </c:FlexDataTable>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.jobTaskTemplate.Type__c != 'Wizard'}">
+                        <c:FlexDataTable name="templateLines2" items="{!v.jobTaskTemplateLines}" var="templateLine" indexVar="rowIndex"
+                                         onrowaction="{!c.handleRowAction}"
+                                         sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]"
+                                         keyName="Line_No__c" linkedToKeyName="Parent_Line__r.Line_No__c" collapsed="true" collapsible="false" collapseButtonPosition="left">
+                            <aura:set attribute="template">
+                                <c:FlexDataTableColumn label="Actions" style="width:5%;">
+                                   <span style="display: inline-block;">
+                                       <lightning:button name="delete" label="Del" variant="base" disabled="{!templateLine.Parent_Line__r &amp;&amp; templateLine.Parent_Line__r.Line_No__c}"/>
+                                   </span>
+                                    <span style="display: inline-block;" class="slds-p-horizontal--xx-small">|</span>
+                                    <span style="display: inline-block;">
+                                       <lightning:button name="edit" label="Edit" variant="base"/>
+                                   </span>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Line No." style="width:5%;">
+                                    {!templateLine.Line_No__c}
+                                </c:FlexDataTableColumn>
+                                <!--
+                                <c:FlexDataTableColumn label="Is Parent" style="width:5%;">
+                                    <aura:if isTrue="{!templateLine.Has_Child_Lines__c == true}">
+                                        <lightning:input type="checkbox" checked="{!templateLine.Has_Child_Lines__c}" disabled="true"/>
+                                    </aura:if>
+                                </c:FlexDataTableColumn>
+                                -->
+                                <c:FlexDataTableColumn label="Category" style="width:15%;">
+                                    <div class="{!if(templateLine.Parent_Line__r != null &amp;&amp; templateLine.Parent_Line__r.Line_No__c != null, 'slds-cell-wrap slds-p-left--small', 'slds-cell-wrap')}">
+                                        <aura:if isTrue="{!templateLine.Category__c == 'Subcontractors'}">Cost Plus Materials, Equipment and Services
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!templateLine.Category__c == 'Demurrage'}">Transportation, Demurrage and Fees
+                                                    <aura:set attribute="else">
+                                                        <aura:if isTrue="{!templateLine.Category__c == 'Bundled'}">Bundled
+                                                            <aura:set attribute="else">
+                                                                {!templateLine.Category__c}
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Resource Type/Resource" style="width:20%;">
+                                    <aura:if isTrue="{!templateLine.Category__c == null || templateLine.Category__c == 'Labor' || templateLine.Category__c == 'Equipment' || templateLine.Category__c == 'Bundled'}">
+                                        {!templateLine.Resource_Type__r.Name}
+                                        <aura:set attribute="else">
+                                            {!templateLine.Resource__r.Name}
+                                        </aura:set>
+                                    </aura:if>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Description" style="width:20%;">
+                                    {!templateLine.Description__c}
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Unit of Measure" style="width:5%;">
+                                    {!templateLine.Unit_of_Measure__r.Name}
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Quantity" style="width:5%;">
+                                    {!templateLine.Quantity__c}
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Question" style="width:20%;">
+                                    {!templateLine.Question__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Parent Line No." style="width:5%;">
+                                    {!templateLine.Parent_Line__r.Line_No__c}
+                                </c:FlexDataTableColumn>
+                                <!--ticket 19130-->
+                                <c:FlexDataTableColumn label="Child Resource" style="width:5%;">
+                                    <lightning:input type="checkbox" variant="label-hidden" checked="{!templateLine.Is_Child_Resource__c}" disabled="true"/>
+                                </c:FlexDataTableColumn>
+                                <!--ticket 19130-->
+                            </aura:set>
+                        </c:FlexDataTable>
+                    </aura:if>
+                </lightning:card>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+
+</aura:component>

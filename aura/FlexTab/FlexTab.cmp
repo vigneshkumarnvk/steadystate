@@ -1,0 +1,33 @@
+<aura:component description="FlexTab">
+    <!--attributes-->
+    <aura:attribute name="tabIndex" type="Integer" required="true" access="public"/>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:attribute name="error" type="Boolean" access="public"/>
+    <aura:attribute name="selectedTabId" type="String" access="public"/>
+    <aura:attribute name="tabId" type="String" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <li class="{!if(v.selectedTabId == v.tabId, 'slds-tabs_scoped__item slds-is-active', 'slds-tabs_scoped__item')}" title="{!v.label}" role="presentation">
+        <a id="{!v.tabId}" class="slds-tabs_scoped__link" href="javascript:void(0);" role="tab" tabindex="{!if(v.selectedTabId == v.tabId, 0, -1)}" data-tab-id="{!v.tabId}" data-tab-index="{!v.tabIndex}" onclick="{!c.handleTabClick}">
+            <aura:if isTrue="{!v.iconName}">
+                <span class="slds-tabs__left-icon">
+                    <span class="slds-icon_container" title="{!v.label}">
+                        <lightning:icon iconName="{!v.iconName}" size="small"/>
+                    </span>
+                </span>
+            </aura:if>
+            {!v.label}
+            <aura:if isTrue="{!v.error == true}">
+                <span class="slds-tabs__right-icon">
+                    <span class="slds-icon_container" title="{!v.label}">
+                        <lightning:icon iconName="utility:error" size="x-small" variant="error"/>
+                    </span>
+                </span>
+            </aura:if>
+        </a>
+    </li>
+</aura:component>

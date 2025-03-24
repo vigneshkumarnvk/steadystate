@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="tmId" type="Id" access="public"/>
+    <aura:attribute name="page" type="String" access="public"/>
+    <aura:attribute name="reloadTM" type="Boolean" access="public"/>
+</aura:event>

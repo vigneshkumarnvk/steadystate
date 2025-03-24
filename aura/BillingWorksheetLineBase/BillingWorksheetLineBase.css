@@ -1,0 +1,66 @@
+.THIS .label-hidden > label {
+    display: none;
+}
+
+.THIS .line-total {
+    color: blue !important;
+}
+
+/*select*/
+.THIS.sticky-col-1 {
+    left: 35px; /*starting position 36px; width: 40*/
+}
+
+/*action*/
+.THIS.sticky-col-2 {
+    left:75px; /*width: 75*/
+}
+
+/*status*/
+.THIS.sticky-col-3 {
+    left: 150px; /*width: 100*/
+}
+
+/*to invoice*/
+.THIS.sticky-col-4 {
+    left: 250px; /*width: 75*/
+}
+
+/*schedule date*/
+.THIS.sticky-col-5 {
+    left: 325px; /*width: 100*/
+}
+
+/*T&M*/
+.THIS.sticky-col-6 {
+    left: 425px; /*width: 150*/
+}
+
+/*category*/
+.THIS.sticky-col-7 {
+    left: 575px; /*width: 125*/
+}
+
+/*resource type*/
+.THIS.sticky-col-9 {
+    left: 700px; /*width: 125*/
+}
+
+/*resource*/
+.THIS.sticky-col-10 {
+    left: 825px; /*width: 125*/
+}
+
+/*resource name*/
+.THIS.sticky-col-11 {
+    left: 950px; /*width: 125*/
+}
+
+/*description*/
+.THIS.sticky-col-12 {
+    left: 1075px;
+}
+
+.THIS.fixed-column-right-border {
+    border-right: #4a4a56;
+}

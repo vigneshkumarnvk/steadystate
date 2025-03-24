@@ -1,0 +1,10 @@
+<aura:component controller="MobileTMController" extensible="true" extends="c:TMBase">
+    <!--attributes-->
+    <!--<aura:attribute name="tm" type="Object" access="public"/>-->
+    <aura:attribute name="unsavedChanges" type="Boolean" default="false" access="public"/>
+
+    <!--events--> 
+    <aura:registerEvent name="tmNavigationEvent" type="c:TMNavigationEvent"/>
+    <!--body-->
+    {!v.body}
+</aura:component>

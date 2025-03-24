@@ -1,0 +1,25 @@
+<aura:component extends="c:BaseComponent" controller="ACVTMController">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="Id" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="salesOrderJobTaskId" type="Id" access="public" description="if provided, only get the lines for this task"/>
+    <aura:attribute name="mode" type="String" access="public"/>
+    <aura:attribute name="salesOrderJobTaskWrappers" type="List" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--method-->
+    <aura:method name="save" action="{!c.save}">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card title="{!'Sales Order ' + v.salesOrder.Name}">
+        <p class="slds-p-horizontal_small">
+            <aura:iteration items="{!v.salesOrderJobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                <c:SalesOrderJobTaskSelection jobTaskWrapper="{!jobTaskWrapper}"/>
+            </aura:iteration>
+        </p>
+    </lightning:card>
+</aura:component>

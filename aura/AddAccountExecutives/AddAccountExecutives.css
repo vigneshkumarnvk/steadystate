@@ -1,0 +1,27 @@
+.THIS .button-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns the buttons to the right */
+    
+}
+.THIS .slds-accordion__summary-heading {
+    font-weight: bold;
+    font-size: 16px;
+    align-items: end;
+    width: 100%;
+    font-size: inherit;
+    padding: 15px 15px;
+    
+}
+
+.THIS .slds-accordion__summary-action {
+    
+    color:black;
+    background-color: #f4f4f4; 
+    padding: 10px 5px;    
+}
+
+.THIS .customCard {
+  
+ 
+    padding: 50px;
+}

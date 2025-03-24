@@ -1,0 +1,383 @@
+<!--
+    Ticket#21540
+    Ticket#21908
+        - prevent record from editing after blocked.
+-->
+<aura:component extends="c:SalesOrderBase">
+    <aura:attribute name="disposalRateUpdateDate" type="DateTime" default="{!'2021-07-12T00:00:00.000Z'}" access="public" />
+    <aura:attribute name="disposalRateUpdateDate2023" type="DateTime" default="{!'2023-07-14T00:00:00.000Z'}" access="public" />
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+            <!-- Standard Assumptions & Contingencies -->
+            <lightning:layoutItem size="12" padding="horizontal-small">
+                <lightning:card title="Standard Assumptions &amp; Contingencies">
+                    <p class="slds-p-horizontal_small">
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.Free_Access__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Standard_AC_Opt1__c == null ? 'Republic Services will have free and easy access to the work area.' : v.salesOrder.Service_Center__r.Standard_AC_Opt1__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.Pricing__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Standard_AC_Opt2__c == null ? 'Pricing is based on work being completed during normal business hours Monday - Friday.' : v.salesOrder.Service_Center__r.Standard_AC_Opt2__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.Expendables__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Standard_AC_Opt3__c == null ? 'Any expendables used are charged in accordance with Republic Services\' current expendable price list.' : v.salesOrder.Service_Center__r.Standard_AC_Opt3__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.Applicable_Taxes__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Standard_AC_Opt4__c == null ? 'Applicable local, state, federal, transporter and/or other applicable taxes or fees will be added to the invoice.' : v.salesOrder.Service_Center__r.Standard_AC_Opt4__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </p>
+                </lightning:card>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <!-- Billing Rule -->
+        <lightning:card title="Billing Rule">
+            <p class="slds-p-horizontal_small">
+                <aura:if isTrue="{!v.salesOrder.Contract__r != null &amp;&amp; v.salesOrder.Contract__r.Billing_Rule__r != null}">
+                    <lightning:formattedText value="{!'Billing Rule - ' + v.salesOrder.Contract__r.Billing_Rule__r.Name + ' from contract ' + v.salesOrder.Contract__r.ContractNumber + ' - ' + v.salesOrder.Contract__r.Name + ' applied.'}"/>
+                    <aura:set attribute="else">
+                        <lightning:input aura:id="assumption-option" value="PortalBasis" type="radio"
+                                             label="All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to analyze and off-load the waste at the disposal facility. Overtime rates will apply after eight hours."
+                                             name="laborAssumption"
+                                             checked="{!v.salesOrder.Portal_Basis__c}"
+                                             onchange="{!c.handleAssumptionChange}"
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input aura:id="assumption-option" value="OvertimeRate"  type="radio"
+                                            label="All labor, vehicle and equipment charges are billed on a portal-to-portal basis. Overtime rates will apply after eight hours."
+                                            name="laborAssumption"
+                                            checked="{!v.salesOrder.Overtime_Rate__c}"
+                                            onchange="{!c.handleAssumptionChange}" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input aura:id="assumption-option" value="DailyRate" type="radio"
+                                            label="All labor, vehicle and equipment charges are billed as a daily rate. This pricing is based on a 10 hour day, portal-to-portal."
+                                            name="laborAssumption"
+                                            checked="{!v.salesOrder.Daily_Rate__c}"
+                                            onchange="{!c.handleAssumptionChange}"
+                                            disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <lightning:input aura:id="assumption-option" value="LumpSum" type="radio"
+                                            label="The labor, materials and equipment portion of this quote is lump sum; it is based on information provided by you and/or gained at the site tour. Any conditions that differ may result in additional charges."
+                                            name="laborAssumption"
+                                            checked="{!v.salesOrder.Lump_Sum__c}"
+                                            onchange="{!c.handleAssumptionChange}"
+                                            disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                        <!--Ticket#24559-->
+                        <aura:if isTrue="{!v.salesOrder.Default_Billing_Rule_To_Display__c == 'PortalBasisAdv'}">
+                            <lightning:input aura:id="assumption-option" value="PortalBasisAdv" type="radio"
+                                             label="All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to analyze and off-load the waste at the disposal facility. Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30 pm, on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holidays.'"
+                                             name="laborAssumption"
+                                             checked="{!v.salesOrder.Portal_Basis_Adv__c}"
+                                             onchange="{!c.handleAssumptionChange}"
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            <aura:set attribute="else">
+                                <lightning:input aura:id="assumption-option" value="DefaultBillingRule2023" type="radio"
+                                                 label="All labor, vehicle and equipment charges are billed on a portal-to-portal basis, including time to analyze and off-load the waste at the disposal facility. Overtime rates will apply for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00 pm, on weekdays and all day Saturday. Double time rates apply for hours worked on Sunday and Holidays."
+                                                 name="laborAssumption"
+                                                 checked="{!v.salesOrder.Default_Billing_Rule_2023__c}"
+                                                 onchange="{!c.handleAssumptionChange}"
+                                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            </aura:set>
+                        </aura:if>
+                        <!--Ticket#24559-->
+                    </aura:set>
+                </aura:if>
+            </p>
+        </lightning:card>
+
+        <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+            <!-- Disposal Related Assumptions &amp; Contingencies -->
+            <lightning:card title="Disposal Related Assumptions &amp; Contingencies (uncheck all if no disposal)">
+                <p class="slds-p-horizontal_small">
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Minimum_Disposal_Fee__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt1__c == null ? 'There is a minimum disposal fee of $975.00 per shipment.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt1__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Disposal_Pricing__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt2__c == null ? 'Disposal Pricing is based on profile and analytical review and acceptance.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt2__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <aura:if isTrue="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c == null}">
+                        <!--
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate &lt;= v.disposalRateUpdateDate}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first hour of loading is free; thereafter demurrage is $100.00 per hour."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate > v.disposalRateUpdateDate &amp;&amp; v.salesOrder.CreatedDate &lt; v.disposalRateUpdateDate2023}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first hour of loading is free; thereafter demurrage is $126.00 per hour."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                        </aura:if>
+                        -->
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate >= v.disposalRateUpdateDate2023}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first 15 minutes of loading is free; thereafter demurrage is $195.00 per hour."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            <aura:set attribute="else">
+                                <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                                 label="The first hour of loading is free; thereafter demurrage is $126.00 per hour."
+                                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt3__c}"
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:set>
+                    </aura:if>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Invoice_Of_Work__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt4__c == null ? 'The invoice may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt4__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Minimum_Disposal_Charge__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt5__c == null ? 'There is a 15 ton minimum disposal charge per load.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt5__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Maximum_Weight__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt6__c == null ? 'There is a maximum weight of 18 tons per roll-off container.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt6__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Off_Specification__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt7__c == null ? 'Off-specification charges will apply if waste and/or waste packaging does not meet expected specifications.' : v.salesOrder.Service_Center__r.Disposal_Related_Asm_Cont_Opt7__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <lightning:input type="checkbox" checked="true"
+                                     label="Fees will be charged for waste approvals. A Profile Submission Fee of $125 will be charged for each initial profile approval, and a Profile Renewal Fee of $40 will be charged for each profile renewal."
+                                     disabled="true"/>
+                 </p>
+            </lightning:card>
+
+            <!-- Terms & Conditions
+                Ticket#23516 - Update Term_Conditions_Opt1__c verbiage and disabled the checkbox.
+                             - add Term_Conditions_Opt20__c
+            -->
+            <lightning:card title="Terms &amp; Conditions (uncheck if N/A)">
+                <p class="slds-p-horizontal_small">
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Any_Deviations__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt1__c == null ? 'Except where superseded by an existing contract between Customer and Republic Services, as noted in the Proposal Acceptance, the terms and conditions below apply to this Quote. This quoted estimate is provided based upon information provided by or gathered at Customer’s location. Services provided will be charged at no less than the estimate. Charges incurred that exceed the cost estimate will be invoiced based upon actual labor, materials, and/or disposal services provided by Republic Services and will be billed at a time and materials basis.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt1__c}"
+                                     disabled="true"/>
+                                     <!-- disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/> -->
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Shippable_Containers__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt2__c == null ? 'This Quote is contingent upon Customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt2__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <!--
+                    <aura:if isTrue="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c == null}">
+                        
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate > v.disposalRateUpdateDate &amp;&amp; v.salesOrder.CreatedDate &lt; v.disposalRateUpdateDate2023}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate &lt;= v.disposalRateUpdateDate}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!v.salesOrder.CreatedDate >= v.disposalRateUpdateDate2023}">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr."
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            <aura:set attribute="else">
+                                <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                                 label="The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr."
+                                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                             label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c}"
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:set>
+                    </aura:if>
+                      -->
+
+                    <!--
+                    <aura:if isTrue="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt2__c == null &amp;&amp; v.salesOrder.CreatedDate > v.disposalRateUpdateDate &amp;&amp; v.salesOrder.CreatedDate < v.disposalRateUpdateDate}">
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c == null ? if(v.salesOrder.CreatedDate > v.disposalRateUpdateDate, 'The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr.', 'The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr.') : v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                    </aura:if>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.First_Hour_Of_Loading__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c == null ? if(v.salesOrder.CreatedDate > v.disposalRateUpdateDate, 'The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr.', 'The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $100.00 / hr.') : v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                    -->
+
+                    <!--Ticket#24559-->
+                    <aura:if isTrue="{!v.salesOrder.Default_Billing_Rule_To_Display__c == 'PortalBasisAdv'}">
+                        <lightning:input type="checkbox" checked="{!v.salesOrder.Overtime_Rate_Description__c}"
+                                         label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c == null ? 'An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, President\'s Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c}"
+                                         disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        <aura:set attribute="else">
+                            <lightning:input type="checkbox" checked="{!v.salesOrder.Overtime_Rate_Description__c}"
+                                             label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c == null ? 'An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, Birthday of Martin Luther King, Jr., President\'s Day, Memorial Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving Day, The day after Thanksgiving, Christmas Eve, and Christmas Day.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c}"
+                                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:set>
+                    </aura:if>
+                    <!--Ticket#24559-->
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Rate_Time_Definitions__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt5__c == null ? 'Rate Time Definitions a. The day rate, where applicable, is defined as twelve hours. b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in the Rate sheet for an item, it will be calculated as the Day Rate divided by 12.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt5__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Charges_For_Labor__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt6__c == null ? 'Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job, for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment. This includes onsite and offsite labor and equipment.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt6__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Term_Conditions_Opt20__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt20__c == null ? 'Bundled rate is based upon our best estimate of project duration inclusive of labor, equipment, and materials. Charges incurred that exceed the cost estimate will be billed to the Client in half day increments.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt20__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Waste_Disposal_And_Ancillary__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt7__c == null ? 'Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste); Ancillary supplies required and used will be billed in accordance with Republic Services standard rates sheet.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt7__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Characterization_Of_Waste__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt8__c == null ? 'This Quote is based on the generator’s characterization of the waste and the Republic Services assigned Process Code. Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt8__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Generate_Before_Final__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt9__c == null ? 'The invoice for work referenced above may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt9__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Lab_Packs_Rate__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt10__c == null ? 'Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material; Republic Services may furnish a separate quotation for any high-hazard work, if requested. Republic Services reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt10__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Cylinders_Require_Evaluation__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt11__c == null ? 'Cylinders require evaluation and approval by an authorized Republic Services representative prior to shipment. Cylinders must be in DOT shippable condition, be marked with original stenciling, labels and/or tags, and valves must be operational. Cylinders not meeting Republic Services approval and the aforementioned conditions may be subject to additional charges.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt11__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Manifest_And_Profile__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c == null ? 'A manifest fee of $20.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c}"
+                                     onchange="{!c.calculateManifest}" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Net_Due_Day__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt13__c == null ? 'Net due ' + v.salesOrder.Payment_Term__r.Name + ' days with prior credit approval unless modified by executed purchase order or contract. Finance charges of one and one half (1.5) percent per month will be due on payments past due after thirty days from date of invoice.' : 'Net due ' + v.salesOrder.Payment_Term__r.Name + ' ' + v.salesOrder.Service_Center__r.Term_Conditions_Opt13__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Applicable_Taxes_Quote__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt14__c == null ? 'Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt14__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Client_Is_Responsible__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt15__c == null ? 'Customer is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary. Said charges will be at Republic Services\' standard T&amp;M rates and disposal cost plus 30%.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt15__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <!-- <lightning:input type="checkbox" checked="{!v.salesOrder.In_The_Event__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt16__c == null ? 'In the event legal or other action is required to collect unpaid invoice balances, Customer agrees to pay all costs of collection, including reasonable attorneys\' fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt16__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/> -->
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Quote_Valid_30__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt17__c == null ? 'This Quote is valid for 30 days. Pricing is based on the current market capacity, conditions, and Government regulations. If a significant market-wide pricing, capacity or regulatory change affects our pricing, this Quote is subject to change.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt17__c}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <!-- <lightning:input type="checkbox" checked="{!v.salesOrder.Unless_Superseded__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt18__c == null ? 'Unless superseded by a fully executed agreement with terms that conflict, additional terms &amp; conditions located at https://www.republicservices.com/cms/documents/Environmental-Solutions/Environmental-Services-Terms-Conditions.pdf are hereby incorporated by reference and are agreed to and acknowledged by customer.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt18__c}"
+                                     disabled="true"/> -->
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Charge_Rinse_Out_Fee__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt19__c == null ? 'Decon performed on-site at rates listed, special rates may apply under listed conditions. Decon performed off-site will be charged a $200.00 Rinse Out Fee. This fee will be added to each job per use for each piece of vacuum equipment and all non-lined waste storage equipment (Frac Tanks, Vac Boxes, Filter Boxes, Roll Off Containers, Etc.) coming into contact with light oils or other contaminates. Charges for the removal of heavy oils, solids or equipment cleaning requiring a confined space entry will be quoted on a case by case basis.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt19__c}"
+                                     onchange="{!c.calculateRinseOutFee}"
+                                     disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                
+                    
+                    <lightning:layout multipleRows="true"> 
+                        <lightning:layoutItem> 
+                            <aura:if isTrue="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee'}">
+                            <div style="display: flex;"> 
+                                <div style="width: 24px;"> 
+                                    <lightning:input type="checkbox" checked="true" disabled="true" />
+                                </div> 
+                                <div> 
+                                    <p style="margin: 0"> An EEC fee will be added to your services.
+                                        EEC is an environmental, energy &amp; compliance fee. The EEC
+                                        fluctuates monthly and will be charged as a percentage of all invoiced
+                                        charges. For more information about this fee, please
+                                        visit <a href="https://www.republicservices.com/customer-support/fee-disclosures"
+                                                 target="_blank">www.republicservices.com/customer-support/fee-disclosures</a>.
+                                    </p> 
+                                </div> 
+                            </div> 
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Surcharge_Type__c == 'ESIC'}">
+                                <lightning:input type="checkbox" checked="true" disabled="true" 
+                                                 label='An ESIC fee will be added to your services. ESIC is an energy, security, insurance, and compliance fee and will be charged as a percentage of all invoiced charges.'
+                                                 />
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge'}">
+                                <lightning:input type="checkbox" checked="true" disabled="true" 
+                                                 label='A fuel surcharge will be billed on equipment that requires fuel and all transportation charges.'
+                                                 />
+                            </aura:if>
+                                <div> 
+                                    <p style="margin: 0"> An EEC fee will be added to your services.
+                                     EEC is an environmental, energy &amp; compliance fee. The EEC
+                                     fluctuates monthly and will be charged as a percentage of all invoiced
+                                     charges. For more information about this fee, please
+                                     visit <a href="https://www.republicservices.com/customer-support/fee-disclosures"
+                                     target="_blank">www.republicservices.com/customer-support/fee-disclosures</a>.
+                                     </p> 
+                                </div> 
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </p>
+            </lightning:card>
+
+            <!-- Custom Assumptions & Contingencies -->
+            <lightning:card title="Custom Assumptions &amp; Contingencies">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 1" value="{!v.salesOrder.Custom_Assumptions1__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 2" value="{!v.salesOrder.Custom_Assumptions2__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 3" value="{!v.salesOrder.Custom_Assumptions3__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 4" value="{!v.salesOrder.Custom_Assumptions4__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 5" value="{!v.salesOrder.Custom_Assumptions5__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 6" value="{!v.salesOrder.Custom_Assumptions6__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 7" value="{!v.salesOrder.Custom_Assumptions7__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 8" value="{!v.salesOrder.Custom_Assumptions8__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 9" value="{!v.salesOrder.Custom_Assumptions9__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Assumption 10" value="{!v.salesOrder.Custom_Assumptions10__c}" maxlength="600" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </aura:if>
+
+        <!-- Terms & Conditions -->
+        <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order'}">
+            <lightning:card title="Terms &amp; Conditions (uncheck if N/A)">
+                <p class="slds-p-horizontal_small">
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Manifest_And_Profile__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c == null ? 'A manifest fee of $20.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c}"
+                                     onchange="{!c.calculateManifest}" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+
+                    <lightning:input type="checkbox" checked="{!v.salesOrder.Charge_Rinse_Out_Fee__c}"
+                                     label="{!v.salesOrder.Service_Center__r.Term_Conditions_Opt19__c == null ? 'Decon performed on-site at rates listed, special rates may apply under listed conditions. Decon performed off-site will be charged a $200.00 Rinse Out Fee. This fee will be added to each job per use for each piece of vacuum equipment and all non-lined waste storage equipment (Frac Tanks, Vac Boxes, Filter Boxes, Roll Off Containers, Etc.) coming into contact with light oils or other contaminates. Charges for the removal of heavy oils, solids or equipment cleaning requiring a confined space entry will be quoted on a case by case basis.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt19__c}"
+                                     onchange="{!c.calculateRinseOutFee}" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                </p>
+            </lightning:card>
+        </aura:if>
+    </lightning:card>
+</aura:component>

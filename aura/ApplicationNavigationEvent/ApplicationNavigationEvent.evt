@@ -1,0 +1,9 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="pageName" type="String"/>
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="recordName" type="String"/>
+    <aura:attribute name="serviceCenterId" type="Id"/>
+    <!--05.17.2019-->
+    <aura:attribute name="serviceCenterName" type="String"/>
+    <!--05.17.2019-->
+</aura:event>

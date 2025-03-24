@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Accounting</label>
+    <tabs>standard-Account</tabs>
+    <tabs>TM__c</tabs>
+    <tabs>Sales_Invoice__c</tabs>
+    <tabs>GL_Entry__c</tabs>
+    <tabs>GL_Batch__c</tabs>
+    <tabs>GL_Account__c</tabs>
+    <tabs>Detailed_Cust_Ledg_Entry__c</tabs>
+    <tabs>Facility__c</tabs>
+    <tabs>Retainage_Ledger_Entry__c</tabs>
+    <tabs>Billing_Worksheet_Line__c</tabs>
+    <tabs>New_Hire_Request__c</tabs>
+</CustomApplication>

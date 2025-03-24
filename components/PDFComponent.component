@@ -1,0 +1,53 @@
+<apex:component >
+    <apex:attribute name="section" type="String" description="Section to display"/>
+    <apex:attribute name="subsection" type="String" description="SubSection to display"/>
+    <apex:attribute name="pdfTitle" type="String" description="PDF Title"/>
+    <apex:attribute name="companySetup" type="Company_Setup__c" description="Company Setup Record"/>
+    
+    <!-- HEADER -->
+    <apex:outputPanel layout="none" rendered="{!section=='header'}">        
+        <div class="header">
+        <div id="cmpnyDetails">
+            <table>
+                <tr><td>&nbsp;</td></tr>
+                <tr><td><apex:outputText escape="false" value="{!companySetup.Company_Logo__c}"/></td></tr>
+                <!--<tr><td class="companyName">{!$Organization.Name}</td></tr>
+                <tr>
+                    <td class="companyAddress">
+                        <div>                            
+                        {!$Organization.Street}<br/>
+                        {!$Organization.City}, {!$Organization.State}&nbsp;  
+                        {!$Organization.PostalCode}
+                        </div>
+                        <div>                            
+                            Phone: {!$Organization.Phone} 
+                        </div> 
+                    </td></tr>    -->        
+            </table>
+        </div>
+        <div style="width: 5%; float: left"></div>
+        <div id="orderNoDetails" >
+            <table width="100%">
+                <tr><td>&nbsp;</td></tr>                        
+                <tr><td class="docTitle"> {!pdfTitle} </td></tr>                    
+                <tr><td>&nbsp;</td></tr>    
+                <tr><td align="right"><div>Page <span class="pagenumber"/> of <span class="pagecount"/></div></td></tr>                    
+                <tr>
+                    <td>
+                        <apex:componentBody />
+                    </td>
+                </tr>
+            </table>
+        </div>  
+    </div>
+    </apex:outputPanel>
+    
+    <!-- FOOTER -->    
+    <apex:outputPanel layout="none" rendered="{!section=='footer'}">             
+        <div class="footer">
+            <div style="text-align:center;">
+                <apex:componentBody />
+            </div>
+        </div>
+    </apex:outputPanel>
+</apex:component>

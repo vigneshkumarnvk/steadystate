@@ -1,0 +1,5 @@
+<!--ticket 19130-->
+<aura:event type="COMPONENT" description="TabChangeEvent">
+    <aura:attribute name="tabId" type="String" access="public"/>
+</aura:event>
+<!--ticket 19130-->

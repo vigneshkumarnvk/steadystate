@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Fired when a barcode scan is completed">
+    <aura:attribute name="barcode" type="String" description="scan result"/>
+</aura:event>

@@ -1,0 +1,226 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+-->
+<aura:component extends="c:SalesOrderBase" controller="ACVSalesLineController">
+    <aura:dependency resource="c:SalesLine"/>
+    <aura:dependency resource="c:SalesLineEdit"/>
+
+    <!--attribute-->
+    <aura:attribute name="jobTaskWrapperIndex" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="nextJobTaskLineNo" type="Integer" access="public"/>
+    <aura:attribute name="nextSalesLineNo" type="Integer" access="public"/>
+    <aura:attribute name="jobTasks" type="List" access="public" description="all job tasks on the sales order"/>
+    <aura:attribute name="defaultCategory" type="String" access="public"/>
+
+    <aura:attribute name="rowComponentParams" type="Object" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="public"/>
+
+    <aura:attribute name="totalAmount" type="Decimal" default="0" access="private"/>
+    <aura:attribute name="totalTax" type="Decimal" default="0" access="private"/>
+    <aura:attribute name="totalAmountIncludingTax" type="Decimal" default="0" access="private"/>
+    <aura:attribute name="totalCost" type="Decimal" default="0" access="private"/>
+    <aura:attribute name="totalProfit" type="Decimal" default="0" access="private"/>
+
+    <!--events-->
+    <aura:registerEvent name="jobTaskWrapperDeleteEvent" type="c:JobTaskWrapperDeleteEvent"/>
+    <aura:registerEvent name="jobTaskWrapperUpdateEvent" type="c:JobTaskWrapperUpdateEvent"/>
+    <aura:registerEvent name="jobTaskWrapperCloneEvent" type="c:JobTaskWrapperCloneEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="salesLineViewEvent" event="c:SalesLineViewEvent" action="{!c.handleSalesLineViewEvent}"/>
+    <aura:handler name="salesLineDeleteEvent" event="c:SalesLineDeleteEvent" action="{!c.handleSalesLineDeleteEvent}"/>
+    <aura:handler name="salesLineUpdateEvent" event="c:SalesLineUpdateEvent" action="{!c.handleSalesLineUpdateEvent}"/>
+    <aura:handler name="jobTaskWrapperUpdateEvent" event="c:JobTaskWrapperUpdateEvent" action="{!c.handleJobTaskWrapperUpdateEvent}"/>
+    <aura:handler name="change" value="{!v.jobTaskWrapper.SalesLines}" action="{!c.handleJobTaskWrapperChange}"/>
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:buttonMenu iconName="utility:rows" value="{!index}" menuAlignment="right" onselect="{!c.handleMenuSelect}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                    <lightning:menuItem value="create-lines-from-template" label="Add Lines from Template" prefixIconName="utility:insert_template"/>
+                    <lightning:menuItem value="clone-job-task" label="Clone Task" prefixIconName="utility:copy"/>
+                    <lightning:menuDivider/>
+                    <lightning:menuItem value="delete-lines" label="Delete Lines" prefixIconName="utility:delete"/>
+                        <aura:if isTrue="{!v.jobTaskWrapper.HasTMs != true}">
+                            <lightning:menuItem value="delete-job-task" label="Delete Task" prefixIconName="utility:delete"/>
+                        </aura:if>
+                </lightning:buttonMenu>
+                <lightning:button label="{!'New Sales Line'}" variant="neutral" iconName="utility:add" onclick="{!c.doNewSalesLine}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input aura:id="task-no" label="Task #" type="number" value="{!v.jobTaskWrapper.JobTask.Task_No__c}" required="true" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true  || v.salesOrder.Blocked__c == true || v.jobTaskWrapper.HasInvoices == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="7">
+                        <lightning:input aura:id="description" label="Description" value="{!v.jobTaskWrapper.JobTask.Name}" required="true" maxlength="30" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true  || v.salesOrder.Blocked__c == true || v.jobTaskWrapper.HasInvoices == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+                    </lightning:layoutItem>
+                    <aura:if isTrue="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                    <lightning:layoutItem padding="horizontal-small" size="3">
+                        <lightning:select aura:id="billing-type" label="Billing Type" value="{!v.jobTaskWrapper.JobTask.Billing_Type__c}" onchange="{!c.handleBillingTypeChange}" disabled="{!v.jobTaskWrapper.JobTask.Pct_Billed__c > 0 || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.jobTaskWrapper.HasInvoices == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}" required="true">
+                            <option label="" value=""/>
+                            <option label="T&amp;M" value="T&amp;M"/>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                        <aura:set attribute="else">
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                        <lightning:select aura:id="billing-type" label="Billing Type" value="{!v.jobTaskWrapper.JobTask.Billing_Type__c}" onchange="{!c.handleBillingTypeChange}" disabled="{!v.jobTaskWrapper.JobTask.Pct_Billed__c > 0 || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.jobTaskWrapper.HasInvoices == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}" required="true">
+                            <option label="" value=""/>
+                            <option label="T&amp;M" value="T&amp;M"/>
+                            <option label="Fixed Price" value="Fixed Price"/>
+                        </lightning:select>
+                    	</lightning:layoutItem>
+                      	</aura:set>
+                    </aura:if>
+                    <aura:if isTrue="{!v.jobTaskWrapper.JobTask.Billing_Type__c == 'Fixed Price'}">
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:input aura:id="fixed-price" type="number" label="Fixed Price" value="{!v.jobTaskWrapper.JobTask.Fixed_Price__c}" formatter="currency" step="0.01" required="{!v.jobTaskWrapper.JobTask.Billing_Type__c == 'Fixed Price'}" oncommit="{!c.handleFixedPriceChange}" disabled="{!v.jobTaskWrapper.JobTask.Pct_Billed__c > 0 || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:select aura:id="surcharge-option" label="Surcharge Option" value="{!v.jobTaskWrapper.JobTask.Fixed_Price_Surcharge_Option__c}" onchange="{!c.handleFixedPriceSurchargeOptionChange}" required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge'}" disabled="{!v.salesOrder.Surcharge_Type__c != 'EEC Fee' &amp;&amp; v.salesOrder.Surcharge_Type__c != 'Fuel Surcharge'}">
+                                <option label="" value=""/>
+                                <option label="Fixed Price Does Not Include Surcharge" value="Fixed Price Does Not Include Surcharge"/>
+                                <option label="Fixed Price Includes Surcharge" value="Fixed Price Includes Surcharge"/>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:input aura:id="surcharge-amount" type="number" label="Surcharge Amount" value="{!v.jobTaskWrapper.JobTask.Surcharge_Amount__c}" formatter="currency" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:input aura:id="job-task-amount" type="number" label="Rolled-Up Sales Lines Amount Incl. Surcharge" value="{!v.jobTaskWrapper.JobTask.Rolled_Up_Sales_Lines_Amount__c}" formatter="currency" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:select aura:id="tax-group" label="Tax Group" value="{!v.jobTaskWrapper.JobTask.Tax_Group__c}" onchange="{!c.handleTaxGroupChange}" required="true" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                                <option value=""></option>
+                                <option value="NT">NT</option>
+                                <option value="TX">TX</option>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:input type="number" label="Tax" value="{!v.jobTaskWrapper.JobTask.Tax__c}" formatter="currency" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="3">
+                            <lightning:input type="number" label="% Billed" value="{!v.jobTaskWrapper.JobTask.Pct_Billed__c}" formatter="percent-fixed" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                    </aura:if>
+                </lightning:layout>
+            </lightning:layoutItem>
+
+
+            <lightning:layoutItem padding="around-small" size="12">
+                <lightning:card title="Task Lines" iconName="utility:rows">
+                    <aura:set attribute="footer">
+                        <lightning:layout>
+                            <lightning:layoutItem size="6"/>
+                            <lightning:layoutItem size="2"><b>Task Subtotal: <lightning:formattedNumber value="{!v.totalAmount}" currencyCode="USD" minimumFractionDigits="2" maximumFractionDigits="2" style="currency"/></b></lightning:layoutItem>
+                            <lightning:layoutItem size="2"><b>Task Cost Subtotal: <lightning:formattedNumber value="{!v.totalCost}" currencyCode="USD" minimumFractionDigits="2" maximumFractionDigits="2" style="currency"/></b></lightning:layoutItem>
+                            <lightning:layoutItem size="2"><b>Task Profit: <lightning:formattedNumber value="{!v.totalProfit}" style="percent" minimumFractionDigits="2" maximumFractionDigits="2"/></b></lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:set>
+
+                    <!--init table after the SalesOrderJobTaskLine component is done with init-->
+                    <aura:if isTrue="{!v.inlineEditComponentParams != null}">
+                        <!--ticket 19130-->
+                        <!--
+                        <c:InlineEditDataTable aura:id="datatable" items="{!v.jobTaskWrapper.SalesLines}" var="salesLine" indexVar="index"
+                                               onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}" showRowNumbers="false"
+                                               rowComponentName="c:SalesLine" rowComponentParams="{!v.rowComponentParams}"
+                                               inlineEditComponentName="c:SalesLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                               parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                               noneInlineFields="['select', 'delete', 'edit', 'billAsLumpSum', 'nonBillable']"
+                                               fixedHeaders="true" height="500px" verticalScroll="true">
+                        -->
+                        <c:InlineEditDataTable aura:id="datatable" items="{!v.jobTaskWrapper.SalesLines}" var="salesLine" indexVar="index"
+                                               onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}" showRowNumbers="false"
+                                               rowComponentName="c:SalesLine" rowComponentParams="{!v.rowComponentParams}"
+                                               inlineEditComponentName="c:SalesLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                               parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                               noneInlineFields="['select', 'delete', 'edit', 'billAsLumpSum', 'nonBillable', 'isChildResource']"
+                                               fixedHeaders="true" height="500px" verticalScroll="true">
+                            <!--ticket 19130-->
+                            <aura:set attribute="template">
+                                <c:InlineEditColumnHeader label="Actions" headerStyle="width:120px;"/>
+                                <c:InlineEditColumnHeader label="Line #" headerStyle="width:50px;"/>
+                                <!--ticket 19130-->
+                                <!--
+                                <c:InlineEditColumnHeader label="Parent Line #" headerStyle="width:50px;"/>
+                                -->
+                                <!--ticket 19130-->
+
+                                <c:InlineEditColumnHeader label="Category" headerStyle="width:100px;"/>
+
+                                <c:InlineEditColumnHeader label="Quantity" headerStyle="width:90px;"/>
+
+                                <!--ticket 19130-->
+                                <c:InlineEditColumnHeader label="Child Resource" headerStyle="width:50px;"/>
+                                <!--ticket 19130-->
+
+                                <c:InlineEditColumnHeader label="Resource Type /Resource" headerClass="slds-cell-wrap"/>
+                                <c:InlineEditColumnHeader label="Description"/>
+                                <c:InlineEditColumnHeader label="UOM Qty." headerClass="slds-cell-wrap" headerStyle="width:90px;"/>
+                                <c:InlineEditColumnHeader label="UOM" headerStyle="width:75px;"/>
+                                <c:InlineEditColumnHeader label="Days Needed" headerStyle="width:60px;"/>
+                                <c:InlineEditColumnHeader label="Unit Price" headerStyle="width:125px;"/>
+                                <c:InlineEditColumnHeader label="REG Rate" headerStyle="width: 100px;"/>
+                                <c:InlineEditColumnHeader label="O/T Rate" headerStyle="width:100px;"/>
+                                <c:InlineEditColumnHeader label="D/T Rate" headerStyle="width:100px;"/>
+                                <c:InlineEditColumnHeader label="Line Amount" headerClass="slds-cell-wrap" headerStyle="width:125px;"/>
+                                <c:InlineEditColumnHeader label="Unit Cost" headerStyle="width:125px;"/>
+                                <c:InlineEditColumnHeader label="Line Cost" headerStyle="width:125px;"/>
+                                <c:InlineEditColumnHeader label="Non-Billable" headerStyle="width:60px;"/>
+                                <c:InlineEditColumnHeader label="Bundled" headerStyle="width:60px;"/>
+                            </aura:set>
+                        </c:InlineEditDataTable>
+                    </aura:if>
+                </lightning:card>
+            </lightning:layoutItem>
+
+            <!--assumptions and contingencies-->
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+                <lightning:layoutItem size="12">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 1" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption1__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 2" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption2__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 3" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption3__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 4" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption4__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 5" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption5__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 6" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption6__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 7" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption7__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 8" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption8__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 9" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption9__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6">
+                            <lightning:textarea label="Assumption 10" value="{!v.jobTaskWrapper.JobTask.Custom_Assumption10__c}" maxlength="600" onblur="{!c.handleAssumptionChange}" class="textarea-assumption" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </aura:if>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

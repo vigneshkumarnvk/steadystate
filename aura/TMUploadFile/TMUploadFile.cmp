@@ -1,0 +1,43 @@
+<aura:component description="TMUploadFile" extends="c:BaseComponent" controller="FileUploaderController">
+    <!--attributes-->
+    <aura:attribute name="recordId" type="Id" required="true" access="public"/>
+    <aura:attribute name="callback" type="Object" access="public"/>
+    <!--ticket 20218-->
+    <aura:attribute name="selectedType" type="String" access="private"/>
+    <!--ticket 20218-->
+
+    <!--body-->
+    <!--body-->
+    <!--ticket 20218-->
+    <!--
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12" padding="around-small">
+                <lightning:fileUpload label="Upload Receipt" multiple="true" accept=".pdf,.jpg,.png" recordId="{!v.recordId}" onuploadfinished="{!c.handleUploadFinished}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <video id=""/>
+    </lightning:card>
+    -->
+    <lightning:layout multipleRows="true" horizontalAlign="center">
+        <lightning:layoutItem size="4" padding="around-small">
+            <lightning:select aura:id="type" label="Type" value="{!v.selectedType}" required="true">
+                <option text="" value=""/>
+                <option text="Manifest_BOL" value="Manifest_BOL"/>
+                <option text="Weight Ticket" value="Weight Ticket"/>
+                <option text="EH&amp;S" value="EH&amp;S"/>
+                <option text="Site Photo" value="Site Photo"/>
+                <option text="Customer Specific Doc" value="Customer Specific Doc"/>
+                <option text="Receipt" value="Receipt"/>
+                <option text="Delivery Ticket" value="Delivery Ticket"/>
+                <!--ticket 20957-->
+                <option text="Profile" value="Profile"/>
+                <!--ticket 20957-->
+            </lightning:select>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="6" padding="around-small">
+            <lightning:fileUpload fileFieldName="Type_fileupload__c" fileFieldValue="{!v.selectedType}" label="Choose a file" recordId="{!v.recordId}" disabled="{!!v.selectedType}" onuploadfinished="{!c.handleUploadFinished}"/>
+        </lightning:layoutItem>
+    </lightning:layout>
+    <!--ticket 20218-->
+</aura:component>

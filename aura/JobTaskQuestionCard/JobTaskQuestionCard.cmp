@@ -1,0 +1,117 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="templateLine" type="Object" access="public"/>
+    <aura:attribute name="xFields" type="Object" access="private"/>
+    <aura:attribute name="isVisible" type="Boolean" default="true" access="private" description="use to clear error message"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.templateLine}" action="{!c.handleTemplateLineChange}"/>
+
+    <!--methods-->
+    <aura:method name="clearErrors" action="{!c.clearErrors}" access="public"/>
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            <aura:if isTrue="{!v.templateLine.answerLine.Category__c == 'Subcontractors'}">
+                <lightning:input label="Category" value="Cost Plus Materials, Equipment and Services" disabled="true"/>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.templateLine.answerLine.Category__c == 'Demurrage'}">
+                        <lightning:input label="Category" value="Transportation, Demurrage and Fees" disabled="true"/>
+                        <aura:set attribute="else">
+                            <lightning:input label="Category" value="{!v.templateLine.answerLine.Category__c}" disabled="true"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            <aura:if isTrue="{!v.templateLine.answerLine.Category__c == 'Labor' || v.templateLine.answerLine.Category__c == 'Equipment' || v.templateLine.answerLine.Category__c == 'LumpSum'}">
+                <aura:if isTrue="{!v.xFields.ResourceType.show == true}">
+                    <c:LookupInput aura:id="resource-type" label="Resource Type" value="{!v.templateLine.answerLine.Resource_Type__r}" SObjectName="Resource_Type__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name']" filter="{!'Category__c=\'' + v.templateLine.Category__c + '\' AND Blocked__c!=TRUE'}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateResourceType}" required="{!v.xFields.ResourceType.required}" disabled="true"/>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.xFields.Resource.show == true}">
+                        <c:LookupInput aura:id="resource" label="Resource" value="{!v.templateLine.answerLine.Resource__r}" SObjectName="Resource__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Has_Container__c', 'Has_Weight_Volume__c']" filter="{!'Category__c=\'' + v.templateLine.Category__c + '\' AND Resource_Type__c=\'' + v.templateLine.Resource_Type__c + '\' AND Blocked__c!=TRUE'}" pill="{iconName: 'custom:custom6', fieldName: 'Name'}" onchange="{!c.validateResource}" required="{!v.xFields.Resource.required}" disabled="true"/>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="horizontal-small" size="12">
+            <lightning:input label="Description" value="{!v.templateLine.answerLine.Description__c}" disabled="true"/>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="horizontal-small" size="12">
+            <aura:if isTrue="{!v.isVisible == true}">
+                <lightning:input aura:id="quantity" type="number" label="Quantity" value="{!v.templateLine.answerLine.Quantity__c}" step="0.01" required="{!v.xFields.Quantity.required}" oncommit="{!c.validateQuantity}"/>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <aura:if isTrue="{!v.xFields.UnitOfMeasure.show == true}">
+            <lightning:layoutItem padding="horizontal-small" size="12">
+                <aura:if isTrue="{!v.templateLine.answerLine.Resource_Type__c != null}">
+                    <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.answerLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name', style: 'width: 100px;'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c', style: 'width: 200px;'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource_Type__c=\'' + v.templateLine.answerLine.Resource_Type__c + '\''}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure1}" required="{!v.xFields.UnitOfMeasure.required}"/>
+                    <aura:set attribute="else">
+                        <!--Waste001
+                        <aura:if isTrue="{!v.templateLine.answerLine.Resource__c != null &amp;&amp; (v.templateLine.answerLine.Category__c == 'Waste Disposal' &amp;&amp; (v.templateLine.answerLine.Resource__r.Name == 'WD' || (v.templateLine.Resource__r.Has_Container__c != true &amp;&amp; v.templateLine.Resource__r.Has_Weight_Volume__c != true)))}">
+                        -->
+                        <aura:if isTrue="{!v.templateLine.answerLine.Resource__c != null &amp;&amp; (v.templateLine.answerLine.Category__c == 'Waste Disposal')}">
+                            <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.answerLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Name', style: 'width: 100px;'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c', style: 'width: 200px;'}]" queryFields="['Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource__c=\'' + v.templateLine.answerLine.Resource__c + '\''}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure2}" required="{!v.xFields.UnitOfMeasure.required}"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.answerLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name', style: 'width:100px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;'}]" queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure3}" required="{!v.xFields.UnitOfMeasure.required}"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <!--Waste001
+        <aura:if isTrue="{!v.xFields.CostMethod.show == true}">
+            <lightning:layoutItem padding="horizontal-small" size="12">
+                <lightning:select aura:id="cost-method" label="Cost Method" value="{!v.templateLine.answerLine.Cost_Method__c}" onchange="{!c.validateCostMethod}" required="{!v.xFields.CostMethod.required}">
+                    <option value=""></option>
+                    <option value="Unit_Weight_Vol">Unit/Weight Volume</option>
+                    <option value="Container">Container</option>
+                </lightning:select>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            <aura:if isTrue="{!v.xFields.UnitWeightVolume.show}">
+                <aura:if isTrue="{!v.templateLine.answerLine.Cost_Method__c == 'Unit_Weight_Vol'}">
+                    <c:LookupInput aura:id="unit-weight-volume" label="Unit Weight/Volume" value="{!v.templateLine.answerLine.Unit_Weight_Vol__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]" queryFields="['Unit_of_Measure__c', 'Container_Size__c']" keyFields="['Unit_of_Measure__c']" filter="{!'Resource__c=\'' + v.templateLine.Resource__c + '\' AND Unit_of_Measure__r.Weight_Volume__c = true'}" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleUnitWeightVolumeChange1}" required="{!v.xFields.UnitWeightVolume.required}"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="unit-weight-volume" label="Unit Weight/Volume" value="{!v.templateLine.answerLine.Unit_Weight_Vol__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Weight_Volume__c=TRUE AND Blocked__c!=TRUE" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleUnitWeightVolumeChange2}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            <aura:if isTrue="{!v.xFields.ContainerSize.show == true}">
+                <aura:if isTrue="{!v.templateLine.answerLine.Cost_Method__c == 'Container'}">
+                    <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.answerLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]" keyFields="['Unit_of_Measure__c']"  filter="{!'Resource__c=\'' + v.templateLine.answerLine.Resource__c + '\' AND Unit_of_Measure__r.Container_Size__c=true'}" pill="{iconName: 'standard:template', fieldName: 'Name'}"  required="{!v.xFields.ContainerSize.required}" messageWhenValueMissing="This field is mandatory." onchange="{!c.handleContainerSizeChange1}"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.templateLine.answerLine.Cost_Method__c == 'Unit_Weight_Vol' &amp;&amp; v.templateLine.answerLine.Unit_Weight_Vol__c != null &amp;&amp; v.templateLine.answerLine.Resource_UOM__r.Container_Size__c != null}">
+                            <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.answerLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Container_Size__r.Name'}, {label: 'Description', fieldName: 'Container_Size__r.Description__c'}]" queryFields="['Container_Size__r.Name']" keyFields="['Container_Size__c']"  filter="{!'Resource__c=\'' + v.templateLine.answerLine.Resource__c + '\' AND Unit_of_Measure__c=\'' + v.templateLine.answerLine.Unit_Weight_Vol__c + '\''}" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleContainerSizeChange2}"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.answerLine.Container_Size__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Container_Size__c=TRUE AND Blocked__c!=TRUE" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleContainerSizeChange3}"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+        </lightning:layoutItem>
+        -->
+
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            <aura:if isTrue="{!v.xFields.ContainerSize.show == true}">
+                <c:LookupInput label="Facility" value="{!v.templateLine.answerLine.Facility__r}" SObjectName="Facility__c" queryFields="['Third_Party_Facility__c']" pill="{iconName: 'standard:household', fieldName: 'Name'}" onchange="{!c.handleFacilityChange}"/>
+            </aura:if>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

@@ -1,0 +1,83 @@
+<aura:component extends="c:MobileTMLinesBase" description="MobileTMLaborLines">
+    <!--attributes-->
+    <aura:attribute name="totalHours" default="0" type="Decimal" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="change" value="{!v.jobTaskWrapper.TMLines}" action="{!c.handleTMLinesChange}"/>
+    <aura:handler name="copyTimeEvent" event="c:TMLineCopyTimeEvent" action="{!c.handleCopyTimeEvent}"/>
+
+    <!--body--> 
+    <lightning:card title="">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <aura:if isTrue="{!v.mode == 'edit'}">
+                        <lightning:button label="View Lines" value="view" onclick="{!c.toggleView}"/>
+                        <lightning:button label="Delete Lines" variant="neutral" onclick="{!c.doDeleteLines}" />
+                        <lightning:button label="Move Lines" variant="neutral" onclick="{!c.doMoveLines}" />
+                        <lightning:button label="Add Line" variant="neutral" onclick="{!c.doNewLine}" />
+                        <aura:set attribute="else">
+                            <lightning:button label="Edit Lines" value="edit" onclick="{!c.toggleView}"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <div aura:id="edit-section" >
+            <aura:iteration items="{!v.jobTaskWrapper.TMLines}" var="tmLine" indexVar="index">
+                <div class="slds-m-bottom--small">
+                    <c:MobileTMLaborLine aura:id="tm-lines" tm="{!v.tm}" rowIndex="{!index}" tmLine="{!tmLine}"/>
+                </div>
+            </aura:iteration>
+        </div>
+
+        <aura:if isTrue="{!v.mode == 'view'}">
+            <c:FlexDataTable items="{!v.jobTaskWrapper.TMLines}" var="tmLine">
+                <aura:set attribute="template">
+                    <aura:if isTrue="{!tmLine.Resource_Type__c != null}">
+                        <c:FlexDataTableColumn label="Title">
+                            {!tmLine.Resource_Type__r.Name}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Description">
+                            {!tmLine.Description__c}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Resource">
+                            {!tmLine.Resource_Name__c}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="SC" style="width:50px;">
+                            {!tmLine.Service_Center__r.Name}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Job Start Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Job_Start_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Site Start Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Site_Start_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Site End Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Site_End_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Job End Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Job_End_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Lunch Start Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Lunch_Start_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Lunch End Time" style="width:75px;">
+                            <c:FormattedTime value="{!tmLine.Lunch_End_Time__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Total Hours" style="width:75px;">
+                            {!tmLine.Total_Job_Hours__c}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Quantity" style="width:75px;">
+                            {!tmLine.Quantity__c}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="UOM" style="width:75px;">
+                            {!tmLine.Unit_of_Measure__r.Name}
+                        </c:FlexDataTableColumn>
+                    </aura:if>
+                </aura:set>
+            </c:FlexDataTable>
+        </aura:if>
+    </lightning:card>
+</aura:component>

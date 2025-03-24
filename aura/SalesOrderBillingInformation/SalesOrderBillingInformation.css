@@ -1,0 +1,16 @@
+.THIS .slds-input-has-icon {
+    position: relative;
+}
+
+.THIS .clear-button {
+    position: absolute;
+    right: 10px; /* Adjust for horizontal spacing */
+    top: 65%;
+    transform: translateY(-50%); /* Center the icon vertically */
+    cursor: pointer;
+    height: 1rem; /* Set a fixed height for the icon */
+    width: 1rem; /* Set a fixed width for the icon */
+}
+
+.THIS .slds-form-element__control .slds-radio{display:inline;
+}

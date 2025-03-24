@@ -1,0 +1,46 @@
+<aura:component extends="c:TMBase">        
+    <!--attributes-->
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="deleteTMLineEvent" event="c:DeleteTMLineEvent" action="{!c.handleDeleteLineEvent}"/>
+    <aura:handler name="copyManifestEvent" event="c:CopyManifestEvent" action="{!c.handleCopyManifestEvent}"/>
+    <aura:handler name="change" value="{!v.pendingChangesStatus}" action="{!c.handlePendingChangesStatus}"/>
+    
+    <!--events-->
+    <aura:registerEvent name="TMNavigationEvent" type="c:TMNavigationEvent"/>
+    
+    <!--body-->
+    <lightning:card title="WASTE DISPOSAL">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete Lines" variant="neutral" onclick="{!c.doDeleteLines}" />
+                    <lightning:button label="Refresh" variant="neutral" onclick="{!c.doRefresh}"/>
+                    <lightning:button label="Add Line" variant="neutral" onclick="{!c.doNewLine}" />
+                    <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.pendingChangesStatus != 'Pending_Changes'}"/>
+                    <lightning:button label="Expand All" variant="neutral" onclick="{!c.doExpandAll}"/>
+                    <lightning:button label="Collapse All" variant="neutral" onclick="{!c.doCollapseAll}"/>
+                    <lightning:button label="Go to Top" variant="neutral" onclick="{!c.scrollToTop}"/>
+                    <lightning:button label="Go to Bottom" variant="neutral" onclick="{!c.scrollToBottom}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        
+        <div class="slds container" aura:id="container" style="border-top:1px solid #ccc">
+            <ui:scrollerWrapper aura:id="scroller" class="scroller-size">
+                <ul class="lds-list--vertical">
+                    <aura:iteration items="{!v.data}" var="row" indexVar="index">
+                        <aura:if isTrue="{!row.Deleted != true}">
+                            <li class="slds-list__item slds-m-vertical_x-small" >
+                                <c:WasteDisposalEntity aura:id="disposalItem" lineIndex="{!index}" tm="{!v.tm}" data="{!row}" pendingChangesStatus="{!v.pendingChangesStatus}" size="12" smallDeviceSize="4" mediumDeviceSize="3" largeDeviceSize="2"/>
+                            </li>    
+                        </aura:if>
+                    </aura:iteration>
+                </ul>
+            </ui:scrollerWrapper>
+        </div>
+    </lightning:card>
+</aura:component>

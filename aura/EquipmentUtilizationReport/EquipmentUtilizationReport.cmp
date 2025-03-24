@@ -1,0 +1,176 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="EquipmentUtilizationController">
+    <ltng:require styles="{!$Resource.DatePicker}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change"	value="{!v.pageNumber}"	action="{!c.renderPage}" />
+    <aura:attribute name="spinner" type="Boolean" default="false" />
+    <aura:attribute name="equipments" type="List" />
+    <aura:attribute name="serviceCenters" type="List" />	
+    
+    <aura:attribute name="currentEquipmentsArray" type="Object[]" default="[]" />  
+    <aura:attribute type="Integer" name="pageNumber" default="1" />
+    <aura:attribute type="Integer" name="maxPage" default="1" />
+    <aura:attribute type="Integer" name="recordsToshow" default="50" />
+    
+    <!-- PAGE HEADER INFORMATION AND TITLE -->
+    <div class="slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Equipment Utilization Report">Equipment Utilization Report</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPORTS FILTER AND GENERATE DOCUMENT BUTTON -->
+    <div class="slds-grid slds-gutters slds-box slds-m-top--x-small slds-modal__content slds-align_absolute-center">
+        <div class="slds-col">
+        	<span>
+                <ui:inputSelect aura:id="serviceCenterFilter" label="Service Center" change="{!c.onFiltersChange}" >
+                	<!--<aura:iteration items="{!v.serviceCenters}" var="sc">
+                 		<ui:inputSelectOption text="{!sc.Id}" label="{!sc.Description}" value="{!sc.isDefault}" />
+                    </aura:iteration>-->
+                </ui:inputSelect>
+        	</span>
+        </div>
+        <div class="slds-col">
+            <span><ui:inputDate label="Start Date" displayDatePicker="true" change="{!c.onFiltersChange}" aura:id="startDateFilter" /></span>
+        </div>
+        <div class="slds-col">
+            <span><ui:inputDate label="End Date" displayDatePicker="true" change="{!c.onFiltersChange}" aura:id="endDateFilter" /></span>
+        </div>
+        <div style="margin-top: 20px;">
+            <lightning:button variant="brand" label="Print PDF" onclick="{!c.sendToUrl}" />
+        </div>
+        <div style="margin-top: 20px; margin-left: 20px">
+            <span><lightning:button variant="brand" label="Export to Excel" onclick="{!c.sendToUrlExcel}" /></span>
+        </div>        
+        
+        <div style="margin-top: 20px;">
+            <c:Pagination currentPageNumber="{!v.pageNumber}" maxPageNumber="{!v.maxPage}" showFirst = "True" showPrev = "True" 
+                          showPageNumber = "True" showNext = "True" showLast = "True"/>
+        </div>
+    </div>
+    
+    <!-- MAIN PAGE TABLE -->
+    <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout" aura:id="tableResult">
+        <thead>
+            <tr class="slds-text-heading--label">
+                <th scope="col">
+                    <div class="slds-truncate" title="No.">No.</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Home S/C">Home S/C</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Fleet Number">Fleet Number</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Equipment Group">Equip Group</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Resource Type">Resource Type</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Name">Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Year">Year</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Make">Make</div>
+                </th>  
+                <th scope="col">
+                    <div class="slds-truncate" title="Model">Model</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="VIN">VIN</div>
+                </th> 
+              	<th scope="col">
+                    <div class="slds-truncate" title="Assigned SC Hours">Assigned SC Hours</div>
+                </th>                
+                <th scope="col">
+                    <div class="slds-truncate" title="IC_Hours">I/C Hours</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Job_Total_Hours">Job Total Hours</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Utilization">% Utilization</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Goal Hours Assigned">Goal Hours Assigned</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Delta">Delta</div>
+                </th>                
+            </tr>
+        </thead>   
+        <tbody>
+            <aura:iteration items="{!v.currentEquipmentsArray}" var="equip">
+                <tr>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!equip.ResourceNo}">{!equip.ResourceNo}</div>
+                    </th>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!equip.HomeServiceCenter}">{!equip.HomeServiceCenter}</div>
+                    </th>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.FleetNumber}">{!equip.FleetNumber}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.EquipmentGroup}">{!equip.EquipmentGroup}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.ResourceType}">{!equip.ResourceType}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.ResourceName}">{!equip.ResourceName}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.Year}">{!equip.Year}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.Make}">{!equip.Make}</div>
+                    </td>                    
+                    <td>
+                        <div class="slds-truncate" title="{!equip.Model}">{!equip.Model}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.VIN}">{!equip.VIN}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.SC_Hours}"><ui:outputNumber value="{!equip.SC_Hours}" format="0.0" /></div>
+                	</td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.IC_Hours}"><ui:outputNumber value="{!equip.IC_Hours}" format="0.0" /></div>
+                	</td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.Total_Hours}"><ui:outputNumber value="{!equip.Total_Hours}" format="0.0" /></div>
+                	</td>                     
+                	<td>
+                        <!--<div class="slds-truncate" title="{!equip.Utilization + '%'}">{!equip.Utilization + '%'}</div>-->
+                        <div class="slds-truncate" title="{!equip.Utilization + '%'}"><ui:outputNumber value="{!equip.Utilization}" format="0.0%" /></div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!equip.GoalHoursAssigned}"><ui:outputNumber value="{!equip.GoalHoursAssigned}" format="0.0" /></div>
+                	</td> 
+                    <td>
+                        <div class="slds-truncate" title="{!equip.Delta}"><ui:outputNumber value="{!equip.Delta}" format="0.0" /></div>
+                	</td>                     
+                </tr>
+            </aura:iteration>
+        </tbody>        
+    </table>
+    
+    <!-- LOADING ICON -->
+    <aura:if isTrue="{!v.spinner}">
+        <div class="demo-only demo--inverse" style="height: 6rem;">
+            <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>    
+</aura:component>

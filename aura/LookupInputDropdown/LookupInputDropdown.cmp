@@ -1,0 +1,60 @@
+<aura:component description="LookupInputDropdown">
+    <!--attributes-->
+    <aura:attribute name="parentElement" type="Object" access="public"/>
+    <aura:attribute name="id" type="String" access="public" required="true"/>
+    <aura:attribute name="columns" type="List" access="public"/>
+    <aura:attribute name="result" type="List" access="public"/>
+    <aura:attribute name="fixedPosition" type="Boolean" access="public"/>
+    <aura:attribute name="dropdownLeft" type="Decimal" access="public"/>
+    <aura:attribute name="dropdownTop" type="Decimal" access="public"/>
+    <aura:attribute name="dropdownBottom" type="Decimal" access="public"/>
+    <aura:attribute name="dropdownMinWidth" type="Decimal" access="public"/>
+    <aura:attribute name="dropdownOnBottom" type="Boolean" access="public"/>
+    <aura:attribute name="showLookupSpinner" type="Boolean" access="public"/>
+    <aura:attribute name="dropdownElement" type="Object" access="private"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--events-->
+    <aura:registerEvent name="onclose" type="c:LookupInputDropdownClosedEvent"/>
+
+    <!--methods-->
+    <aura:method name="showDropdown" action="{!c.showDropdown}" access="public"/>
+    <aura:method name="closeDropdown" action="{!c.closeDropdown}" access="public"/>
+
+    <!--body-->
+
+    <div id="{!v.id}" aura:id="dropdown-box" class="slds slds-dropdown slds-lookup__menu" onmousedown="{!c.handleMouseDown}">
+        <div aura:id="close-button" style="position: absolute;right:0px;top:-25px;z-index:5000;">
+            <lightning:buttonIcon iconName="utility:close" variant="bare" size="large" onclick="{!c.closeDropdown}"/>
+        </div>
+        <div class="dropdown">
+            <table class="slds-table slds-ta slds-table--resizable-cols">
+                <aura:if isTrue="{!v.showLookupSpinner == true}">
+                    <lightning:spinner aura:id="spinner" variant="brand" size="small" alternativeText="loading"/>
+                </aura:if>
+                <aura:if isTrue="{!not(empty(v.columns))}">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.columns}" var="column">
+                                <td class="slds-p-around--small slds-text-title_bold" style="border: 0px;">
+                                    <span cstyle="{!if(column.style != null, column.style, '')}">
+                                        {!column.label}
+                                    </span>
+                                </td>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <aura:if isTrue="{!not(empty(v.result))}">
+                        <aura:iteration items="{!v.result}" var="record" indexVar="index">
+                            <c:LookupInputResult record="{!record}" columns="{!v.columns}"/>
+                        </aura:iteration>
+                    </aura:if>
+                    </tbody>
+                </aura:if>
+            </table>
+        </div>
+    </div>
+</aura:component>

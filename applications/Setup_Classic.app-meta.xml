@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>Company_Setup__c</defaultLandingTab>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Setup</label>
+    <tabs>Company_Setup__c</tabs>
+    <tabs>Subsidiary_Company__c</tabs>
+    <tabs>Service_Center__c</tabs>
+    <tabs>Resource__c</tabs>
+    <tabs>Numbering_Series__c</tabs>
+    <tabs>Unit_of_Measure__c</tabs>
+    <tabs>Sales_Order_Type__c</tabs>
+    <tabs>Resource_Type__c</tabs>
+    <tabs>Equipment_Group__c</tabs>
+    <tabs>Prevailing_Wage_Setup__c</tabs>
+    <tabs>Payment_Term__c</tabs>
+    <tabs>Tax_Area__c</tabs>
+    <tabs>Tax_Detail__c</tabs>
+    <tabs>Tax_Jurisdiction__c</tabs>
+    <tabs>Off_Type__c</tabs>
+    <tabs>Site_Address__c</tabs>
+    <tabs>SC_Budget_Forecast__c</tabs>
+    <tabs>Detailed_Cust_Ledg_Entry__c</tabs>
+    <tabs>Billing_Worksheet_Line__c</tabs>
+    <tabs>New_Hire_Request__c</tabs>
+</CustomApplication>

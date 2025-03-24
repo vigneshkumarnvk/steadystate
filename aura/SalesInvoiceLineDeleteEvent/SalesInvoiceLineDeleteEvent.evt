@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="SalesInvoiceLineDeleteEvent">
+    <aura:attribute name="salesInvoiceLine" type="Object" access="public"/>
+</aura:event>

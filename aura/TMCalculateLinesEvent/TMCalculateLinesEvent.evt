@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="TMCalculateLinesEvent">
+    <aura:attribute name="actions" type="List" access="public" description="calculateFlatPays, deletePresumptiveChildLines, insertPresumptiveChildLines, unlinkPresumptiveChildLines"/>
+    <aura:attribute name="category" type="String" access="public"/>
+    <aura:attribute name="tmLines" type="List" access="public"/>
+    <aura:attribute name="callback" type="Object" access="public" description="function to callback"/>
+</aura:event>

@@ -1,0 +1,6 @@
+.THIS .invalid-number {
+    color: red !important;
+}
+.THIS .textarea-assumption textarea {
+    height: 125px;
+}

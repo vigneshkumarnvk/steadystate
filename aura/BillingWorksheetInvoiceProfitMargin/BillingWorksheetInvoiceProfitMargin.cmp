@@ -1,0 +1,40 @@
+<aura:component description="BillingWorksheetInvoiceProfitMargin">
+    <!--attributes-->
+    <aura:attribute name="worksheets" type="List" access="public"/>
+    <aura:attribute name="lineTotals" type="List" default="[]" access="private"/>
+
+    <!--handlers-->
+    <!--
+    <aura:handler name="init" value="{!this}" action="{!c.calculateProfitMargin}"/>
+    <aura:handler name="change" value="{!v.worksheets}" action="{!c.calculateProfitMargin}"/>
+    -->
+
+    <!--methods-->
+    <aura:method name="refresh" action="{!c.calculateProfitMargin}" access="public"/>
+
+    <!--body-->
+    <lightning:card title="Profit &amp; Margin" iconName="standard:lightning_usage">
+        <c:DataTable items="{!v.lineTotals}" var="lineTotal">
+            <aura:set attribute="template">
+                <c:DataColumn label="Category" headerStyle="width:25%">
+                    <lightning:formattedText label="Category" value="{!lineTotal.Category}" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+                <c:DataColumn label="Subtotal" headerStyle="width:15%">
+                    <lightning:formattedNumber label="Subtotal" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+                <c:DataColumn label="Profit Margin" headerStyle="width:15%">
+                    <lightning:formattedNumber label="Profit Margin" value="{!lineTotal.ProfitMargin}" style="percent" minimumFractionDigits="2" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+                <c:DataColumn label="Total Cost" headerStyle="width:15%">
+                    <lightning:formattedNumber label="Total Cost" value="{!lineTotal.LineCost}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+                <c:DataColumn label="Tax" headerStyle="width:15%">
+                    <lightning:formattedNumber label="Tax" value="{!lineTotal.Tax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+                <c:DataColumn label="Total" headerStyle="width:15%">
+                    <lightning:formattedNumber label="Total" value="{!lineTotal.LineAmountIncludingTax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                </c:DataColumn>
+            </aura:set>
+        </c:DataTable>
+    </lightning:card>
+</aura:component>

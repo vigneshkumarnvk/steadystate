@@ -1,0 +1,52 @@
+<aura:component extends="c:BaseComponent" >
+    <!--attributes-->
+    <aura:attribute name="title" type="String" access="public"/>
+    <aura:attribute name="templateLines" type="List" access="public"/>
+    <aura:attribute name="templateLineIndex" type="Integer" default="0" access="public"/>
+    <aura:attribute name="templateLine" type="Object" access="private"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="doYes" action="{!c.doYes}"/>
+    <aura:method name="doNo" action="{!c.doNo}"/>
+
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:card>
+            <aura:set attribute="title">
+                <aura:if isTrue="{!v.templateLineIndex &lt; (v.templateLines.length)}">
+                    <lightning:icon iconName="utility:question" size="small"/>
+                    <span class="slds-m-horizontal--small">{!v.templateLine.Question__c}</span>
+                    <aura:if isTrue="{!v.templateLine.answer != null}">
+                        <lightning:badge label="{!v.templateLine.answer}" class="{!if(v.templateLine.answer == 'Yes', 'slds-theme_success', if(v.templateLine.answer == 'No', 'slds-theme_warning', ''))}"/>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <div class="slds-text-heading_small">
+                            <aura:if isTrue="{!v.finished == true}">
+                                <lightning:icon iconName="action:approval" size="xx-small" class="slds-m-right--x-small"/>
+                                You have completed questions for this job task.
+                                <aura:set attribute="else">
+                                    <lightning:icon iconName="utility:warning" size="small" class="slds-m-right--x-small"/>
+                                    You have not completed all the questions.
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+
+            <aura:set attribute="actions">
+                <lightning:buttonGroup>
+                    <lightning:buttonIcon iconName="utility:left" value="previous" onclick="{!c.handleButtonClick}"/>
+                    <lightning:buttonIcon iconName="utility:right" value="next" onclick="{!c.handleButtonClick}"/>
+                </lightning:buttonGroup>
+            </aura:set>
+
+            <aura:if isTrue="{!v.templateLineIndex &lt; (v.templateLines.length)}">
+                <c:JobTaskQuestionCard aura:id="question-card" templateLine="{!v.templateLine}"/>
+            </aura:if>
+        </lightning:card>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,102 @@
+<aura:component extends="c:BaseComponent" description="BillingWorksheetInvoiceReviewJobTaskLine">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="Id" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="worksheet" type="Object" access="public"/>
+    <aura:attribute name="worksheetIndex" type="Integer" access="public"/>
+
+    <!--handlers-->
+
+    <!--methods-->
+    <aura:method name="validateWorksheet" action="{!c.validateWorksheet}"/>
+
+    <!--body-->
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="12">
+            <aura:if isTrue="{!v.worksheet.SalesOrderJobTask.Billing_Type__c == 'Fixed Price'}">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input type="number" label="Fixed Price" value="{#v.worksheet.SalesOrderJobTask.Fixed_Price__c}" formatter="currency" step="0.01" disabled="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input label="Tax Group" value="{#v.worksheet.SalesOrderJobTask.Tax_Group__c}" disabled="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input type="number" label="% Billed" value="{#v.worksheet.SalesOrderJobTask.Pct_Billed__c}" formatter="percent-fixed" step="0.01" disabled="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input type="number" label="% To Bill" value="{#v.worksheet.SalesOrderJobTask.Pct_To_Bill__c}" formatter="percent-fixed" step="0.01" disabled="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="2">
+                        <lightning:input type="number" label="Amount To Bill" value="{#v.worksheet.SalesOrderJobTask.Amount_To_Bill__c}" formatter="currency" step="0.01" disabled="true"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="around-small" size="12">
+            <c:FlexDataTable aura:id="datatable" items="{!v.worksheet.WorksheetLines}" var="worksheetLine" indexVar="index"
+                             keyName="Line_No__c" linkedToKeyName="Bundle_Line__r.Line_No__c">
+                <aura:set attribute="template">
+                    <c:FlexDataTableColumn label="Scheduled Date">
+                        <c:FormattedDate value="{#worksheetLine.TM__r.Scheduled_Date__c}"/>
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="T&amp;M">
+                        {#worksheetLine.TM__r.Name}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Category">
+                        <c:FormattedText value="{#worksheetLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(worksheetLine.Bundle_Line__r != null, 'slds-p-left--medium', '')}"/>
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Service Center">
+                        {#worksheetLine.Service_Center__r.Name}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Resource Type">
+                        {#worksheetLine.Resource_Type__r.Name}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Resource">
+                        {#worksheetLine.Resource__r.Name}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Billing Description">
+                        {#worksheetLine.Description__c}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Quantity">
+                        <!--ticket 19982-->
+                        <!--
+                        <lightning:formattedNumber value="{#worksheetLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                        -->
+                        <lightning:formattedNumber value="{#worksheetLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="4"/>
+                        <!--ticket 19982-->
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="UOM">
+                        {#worksheetLine.Unit_of_Measure__r.Name}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Rate Code">
+                        {#worksheetLine.RateCode}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Unit Price">
+                        <!--ticket 19982-->
+                        <!--
+                        <lightning:formattedNumber value="{#worksheetLine.Unit_Price__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                        -->
+                        <lightning:formattedNumber value="{#worksheetLine.Unit_Price__c}" minimumFractionDigits="2" maximumFractionDigits="4"/>
+                        <!--ticket 19982-->
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Line Amount">
+                        <lightning:formattedNumber value="{#worksheetLine.Line_Amount__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                    </c:FlexDataTableColumn>
+                    <!--
+                    <c:FlexDataTableColumn label="Line Cost">
+                        <lightning:formattedNumber value="{#worksheetLine.Line_Cost__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                    </c:FlexDataTableColumn>
+                    -->
+                    <c:FlexDataTableColumn label="Pricing Source">
+                        {#worksheetLine.Pricing_Source_2__c}
+                    </c:FlexDataTableColumn>
+                    <c:FlexDataTableColumn label="Line #">
+                        {#worksheetLine.Line_No__c}
+                    </c:FlexDataTableColumn>
+                </aura:set>
+            </c:FlexDataTable>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

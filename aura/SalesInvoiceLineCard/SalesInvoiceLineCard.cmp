@@ -1,0 +1,11 @@
+<aura:component description="SalesInvoiceLineCard" extends="c:SalesInvoiceBase">
+    <!--attributes-->
+
+    <!--handlers-->
+
+    <!--events-->
+
+    <!--methods-->
+
+    <!--body--> 
+</aura:component>

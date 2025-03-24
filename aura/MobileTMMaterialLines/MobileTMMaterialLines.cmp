@@ -1,0 +1,60 @@
+<aura:component extends="c:MobileTMLinesBase" description="MobileTMMaterialLines">
+    <!--attributes-->
+    <aura:attribute name="totalHours" default="0" type="Decimal" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="change" value="{!v.jobTaskWrapper.TMLines}" action="{!c.handleTMLinesChange}"/>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <aura:if isTrue="{!v.mode == 'edit'}">
+                        <lightning:button label="View Lines" value="view" onclick="{!c.toggleView}"/>
+                        <lightning:button label="Delete Lines" variant="neutral" onclick="{!c.doDeleteLines}" />
+                        <lightning:button label="Move Lines" variant="neutral" onclick="{!c.doMoveLines}" />
+                        <lightning:button label="Add Line" variant="neutral" onclick="{!c.doNewLine}" />
+                        <aura:set attribute="else">
+                            <lightning:button label="Edit Lines" value="edit" onclick="{!c.toggleView}"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <div aura:id="edit-section" >
+            <aura:iteration items="{!v.jobTaskWrapper.TMLines}" var="tmLine" indexVar="index">
+                <div class="slds-m-bottom--small">
+                    <c:MobileTMMaterialLine aura:id="tm-lines" tm="{!v.tm}" rowIndex="{!index}" tmLine="{!tmLine}"/>
+                </div>
+            </aura:iteration>
+        </div>
+
+        <aura:if isTrue="{!v.mode == 'view'}">
+            <c:FlexDataTable items="{!v.jobTaskWrapper.TMLines}" var="tmLine">
+                <aura:set attribute="template">
+                    <aura:if isTrue="{!tmLine.Resource__c != null}">
+                        <c:FlexDataTableColumn label="Material">
+                            {!tmLine.Resource__r.Name}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Description">
+                            {!tmLine.Description__c}
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Quantity" style="width:200px;">
+                            <!--ticket 19982-->
+                            <!--
+                            <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="2" minimumFractionDigits="2"/>
+                            -->
+                            <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                            <!--ticket 19982-->
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Unit of Measure" style="width:200px;">
+                            {!tmLine.Unit_of_Measure__r.Name}
+                        </c:FlexDataTableColumn>
+                    </aura:if>
+                </aura:set>
+            </c:FlexDataTable>
+        </aura:if>
+    </lightning:card>
+</aura:component>

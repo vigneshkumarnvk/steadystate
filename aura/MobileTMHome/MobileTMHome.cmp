@@ -1,0 +1,109 @@
+<aura:component controller="MobileTMController" extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="tms" type="List" default="[]" access="private"/>
+    <aura:attribute name="userInfo" type="User" access="private"/>
+    <aura:attribute name="ownership" type="String" default="MyTMs" access="private"/>
+    <aura:attribute name="ownershipOptions" type="List" default="[{'label': 'My T&amp;Ms', 'value': 'MyTMs'}, {'label': 'All T&amp;Ms', 'value': 'AllTMs'}]" access="private"/>
+    <aura:attribute name="dateOption" type="String" default="Today" access="private"/>
+    <aura:attribute name="dateOptions" type="List" default="[{'label': 'Today', 'value': 'Today'}, {'label': 'All Scheduled', 'value': 'All'}]" access="private"/>
+    <aura:attribute name="scheduledDate" type="Date" access="private"/>
+    <aura:attribute name="keyword" type="String" access="private"/>
+    <!--cache control-->
+    <aura:attribute name="version" type="String" access="public"/>
+    <!--cache control-->
+
+    <!--events-->
+    <aura:registerEvent name="tmNavigationEvent" type="c:TMNavigationEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <div aura:id="container">
+        <!--cache control-->
+        <!--
+        <lightning:card title="T&amp;M HOME">
+        -->
+        <lightning:card title="{!if(v.version != 'VERSION_ERROR', 'MOBILE T&amp;M (v' + v.version + ')', 'MOBILE T&amp;M')}">
+        <!--cache control-->
+            <aura:set attribute="actions">
+                {!v.userInfo.Name}
+            </aura:set>
+
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem padding="around-small">
+                    <lightning:radioGroup name="tm-scope" type="button" label="" variant="label-hidden" options="{!v.ownershipOptions}" value="{!v.ownership}" onchange="{!c.handleOwnershipOptionChange}" class="radio-group"/>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem padding="around-small">
+                    <lightning:radioGroup name="date-scope" type="button" label="" variant="label-hidden" options="{!v.dateOptions}" value="{!v.dateOption}" onchange="{!c.handleDateOptionChange}" class="radio-group"/>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem padding="around-small">
+                    <lightning:input type="date" label="Scheduled Date" variant="label-hidden" value="{!v.scheduledDate}" onchange="{!c.handleScheduledDateChange}" dateStyle="short" autocomplete="off" class="date-style"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small">
+                    <div style="display:flex">
+                    <span><lightning:input type="search" variant="label-hidden" aura:id="search-box" label="Search" value="{!v.keyword}"/></span>
+                    <span class="slds-m-left--xx-small"><lightning:buttonIcon iconName="utility:search" onclick="{!c.doSearch}" alternativeText="Search"/></span>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <div class="scrollable-container">
+                <p class="slds-p-horizontal--small">
+                    <!--cache control-->
+                    <aura:if isTrue="{!v.version == 'VERSION_ERROR'}">
+                        <p class="slds-p-around--small">
+                            T&amp;M version has been updated. Please follow the instructions below to load the new version to this device.
+                        </p>
+                        <p class="slds-p-around--small">
+                            <ul>
+                                <ol>1. Tap the Menu icon (top-left corner), scroll down the menu and tap Settings.</ol>
+                                <ol>2. Tap Advanced.</ol>
+                                <ol>3. Tap Clear Cached Data.</ol>
+                                <ol>4. Tap the back arrow button.</ol>
+                                <ol>4. Tap Done.</ol>
+                                <ol>5. Scroll up the menu, and tap Mobile T&amp;M to load the new version.</ol>
+                            </ul>
+                        </p>
+                        <aura:set attribute="else">
+                    <!--cache control-->
+
+                            <c:DataTable items="{!v.tms}" var="tm" onRowAction="{!c.handleRowAction}">
+                                <aura:set attribute="template">
+                                    <c:DataRow class="line-style"/>
+                                    <c:DataColumn label="T&amp;M #">
+                                        {!tm.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Scheduled Date">
+                                        {!tm.formattedScheduledDate}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Status">
+                                        {!tm.Status__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Emergency T&amp;M">
+                                        <lightning:input type="checkbox" checked="{!tm.Emergency_TM__c}" disabled="true"/>
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Customer Name">
+                                        {!tm.Bill_to_Customer__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Sales Order #">
+                                        {!tm.Sales_Order__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="SC">
+                                        {!tm.Service_Center__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Site Location">
+                                        {!tm.SiteLocation}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                    <!--cache control-->
+                        </aura:set>
+                    </aura:if>
+                    <!--cache control-->
+                </p>
+            </div>
+        </lightning:card>
+    </div>
+</aura:component>

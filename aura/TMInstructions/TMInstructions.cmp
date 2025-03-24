@@ -1,0 +1,22 @@
+<aura:component extends="c:TMBase">
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="around-small">
+                <lightning:textarea aura:id="project-scope" label="Project Scope" value="{!v.tm.Site_Scope__c}" required="true" class="textarea"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="around-small">
+                <lightning:textarea aura:id="job-log" label="Job Log" value="{!v.tm.Customer_Comments__c}" class="textarea"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="around-small">
+                <lightning:textarea label="Internal Comments" value="{!v.tm.Internal_Comments__c}" class="textarea"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="around-small">
+                <lightning:textarea label="Customer Billing Instructions" value="{!v.tm.Customer_Billing_Instructions__c}" class="textarea" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="around-small">
+                <lightning:textarea label="Sales Order Instructions" value="{!v.tm.Sales_Order_Instructions__c}" class="textarea" disabled="true"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

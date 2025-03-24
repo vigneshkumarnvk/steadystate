@@ -1,0 +1,7 @@
+<aura:component>
+    <aura:attribute name="id" type="String" access="public"/>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="style" type="String" access="public"/>
+</aura:component>

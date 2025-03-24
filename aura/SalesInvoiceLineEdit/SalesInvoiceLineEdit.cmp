@@ -1,0 +1,359 @@
+<aura:component description="SalesInvoiceLineEdit" extends="c:SalesInvoiceLineBase">
+    <!--attributes-->
+    <aura:attribute name="fields" type="Object" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--events-->
+    <aura:registerEvent name="salesInvoiceLineUpdateEvent" type="c:SalesInvoiceLineUpdateEvent"/>
+
+    <!--methods-->
+    <aura:method name="validateCategory" action="{!c.handleCategoryChange}" access="public"/>
+
+    <!--body-->
+    <aura:if isTrue="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Type__c == 'Misc. Credit Memo'}">
+        <td>
+            <span name="delete" style="display: inline-block;">
+                <lightning:button variant="base" label="Delete" onclick="{!c.deleteLine}" disabled="{!v.fields.delete.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+            </span>
+        </td>
+        <td>
+            {#v.salesInvoiceLine.Line_No__c}
+        </td>
+        <td>
+            <lightning:select variant="label-hidden" value="{!v.salesInvoiceLine.Category__c}" class="label-hidden" onchange="{!c.handleCategoryChange}" disabled="{!v.fields.category.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}">
+                <option></option>
+                <option value="Labor">Labor</option>
+                <option value="Equipment">Equipment</option>
+                <option value="Materials">Materials</option>
+                <option value="Subcontractors">Cost Plus Materials, Equipment and Services</option>
+                <option value="Waste Disposal">Waste Disposal</option>
+                <option value="Demurrage">Transportation, Demurrage and Fees</option>
+                <option value="Misc. Charges And Taxes">Misc. Charges And Taxes</option>
+                <option value="Bundled">Bundled</option>
+            </lightning:select>
+        </td>
+        <!--
+            Ticket#19931
+                - add Rental_Resource_Type__c to the query field
+        -->
+        <td>
+            <span style="display: block;">
+                <aura:if isTrue="{!v.fields.resourceType.visible}">
+                    <c:LookupInput label="" name="resource-type" variant="label-hidden" value="{!v.salesInvoiceLine.Resource_Type__r}" SObjectName="Resource_Type__c"
+                                   columns="[{label: 'Name', fieldName: 'Name', style: 'width:250px;'}]"
+                                   pill="{fieldName: 'Name'}"
+                                   queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Description__c', 'Fleet_No_Required__c', 'Rental_Resource_Type__c']"
+                                   filter="{!'Category__c=\'' + v.salesInvoiceLine.Category__c + '\' AND Blocked__c!=TRUE'}"
+                                   dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                   onchange="{!c.handleResourceTypeChange}" disabled="{!v.fields.resourceType.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                </aura:if>
+            </span>
+            <aura:if isTrue="{!v.salesInvoiceLine.errorText}">
+                <span class="boxed-error-message">
+                    {!v.salesInvoiceLine.errorText}
+                </span>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.resource.visible}"> 
+                <c:LookupInput name="resource" label="" variant="label-hidden" value="{!v.salesInvoiceLine.Resource__r}" SObjectName="Resource__c"
+                               columns="[{label: 'Name', fieldName: 'Name', style: 'width:200px;', 'class': 'slds-cell-wrap'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;', 'class': 'slds-cell-wrap'}, {label: 'Service Center', fieldName: 'Service_Center__r.Name', style: 'width:100px;'}]"
+                               pill="{fieldName: 'Name'}"
+                               queryFields="['Service_Center__c', 'Service_Center__r.Temporary__c', 'Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Has_Weight_Volume__c', 'Has_Container__c']"
+                               filter="{!'Blocked__c!=TRUE AND Category__c=\'' + v.salesInvoiceLine.Category__c + '\' AND Resource_Type__c=\'' + v.salesInvoiceLine.Resource_Type__c + '\''}"
+                               dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                               onchange="{!c.handleResourceChange}" disabled="{!v.fields.resource.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.description.visible}">
+                <lightning:input variant="label-hidden" value="{!v.salesInvoiceLine.Description__c}" disabled="{!or(v.fields.description.disabled, and(v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Posted',v.salesInvoiceLine.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c))}"/>
+                <!--<lightning:input variant="label-hidden" value="{!v.salesInvoiceLine.Description__c}" disabled="{!v.fields.description.disabled || v.salesInvoice.Document_Status__c != 'Open'}"/>-->
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.serviceCenter.visible}">
+                {!v.salesInvoiceLine.Service_Center__r.Name}
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.quantity.visible}">
+                <!--ticket 19982-->
+                <!--
+                <lightning:input type="number" variant="label-hidden" value="{!v.salesInvoiceLine.Quantity__c}" step="0.01" oncommit="{!c.handleQuantityChange}" disabled="{!v.fields.quantity.disabled || v.salesInvoice.Document_Status__c != 'Open'}"/>
+                -->
+                <lightning:input type="number" variant="label-hidden" value="{!v.salesInvoiceLine.Quantity__c}" step="0.0001" oncommit="{!c.handleQuantityChange}" disabled="{!v.fields.quantity.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                <!--ticket 19982-->
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.unitOfMeasure.visible}">
+                <aura:if isTrue="{!v.salesInvoiceLine.Resource_Type__c != null}">
+                    <c:LookupInput name="unit-of-measure-1" variant="label-hidden" value="{!v.salesInvoiceLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource_Type__c=\'' + v.salesInvoiceLine.Resource_Type__c + '\''}" pill="{fieldName: 'Name'}" hideLookupGlass="true" dropdownOnBottom="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange1}" disabled="{!v.fields.unitOfMeasure.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.timeLine.Resource__c != null}">
+                            <c:LookupInput name="unit-of-measure-1" variant="label-hidden" value="{!v.salesInvoiceLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Name'}]" queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource__c=\'' + v.salesInvoiceLine.Resource__c + '\''}" pill="{fieldName: 'Name'}" hideLookupGlass="true" dropdownOnBottom="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange1}" disabled="{!v.fields.unitOfMeasure.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput name="unit-of-measure-3" variant="label-hidden" value="{!v.salesInvoiceLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}]" queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE" pill="{fieldName: 'Name'}" hideLookupGlass="true" dropdownOnBottom="true" datatable="true" onchange="{!c.handleUnitOfMeasureChange3}" disabled="{!v.fields.unitOfMeasure.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.unitPrice.visible}">
+                <lightning:input type="number" variant="label-hidden" value="{!v.salesInvoiceLine.Unit_Price__c}" step="0.001" oncommit="{!c.handleUnitPriceChange}" disabled="{!v.salesInvoiceLine.Bill_as_Lump_Sum__c == true || v.salesInvoiceLine.Non_Billable__c == true || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+            </aura:if>
+        </td>
+
+        <td>
+            <aura:if isTrue="{!v.fields.taxGroup.visible}">
+                <lightning:select variant="label-hidden" class="label-hidden" value="{!v.salesInvoiceLine.Tax_Group__c}" onchange="{!c.handleTaxGroupChange}" disabled="{!v.fields.taxGroup.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}">
+                    <option value=""></option>
+                    <option value="NT">NT</option>
+                    <option value="TX">TX</option>
+                </lightning:select>
+            </aura:if>
+        </td>
+        <td>
+            <lightning:formattedNumber value="{!v.salesInvoiceLine.Line_Amount__c}" style="currency" currencyCode="USD" class="line-total"/>
+        </td>
+        <td>
+            <lightning:formattedNumber value="{!v.salesInvoiceLine.Line_Amt_Incl_Tax__c}" style="currency" currencyCode="USD" class="line-total"/>
+        </td>
+        <td>
+            <lightning:formattedNumber value="{!v.salesInvoiceLine.Unit_Cost__c}" style="currency" currencyCode="USD"/>
+        </td>
+        <td>
+            <lightning:formattedNumber value="{!v.salesInvoiceLine.Line_Cost__c}" style="currency" currencyCode="USD" class="line-total"/>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.billAsLumpSum.visible}">
+                <lightning:input type="checkbox" variant="label-hidden" checked="{!v.salesInvoiceLine.Bill_as_Lump_Sum__c}" disabled="{!v.salesInvoiceLine.Category__c == 'Bundled' || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}" onchange="{!c.handleBillAsLumpSumChange}"/>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.nonBillable.visible}">
+                <lightning:input type="checkbox" variant="label-hidden" checked="{!v.salesInvoiceLine.Non_Billable__c || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}" onchange="{!c.handleNonBillableChange}"/>
+            </aura:if>
+        </td>
+        <td>
+
+        </td>
+        <td>
+
+        </td>
+        <td>
+        </td>
+
+        <td>
+            <aura:if isTrue="{!v.fields.costMethod.visible}">
+                <lightning:select variant="label-hidden" class="label-hidden" value="{!v.salesInvoiceLine.Cost_Method__c}" onchange="{!c.handleCostMethodChange}" disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}">
+                    <option value=""></option>
+                    <option value="Unit_Weight_Vol">Unit Wt/Vol</option>
+                    <option value="Container">Container</option>
+                </lightning:select>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.unitWeightVolume.visible}">
+                <aura:if isTrue="{!v.salesInvoiceLine.Cost_Method__c == 'Unit_Weight_Vol'}">
+                    <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Unit_Weight_Vol__r}" SObjectName="ResourceUOMAssociation__c"
+                                   columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]"
+                                   queryFields="['Unit_of_Measure__c', 'Container_Size__c']"
+                                   keyFields="['Unit_of_Measure__c']"
+                                   filter="{!'Resource__c=\'' + v.salesInvoiceLine.Resource__c + '\' AND Unit_of_Measure__r.Weight_Volume__c = true'}"
+                                   pill="{fieldName: 'Name'}"
+                                   dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                   onchange="{!c.handleUnitWeightVolumeChange1}"
+                                   disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Unit_Weight_Vol__r}" SObjectName="Unit_of_Measure__c"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                                       filter="Weight_Volume__c=TRUE AND Blocked__c!=TRUE"
+                                       pill="{fieldName: 'Name'}"
+                                       dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                       onchange="{!c.handleUnitWeightVolumeChange2}"
+                                       disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.containerSize.visible}">
+                <aura:if isTrue="{!v.salesInvoiceLine.Cost_Method__c == 'Container'}">
+                    <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c"
+                                   columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]"
+                                   keyFields="['Unit_of_Measure__c']"
+                                   filter="{!'Resource__c=\'' + v.salesInvoiceLine.Resource__c + '\' AND Unit_of_Measure__r.Container_Size__c=true'}"
+                                   pill="{fieldName: 'Name'}"
+                                   dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                   onchange="{!c.handleContainerSizeChange1}"
+                                   disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.salesInvoiceLine.Cost_Method__c == 'Unit_Weight_Vol' &amp;&amp; v.salesInvoiceLine.Unit_Weight_Vol__c != null &amp;&amp; v.salesInvoiceLine.Resource_UOM__r.Container_Size__c != null}">
+                            <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c"
+                                           columns="[{label: 'Name', fieldName: 'Container_Size__r.Name'}, {label: 'Description', fieldName: 'Container_Size__r.Description__c'}]"
+                                           queryFields="['Container_Size__r.Name']"
+                                           keyFields="['Container_Size__c']"
+                                           filter="{!'Resource__c=\'' + v.salesInvoiceLine.Resource__c + '\' AND Unit_of_Measure__c=\'' + v.salesInvoiceLine.Unit_Weight_Vol__c + '\''}"
+                                           pill="{fieldName: 'Name'}"
+                                           dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                           onchange="{!c.handleContainerSizeChange3}"
+                                           disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Container_Size__r}" SObjectName="Unit_of_Measure__c"
+                                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                                               filter="Container_Size__c=TRUE AND Blocked__c!=TRUE"
+                                               pill="{fieldName: 'Name'}"
+                                               dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                                               onchange="{!c.handleContainerSizeChange2}"
+                                               disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.fields.facility.visible}">
+                <c:LookupInput variant="label-hidden" value="{!v.salesInvoiceLine.Facility__r}" SObjectName="Facility__c"
+                               queryFields="['Third_Party_Facility__c']"
+                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                               pill="{fieldName: 'Name'}"
+                               dropdownOnBottom="true" hideLookupGlass="true" datatable="true"
+                               onchange="{!c.handleFacilityChange}"
+                               disabled="{!v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+            </aura:if>
+        </td>
+        <td>
+            <lightning:input variant="label-hidden" value="{!v.salesInvoiceLine.BOL_Manifest__c}" disabled="{!v.fields.BOLManifest.disabled || v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Open'}"/>
+        </td>
+
+        <!--regular invoice/credit memo lines-->
+        <aura:set attribute="else">
+            <td></td>
+            <td>
+                {#v.salesInvoiceLine.Line_No__c}
+            </td>
+            <td>
+                <c:FormattedText value="{#v.salesInvoiceLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(v.salesInvoiceLine.Bundle_Line__r != null, 'slds-p-left--medium', '')}"/>
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Resource_Type__r.Name}
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Resource__r.Name}
+            </td>  
+            <td>
+                <lightning:input variant="label-hidden" value="{!v.salesInvoiceLine.Description__c}" disabled="{!and(v.salesInvoiceLine.Sales_Invoice__r.Document_Status__c != 'Posted', v.salesInvoiceLine.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c)}" maxLength="100"/>
+                <!--<lightning:input variant="label-hidden" value="{!v.salesInvoiceLine.Description__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open'}"/>-->
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Service_Center__r.Name}
+            </td>
+            <td>
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Unit_of_Measure__r.Name}
+            </td>
+            <td>
+                <!--ticket 19982-->
+                <!--
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Unit_Price__c}" style="currency" currencyCode="USD"/>
+                -->
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Unit_Price__c}" maximumFractionDigits="3" minimumFractionDigits="2"/>
+                <!--ticket 19982-->
+            </td>
+
+            <td>
+                {#v.salesInvoiceLine.Tax_Group__c}
+            </td>
+            <td>
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Line_Amount__c}" style="currency" currencyCode="USD" class="line-total"/>
+            </td>
+            <td>
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Line_Amt_Incl_Tax__c}" style="currency" currencyCode="USD" class="line-total"/>
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Pricing_Source_2__c}
+            </td>
+            <td>
+                <!--ticket 19982-->
+                <!--
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Unit_Cost__c}" style="currency" currencyCode="USD"/>
+                -->
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Unit_Cost__c}" maximumFractionDigits="3" minimumFractionDigits="2"/>
+                <!--ticket 19982-->
+            </td>
+            <td>
+                <lightning:formattedNumber value="{#v.salesInvoiceLine.Line_Cost__c}" style="currency" currencyCode="USD" class="line-total"/>
+            </td>
+            <td>
+                <lightning:input type="checkbox" variant="label-hidden" class="label-hidden" checked="{#v.salesInvoiceLine.Bill_as_Lump_Sum__c}" disabled="true"/>
+            </td>
+            <td>
+                <lightning:input type="checkbox" variant="label-hidden" class="label-hidden" checked="{#v.salesInvoiceLine.Non_Billable__c}" disabled="true"/>
+            </td>
+            <!--19631-->
+            <td>
+                <span name="print">
+                    <lightning:input type="checkbox" variant="label-hidden" class="label-hidden" checked="{!v.salesInvoiceLine.Print_Line__c}" disabled="{!v.salesInvoiceLine.Non_Billable__c != true}"/>
+                </span>
+            </td>
+            <!--19631-->
+            <td>
+                <aura:if isTrue="{#v.salesInvoiceLine.TM__r != null}">
+                    <lightning:formattedUrl label="{#v.salesInvoiceLine.TM__r.Name}" value="{#'/' + v.salesInvoiceLine.TM__c}" target="_blank"/>
+                </aura:if>
+            </td>
+            <td>
+                <aura:if isTrue="{#v.salesInvoiceLine.TM_Line__r != null}">
+                    <lightning:formattedUrl label="{#v.salesInvoiceLine.TM_Line__r.Name}" value="{#'/' + v.salesInvoiceLine.TM_Line__c}" target="_blank"/>
+                </aura:if>
+            </td>
+            <td>
+                <aura:if isTrue="{#v.salesInvoiceLine.Billing_Worksheet_Line__r != null}">
+                    <lightning:formattedUrl label="{#v.salesInvoiceLine.Billing_Worksheet_Line__r.Line_No__c}" value="{#'/' + v.salesInvoiceLine.Billing_Worksheet_Line__c}" target="_blank" />
+                </aura:if>
+            </td>
+            <td>
+                <c:FormattedDate value="{#v.salesInvoiceLine.TM__r.Scheduled_Date__c}"/>
+            </td>
+            <!--<td>
+                {#v.salesInvoiceLine.Cost_Method__c}"
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Unit_Weight_Vol__r}
+            </td>
+            <td>
+                {#v.salesInvoiceLine.Container_Size__r.Name}
+            </td>-->
+            <aura:if isTrue="{!v.salesInvoiceLine.TM__r.Service_Center__r.Advanced_Disposal__c}"> 
+            <td>  
+             
+                {#v.salesInvoiceLine.Disposal_Billing_Method__c} 
+              
+            </td>
+            </aura:if>
+            <td>
+                {#v.salesInvoiceLine.Facility__r.Name}
+            </td>
+            <aura:if isTrue="{!v.salesInvoiceLine.TM__r.Service_Center__r.Advanced_Disposal__c}"> 
+            <td> 
+             
+                {#v.salesInvoiceLine.Approval_Id__c} 
+              
+            </td>
+              </aura:if>
+            <td>
+                {#v.salesInvoiceLine.BOL_Manifest__c}
+            </td>
+        </aura:set>
+    </aura:if>
+
+</aura:component>

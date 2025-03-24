@@ -1,0 +1,16 @@
+.THIS .slds-radio__label {
+    display: table !important;
+}
+
+.THIS .slds-checkbox__label {
+    display: table !important;
+}
+
+    
+.THIS .slds-radio__label > .slds-form-element__label {
+    display: table-cell !important;
+}
+
+.THIS .slds-checkbox__label > .slds-form-element__label {
+    display: table-cell !important;
+}

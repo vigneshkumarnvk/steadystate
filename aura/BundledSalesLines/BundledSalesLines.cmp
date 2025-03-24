@@ -1,0 +1,192 @@
+<aura:component controller="ACVSalesLineController" extends="c:SalesOrderBase">
+    <!--attributes-->
+
+    <!--job task-->
+    <!--
+    <aura:attribute name="parentSalesLine" type="Object" access="public"/>
+    <aura:attribute name="salesLines" type="List" access="public"/>
+    -->
+    <aura:attribute name="lumpSumLine" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <!--job task-->
+    <aura:attribute name="showBundledOnly" type="Boolean" default="true" access="private"/>
+
+    <!--events-->
+    <!--
+    <aura:registerEvent name="calculateLumpSumLineEvent" type="c:CalculateLumpSumLineEvent"/>
+    -->
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!--body-->
+    <lightning:card title="Bundled Resources" class="slds-card_boundary" iconName="standard:poll">
+        <aura:set attribute="actions">
+                <lightning:layout horizontalAlign="space">
+                    <lightning:input type="toggle" checked="{!v.showBundledOnly}" messageToggleActive="Bundled Lines" messageToggleInactive="All Lines" onchange="{!c.refresh}"/>
+                </lightning:layout>
+
+        </aura:set>
+
+        <p class="slds-p-horizontal_small">
+            <!--job task-->
+            <!--
+            <c:DataTable data="{!v.salesLines}" var="salesLine" onrowaction="{!c.handleRowAction}">
+                <aura:set attribute="template">
+                    <aura:if isTrue="{!salesLine.showLine == true}">
+
+                        <c:DataRow style="{!if(v.showBundledOnly != true, 'color:blue', 'color:red')}"/>
+
+                        <c:DataColumn label="Select">
+                            <lightning:input type="checkbox" label="select" variant="label-hidden" checked="{!salesLine.Checked}" class="slds-cell-wrap" disabled="{!v.salesOrder.Document_Status__c == 'Closed'}"/> 
+                        </c:DataColumn>
+                        <c:DataColumn label="Line No.">
+                            <lightning:formattedNumber label="Line No." variant="label-hidden" value="{!salesLine.Line_No__c}" class="slds-cell-wrap"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Category" class="slds-cell-wrap">
+                            <lightning:formattedText label="Category" variant="label-hidden" value="{!if(salesLine.Category__c=='Subcontractors', 'Cost Plus Materials, Equipment and Services', salesLine.Category__c)}" class="slds-cell-wrap"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Quantity" class="slds-cell-wrap">
+                            <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{!salesLine.Quantity__c}" minimumFractionDigits="2"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Resource Type /Resource" class="slds-cell-wrap">
+                            <aura:if isTrue="{!salesLine.Resource_Type__c != null}">
+                                <lightning:formattedText label="Resource Type" variant="label-hidden" value="{!salesLine.Resource_Type__r.Name}" class="slds-cell-wrap"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedText label="Resource" variant="label-hidden" value="{!salesLine.Resource__r.Name}" class="slds-cell-wrap"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:DataColumn>
+                        <c:DataColumn label="Description" class="slds-cell-wrap">
+                            <lightning:formattedText label="Description" variant="label-hidden" value="{!salesLine.Description__c}" class="slds-cell-wrap"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Days Needed" class="slds-cell-wrap">
+                            <lightning:formattedNumber label="Days Needed" variant="label-hidden" value="{!salesLine.Number_of_Day__c}" minimumFractionDigits="0"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="UOM Qty." class="slds-cell-wrap">
+                            <lightning:formattedNumber label="UOM Qty." variant="label-hidden" value="{!salesLine.UOM_Qty__c}" minimumFractionDigits="2"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Unit of Measure" class="slds-cell-wrap">
+                            <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!salesLine.Unit_of_Measure__r.Name}"/>
+                        </c:DataColumn>
+
+                        <c:DataColumn label="Unit Price">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Unit Price" variant="label-hidden" value="{!salesLine.Unit_Price__c}" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xUnit Price" variant="label-hidden" value="{!salesLine.xUnit_Price__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:DataColumn>
+
+                        <c:DataColumn label="Line Amount">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Line Amount" variant="label-hidden" value="{!salesLine.Line_Amount__c}" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xLine Amount" variant="label-hidden" value="{!salesLine.xLine_Amount__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:DataColumn>
+
+                        <c:DataColumn label="Unit Cost">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Unit Cost" variant="label-hidden" value="{!salesLine.Unit_Cost__c }" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xUnit Cost" variant="label-hidden" value="{!salesLine.xUnit_Cost__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:DataColumn>
+
+                        <c:DataColumn label="Line Cost">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{!salesLine.Line_Cost__c }" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xLine Cost" variant="label-hidden" value="{!salesLine.xLine_Cost__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:DataColumn>
+                    </aura:if>
+                </aura:set>
+            </c:DataTable>
+            -->
+
+            <c:FlexDataTable name="bundledLines" items="{!v.jobTaskWrapper.SalesLines}" var="salesLine" indexVar="rowIndex" onrowaction="{!c.handleRowAction}">
+                <aura:set attribute="template">
+                    <aura:if isTrue="{!salesLine.showLine == true}">
+                        <c:FlexDataTableRow style="{!if(v.showBundledOnly != true, 'color:blue', 'color:red')}"/>
+
+                        <c:FlexDataTableColumn label="Select">
+                            <lightning:input name="select" type="checkbox" label="select" variant="label-hidden" checked="{!salesLine.Checked}" class="slds-cell-wrap" disabled="{!salesLine.disabled}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Line No.">
+                            <lightning:formattedNumber label="Line No." variant="label-hidden" value="{!salesLine.Line_No__c}" class="slds-cell-wrap"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Category" class="slds-cell-wrap">
+                            <lightning:formattedText label="Category" variant="label-hidden" value="{!if(salesLine.Category__c=='Subcontractors', 'Cost Plus Materials, Equipment and Services', salesLine.Category__c)}" class="slds-cell-wrap"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Quantity" class="slds-cell-wrap">
+                            <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{!salesLine.Quantity__c}" minimumFractionDigits="2"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Resource Type /Resource" class="slds-cell-wrap">
+                            <aura:if isTrue="{!salesLine.Resource_Type__c != null}">
+                                <lightning:formattedText label="Resource Type" variant="label-hidden" value="{!salesLine.Resource_Type__r.Name}" class="slds-cell-wrap"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedText label="Resource" variant="label-hidden" value="{!salesLine.Resource__r.Name}" class="slds-cell-wrap"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Description" class="slds-cell-wrap">
+                            <lightning:formattedText label="Description" variant="label-hidden" value="{!salesLine.Description__c}" class="slds-cell-wrap"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Days Needed" class="slds-cell-wrap">
+                            <lightning:formattedNumber label="Days Needed" variant="label-hidden" value="{!salesLine.Number_of_Day__c}" minimumFractionDigits="0"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="UOM Qty." class="slds-cell-wrap">
+                            <lightning:formattedNumber label="UOM Qty." variant="label-hidden" value="{!salesLine.UOM_Qty__c}" minimumFractionDigits="2"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Unit of Measure" class="slds-cell-wrap">
+                            <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!salesLine.Unit_of_Measure__r.Name}"/>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Unit Price">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Unit Price" variant="label-hidden" value="{!salesLine.Unit_Price__c}" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xUnit Price" variant="label-hidden" value="{!salesLine.xUnit_Price__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Line Amount">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Line Amount" variant="label-hidden" value="{!salesLine.Line_Amount__c}" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xLine Amount" variant="label-hidden" value="{!salesLine.xLine_Amount__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Unit Cost">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Unit Cost" variant="label-hidden" value="{!salesLine.Unit_Cost__c }" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xUnit Cost" variant="label-hidden" value="{!salesLine.xUnit_Cost__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Line Cost">
+                            <aura:if isTrue="{!salesLine.Bill_as_Lump_Sum__c != true}">
+                                <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{!salesLine.Line_Cost__c }" style="currency" currencyCode="USD"/>
+                                <aura:set attribute="else">
+                                    <lightning:formattedNumber label="xLine Cost" variant="label-hidden" value="{!salesLine.xLine_Cost__c}" style="currency" currencyCode="USD"/>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+                    </aura:if>
+                </aura:set>
+            </c:FlexDataTable>
+            <!--job task-->
+        </p>
+    </lightning:card>
+</aura:component>

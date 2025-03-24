@@ -1,0 +1,204 @@
+<aura:component description="SalesInvoiceBillingInformation" extends="c:SalesInvoiceBase">
+    <!--attributes-->
+    
+    <!--handlers-->
+    
+    <!--events-->
+    
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+    
+    <!--body-->
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input label="Bill-to Customer" value="{!v.salesInvoice.Bill_to_Customer__r.Name}" disabled="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input label="Document Status" value="{!v.salesInvoice.Document_Status__c}" disabled="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <!-- Ticket#21357 -->
+                <aura:if isTrue="{!v.salesInvoice.Bill_to_Customer__r.Contact_Type_Filter__c != null}">
+                    <c:LookupInput aura:id="contact"
+                                   label="Contact"
+                                   value="{!v.salesInvoice.Contact__r}"
+                                   SObjectName="Contact"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}]"
+                                   filter="{!'AccountId=\'' + v.salesInvoice.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES ' + v.salesInvoice.Bill_to_Customer__r.Contact_Type_Filter__c + ' AND Blocked__c != TRUE'}"
+                                   fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                   onchange="{!c.handleContactChange}"
+                                   disabled="true"                 
+                                   />
+                    <!-- US133094
+                  disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"-->         
+                    
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="contact"
+                                       label="Contact"
+                                       value="{!v.salesInvoice.Contact__r}"
+                                       SObjectName="Contact"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}]"
+                                       filter="{!'AccountId=\'' + v.salesInvoice.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Billing\') AND Blocked__c !=TRUE'}"
+                                       fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                       onchange="{!c.handleContactChange}"
+                                       disabled="true"
+                                       />
+                        <!--US133094
+                        disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"-->
+                        
+                    </aura:set>
+                </aura:if>
+                <!-- Ticket#21357 -->
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input label="Customer PO No." value="{!v.salesInvoice.Customer_PO_No__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+            <!--TA485265 - Rendered SPO No and Expected Payment Date based on the status -->
+            <aura:if isTrue="{!v.salesInvoice.Document_Status__c != 'Open' &amp;&amp; (v.salesInvoice.Approval_Status__c != 'Pending Approval' || v.salesInvoice.Approval_Status__c != 'Approved') &amp;&amp; v.salesInvoice.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="SPO No." value="{!v.salesInvoice.SPO_No__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input type="date" label="Expected Payment Date" dateStyle="short" value="{!v.salesInvoice.Expected_Payment_Date__c}"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.salesInvoice.Document_Status__c == 'Posted'}">
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Corrected Customer PO No." value="{!v.salesInvoice.Corrected_Customer_PO_No__c}"/>
+                </lightning:layoutItem>
+                <!--TA485265 - Rendered SPO No and Expected Payment Date based on the status -->
+                <aura:if isTrue="{!v.salesInvoice.Document_Status__c != 'Open' &amp;&amp; (v.salesInvoice.Approval_Status__c != 'Pending Approval' || v.salesInvoice.Approval_Status__c != 'Approved')}">
+                    <lightning:layoutItem padding="horizontal-small" size="6">
+                        <lightning:input label="SPO No." value="{!v.salesInvoice.SPO_No__c}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="6">
+                        <lightning:input type="date" label="Expected Payment Date" dateStyle="short" value="{!v.salesInvoice.Expected_Payment_Date__c}"/>
+                    </lightning:layoutItem>
+                </aura:if>
+                <!--TA485265 - Rendered SPO No and Expected Payment Date based on the status -->
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea label="Street" value="{!v.salesInvoice.Street__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="255"/>
+            </lightning:layoutItem>
+            
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="date" label="Invoice Date" value="{!v.salesInvoice.Invoice_Date__c}"
+                                 dateStyle="short"
+                                 onchange="{!c.handleInvoiceDateChange}"
+                                 disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="City" value="{!v.salesInvoice.City__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="30"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput aura:id="payment-term"
+                               label="Payment Term"
+                               value="{!v.salesInvoice.Payment_Term__r}"
+                               SObjectName="Payment_Term__c"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                               fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                               onchange="{!c.handlePaymentTermChange}"
+                               disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval' || $Profile.Name != 'System Administrator' || $Profile.Name != 'Contract Manager' || $Profile.Name != 'Republic Integration'}"
+                               />
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="State" value="{!v.salesInvoice.State__c}" SObjectName="Sales_Invoice__c" fieldName="State__c" controllingValue="{!v.salesInvoice.Country__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="date" label="Due Date" value="{!v.salesInvoice.Due_Date__c}" dateStyle="short" disabled="true"/>
+            </lightning:layoutItem> 
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Postal Code" value="{!v.salesInvoice.Postal_Code__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="20"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input label="Surcharge Type" value="{!v.salesInvoice.Surcharge_Type__c}" disabled="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Country" value="{!v.salesInvoice.Country__c}" SObjectName="Sales_Invoice__c" fieldName="Country__c" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="number" label="Surcharge %" value="{!v.salesInvoice.Surcharge_Pct__c}" formatter="percent-fixed" step="0.01" disabled="true"/>
+            </lightning:layoutItem>
+            
+            <!--
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Rental Invoice" checked="{!v.salesInvoice.Rental_Invoice__c}" disabled="true"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Misc. Invoice" checked="{!v.salesInvoice.Misc_Invoice__c}" disabled="true"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Credit Memo" checked="{!v.salesInvoice.Credit_Memo__c}" disabled="true"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Regainage Invoice" checked="{!v.salesInvoice.Retainage_Invoice__c}" disabled="true"/>
+            </lightning:layoutItem>
+            -->
+            
+            <aura:if isTrue="{!v.salesInvoice.Retainage_Invoice__c != true &amp;&amp; v.salesInvoice.Credit_Memo__c != true &amp;&amp; v.salesInvoice.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c == false}">
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input type="number" label="Retainage %" value="{!v.salesInvoice.Retainage_Pct__c}" formatter="percent-fixed" step="0.01" min="0" max="100" oncommit="{!c.handleRetainagePctChange}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || (v.salesInvoice.Document_Type__c == 'Sales Invoice' &amp;&amp; v.salesInvoice.Document_Type__c == 'Misc. Invoice') || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+                </lightning:layoutItem>
+                
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input type="number" label="Retainage Amount" value="{!v.salesInvoice.Retainage_Amount__c}" formatter="currency" step="0.01" disabled="true"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.salesInvoice.Reversed_by_CM_No__c != null}">
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <c:LookupInput label="Reversed by Credit Memo" value="{!v.salesInvoice.Reversed_by_CM_No__r}" SObjectName="Sales_Invoice__c" pill="{iconName: 'standard:document', fieldName: 'Name'}" disabled="true"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.salesInvoice.Credit_Memo__c == true}">
+                <!--
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <c:LookupInput label="Reversed from Sales Invoice" value="{!v.salesInvoice.Reversed_from_SI__r}" SObjectName="Sales_Invoice__c" pill="{iconName: 'standard:document', fieldName: 'Name'}" disabled="true"/>
+                </lightning:layoutItem>
+                -->
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <c:LookupInput aura:id="applies-to-invoice" label="{!if(v.salesInvoice.Misc_Invoice__c != true, 'Reversed from Sales Invoice', 'Applies-to Invoice')}"
+                                   value="{!v.salesInvoice.Reversed_from_SI__r}"
+                                   SObjectName="Sales_Invoice__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Invoice Date', fieldName: 'Invoice_Date__c'}]"
+                                   filter="{!'Bill_to_Customer__c=\'' + v.salesInvoice.Bill_to_Customer__c + '\' AND Payment_Status__c!=\'Fully Paid\' AND Document_Status__c=\'Posted\' AND Credit_Memo__c!=TRUE AND Customer_Ledger_Entry__c!=NULL'}"
+                                   pill="{iconName: 'standard:document', fieldName: 'Name'}"
+                                   onchange="{!c.handleApplyToSalesInvoiceChange}"
+                                   required="{!v.salesInvoice.Document_Type__c == 'Misc. Credit Memo'}"
+                                   disabled="{!v.salesInvoice.Document_Type__c != 'Misc. Credit Memo'}"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput aura:id="sales-order"
+                               label="Sales Order"
+                               value="{!v.salesInvoice.Sales_Order__r}"
+                               SObjectName="Sales_Order__c"
+                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                               fetchLimit="25" pill="{iconName: 'standard:quotes', fieldName: 'Name'}"
+                               disabled="true"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,106 @@
+<aura:component extends="c:TMBase">        
+    <aura:attribute name="lineIndex" type="Integer" required="true"/>
+    <aura:attribute name="data" type="sObject"/>
+    <aura:attribute name="size" type="Integer" default="12"/>
+    <aura:attribute name="smallDeviceSize" type="Integer" default="12"/>
+    <aura:attribute name="mediumDeviceSize" type="Integer" default="6"/>
+    <aura:attribute name="largeDeviceSize" type="Integer" default="6"/>
+    
+    <aura:attribute name="expanded" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="hours" type="String" access="private"/>
+
+    <aura:registerEvent name="deleteTMLineEvent" type="c:DeleteTMLineEvent"/> 
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.data}" action="{!c.doPendingChangesStatus}"/>
+
+    <aura:method name="expand" action="{!c.expand}"/>
+    <aura:method name="collapse" action="{!c.collapse}"/>
+    
+
+    <lightning:card aura:id="card" class="{!v.expanded == true ? 'slds-card_boundary slds-show' : 'slds-card_boundary slds-show'}">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete" iconName="utility:delete" onclick="{!c.doDelete}" class="{!v.expanded == true ? 'slds-show' : 'slds-hide'}"/>	
+                    <lightning:button label="{!v.expanded == true ? 'Collapse' : 'Expand'}" iconName="{!v.expanded == true ? 'utility:dash' : 'utility:add'}" onclick="{!c.toggleDetail}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        
+        <aura:set attribute="title">
+            <lightning:layout class="slds-grid_vertical-align-center">
+                <lightning:layoutItem>
+                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!v.data.Selected}" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small">
+                    <lightning:icon iconName="standard:partners"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem>
+                    {!v.data.Description__c}
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+
+        <div aura:id="detail" class="{!v.expanded == true ? 'slds-show' : 'slds-hide'}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem padding="around-small" size="7">
+                    <lightning:input type="text" label="Description" value="{!v.data.Description__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="5">
+                    <c:LookupInput  aura:id="unitOfMeasureLookup" label="Unit of Measure" value="{!v.data.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Description__c'}" columns="[{label: 'No.', fieldName: 'Name'}, {label: 'Name', fieldName: 'Description__c'}]" queryFields="['Name']" filter="Blocked__c!=TRUE" onchange="{!c.handleUnitOfMeasureChange}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="4">
+                    <lightning:input type="number" label="Quantity" value="{!v.data.Quantity__c}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    
+    <div aura:id="summary" class="{!v.expanded != true ? 'slds-show' : 'slds-hide'}">
+        <aura:if isTrue="{!v.lineIndex >=0}">
+
+            <lightning:layout horizontalAlign="space" multipleRows="true">
+                <lightning:layoutItem size="2" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Description</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Unit of Measure</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Quantity</label>
+                    </div>
+                </lightning:layoutItem>
+        	</lightning:layout>
+
+		</aura:if>            
+        <lightning:layout horizontalAlign="space" multipleRows="true">
+            <lightning:layoutItem size="2" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedText type="text" value="{!v.data.Description__c}" class="slds-truncate"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="3" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedText value="{!v.data.UnitOfMeasureName}"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="3" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedNumber value="{!v.data.Quantity__c}" style="decimal"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>

@@ -1,0 +1,101 @@
+<aura:component description="SalesLineDetailLine" extends="c:SalesOrderBase">
+    <aura:attribute name="disabled" type="Boolean" />
+    <aura:attribute name="salesLineDetail" type="Object" required="true" access="public"/>
+
+    <!--equipment schedule lines-->
+    <aura:attribute name="salesLine" type="Object" required="true" access="public"/>
+    <!--equipment schedule lines-->
+    <aura:attribute name="rowIndex" type="Integer" access="global" />
+
+    <!--events-->
+    <aura:registerEvent name="calculateSalesLineEvent" type="c:CalculateSalesLineEvent"/>
+    <aura:registerEvent name="salesDetailLineCopyTimeEvent" type="c:CopyTimeEvent" />
+
+    <!--body-->
+    <lightning:layout>
+    <!--equipment schedule lines-->
+    <lightning:layoutItem class="around-small " size="1"  >
+                    <lightning:button label="Copy Time" variant="base" onclick="{!c.handleCopyTime}" class="slds-m-left_x-small"></lightning:button>
+    </lightning:layoutItem>
+    <aura:if isTrue="{!v.salesLine.Category__c == 'Labor'}">
+        <lightning:layoutItem padding="around-small"  size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-15': 'width-11'}"><!--ticket 77603-->
+            <lightning:input id="scheduledDate" name="scheduledDate"   type="date" label="Scheduled Date" variant="label-hidden" value="{!v.salesLineDetail.Scheduled_Date__c}" dateStyle="short" onchange="{!c.handleScheduledDateChange}" disabled="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+            <!--
+            <c:TimeInput id="startTime" name="startTime" label="Start Time" variant="label-hidden" value="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleStartTimeChange}"/>
+            -->
+            <c:MilitaryTimeInput aura:id="startTime" label="Start Time" variant="label-hidden" value="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleStartTimeChange}" datatable="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"> <!--ticket 77603-->
+            <!--
+            <c:TimeInput id="endTime" name="endTime" label="End Time" variant="label-hidden" value="{!v.salesLineDetail.End_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleEndTimeChange}"/>
+            -->
+            <c:MilitaryTimeInput aura:id="endTime" label="End Time" variant="label-hidden" value="{!v.salesLineDetail.End_Time__c}" defaultTime="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleEndTimeChange}" datatable="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small"  size="1">
+            <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{!v.salesLineDetail.Quantity__c}" minimumFractionDigits="2"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <!--lightning:input type="number" label="UOM Qty." variant="label-hidden" value="{!v.salesLineDetail.UOM_Qty__c}" onchange="{!c.handleUOMQtyChange}" step="0.01"/-->
+            <c:LightningInput aura:id="uom-qty" type="number" label="UOM Qty." variant="label-hidden" value="{!v.salesLineDetail.UOM_Qty__c}" onchange="{!c.handleUOMQtyChange}" required="true" messageWhenValueMissing="This field is mandatory." min="0.01" messageWhenRangeUnderflow="UOM Qty must be greater than zero." step="0.01" disabled="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!v.salesLineDetail.Unit_of_Measure__r.Name}" disable="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Regular Hours" variant="label-hidden" value="{!v.salesLineDetail.Regular_Hours__c}" minimumFractionDigits="2" class="{!if(v.salesLineDetail.Regular_Hours__c != 0, 'font-bold', '')}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Overtime Hours" variant="label-hidden" value="{!v.salesLineDetail.Overtime_Hours__c}" minimumFractionDigits="2" class="{!if(v.salesLineDetail.Overtime_Hours__c != 0, 'font-bold', '')}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Double Time Hours" variant="label-hidden" value="{!v.salesLineDetail.Premium_Hours__c}" minimumFractionDigits="2" class="{!if(v.salesLineDetail.Premium_Hours__c != 0, 'font-bold', '')}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Line Amount" variant="label-hidden" value="{!v.salesLineDetail.Line_Amount__c}" style="currency" currencyCode="USD"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{!v.salesLineDetail.Line_Cost__c }" style="currency" currencyCode="USD"/>
+        </lightning:layoutItem>
+    <!--equipment schedule lines-->
+    </aura:if>
+
+    <aura:if isTrue="{!v.salesLine.Category__c == 'Equipment'}">
+        <lightning:layoutItem padding="around-small" size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-15': 'width-11'}" ><!--ticket 77603-->
+            <lightning:input id="scheduledDate" name="scheduledDate" type="date" label="Scheduled Date" variant="label-hidden" value="{!v.salesLineDetail.Scheduled_Date__c}" dateStyle="short" onchange="{!c.handleScheduledDateChange}" disabled="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+            <!--
+            <c:TimeInput id="startTime" name="startTime" label="Start Time" variant="label-hidden" value="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleStartTimeChange}"/>
+            -->
+            <c:MilitaryTimeInput aura:id="startTime" label="Start Time" variant="label-hidden" value="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleStartTimeChange}" datatable="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1"  class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+            <!--
+            <c:TimeInput id="endTime" name="endTime" label="End Time" variant="label-hidden" value="{!v.salesLineDetail.End_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleEndTimeChange}"/>
+            -->
+            <c:MilitaryTimeInput aura:id="endTime" label="End Time" variant="label-hidden" value="{!v.salesLineDetail.End_Time__c}" defaultTime="{!v.salesLineDetail.Start_Time__c}" disabled="{!v.salesLineDetail.Unit_of_Measure__r.Hours_UOM__c != true || v.disabled}" onchange="{!c.handleEndTimeChange}" datatable="true"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1" >
+            <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{!v.salesLineDetail.Quantity__c}" minimumFractionDigits="2"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1" >
+            <!--lightning:input type="number" label="UOM Qty." variant="label-hidden" value="{!v.salesLineDetail.UOM_Qty__c}" onchange="{!c.handleUOMQtyChange}" step="0.01"/-->
+            <c:LightningInput aura:id="uom-qty" type="number" label="UOM Qty." variant="label-hidden" value="{!v.salesLineDetail.UOM_Qty__c}" onchange="{!c.handleUOMQtyChange}" required="true" messageWhenValueMissing="This field is mandatory." min="0.01" messageWhenRangeUnderflow="UOM Qty must be greater than zero." step="0.01" disabled="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!v.salesLineDetail.Unit_of_Measure__r.Name}" disable="{!v.disabled}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Line Amount" variant="label-hidden" value="{!v.salesLineDetail.Line_Amount__c}" style="currency" currencyCode="USD"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="1">
+            <lightning:formattedNumber label="Line Cost" variant="label-hidden" value="{!v.salesLineDetail.Line_Cost__c }" style="currency" currencyCode="USD"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small" size="2">
+        </lightning:layoutItem>
+    </aura:if>
+    <!--equipment schedule lines-->
+    </lightning:layout>
+</aura:component>

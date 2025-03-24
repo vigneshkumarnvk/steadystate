@@ -1,0 +1,126 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="12" padding="around-small">
+            <!--show checkbox for the task only if the task has no lines. Allow users to create TM with just the task-->
+            <!--
+            <aura:if isTrue="{!v.jobTaskWrapper.SalesLines.length == 0}">
+                <lightning:input type="checkbox" checked="{!v.jobTaskWrapper.Selected}" label="{!'Task ' + v.jobTaskWrapper.JobTask.Task_No__c + ' - ' + v.jobTaskWrapper.JobTask.Name + if(v.jobTaskWrapper.JobTask.Billing_Type__c != null, ' (' + v.jobTaskWrapper.JobTask.Billing_Type__c + ')', '')}" onchange="{!c.handleJobTaskSelect}"/>
+                <aura:set attribute="else">
+                    <lightning:input type="checkbox" label="{!'Task ' + v.jobTaskWrapper.JobTask.Task_No__c + ' - ' + v.jobTaskWrapper.JobTask.Name + if(v.jobTaskWrapper.JobTask.Billing_Type__c != null, ' (' + v.jobTaskWrapper.JobTask.Billing_Type__c + ')', '')}" checked="{!v.jobTaskWrapper.Selected}" onchange="{!c.handleJobTaskSelect}"/>
+                </aura:set>
+            </aura:if>
+            -->
+            <lightning:input type="checkbox" label="{!'Task ' + v.jobTaskWrapper.JobTask.Task_No__c + ' - ' + v.jobTaskWrapper.JobTask.Name + if(v.jobTaskWrapper.JobTask.Billing_Type__c != null, ' (' + v.jobTaskWrapper.JobTask.Billing_Type__c + ')', '')}" checked="{!v.jobTaskWrapper.Selected}" onchange="{!c.handleJobTaskSelect}" disabled="{!v.jobTaskWrapper.disableCheck == true}"/>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="12" padding="around-small">
+            <aura:if isTrue="{!v.jobTaskWrapper.SalesLines.length == 0}">
+                This task does not have any lines.
+                <aura:set attribute="else">
+                    <c:FlexDataTable name="salesLines" items="{!v.jobTaskWrapper.SalesLines}" var="salesLine" indexVar="rowIndex" onrowaction="{!c.handleRowAction}"
+                                     sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]"
+                                     collapsible="false" collapseButtonPosition="left" keyName="Line_No__c" linkedToKeyName="Bundle_Line__r.Line_No__c" collapsed="false"
+                                     onSelectAll="{!c.handleSelectAll}">
+                        <aura:set attribute="template">
+                            <c:FlexDataTableColumn label="" style="width:40px;" checkbox="Selected">
+                                <span name="select">
+                                    <lightning:input type="checkbox" value="{!salesLine.Line_No__c}" checked="{!salesLine.Selected}" disabled="{!salesLine.Bundle_Line__r != null}"/>
+                                </span>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Line No." style="width:50px;">
+                                {!salesLine.Line_No__c}
+                            </c:FlexDataTableColumn>
+                            <!--
+                            <c:FlexDataTableColumn label="Parent Line No." style="width:50px;">
+                                {!salesLine.Parent_Line__r.Line_No__c}
+                            </c:FlexDataTableColumn>
+                            -->
+                            <c:FlexDataTableColumn label="Category" style="width: 200px;">
+                                <c:FormattedText value="{!salesLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(salesLine.Bundle_Line__r != null, 'slds-p-left--medium', '')}"/>
+                            </c:FlexDataTableColumn>
+
+                            <c:FlexDataTableColumn label="Quantity" style="width: 100px;">
+                                <lightning:formattedNumber label="Quantity" variant="label-hidden" value="{!salesLine.Quantity__c}" minimumFractionDigits="2"/>
+                            </c:FlexDataTableColumn>
+
+                            <!--ticket 19130-->
+                            <c:FlexDataTableColumn label="Child Resource" style="width: 60px;">
+                                <lightning:input type="checkbox" variant="label-hidden" checked="{!salesLine.Is_Child_Resource__c}" disabled="true"/>
+                            </c:FlexDataTableColumn>
+                            <!--ticket 19130-->
+
+                            <c:FlexDataTableColumn label="Resource Type /Resource" class="slds-cell-wrap" style="width: 250px;">
+                                <aura:if isTrue="{!salesLine.Resource_Type__c != null}">
+                                    <!--ticket 19861-->
+                                    <!--
+                                    {!salesLine.Resource_Type__r.Name}
+                                    <aura:set attribute="else">
+                                        {!salesLine.Resource__r.Name}
+                                    </aura:set>
+                                    -->
+                                   {!salesLine.Resource_Type__r.Name}
+                                    <aura:if isTrue="{!salesLine.Resource_Type__r.Blocked__c == true}">
+                                        <span style="font-size:x-small;color:red;"> - Blocked</span>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        {!salesLine.Resource__r.Name}
+                                        <aura:if isTrue="{!salesLine.Resource__r.Blocked__c == true}">
+                                            <span style="font-size:x-small;color:red;"> - Blocked</span>
+                                        </aura:if>
+                                    </aura:set>
+                                    <!--ticket 19861-->
+                                </aura:if>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Description">
+                                {!salesLine.Description__c}
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="UOM Qty." class="slds-cell-wrap" style="width:75px;">
+                                <lightning:formattedNumber label="UOM Qty." variant="label-hidden" value="{!salesLine.UOM_Qty__c}" minimumFractionDigits="2" class="slds-cell-wrap"/>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="UOM" style="width:75px;">
+                                <!--Waste001
+                                <aura:if isTrue="{!salesLine.Category__c == 'Waste Disposal' &amp;&amp; salesLine.System_Calculated_Line__c != true &amp;&amp;salesLine.Cost_Method__c != null}">
+                                    <aura:if isTrue="{!salesLine.Cost_Method__c == 'Container'}">
+                                        {!salesLine.Container_Size__r.Name}
+                                        <aura:set attribute="else">
+                                            {!salesLine.Unit_Weight_Vol__r.Name}
+                                        </aura:set>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        {!salesLine.Unit_of_Measure__r.Name}
+                                    </aura:set>
+                                </aura:if>
+                                -->
+                                {!salesLine.Unit_of_Measure__r.Name}
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Days Needed" style="width:75px;">
+                                <aura:if isTrue="{!salesLine.Category__c == 'Labor' || salesLine.Category__c == 'Equipment' || salesLine.Category__c == 'Materials'}">
+                                    <lightning:formattedNumber label="Days Needed" variant="label-hidden" value="{!salesLine.Number_of_Day__c}" minimumFractionDigits="0" class="slds-cell-wrap"/>
+                                </aura:if>
+                            </c:FlexDataTableColumn>
+                            <!--ticket 19130-->
+                            <!--not needed-->
+                            <!--
+                            <c:FlexDataTableColumn label="Child Resources" style="width:300px;">
+                                <aura:if isTrue="{!salesLine.Sales_Child_Lines__r &amp;&amp; salesLine.Sales_Child_Lines__r.records}">
+                                    <aura:iteration items="{!salesLine.Sales_Child_Lines__r.records}" var="relation">
+                                        <div class="slds-cell-wrap">Line #{!relation.Child_Line__r.Line_No__c} - {!relation.Child_Line__r.Description__c}</div>
+                                    </aura:iteration>
+                                </aura:if>
+                            </c:FlexDataTableColumn>
+                            -->
+                            <!--ticket 19130-->
+                        </aura:set>
+                    </c:FlexDataTable>
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

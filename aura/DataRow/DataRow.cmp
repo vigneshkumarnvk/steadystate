@@ -1,0 +1,4 @@
+<aura:component>
+    <!--attributes-->
+	<aura:attribute name="class" type="Object" access="public"/>
+</aura:component>

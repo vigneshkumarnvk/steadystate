@@ -1,0 +1,22 @@
+<aura:component extensible="true" abstract="true">
+    <!--events-->
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <!--
+    <lightning:navigation aura:id="navigation"/>
+    -->
+    
+    <!--body-->
+    <aura:if isTrue="{!v.showSpinner}">
+        <div style="z-index: 9999;">
+            <!--ticket 19130-->
+            <!--<lightning:spinner variant="brand" size="large" alternativeText="loading" class="slds-spinner_container"/>-->
+            <lightning:spinner variant="brand" size="large" alternativeText="loading" class="slds-spinner_container slds-is-fixed"/>
+            <!--ticket 19130-->
+        </div>
+    </aura:if>
+
+    <div aura:id="my-modal-container" class="slds-hide"/>
+
+    {!v.body}
+</aura:component>

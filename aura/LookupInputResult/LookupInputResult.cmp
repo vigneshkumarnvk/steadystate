@@ -1,0 +1,24 @@
+<aura:component>
+    <!--attributes -->
+	<aura:attribute name="record" type="Object" access="public"/>
+    <aura:attribute name="columns" type="List" access="public"/>
+    
+    <!--events-->
+    <aura:registerEvent name="onselect" type="c:LookupInputResultSelectEvent"/>
+    
+	<!--body-->
+    <tr onclick="{!c.handleClick}" style="cursor: pointer;">
+        <aura:iteration items="{!v.columns}" var="column">
+            <!--
+            <td class="slds-p-around-small slds-align-top" style="border: 0px;">
+                <span class="{!column.class}" style="{!if(column.style != null, column.style, '')}">
+                    <c:DynamicField record="{!v.record}" fieldName="{!column.fieldName}" type="{!column.fieldType}"/>
+                </span>
+            </td>
+            -->
+            <td class="{!'slds-p-around--small slds-align-top ' + column.class}" style="{!'border: 0px;' + column.style}">
+                <c:DynamicField record="{!v.record}" fieldName="{!column.fieldName}" type="{!column.fieldType}"/>
+            </td>
+        </aura:iteration>
+    </tr>
+</aura:component>

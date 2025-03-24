@@ -1,0 +1,46 @@
+<aura:component controller="PicklistInputController">
+    
+  	<!--attributes-->
+   	<aura:attribute name="SObjectName" type="String" access="public" required="true"/>
+    <aura:attribute name="controllingValue" type="String" access="public"/>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="name" type="String" default="picklist" access="public"/>
+    <aura:attribute name="fieldName" type="String"  access="public" required="true"/>
+    <aura:attribute name="value" type="String" default="" access="public"/>
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="onblur" type="Aura.Action" access="public"/>
+    <aura:attribute name="onfocus" type="Aura.Action" access="public"/>
+    <aura:attribute name="onchange" type="Aura.Action" access="public"/>
+	<aura:attribute name="disabled" type="Boolean" access="public"/>
+    <aura:attribute name="required" type="Boolean" access="public"/>
+    <aura:attribute name="messageWhenValueMissing" type="String" access="public"/>
+    <aura:attribute name="validity" type="Object" access="public"/>
+    
+    <aura:attribute name="options" type="Object" access="private"/>
+
+    <aura:attribute name="initialized" type="Boolean" access="private"/>
+
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.controllingValue}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="showHelpMessageIfInvalid" action="{!c.showHelpMessageIfInvalid}" access="public"/>
+    
+	<!--body-->
+    <aura:if isTrue="{!v.label == null}">
+        <lightning:select aura:id="picklist" name="{!v.name}" label="" variant="label-hidden" class="label-hidden slds-form_inline" value="{!v.value}" onblur="{!v.onblur}" onfocus="{!v.onfocus}" onchange="{!v.onchange}" required="{!v.required}" messageWhenValueMissing="{!v.messageWhenValueMissing}">
+            <aura:iteration items="{!v.options}" var="option">
+                <option value="{!option.value}" selected="{!v.value == option.value}">{!option.label}</option>
+            </aura:iteration>
+        </lightning:select>
+        <aura:set attribute="else">
+            <lightning:select aura:id="picklist" name="{!v.name}" label="{!v.label}" value="{!v.value}" onblur="{!v.onblur}" onfocus="{!v.onfocus}" onchange="{!v.onchange}" required="{!v.required}" messageWhenValueMissing="{!v.messageWhenValueMissing}" disabled="{!v.disabled}">
+            <aura:iteration items="{!v.options}" var="option">
+                <option value="{!option.value}" selected="{!v.value == option.value}">{!option.label}</option>
+            </aura:iteration>
+        </lightning:select>
+        </aura:set>
+    </aura:if>
+</aura:component>

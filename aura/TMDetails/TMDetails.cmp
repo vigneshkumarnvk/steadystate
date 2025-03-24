@@ -1,0 +1,185 @@
+<aura:component extends="c:TMBase">
+    <!--attributes-->
+    <aura:attribute name="validateAsStatus" type="String" default="" access="public"/>
+    <!--ticket 19674-->
+    <aura:attribute name="allowChangeSalesOrder" type="Boolean" default="false" access="private"/>
+    <!--ticket 19674-->
+    <aura:attribute name="UnvoicedPicklistMap" type="Map"/>
+
+    <!--handlers-->
+    <!--ticket 19674-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--ticket 19674-->
+
+    <!--body-->
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <!--
+                <c:LookupInput label="Sales Order"
+                               aura:id="sales-order"
+                               value="{!v.tm.Sales_Order__r}"
+                               SObjectName="Sales_Order__c"
+                               columns="[{label: 'No.', fieldName: 'Name'},{label: 'Customer Name', fieldName: 'Bill_to_Customer_No__r.Name'}]"
+                               filter="Document_Type__c='Sales Order'"
+                               pill="{iconName: 'standard:quotes', fieldName: 'Name'}"
+                               onchange="{!c.handleSalesOrderChange}"
+                               required="true"
+                               disabled="{!v.variables.User.Super_User__c != true &amp;&amp; v.tm.Emergency_TM__c != true}"/>
+                -->
+
+                <lightning:layout>
+                     <lightning:layoutItem flexibility="auto">
+                        <c:LookupInput label="Sales Order"
+                                       aura:id="sales-order"
+                                       value="{!v.tm.Sales_Order__r}"
+                                       SObjectName="Sales_Order__c"
+                                       disabled="true"/>
+                     </lightning:layoutItem>
+
+                    <!--ticket 19674-->
+                    <!--<aura:if isTrue="{!v.variables.User.Super_User__c == true || v.tm.Emergency_TM__c == true}">-->
+                    <aura:if isTrue="{!v.allowChangeSalesOrder == true}">
+                    <!--ticket 19674-->
+                        <lightning:layoutItem flexibility="auto, no-grow" class="slds-p-left--xx-small slds-align-bottom">
+                            <lightning:button label="Link to Sales Order" variant="brand" onclick="{!c.handleLinkToSalesOrder}"></lightning:button>
+                        </lightning:layoutItem>
+                    </aura:if>
+                </lightning:layout>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput aura:id="bill-to-customer"
+                               label="Bill-to Customer"
+                               value="{!v.tm.Bill_to_Customer__r}"
+                               SObjectName="Account"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Billing City', fieldName: 'BillingCity'}, {label: 'Billing State', fieldName: 'BillingStateCode'}, {label: 'Type', fieldName: 'Type'}]"
+                               queryFields="['AccountNumber', 'Subsidiary_Company__c', 'ParentId']" filter="Subsidiary_Company__r.Name='1-REPUBLIC SERVICES' AND (Type='Customer' OR Type='Prospect')"
+                               pill="{iconName: 'standard:account', fieldName: 'Name'}"
+                               required="true"
+                               disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput label="From Quote" value="{!v.tm.From_Sales_Quote__r}" SObjectName="Sales_Order__c" columns="[{label: 'Quote No.', fieldName: 'Name'}, {label: 'Quote Date', fieldName: 'Quote_Date__c'}, {label: 'Description', fieldName: 'Order_Description__c'}]" filter="{!'Bill_to_Customer_No__c=\'' + v.tm.Bill_to_Customer__c + '\' AND Document_Type__c=\'Sales Quote\' AND Allow_Convert__c=TRUE'}" pill="{iconName: 'standard:quotes', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handleFromSalesQuoteChange}"/>
+            </lightning:layoutItem> 
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput label="Contract" value="{!v.tm.Contract__r}" SObjectName="Contract" columns="[{label: 'Contract No.', fieldName: 'ContractNumber'}, {label: 'Name', fieldName: 'Name'}]" queryFields="['Billing_Rule__c', 'Billing_Rule__r.Name']" filter="{!'(AccountId=\'' + v.tm.Bill_to_Customer__c + '\' OR AccountId=\'' + v.tm.Bill_to_Customer__r.ParentId + '\') AND Status != \'Inactive\''}" pill="{iconName: 'standard:contract', expression: '{Name} - {ContractNumber}'}" fetchLimit="50" onchange="{!c.handleContractChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Sales Order Type" value="{!v.tm.Sales_Order__r.Sales_Order_Type__r.Name}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <!-- Ticket#21357 -->
+                <aura:if isTrue="{!v.tm.Bill_to_Customer__r.Contact_Type_Filter__c != null}">
+                    <c:LookupInput aura:id="bill-to-contact"
+                                   label="Bill-to Contact"
+                                   value="{!v.tm.Contact__r}"
+                                   SObjectName="Contact"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}]"
+                                   filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES ' + v.tm.Bill_to_Customer__r.Contact_Type_Filter__c + ' AND Blocked__c !=TRUE'}"
+                                   fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                   onchange="{!c.handleBillToContactChange}" />
+                                    <!-- ticket DE35366  -->
+                                   <!--
+                                    newRecordComponentName="c:SalesOrderContactCard"
+                                    newRecordParams="{!v.newContactRecordParams}"
+                                    newRecordCreateMethod="createRecord"/>
+                                    -->
+                                    <!-- ticket DE35366  -->
+                    <aura:set attribute="else">
+                        
+                        <c:LookupInput aura:id="bill-to-contact"
+                                       label="Bill-to Contact"
+                                       value="{!v.tm.Contact__r}"
+                                       SObjectName="Contact"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}]"
+                                       filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Billing\') AND Blocked__c !=TRUE'}"
+                                       fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                       onchange="{!c.handleBillToContactChange}"
+                                       />
+                                        <!-- ticket DE35366  -->
+                                       <!--
+                                       newRecordComponentName="c:SalesOrderContactCard"
+                                       newRecordParams="{!v.newContactRecordParams}"
+                                       newRecordCreateMethod="createRecord"/>
+                                       -->
+                                       <!-- ticket DE35366  -->
+                    </aura:set>
+                </aura:if>
+                <!-- Ticket#21357 -->
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="date" aura:id="scheduled-date" label="Scheduled Date" value="{!v.tm.Scheduled_Date__c}" dateStyle="short" autocomplete="off" required="{!v.validateAsStatus == 'Scheduled' || v.validateAsStatus == 'Confirmed' || v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Confirmed'}"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <!--
+                <c:TimeInput label="Start Time" value="{!v.tm.Start_Time__c}"/>
+                -->
+                <c:MilitaryTimeInput aura:id="start-time" label="Start Time" value="{!v.tm.Start_Time__c}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="date" label="Desired Scheduled Date" value="{!v.tm.Desired_Scheduled_Date__c}" dateStyle="short" autocomplete="off"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="number" label="Day of Job" value="{!v.tm.Day_of_Job__c}" step="1"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput label="Project Manager" value="{!v.tm.Project_Coordinator__r}" SObjectName="Salesperson__c" columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]" filter="{!'Status__c=\'Active\''}" pill="{iconName: 'standard:user', fieldName: 'Name'}" fetchLimit="25"  onchange="{!c.handleProjectCoordinatorChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput label="Account Executive" value="{!v.tm.Account_Executive__r}" SObjectName="Salesperson__c" columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]" filter="Status__c='Active' AND Account_Executive__c=TRUE" pill="{iconName: 'standard:user', fieldName: 'Name'}" fetchLimit="25" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Emergency T&amp;M" checked="{!v.tm.Emergency_TM__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Prevailing Wage Job" checked="{!v.tm.Prevailing_Wage_Job__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Mobile TM" checked="{!v.tm.Mobile_TM__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input type="checkbox" variant="label-stacked" label="Certified(PW) Job" checked="{!v.tm.Certified_PW_Job__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput label="Service Center" value="{!v.tm.Service_Center__r}" SObjectName="Service_Center__c"
+                               pill="{iconName: 'standard:household', fieldName: 'Name'}"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                               queryFields="['Subsidiary_Company__c', 'Subsidiary_Company__r.Name']"
+                               disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:select aura:id="status" label="Status" value="{!v.tm.Status__c}" disabled="true" required="true" messageWhenValueMissing="This field is mandatory">
+                    <option value=""></option>
+                    <option value="Open">Open</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Mobile Review">Mobile Review</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Voided">Voided</option>
+                </lightning:select>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <c:LookupInput aura:id="subsidiary-company" label="Subsidiary Company" value="{!v.tm.Subsidiary_Company__r}" SObjectName="Subsidiary_Company__c" pill="{iconName: 'standard:store_group', fieldName: 'Name'}" disabled="true"/>
+            </lightning:layoutItem>
+            <!--US115867-->
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:select aura:id="unInvoicedReasonCode" label="Un-Invoiced Reason Code" value="{!v.tm.Un_invoiced_Reason_Code__c}">
+                    <option value=""> </option>
+                    <aura:iteration items="{!v.UnvoicedPicklistMap}" var="ind" indexVar="key">
+                        <option text="{!ind.value}" value="{!ind.key}" selected="{!ind.key==v.tm.Un_invoiced_Reason_Code__c}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+            <!--US140219-->
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input label="D365 Project ID"
+                                    value="{!v.tm.D365_Project_ID__c}"
+                                    maxlength="80"
+                                    disabled="true" />
+                </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

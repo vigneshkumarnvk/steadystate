@@ -1,0 +1,44 @@
+<aura:component extends="c:TMBase" extensible="true">
+    <!--attributes-->
+    <aura:attribute name="category" type="String" access="public"/>
+    <aura:attribute name="title" type="String" access="public"/>
+    <!--ticket 19130-->
+    <!--
+    <aura:attribute name="jobTask" type="Object" access="public" description="pass in for creating new lines, assign new lines to the job task"/>
+    -->
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <!--ticket 19130-->
+    <aura:attribute name="nextTMLineNo" type="Integer" access="public"/>
+    <aura:attribute name="tmLines" type="List" access="public"/>
+    <aura:attribute name="inlineEditRowIndex" type="Integer" access="public"/>
+
+    <aura:attribute name="rowComponentParams" type="Object" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="tmLineViewEvent" event="c:TMLineViewEvent" action="{!c.viewLine}"/>
+    <aura:handler name="tmLineCopyTimeEvent" event="c:TMLineCopyTimeEvent" action="{!c.copyTime}"/>
+    <aura:handler name="tmLineDeleteEvent" event="c:TMLineDeleteEvent" action="{!c.handleTMLineDeleteEvent}"/>
+    <aura:handler name="tmLineUpdateEvent" event="c:TMLineUpdateEvent" action="{!c.handleTMLineUpdateEvent}"/>
+
+    <!--events-->
+    <aura:registerEvent name="onchange" type="c:TMLinesChangedEvent"/>
+    <!--
+    <aura:registerEvent name="tmCalculateLinesEvent" type="c:TMCalculateLinesEvent"/>
+    -->
+    <!--methods-->
+    <aura:method name="validateLines" action="{!c.validateLines}" access="public"/>
+    <aura:method name="isInlineEditMode" action="{!c.isInlineEditMode}" access="public"/>
+    <aura:method name="refreshTable" action="{!c.refreshTable}" access="public"/>
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}" access="public">
+        <aura:attribute name="callback" type="Function" access="public"/>
+    </aura:method>
+
+    <!--
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}" access="public"/>
+    -->
+
+    <!--body-->
+    {!v.body}
+</aura:component>

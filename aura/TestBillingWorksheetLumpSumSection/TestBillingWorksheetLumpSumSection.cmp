@@ -1,0 +1,85 @@
+<aura:component description="TestBillingWorksheetLaborSection">
+    <aura:dependency resource="c:TestBillingWorksheetLine"/>
+    <aura:dependency resource="c:TestBillingWorksheetLineEdit"/>
+
+    <aura:attribute name="salesOrderId" type="Id" access="public"/>
+    <aura:attribute name="worksheetLines" type="List" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="private"/>
+
+
+    <aura:if isTrue="{!v.inlineEditComponentParams}">
+        <c:TestInlineEditDdataTable aura:id="datatable" items="{!v.worksheetLines}" var="worksheetLine" indexVar="index" showRowNumbers="false"
+                                    onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                    rowComponentName="c:TestBillingWorksheetLine"
+                                    inlineEditComponentName="c:TestBillingWorksheetLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                    noneInlineFields="['select', 'delete', 'view', 'invoice', 'contractLineLink']"
+                                    parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                    horizontalScroll="true" verticalScroll="true" height="500px"
+                                    fixedHeaders="true">
+            <aura:set attribute="template">
+                <c:InlineEditColumnHeader label="" headerStyle="min-width:40px;max-width:40px;" selectAllCheckbox="Selected"/>
+                <c:InlineEditColumnHeader label="Actions" headerStyle="min-width:75px;max-width:75px;"/>
+                <c:InlineEditColumnHeader label="Status" headerStyle="min-width:100px;max-width:100px;"/>
+                <c:InlineEditColumnHeader label="To Invoice" headerStyle="min-width:70px;max-width:70px;" selectAllCheckbox="To_Invoice__c"/>
+                <c:InlineEditColumnHeader label="Scheduled Date" headerStyle="min-width:100px;" filterField="TM__r.Scheduled_Date__c" filterFieldType="date"/>
+                <c:InlineEditColumnHeader label="T&amp;M #" headerStyle="min-width:125px;" filterField="TM__r.Name"/>
+                <c:InlineEditColumnHeader label="Category" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;" filterField="Category__c" filterFieldType="option"
+                                          filterFieldOptions="[{ label: 'Labor', value: 'Labor' },
+                                                      { label: 'Equipment', value: 'Equipment' },
+                                                      { label: 'Materials', value: 'Materials' },
+                                                      { label: 'Cost Plus Materials, Equipment and Services', value: 'Subcontractors' },
+                                                      { label: 'Waste Disposal', value: 'Waste Disposal' },
+                                                      { label: 'Transportation, Demurrage and Fees', value: 'Demurrage' },
+                                                      { label: 'Misc. Charges And Taxes', value: 'Misc. Charges And Taxes' },
+                                                      { label: 'Bundled', value: 'Bundled' }]"/>
+                <c:InlineEditColumnHeader label="Service Center" headerStyle="min-width:100px" filterField="Service_Center__r.Name"/>
+                <c:InlineEditColumnHeader label="Resource Type" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;" filterField="Resource_Type__r.Name"/>
+                <c:InlineEditColumnHeader label="Resource" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;" filterField="Resource__r.Name"/>
+                <c:InlineEditColumnHeader label="Resource Name" headerStyle="min-width:125px;max-width:125px;" filterField="Resource_Name__c"/>
+                <c:InlineEditColumnHeader label="Billing Description" headerStyle="min-width:150px;" filterField="Description__c"/>
+                <c:InlineEditColumnHeader label="Bill Site Time" headerStyle="min-width:50px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Include Lunch Y/N" headerStyle="min-width:50px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Billing Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Billing End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="REG Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="OT Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="DT Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="REG Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="OT Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="DT Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Unit Price" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:65px;"/>
+                <c:InlineEditColumnHeader label="Bundled" headerStyle="min-width:65px;"/>
+                <c:InlineEditColumnHeader label="Markup Option" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Markup" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Pricing Source" headerStyle="min-width:125px;"/>
+                <c:InlineEditColumnHeader label="Line Amount" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Line Amount Incl. Tax" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Unit Cost" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Line Cost" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Job Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Site Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Site End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Job End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Lunch Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Lunch End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Job Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Site Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                <c:InlineEditColumnHeader label="Cost Method" headerStyle="min-width:150px;"/>
+                <c:InlineEditColumnHeader label="Unit Weight/Volume" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Container" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Facility" headerStyle="min-width:150px;"/>
+                <c:InlineEditColumnHeader label="BOL Manifest" headerStyle="min-width:125px;"/>
+                <c:InlineEditColumnHeader label="Contract Line" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Tax Group" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Tax %" headerStyle="min-width:80px;"/>
+                <c:InlineEditColumnHeader label="Tax" headerStyle="min-width:100px;"/>
+                <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:55px;max-width:55px;"/>
+                <c:InlineEditColumnHeader label="Parent Line No." headerStyle="min-width:75px;"/>
+            </aura:set>
+        </c:TestInlineEditDdataTable>
+    </aura:if>
+</aura:component>

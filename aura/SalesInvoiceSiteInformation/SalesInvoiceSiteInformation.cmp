@@ -1,0 +1,67 @@
+<aura:component description="SalesInvoiceSiteInformation" extends="c:SalesInvoiceBase">
+    <!--attributes-->
+
+    <!--handlers-->
+
+    <!--events-->
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <!--body-->
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Name" value="{!v.salesInvoice.Site_Name__c}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength ="40"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Site Contact"
+                               value="{!v.salesInvoice.Site_Contact_2__r}"
+                               SObjectName="Contact"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                               filter="{!'AccountId=\'' + v.salesInvoice.Bill_to_Customer_No__c + '\' AND Contact_Type__c INCLUDES (\'Site\') AND Blocked__c !=TRUE'}"
+                               pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                               onchange="{!c.handleSiteContactChange}"
+                               disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea label="Site Street" value="{!v.salesInvoice.Site_Street__c}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="255"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Phone No." value="{!v.salesInvoice.Site_Phone_No__c}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"  maxlength="10"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site City" value="{!v.salesInvoice.Site_City__c}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="30"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Email Address" value="{!v.salesInvoice.Site_Email_Address__c}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="80"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Site State" value="{!v.salesInvoice.Site_State__c}" SObjectName="Sales_Invoice__c" fieldName="Site_State__c" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem> 
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput aura:id="tax-area" label="Tax Area" value="{!v.salesInvoice.Tax_Area__r}" SObjectName="Tax_Area__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Blocked__c&lt;>TRUE" pill="{iconName: 'standard:picklist_type', expression: '{Name} - {Description__c}'}" fetchLimit="25" onchange="{!c.handleTaxAreaChange}" required="true" messageWhenValueMissing="This field is mandatory" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Postal Code" value="{!v.salesInvoice.Site_Postal_Code__c}" maxlength="20" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Tax Liable" variant="label-stacked" checked="{!v.salesInvoice.Tax_Liable__c}" onchange="{!c.handleTaxLiableChange}" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Site Country" value="{!v.salesInvoice.Site_Country__c}" SObjectName="Sales_Invoice__c" fieldName="Site_Country__c" disabled="{!v.salesInvoice.Document_Status__c == 'Open' || v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+            </lightning:layoutItem>
+
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,255 @@
+<!--
+    Ticket#19962
+        - Add more filters to Bill-to Customer: 'BillingStreet != NULL AND BillingCity != NULL AND BillingStateCode != NULL AND BillingPostalCode != NULL'
+        - Separate logic for Bill-to customer for Sales Quote and Sales Order
+    Ticket#20124
+        - updating From Sales Quote updates Surcharge Type and Surcharge %
+    Ticket#20079
+        - add Payment Term to contract
+    Ticket#21908
+        - prevent record from editing after blocked.
+    Ticket#DE35515
+        - remove logic to create contact from bill-to contact field
+-->
+<aura:component extends="c:SalesOrderBase">
+    <aura:attribute name="newContactRecordParams" type="Object"/>    
+    <aura:attribute name="modelCreatePromise" type="Aura.Component"/>
+    <lightning:overlayLibrary aura:id="overlayLibCreateSalesOrder" />
+    <aura:handler name="change" value="{!v.salesOrder.Bill_to_Customer_No__r}" action="{!c.setNewContactRecordParams}"/>
+    <lightning:messageChannel aura:id="messageChannel" type="BillingProjectLookupMessageChannel__c" scope="APPLICATION" onMessage="{!c.handleBillingProjectLookupMessage}" />
+    <aura:attribute name="billingProjectName" type="String"/>
+     <aura:attribute name="d365options" type="List" default="[
+    {'label': 'Create New', 'value': 'new'},
+    {'label': 'Select Existing', 'value': 'existing'}
+    ]"/>
+    <aura:attribute name="d365value" type="String" default=""/>
+    <aura:attribute name="isExistingD365" type="Boolean" default="" />
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+                    <!-- filter="Subsidiary_Company__r.Name='1-ACV ENVIRO' AND (Type='Customer' OR Type='Prospect') AND BillingStreet != NULL AND BillingCity != NULL AND BillingStateCode != NULL AND BillingPostalCode != NULL"                         -->
+                    <c:LookupInput aura:id="bill-to-customer"
+                                   label="Bill-to Customer"
+                                   value="{!v.salesOrder.Bill_to_Customer_No__r}"
+                                   SObjectName="Account"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Billing City', fieldName: 'BillingCity'}, {label: 'Billing State', fieldName: 'BillingStateCode'}, {label: 'Type', fieldName: 'Type'}]"
+                                   queryFields="['AccountNumber', 'Subsidiary_Company__c', 'ParentId']"
+                                   filter="{!'Subsidiary_Company__c=\'' + v.salesOrder.Service_Center__r.Subsidiary_Company__c +'\' AND (Type=\'Customer\' OR Type=\'Prospect\') AND BillingStreet != NULL AND BillingCity != NULL AND BillingStateCode != NULL AND BillingPostalCode != NULL'}"
+                                   pill="{iconName: 'standard:account', fieldName: 'Name'}"
+                                   onchange="{!c.handleBillToCustomerChange}"
+                                   required="true"
+                                   messageWhenValueMissing="This field is mandatory"
+                                   disabled="{!v.setupData.User.Super_User__c != true || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    
+                    <aura:set attribute="else">
+                        <!-- filter="Subsidiary_Company__r.Name='1-ACV ENVIRO' AND Type='Customer' AND BillingStreet != NULL AND BillingCity != NULL AND BillingStateCode != NULL AND BillingPostalCode != NULL" -->
+                        <c:LookupInput aura:id="bill-to-customer"
+                                       label="Bill-to Customer"
+                                       value="{!v.salesOrder.Bill_to_Customer_No__r}"
+                                       SObjectName="Account"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Billing City', fieldName: 'BillingCity'}, {label: 'Billing State', fieldName: 'BillingStateCode'}, {label: 'Type', fieldName: 'Type'}]"
+                                       queryFields="['AccountNumber', 'Subsidiary_Company__c', 'ParentId']"
+                                       filter="{!'Subsidiary_Company__c=\'' + v.salesOrder.Service_Center__r.Subsidiary_Company__c +'\' AND Type=\'Customer\' AND BillingStreet != NULL AND BillingCity != NULL AND BillingStateCode != NULL AND BillingPostalCode != NULL'}"
+                                       pill="{iconName: 'standard:account', fieldName: 'Name'}"
+                                       onchange="{!c.handleBillToCustomerChange}"
+                                       required="true"
+                                       messageWhenValueMissing="This field is mandatory"
+                                       disabled="{!v.setupData.User.Super_User__c != true || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.salesOrder.Bill_to_Customer_No__r.Contact_Type_Filter__c != null}">
+                    <c:LookupInput aura:id="bill-to-contact"
+                                   label="Bill-to Contact"
+                                   SObjectName="Contact"
+                                   value="{!v.billToContacts}"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Contact Type', fieldName: 'Contact_Type__c'}]"
+                                   filter="{!'AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Contact_Type__c INCLUDES ' + v.salesOrder.Bill_to_Customer_No__r.Contact_Type_Filter__c + ' AND Blocked__c != TRUE'}"
+                                   fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                   onchange="{!c.handleBillToContactChange}"
+                                   required="true"
+                                   messageWhenValueMissing="This field is mandatory"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                   allowMultipleValues="true"/>
+                    <!-- DE35366  -->
+                    <!--ewRecordComponentName="c:SalesOrderContactCard"
+                                    newRecordParams="{!v.newContactRecordParams}"
+                                    newRecordCreateMethod="createRecord" -->
+                    <!-- ticket DE35366  -->
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="bill-to-contact"
+                                       label="Bill-to Contact"
+                                       SObjectName="Contact"
+                                       value="{!v.billToContacts}"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Contact Type', fieldName: 'Contact_Type__c'}]"
+                                       filter="{!'AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Contact_Type__c INCLUDES (\'Billing\') AND Blocked__c != TRUE'}"
+                                       fetchLimit="25" pill="{iconName: 'standard:people', fieldName: 'Name'}"
+                                       onchange="{!c.handleBillToContactChange}"
+                                       required="true"
+                                       messageWhenValueMissing="This field is mandatory"
+                                       disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                       allowMultipleValues="true"/>
+                        <!-- DE35366  -->
+                        <!-- newRecordComponentName="c:SalesOrderContactCard"
+                                    newRecordParams="{!v.newContactRecordParams}"
+                                    newRecordCreateMethod="createRecord" -->
+                    </aura:set>
+                </aura:if>
+                
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Billing Rule Not Required"
+                                 variant="label-stacked"
+                                 checked="{!v.salesOrder.Billing_Rule_Not_Required__c}"
+                                 disabled="{!v.setupData.User.Super_User__c != true || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+            
+            <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+                <lightning:layoutItem size="12" padding="horizontal-small" class="slds-m-vertical_small">
+                    <lightning:button label="Billing Project Lookup" variant="brand" onclick="{!c.navigateTobillingProjectLookup}"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.isBillingProjectVisible}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <div class="slds-form-element">
+                         <label class="slds-form-element__label" for="billing-project-field">Billing Project</label>
+                        <div class="slds-input-has-icon slds-input-has-icon_right">
+                            <lightning:input aura:id="billingProjectField" 
+                                             label="" 
+                                             value="{!v.billingProjectName}" 
+                                             disabled="true"/>
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  alternativeText="Clear"
+                                                  variant="bare"
+                                                  class="clear-button"
+                                                  onclick="{!c.clearBillingProject}" />
+                        </div>
+                    </div>
+                    
+                </lightning:layoutItem>
+            </aura:if>
+            
+            
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input aura:id="customer-po-number"
+                                     label="Customer PO No."
+                                     value="{!v.salesOrder.Customer_PO_No__c}"
+                                     required="{!v.salesOrder.Bill_to_Customer_No__r.PO_Number_Type__c != null || v.salesOrder.Bill_to_Customer_No__r.PO_Required__c == true}"
+                                     messageWhenValueMissing="This field is mandatory"
+                                     disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                </lightning:layoutItem>
+                
+                <!-- Ticket#24560 -->
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput label="From Quote"
+                                   value="{!v.salesOrder.From_Sales_Quote__r}"
+                                   SObjectName="Sales_Order__c"
+                                   columns="[{label: 'Quote No.', fieldName: 'Name'}, {label: 'Quote Date', fieldName: 'Quote_Date__c'}, {label: 'Description', fieldName: 'Order_Description__c'}]"
+                                   queryFields="['Id', 'Surcharge_Type__c', 'Surcharge_Pct__c', 'Service_Center__c', 'Operating_Expense_Cost_Pct__c']"
+                                   filter="{!'Bill_to_Customer_No__c=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Document_Type__c=\'Sales Quote\' AND Service_Center__c =\'' + v.salesOrder.Service_Center__c + '\' AND Allow_Convert__c=TRUE'}"
+                                   pill="{iconName: 'standard:quotes', fieldName: 'Name'}"
+                                   fetchLimit="50"
+                                   onchange="{!c.handleFromSalesQuoteChange}"
+                                   disabled="{!v.salesOrder.Id != null || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea label="Street" value="{!v.salesOrder.Street__c}" disabled="true"/>
+            </lightning:layoutItem>    
+            
+            <aura:if isTrue="{!v.salesOrder.Service_Center__r.Advanced_Disposal__c}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:select aura:id="disposal-billing"
+                                      label="Disposal Billing Method"
+                                      value="{!v.salesOrder.Disposal_Billing_Method__c}"
+                                      onchange="{!c.handleDisposalBillingChange}"
+                                      disabled="{v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                        <option value=""></option>
+                        <option value="Indirect">Indirect</option>
+                        <option value="Direct">Direct</option>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </aura:if>
+            
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Phone No." value="{!v.salesOrder.Phone_No__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="City" value="{!v.salesOrder.City__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Contract"
+                               value="{!v.salesOrder.Contract__r}"
+                               SObjectName="Contract"
+                               columns="[{label: 'Contract No.', fieldName: 'ContractNumber'}, {label: 'Name', fieldName: 'Name'}]"
+                               queryFields="['Id', 'Billing_Rule__c', 'Billing_Rule__r.Name', 'Billing_Rule__r.Quote_Order_Assumption__c', 'Surcharge_Type__c', 'Surcharge_Pct__c', 'Payment_Term__c', 'Payment_Term__r.Name']"
+                               filter="{!'Id IN (SELECT Contract__c FROM Account_Contract_Association__c WHERE (Account__c =\'' + v.salesOrder.Bill_to_Customer_No__c + '\' OR Account__c =\'' + v.salesOrder.Bill_to_Customer_No__r.ParentId + '\') AND Contract__r.Status = \'Activated\' AND Contract__r.StartDate &lt;= TODAY AND Contract__r.Subsidiary__c INCLUDES (\'' + v.salesOrder.Bill_to_Customer_No__r.Subsidiary_Company__r.Name + '\'))'}"
+                               pill="{iconName: 'standard:contract', expression: '{Name} - {ContractNumber}'}"
+                               fetchLimit="50"
+                               onchange="{!c.handleContractChange}"
+                               disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                               />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="State" value="{!v.salesOrder.State__c}" SObjectName="Sales_Order__c" fieldName="State__c" controllingValue="{!v.salesOrder.Country__c}" disabled="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Contract Name" value="{!v.salesOrder.Contract_Name__c}" disabled="true"/>
+            </lightning:layoutItem>
+            
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Country" value="{!v.salesOrder.Country__c}" SObjectName="Sales_Order__c" fieldName="Country__c" disabled="true"/>
+            </lightning:layoutItem>
+            <!--
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Country" value="{!v.salesOrder.Country__c}" SObjectName="Sales_Order__c" fieldName="Country__c" disabled="true"/>
+            </lightning:layoutItem>
+            -->
+                <aura:if isTrue="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c &amp;&amp; 
+                  (v.salesOrder.Document_Type__c == 'Sales Order' || v.salesOrder.Document_Type__c == 'Sales Quote')}">
+
+                <lightning:layoutItem size="6" padding="horizontal-small" class="slds-p-top_small">
+                 <lightning:formattedText value="D365 Project" class="slds-p-top_medium"/>
+                <lightning:helptext
+                                    content='Use "Create New" to send an email to the Project Start team to create a new D365 Project. Use "Select Existing" to associate this Sales Order with an existing D365 Project.'/>
+                
+                <lightning:radioGroup
+                                      aura:id="d365Radio"
+                                      label="D365 Project"
+                                      options="{! v.d365options }"
+                                      value="{! v.d365value }"
+                                      onchange="{! c.handleD365projectChange }"
+                                      variant="label-hidden"
+                                      required="true"
+                                      disabled="{!v.salesOrder.SO_sent_to_EQAI__c == true &amp;&amp; v.setupData.User.Profile.Name != 'System Administrator'}"
+                                      />
+            </lightning:layoutItem>
+            <aura:if isTrue="{!v.isExistingD365}">
+            <lightning:layoutItem size="4" padding="horizontal-small">
+                <c:LookupInputD365Customer aura:id="d365-project-id"
+                                       value="{!v.salesOrder.D365_Project_ID__c}"
+                                       label="D365 Project ID"
+                                       name="{!v.salesOrder}"
+                                       columns="[{label: 'Project ID', fieldName: 'projectId'},{label: 'Project Name', fieldName: 'projectName'},{label: 'Prevailing Wage', fieldName: 'prevailingWage'},{label: 'Business Unit', fieldName: 'businessUnit'},{label: 'Dept', fieldName: 'department'},{label: 'Cost Center', fieldName: 'deptCostCenter'}]"
+                                       pill="{fieldName: 'Approval'}" hideLookupGlass="true"
+                                       onchange="{!c.handleD365IdChange}"
+                                       messageWhenValueMissing="This field is mandatory"
+                                       required="true"
+                                       disabled="{!v.salesOrder.SO_sent_to_EQAI__c == true &amp;&amp; v.setupData.User.Profile.Name != 'System Administrator'}"
+                                       />
+            </lightning:layoutItem>
+            </aura:if>
+            </aura:if>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

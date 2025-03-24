@@ -1,0 +1,215 @@
+<apex:component id="invoiceApprovalNotificationContent" controller="InvoiceApprovalEmailContent" access="global">
+    <apex:attribute name="objectId" description="Invoice Id" type="Id" assignTo="{!invoiceRecordId}" />
+    <style type="text/css">
+        .alignleft{
+            text-align: left;
+        }
+        .alignRight{
+            text-align: right;
+        }
+        .wd30{
+            width: 30px;
+        }
+        .wd200{
+            width: 250px;
+        }
+        .wd300{
+            width: 300px;
+        }
+        .wd100{
+            width: 100px;
+        }
+    </style>
+
+    <apex:outputPanel rendered="{!salesInvoicesWrapper.docType == 'Credit Memo Worksheet'}">
+        <p><b>This worksheet is for Invoice# {!salesInvoicesWrapper.parentRecordNo} <a href="{!salesInvoicesWrapper.linkToOriginalInvoice}">click here</a></b></p>
+    </apex:outputPanel>
+
+    <table>
+        <tbody>
+        <tr>
+            <td>{!salesInvoicesWrapper.docType}:</td>
+            <td>{!salesInvoicesWrapper.invoiceNo}</td>
+        </tr>
+        <tr>
+            <td>Total Invoice Amount Incl. Tax:</td>
+            <td>{!salesInvoicesWrapper.invoiceTotalInclTax}</td>
+        </tr>
+        <tr>
+            <td>Total Invoice Profit %</td>
+            <td>{!salesInvoicesWrapper.newProfitMargin}</td>
+        </tr>
+        <tr>
+            <td>Original Profit Margin: %</td>
+            <td>{!salesInvoicesWrapper.approvedProfitMargin}</td>
+        </tr>
+        <tr>
+            <td>Customer Name</td>
+            <td>{!salesInvoicesWrapper.billToCustomer}</td>
+        </tr>
+        <tr>
+            <td>Service Center</td>
+            <td>{!salesInvoicesWrapper.serviceCenter}</td>
+        </tr>
+        <tr>
+            <td>Entered By</td>
+            <td>{!salesInvoicesWrapper.createdBy}</td>
+        </tr>
+        <tr>
+            <td>Sales Order Owner</td>
+            <td>{!salesInvoicesWrapper.salesOrderOwner}</td>
+        </tr>
+        <tr>
+            Approval Steps:<br />
+            <ul>
+                <apex:repeat value="{!salesInvoicesWrapper.approverByLevels}" var="level">
+                    <li>{!level}  - {!salesInvoicesWrapper.approverByLevels[level]}</li>
+                </apex:repeat>
+            </ul>
+        </tr>
+        <tr>
+            Comments: <br />
+            <apex:repeat value="{!salesInvoicesWrapper.approvalComments}" var="comment">
+                {!comment} <br />
+            </apex:repeat>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+        <tr>
+            <th class="alignleft wd30">#</th>
+            <th class="alignleft wd100">Category</th>
+                <th class="alignleft wd300">Resource Type/Name</th>
+                <th class="alignleft wd300">Description</th>
+            <th class="alignleft wd30">UOM</th>
+            <th class="alignleft wd30">Quantity</th>
+            <!--                <th class="alignleft wd30">Qty. App.</th>-->
+            <!--                <th class="alignleft wd30">Qty. Diff</th>-->
+            <!-- <th class="alignRight wd30">Original Unit Price</th> -->
+            <th class="alignRight wd30">Unit Price</th>
+            <!--                <th class="alignRight wd30">UP App.</th>-->
+            <!-- <th class="alignRight wd30">Price Delta</th> -->
+            <th class="alignRight wd30">Unit Cost</th>
+            <!--                <th class="alignRight wd30">UC App.</th>-->
+            <!--                <th class="alignRight wd30">UC Diff</th>-->
+            <th class="alignRight wd30">Line Cost</th>
+            <!--                <th class="alignRight wd30">LC App.</th>-->
+            <!--                <th class="alignRight wd30">LC Diff</th>-->
+            <th class="alignRight wd30">Line Amount</th>
+            <!--                <th class="alignRight wd30">LA App.</th>-->
+            <!--                <th class="alignRight wd30">LA Diff</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <apex:repeat value="{!salesInvoicesWrapper.salesInvoiceLines}" var="line">
+            <tr>
+                <td class="alignleft" style="width: 35px;">{!line.lineNo}</td>
+                <td class="alignleft" style="width: 180px;">{!line.category}</td>
+                <td class="alignleft" style="width: 300px;">{!IF(line.resType == null, line.resName, line.resType + '/' + line.resName)}</td>
+                <td class="alignleft" style="width: 300px;">{!line.description}</td>
+                <td class="alignleft" style="width: 70px; border-right: 1px solid black;">
+                    {!line.approvedUnitOfMeasure}
+                    <apex:outputText escape="false" rendered="{!line.approvedUnitOfMeasure != line.unitOfMeasure}" style="color:green" value="&#8594;" />
+                    <apex:outputText rendered="{!line.approvedUnitOfMeasure != line.unitOfMeasure}" value="{!line.unitOfMeasure}" />
+                </td>
+
+                <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                    <apex:outputText value="{0, number, 0.00}">
+                        <apex:param value="{!line.quantity}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.quantityDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.quantityDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.approvedQuantity}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.quantityDifference}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+                <!--
+                <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}">
+                        <apex:param value="{!line.approvedUnitPrice}" />
+                    </apex:outputText>
+                </td>
+                -->
+                <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}">
+                        <apex:param value="{!line.unitPrice}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.unitPriceDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.unitPriceDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                <!--
+                <td class="alignRight" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}" rendered="{!line.unitPriceDifference != 0}">
+                        <apex:param value="{!line.unitPriceDifference}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.unitPriceDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.unitPriceDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                -->
+
+                <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}">
+                        <apex:param value="{!line.unitCost}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.unitCostDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.unitCostDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.approvedUnitCost}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.unitCostDifference}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+
+                <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}">
+                        <apex:param value="{!line.lineCost}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.lineCostDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.lineCostDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.approvedLineCost}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.lineCostDifference}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+
+                <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                    <apex:outputText value="{0, number, $0.00}">
+                        <apex:param value="{!line.lineAmount}" />
+                    </apex:outputText>
+                    <apex:outputText escape="false" rendered="{!line.lineAmountDifference > 0}" style="color:green" value="&#8593;" />
+                    <apex:outputText escape="false" rendered="{!line.lineAmountDifference < 0}" style="color:red" value="&#8595;" />
+                </td>
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.approvedLineAmount}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+                <!--                <td class="alignleft" style="width: 80px; border-right: 1px solid black; margin-right: 2px;">-->
+                <!--                    <apex:outputText value="{0, number, 0.00}">-->
+                <!--                        <apex:param value="{!line.lineAmountDifference}" />-->
+                <!--                    </apex:outputText>-->
+                <!--                </td>-->
+            </tr>
+        </apex:repeat>
+        </tbody>
+    </table>
+</apex:component>

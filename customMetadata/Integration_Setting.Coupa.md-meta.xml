@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Coupa</label>
+    <protected>false</protected>
+    <values>
+        <field>API_Key__c</field>
+        <value xsi:type="xsd:string">1fdd27b44d0c4fcaca61673da49ee40e88517232</value>
+    </values>
+    <values>
+        <field>Base_URL__c</field>
+        <value xsi:type="xsd:string">https://acvenviro.coupahost.com/</value>
+    </values>
+    <values>
+        <field>Client_Id__c</field>
+        <value xsi:type="xsd:string">81af3adc8e7fd6a9bdd6724a186e4342</value>
+    </values>
+    <values>
+        <field>Client_Secret__c</field>
+        <value xsi:type="xsd:string">d9b4a2bf1d53a3fb7601ced715dea2ce35434e2ca155504db6e8573d1d904942</value>
+    </values>
+    <values>
+        <field>Coupa_Asset_Lookup_Id__c</field>
+        <value xsi:type="xsd:string">2</value>
+    </values>
+    <values>
+        <field>Coupa_Sales_Order_Lookup_Id__c</field>
+        <value xsi:type="xsd:string">3</value>
+    </values>
+    <values>
+        <field>Enabled__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Grant_Type__c</field>
+        <value xsi:type="xsd:string">client_credentials</value>
+    </values>
+    <values>
+        <field>Scope__c</field>
+        <value xsi:type="xsd:string">core.catalog.read core.catalog.write core.comment.write core.common.read core.common.write core.contract.read core.item.read core.purchase_order_change.read core.purchase_order.read core.requisition.read core.sourcing.read core.sourcing.write core.supplier_information_sites.read core.supplier_sites.read core.supplier.read core.translation.read core.uom.read core.user_group.read email login</value>
+    </values>
+</CustomMetadata>

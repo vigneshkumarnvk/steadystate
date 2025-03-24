@@ -1,0 +1,6 @@
+.zindex.THIS {
+    z-index: 5;
+}
+.THIS .label-hidden > label {
+    display: none;
+}

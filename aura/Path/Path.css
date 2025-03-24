@@ -1,0 +1,11 @@
+.THIS .slds-is-complete .slds-path__title {
+    transform: none;
+}
+
+.THIS .slds-path__nav {
+    width: 100%;
+}
+
+.THIS .check-icon svg {
+    fill: #FFFFFF !important;
+}

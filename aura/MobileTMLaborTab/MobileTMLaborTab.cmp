@@ -1,0 +1,35 @@
+<aura:component extends="c:MobileTMTabBase" description="MobileTMLaborTab">
+    <!--attributes-->
+    <aura:attribute name="activeSections" type="List" default="['']" access="private"/>
+
+    <!--handlers-->
+
+    <!--body--> 
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.unsavedChanges != true || v.tm.Status__c != 'Scheduled'}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+        <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+            <div class="scrollable-container">
+                <!--
+                <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                    <c:CollapsibleSection title="JOB TASK" label="{!jobTaskWrapper.JobTask.Name}">
+                        <aura:set attribute="body">
+                            <c:MobileTMLaborLines tm="{!v.tm}" category="{!v.category}" jobTaskWrapper="{!jobTaskWrapper}" jobTasks="{!v.jobTasks}" nextTMLineNo="{!v.nextTMLineNo}"/>
+                        </aura:set>
+                    </c:CollapsibleSection>
+                </aura:iteration>
+                -->
+                <lightning:tabset selectedTabId="tab0">
+                    <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                        <lightning:tab label="{!jobTaskWrapper.JobTask.Name}" id="{!'tab' + index}" iconName="standard:task">
+                            <c:MobileTMLaborLines tm="{!v.tm}" category="{!v.category}" jobTaskWrapper="{!jobTaskWrapper}" jobTaskOptions="{!v.jobTaskOptions}" nextTMLineNo="{!v.nextTMLineNo}"/>
+                        </lightning:tab>
+                    </aura:iteration>
+                </lightning:tabset>
+            </div>
+        </aura:if>
+    </lightning:card>
+</aura:component>

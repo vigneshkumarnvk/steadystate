@@ -1,0 +1,198 @@
+<aura:component controller="BillingWorksheetController" extends="c:BillingWorksheetBase" implements="force:hasRecordId" description="BillingWorksheetJobTaskLine">
+    <aura:dependency resource="c:BillingWorksheetLine"/>
+    <aura:dependency resource="c:BillingWorksheetLineEdit"/>
+
+    <!--attributes-->
+    <aura:attribute name="worksheetIndex" type="Integer" access="public"/>
+    <aura:attribute name="worksheet" type="Object" access="public"/>
+    <aura:attribute name="unsavedChanges" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="private"/>
+    <aura:attribute name="validUOMsMap" type="Map" />
+    <aura:attribute name="advDisposalFlag" type="Boolean" default="false" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="worksheetLineUpdateEvent" event="c:BillingWorksheetLineUpdateEvent" action="{!c.handleWorksheetLineUpdateChange}"/>
+    <aura:handler name="worksheetLineDeleteEvent" event="c:BillingWorksheetLineDeleteEvent" action="{!c.deleteLine}"/>
+    <aura:handler name="worksheetLineViewEvent" event="c:BillingWorksheetLineViewEvent" action="{!c.viewLine}"/>
+    <aura:handler name="worksheetLineSelectEvent" event="c:BillingWorksheetLineSelectEvent" action="{!c.selectLines}"/>
+
+    <!--events-->
+    <aura:registerEvent name="unsavedChangesEvent" type="c:UnsavedChangesEvent"/>
+    <aura:registerEvent name="worksheetUpdateEvent" type="c:BillingWorksheetUpdateEvent"/>
+    <aura:registerEvent name="worksheetLinesMoveEvent" type="c:JobTaskLinesMoveEvent"/>
+
+    <!--methods-->
+    <aura:method name="validateLines" action="{!c.validateLines}" access="public">
+        <!--ticket 20143-->
+        <!--
+        <aura:attribute name="invoice" type="Boolean" default="false" access="public"/>
+        -->
+        <!--ticket 20143-->
+    </aura:method>
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}"/>
+    <!--ticket 20170-->
+    <!--TM lookup-->
+    <!--
+    <aura:method name="updateTMNoOptions" action="{!c.updateTMNoOptions}"/>
+    -->
+    <!--TM lookup-->
+    <!--ticket 20170-->
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:buttonMenu iconName="utility:rows" value="{!index}" menuAlignment="right" onselect="{!c.handleMenuSelect}">
+                    <lightning:menuItem value="move-lines" label="Move Lines" prefixIconName="utility:link" disabled="{!v.jobTaskOptions.length &lt;= 1}"/>
+                    <!--
+                    <lightning:menuItem value="create-lines-from-template" label="Create Lines from Template" prefixIconName="utility:insert_template"/>
+                    -->
+                    <lightning:menuDivider/>
+                    <!--
+                    <lightning:menuItem value="clear-table-filters" label="Clear Filters" prefixIconName="utility:filterList"/>
+                    -->
+                    <lightning:menuItem prefixIconName="utility:delete" value="delete-lines" label="Delete Lines"/>
+                    <lightning:menuDivider/>
+                    <lightning:menuItem value="sort-table-rows" label="Sort Table" prefixIconName="utility:sort"/>
+                </lightning:buttonMenu>
+                <!--change line status-->
+                <c:ButtonMenu label="Change Line Status" iconName="utility:down" onclick="{!c.changeLineStatus}" menuItems="[{ label: 'Ready to Bill', value: 'Ready to Bill' }, { label: 'PM Review', value: 'PM Review' }]"/>
+                <lightning:button label="Get Bundle Line" onclick="{!c.getBundleLine}"/>
+                <lightning:button label="Add Line" iconName="utility:add" onclick="{!c.addLine}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12">
+                <aura:if isTrue="{!v.worksheet.SalesOrderJobTask.Billing_Type__c == 'Fixed Price'}">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input type="number" label="Fixed Price" value="{!v.worksheet.SalesOrderJobTask.Fixed_Price__c}" formatter="currency" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input label="Tax Group" value="{!v.worksheet.SalesOrderJobTask.Tax_Group__c}" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input type="number" label="% Billed" value="{!v.worksheet.SalesOrderJobTask.Pct_Billed__c}" formatter="percent-fixed" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input type="number" label="% To Bill" value="{!v.worksheet.SalesOrderJobTask.Pct_To_Bill__c}" formatter="percent-fixed" step="0.01" disabled="false" oncommit="{!c.handlePctToBillChange}" required="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input type="number" label="Amount To Bill" value="{!v.worksheet.SalesOrderJobTask.Amount_To_Bill__c}" formatter="currency" step="0.01" disabled="true"/>
+                        </lightning:layoutItem>
+                        <!--ticket 19672-->
+                        <lightning:layoutItem padding="horizontal-small" size="2">
+                            <lightning:input type="checkbox" label="Fixed Price Includes Surcharge" variant="label-stacked" checked="{!v.worksheet.SalesOrderJobTask.Fixed_Price_Surcharge_Option__c == 'Fixed Price Includes Surcharge'}" disabled="true"/>
+                        </lightning:layoutItem>
+                        <!--ticket 19672-->
+                    </lightning:layout>
+                </aura:if>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem padding="around-small" size="12">
+                <aura:if isTrue="{!v.inlineEditComponentParams}">
+                    <c:InlineEditDataTable aura:id="datatable" items="{!v.worksheet.WorksheetLines}" var="worksheetLine" indexVar="index" showRowNumbers="false"
+                                           onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}" onSelectAll="{!c.handleSelectAll}"
+                                           rowComponentName="c:BillingWorksheetLine"
+                                           inlineEditComponentName="c:BillingWorksheetLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                           noneInlineFields="['select', 'delete', 'view', 'invoice', 'contractLineLink']"
+                                           parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                           horizontalScroll="true" verticalScroll="true" height="500px"
+                                           fixedHeaders="true" fixedColumns="11" serviceCenterIntegration="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}" advDisposalFlag="{!v.salesOrder.Service_Center__r.Advanced_Disposal__c}">
+                     
+                        <aura:set attribute="template">
+                            <c:InlineEditColumnHeader label="" headerStyle="min-width:40px;max-width:40px;left:35px;z-index:1000;" selectAllCheckbox="Selected"/>
+                            <c:InlineEditColumnHeader label="Actions" headerStyle="min-width:75px;max-width:75px;left:75px;z-index:1000;"/>
+                            <c:InlineEditColumnHeader label="Status" headerStyle="min-width:100px;max-width:100px;left:150px;z-index:1000;" filterField="Status__c" filterFieldType="option"
+                                                      filterFieldOptions="[{ label: '', value: null },
+                                                      { label: 'Ready to Bill', value: 'Ready to Bill' },
+                                                      { label: 'PM Review', value: 'PM Review' }]"/>
+                            <c:InlineEditColumnHeader label="To Invoice" headerStyle="min-width:75px;max-width:75px;left:250px;z-index:1000;" selectAllCheckbox="To_Invoice__c"/>
+                            <c:InlineEditColumnHeader label="Scheduled Date" headerStyle="min-width:100px;max-width:100px;left:325px;z-index:1000;" filterField="TM__r.Scheduled_Date__c" filterFieldType="date"/>
+                            <c:InlineEditColumnHeader label="T&amp;M #" headerStyle="min-width:150px;max-width:150px;left:425px;z-index:1000;" filterField="TM__r.Name"/>
+                            <c:InlineEditColumnHeader label="Category" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;left:575px;z-index:1000;" filterField="Category__c" filterFieldType="option"
+                                                      filterFieldOptions="[{ label: 'Labor', value: 'Labor' },
+                                                      { label: 'Equipment', value: 'Equipment' },
+                                                      { label: 'Materials', value: 'Materials' },
+                                                      { label: 'Cost Plus Materials, Equipment and Services', value: 'Subcontractors' },
+                                                      { label: 'Waste Disposal', value: 'Waste Disposal' },
+                                                      { label: 'Transportation, Demurrage and Fees', value: 'Demurrage' },
+                                                      { label: 'Misc. Charges And Taxes', value: 'Misc. Charges And Taxes' },
+                                                      { label: 'Bundled', value: 'Bundled' }]"/>
+                            <c:InlineEditColumnHeader label="Resource Type" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;left:700px;z-index:1000;" filterField="Resource_Type__r.Name"/>
+                            <c:InlineEditColumnHeader label="Resource" headerClass="slds-cell-wrap" headerStyle="min-width:125px;max-width:125px;left:825px;z-index:1000;" filterField="Resource__r.Name"/>
+                            <c:InlineEditColumnHeader label="Resource Name" headerStyle="min-width:125px;max-width:125px;left:950px;z-index:1000;" filterField="Resource_Name__c"/>
+                            <c:InlineEditColumnHeader label="Billing Description" headerStyle="min-width:150px;max-width:150px;left:1075px;z-index:1000;border-right:1px solid rgb(221, 219, 218);" filterField="Description__c"/>
+                            <c:InlineEditColumnHeader label="Service Center" headerStyle="min-width:100px;max-width:100px" filterField="Service_Center__r.Name"/>
+                            <c:InlineEditColumnHeader label="Bill Site Time" headerStyle="min-width:50px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Include Lunch Y/N" headerStyle="min-width:50px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Billing Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Billing End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="REG Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="OT Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="DT Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="REG Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="OT Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="DT Rate" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Unit Price" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:65px;"/>
+                            <c:InlineEditColumnHeader label="Bundled" headerStyle="min-width:65px;"/>
+                            <c:InlineEditColumnHeader label="Markup Option" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Markup" headerStyle="min-width:100px;"/>
+                            <!--ticket 20050-->
+                            <!--
+                            <c:InlineEditColumnHeader label="Pricing Source" headerStyle="min-width:125px;"/>
+                            -->
+                            <c:InlineEditColumnHeader label="Pricing Source" headerStyle="min-width:125px;" filterField="Pricing_Source_2__c"/>
+                            <!--ticket 20050-->
+                            <c:InlineEditColumnHeader label="Line Amount" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Line Amount Incl. Tax" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Unit Cost" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Line Cost" headerStyle="min-width:100px;"/>
+                            <!--
+                            <c:InlineEditColumnHeader label="Profit %" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Profit" headerStyle="min-width:100px;"/>
+                            -->
+                            <c:InlineEditColumnHeader label="Job Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Site Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Site End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Job End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Lunch Start Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Lunch End Time" headerStyle="min-width:100px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Job Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <c:InlineEditColumnHeader label="Site Hours" headerStyle="min-width:75px;background-color:rgb(240,240,240)" cellStyle="background-color:rgb(240,240,240)"/>
+                            <!-- Waste001
+                            <c:InlineEditColumnHeader label="Cost Method" headerStyle="min-width:150px;"/>
+                            <c:InlineEditColumnHeader label="Unit Weight/Volume" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Container" headerStyle="min-width:100px;"/>
+                            -->
+                            <c:InlineEditColumnHeader label="Facility" headerStyle="min-width:150px;"/>
+                            <c:InlineEditColumnHeader label="Profile Approval" headerStyle="min-width:170px;"/>
+                           
+                            <c:InlineEditColumnHeader label="BOL Manifest" headerStyle="min-width:125px;"/> 
+                            <!--<aura:if isTrue="{!v.worksheetLine.TM__r.Service_Center__r.Advanced_Disposal__c == true}">-->
+                                <c:InlineEditColumnHeader label="Disposal Billing Method" headerStyle="min-width:170px;"/>
+                            <!--</aura:if>-->
+                            <c:InlineEditColumnHeader label="Contract Line" headerStyle="min-width:170px;"/>
+                            <c:InlineEditColumnHeader label="Tax Group" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Tax %" headerStyle="min-width:80px;"/>
+                            <c:InlineEditColumnHeader label="Tax" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:55px;max-width:55px;"/>
+                            <!--ticket 19130-->
+                            <!--
+                            <c:InlineEditColumnHeader label="Parent Line No." headerStyle="min-width:75px;"/>
+                            -->
+                            <!--ticket 19130-->
+
+                        </aura:set>
+                    </c:InlineEditDataTable>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

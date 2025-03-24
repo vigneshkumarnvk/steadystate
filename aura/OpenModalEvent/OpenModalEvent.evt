@@ -1,0 +1,10 @@
+<aura:event type="Component">
+    <aura:attribute name="title" type="String" access="public"/>
+    <aura:attribute name="message" type="String" access="public"/>
+    <aura:attribute name="buttons" type="List" access="public"/>
+    <aura:attribute name="componentName" type="String" access="public"/>
+    <aura:attribute name="params" type="Object" access="public"/>
+    <aura:attribute name="size" type="String" access="public"/>
+    <aura:attribute name="xButton" type="Boolean" access="public"/>
+    <aura:attribute name="closeCallback" type="Object" access="public"/>
+</aura:event>

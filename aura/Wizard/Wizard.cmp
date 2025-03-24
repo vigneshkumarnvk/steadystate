@@ -1,0 +1,56 @@
+<aura:component extends="c:BaseComponent">
+    <!--ticket 19130-->
+    <aura:attribute name="sourceObjectType" type="String" access="public"/>
+    <!--ticket 19130-->
+    <aura:attribute name="contractId" type="Id" access="public"/>
+    <aura:attribute name="completeCallback" type="Object" access="public"/>
+    <aura:attribute name="cancelCallback" type="Object" access="public"/>
+    <!--<aura:attribute name="resolve" type="Object" access="public"/>-->
+
+    <aura:attribute name="questionSets" type="List" access="public" description="data structure: [ jobTaskWrapperIndex, Job_Template_Line__c[]]"/>
+    <aura:attribute name="questionSetIndex" type="Integer" default="0" access="public"/>
+    <aura:attribute name="questionSet" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="footer">
+            <lightning:layout>
+                <lightning:layoutItem flexibility="auto">
+                    <lightning:button label="Cancel" onclick="{!c.doCancel}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto">
+                    <aura:if isTrue="{!v.questionSet.questionIndex &lt; v.questionSet.templateLines.length}">
+                        <lightning:button label="No - Leave the Quantity" onclick="{!c.doNo}"/>
+                    </aura:if>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto">
+                    <aura:if isTrue="{!v.questionSet.questionIndex &lt; v.questionSet.templateLines.length}">
+                        <lightning:button label="Yes - Update the Quantity" variant="brand" onclick="{!c.doYes}"/>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.questionSetIndex == (v.questionSets.length - 1) &amp;&amp; v.questionSet.completed == true}">
+                                <lightning:button label="Finish" variant="brand" onclick="{!c.doCompleteWizard}"/>
+                                <aura:set attribute="else">
+                                    <lightning:button label="Finish &amp; Next" variant="brand" onclick="{!c.doCompleteQuestionSet}"/>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+
+        <div class="slds-p-horizontal--small slds-scrollable_y">
+            <aura:if isTrue="{!v.questionSet}">
+                <!--ticket 19130-->
+                <!--
+                <c:QuestionList aura:id="question-list" questionSet="{!v.questionSet}" contractId="{!v.contractId}"/>
+                -->
+                <c:QuestionList aura:id="question-list" sourceObjectType="{!v.sourceObjectType}" questionSet="{!v.questionSet}" contractId="{!v.contractId}"/>
+                <!--ticket 19130-->
+            </aura:if>
+        </div>
+    </lightning:card>
+</aura:component>

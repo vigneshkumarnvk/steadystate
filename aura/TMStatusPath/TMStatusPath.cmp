@@ -1,0 +1,23 @@
+<!--
+<aura:component controller="ACVTMController" extends="c:TMBase" implements="force:hasRecordId,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global">
+-->
+<aura:component controller="ACVTMController" extends="c:TMLinesBase" implements="force:hasRecordId,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <!--attributes-->
+    <aura:attribute name="stages" type="List" default="[]" access="public"/>
+    <!-- 
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    -->
+
+    <aura:attribute name="singleStage" type="Boolean" access="private"/>
+    <aura:attribute name="xStatus" type="String" access="private"/>
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card>
+        <p class="slds-p-around--small">
+            <c:Path aura:id="path" markStatusLabel="Save Status" stages="{!v.stages}" value="{!v.tm.Status__c}" singleStage="{!v.singleStage}" onstagechange="{!c.handleStageChange}" onstagecomplete="{!c.handleStageComplete}" hideMarkComplete="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Sent to EQAI' }"/>
+        </p>
+    </lightning:card>
+</aura:component>

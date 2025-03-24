@@ -1,0 +1,52 @@
+.THIS {
+    height: 100vh !important;
+}
+
+.THIS .slds-modal__container {
+    max-width: 100% !important;
+    max-height:100% !important;
+    /*
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    */
+    transform: none !important; /*remove transform, causing left position issue on the fixed position items showing in the modal*/
+    margin: 0px !important;
+}
+.THIS .slds-modal__content {
+    padding:0px !important;
+    overscroll-behavior-y: contain;
+    /*overflow: initial;*/
+    /*min-height: 60vh !important;*/
+}
+.THIS .modal-body {
+    /*height : auto !important;*/
+    /*min-height: 60vh;*/
+    max-height: 70vh !important;
+}
+.THIS .slds-modal__footer{
+    display: inline !important;
+}
+.THIS .large {
+    min-width: 90vw !important;
+    min-height: 90vh !important;
+}
+.THIS .medium {
+    min-width: 70vw !important;
+    min-height: 70vh !important;
+}
+.THIS .small {
+    min-width: 40vw !important;
+    min-height: 50vh !important;
+}
+.THIS .small-high {
+    min-width: 40vw !important;
+    min-height: 85vh !important;
+}
+.THIS .size-30vw {
+    max-width: 30vw !important;
+    min-width: 30vw !important;
+}
+.THIS .content-height {
+    /*height: 100%;*/
+}

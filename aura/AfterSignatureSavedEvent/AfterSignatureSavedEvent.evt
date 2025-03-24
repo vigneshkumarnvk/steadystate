@@ -1,0 +1,9 @@
+<aura:event type="COMPONENT" description="AfterSignatureSavedEvent">
+    <aura:attribute name="signatureId" type="Id" access="public"/>
+    <!--signature request-->
+    <!--
+    <aura:attribute name="label" type="String" access="public"/>
+    -->
+    <aura:attribute name="signerRole" type="String" access="public"/>
+    <!--signature request-->
+</aura:event>

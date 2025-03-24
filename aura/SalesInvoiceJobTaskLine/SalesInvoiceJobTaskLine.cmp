@@ -1,0 +1,195 @@
+<aura:component description="SalesInvoiceJobTaskLine" extends="c:SalesInvoiceBase">
+    <!--dependencies-->
+    <aura:dependency resource="c:SalesInvoiceLine"/>
+    <aura:dependency resource="c:SalesInvoiceLineEdit"/>
+
+    <!--attributes-->
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapperIndex" type="Integer" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="private"/>
+    <aura:attribute name="total" type="Decimal" default="0" access="private"/>
+    <aura:attribute name="totalInclTax" type="Decimal" default="0" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.jobTaskWrapper}" action="{!c.handleJobTaskWrapperChange}"/>
+    <aura:handler name="salesInvoiceLineUpdateEvent" event="c:SalesInvoiceLineUpdateEvent" action="{!c.handleSalesInvoiceLineUpdate}"/>
+    <aura:handler name="salesInvoiceLineDeleteEvent" event="c:SalesInvoiceLineDeleteEvent" action="{!c.handleSalesInvoiceLineDelete}"/>
+
+    <!--events-->
+    <aura:registerEvent name="salesInvoiceLinesChangedEvent" type="c:SalesInvoiceLinesChangedEvent"/>
+
+    <!--methods-->
+    <aura:method name="validateLines" action="{!c.validateLines}" access="public"/>
+
+    <!--body-->
+    <!--
+    <c:CollapsibleSection title="JOB TASK" label="{!v.jobTaskWrapper.JobTask.Name + if(v.jobTaskWrapper.JobTask.Billing_Type__c != null, ' ('+ v.jobTaskWrapper.JobTask.Billing_Type__c + ')','')}" collapsed="{!v.jobTaskWrapper.Collapsed}">
+    -->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <aura:if isTrue="{!v.salesInvoice.Credit_Memo__c == true &amp;&amp; v.salesInvoice.Misc_Invoice__c == true}">
+                <lightning:buttonGroup>
+                    <lightning:button label="Add Line" variant="brand" onclick="{!c.addLine}" disabled="{!v.salesInvoice.Document_Status__c != 'Open'}"/>
+                </lightning:buttonGroup>
+            </aura:if>
+        </aura:set>
+
+            <lightning:layout multipleRows="true">
+                <aura:if isTrue="{!v.salesInvoice.Document_Type__c == 'Sales Invoice' || v.salesInvoice.Document_Type__c == 'Credit Memo'}">
+                    <lightning:layoutItem size="12">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem padding="horizontal-small" size="2">
+                                <lightning:select label="Billing Type" value="{!v.jobTaskWrapper.JobTask.Billing_Type__c}" disabled="true">
+                                    <option label="" value=""/>
+                                    <option label="T&amp;M" value="T&amp;M"/>
+                                    <!--<option label="Task-Based" value="Task-Based"/>-->
+                                    <option label="Fixed Price" value="Fixed Price"/>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="horizontal-small" size="3">
+                                <!--<lightning:input label="Description" value="{!v.jobTaskWrapper.JobTask.Name}" required="true" maxlength="30"/>-->
+                            <lightning:input label="Description" value="{!v.jobTaskWrapper.JobTask.Name}" disabled="{!and(v.salesInvoice.Document_Status__c != 'Posted' ,v.salesInvoice.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c)}" required="true"/>
+   
+							</lightning:layoutItem>
+                            <aura:if isTrue="{!v.jobTaskWrapper.JobTask.Billing_Type__c == 'Fixed Price'}">
+                                <lightning:layoutItem padding="horizontal-small" size="2">
+                                    <lightning:input label="Surcharge Option" value="{!v.jobTaskWrapper.JobTask.Fixed_Price_Surcharge_Option__c}" disabled="true"/>
+                                </lightning:layoutItem>
+                            </aura:if>
+                            <aura:if isTrue="{!!and(v.salesInvoice.Document_Status__c != 'Posted',v.salesInvoice.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c)}">
+                                <lightning:layoutItem padding="horizontal-small" size="2">
+                                    <lightning:select label="Invoice Format" value="{!v.jobTaskWrapper.JobTask.Invoice_Format__c}">
+                                        <option label="Detail" value="Detail"/>
+                                        <option label="Summary" value="Summary"/>
+                                        <option label="By Date by Category" value="By Date by Category"/>
+                                    </lightning:select>
+                                </lightning:layoutItem>
+                            </aura:if>
+                        </lightning:layout>
+                    </lightning:layoutItem>
+                </aura:if>
+
+
+                <lightning:layoutItem padding="around-small" size="12">
+                    <!-- <aura:if isTrue="{!v.jobTaskWrapper.SalesInvoiceLines.length &lt;= 300}"> -->
+                        <!-- <aura:if isTrue="{!v.inlineEditComponentParams}"> -->
+                            <!--19631-->
+                            <!--
+                            <c:InlineEditDataTable aura:id="datatable" items="{!v.jobTaskWrapper.SalesInvoiceLines}" var="salesInvoiceLine"
+                                                   indexVar="index" showRowNumbers="false"
+                                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                                   rowComponentName="c:SalesInvoiceLine" rowComponentParams="{!v.inlineEditComponentParams}"
+                                                   inlineEditComponentName="c:SalesInvoiceLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                                   parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                                   noneInlineFields="['delete']"
+                                                   horizontalScroll="true" verticalScroll="true" height="500px">
+                           -->                    
+                            <c:InlineEditDataTable aura:id="datatable" items="{!v.jobTaskWrapper.SalesInvoiceLines}" var="salesInvoiceLine"
+                                                   indexVar="index" showRowNumbers="false"
+                                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                                   rowComponentName="c:SalesInvoiceLine" rowComponentParams="{!v.inlineEditComponentParams}"
+                                                   inlineEditComponentName="c:SalesInvoiceLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                                   parentLinkField="Line_No__c" childLinkField="Bundle_Line__r.Line_No__c"
+                                                   noneInlineFields="['delete', 'print']"
+                                                   horizontalScroll="true" verticalScroll="true" height="500px" advDisposalFlag="{!v.salesInvoice.Service_Center__r.Advanced_Disposal__c}">
+                            <!--19631-->
+                                <aura:set attribute="template">
+                                    <c:InlineEditColumnHeader label="Action" headerStyle="min-width:60px;max-width:60px;"/>
+                                    <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:60px;max-width:60px;"/>
+                                    <c:InlineEditColumnHeader label="Category" headerClass="slds-cell-wrap" headerStyle="min-width:175px" filterField="Category__c"/>
+                                    <c:InlineEditColumnHeader label="Resource Type" headerClass="slds-cell-wrap" headerStyle="min-width:175px;max-width:175px;" filterField="Resource_Type__r.Name"/>
+                                    <c:InlineEditColumnHeader label="Resource" headerClass="slds-cell-wrap" headerStyle="min-width:175px;max-width:175px;" filterField="Resource__r.Name"/>
+                                    <c:InlineEditColumnHeader label="Description" headerStyle="min-width:200px;" filterField="Description__c"/>
+                                    <c:InlineEditColumnHeader label="Service Center" headerStyle="min-width:70px;"/>
+                                    <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Unit Price" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Tax Group" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Line Amount" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Line Amount Incl. Tax" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Pricing Source" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Unit Cost" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Line Cost" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Bundled" headerStyle="min-width:65px;"/>
+                                    <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:65px;"/>
+                                    <!--ticket 19631-->
+                                    <c:InlineEditColumnHeader label="Print Line" headerStyle="min-width:65px;"/>
+                                    <!--ticket 19631-->
+                                    <c:InlineEditColumnHeader label="T&amp;M" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="T&amp;M Line" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Billing Worksheet Line #" headerStyle="min-width:65px;"/>
+                                    <c:InlineEditColumnHeader label="Scheduled Date" headerStyle="min-width:100px;"/>
+                                    <!--Waste001
+                                    <c:InlineEditColumnHeader label="Cost Method" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Unit Weight/Volume" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Container Size" headerStyle="min-width:100px;"/>
+                                    -->
+                                    <c:InlineEditColumnHeader label="Disposal Billing Method" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Facility" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="Profile Approval" headerStyle="min-width:100px;"/>
+                                    <c:InlineEditColumnHeader label="BOL Manifest" headerStyle="min-width:100px;"/>
+                                </aura:set>
+                            </c:InlineEditDataTable>
+                        <!-- </aura:if> -->
+
+                        <!-- <aura:set attribute="else">
+                            <c:FlexDataTable aura:id="datatable" items="{!v.jobTaskWrapper.SalesInvoiceLines}" var="salesInvoiceLine" indexVar="index"
+                                                                    keyName="Line_No__c" linkedToKeyName="Bundle_Line__r.Line_No__c">
+                                <aura:set attribute="template">
+                                    <c:FlexDataTableColumn label="Scheduled Date">
+                                        <c:FormattedDate value="{#salesInvoiceLine.TM__r.Scheduled_Date__c}"/>
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="T&amp;M">
+                                        {#salesInvoiceLine.TM__r.Name}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Category">
+                                        <c:FormattedText value="{#salesInvoiceLine.Category__c}" options="{&quot;Subcontractors&quot;:&quot;Cost Plus Materials, Equipment and Services&quot;, &quot;Demurrage&quot;:&quot;Transportation, Demurrage and Fees&quot;, &quot;Bundled&quot;:&quot;Bundled&quot;}" class="{#if(salesInvoiceLine.Bundle_Line__r != null, 'slds-p-left-medium', '')}"/>
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Service Center">
+                                        {#salesInvoiceLine.Service_Center__r.Name}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Resource Type">
+                                        {#salesInvoiceLine.Resource_Type__r.Name}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Resource">
+                                        {#salesInvoiceLine.Resource__r.Name}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Billing Description">
+                                        {#salesInvoiceLine.Description__c}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Quantity">
+                                        <lightning:formattedNumber value="{#salesInvoiceLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="UOM">
+                                        {#salesInvoiceLine.Unit_of_Measure__r.Name}
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Unit Price">
+                                        <lightning:formattedNumber value="{#salesInvoiceLine.Unit_Price__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                    </c:FlexDataTableColumn>
+                                    <c:FlexDataTableColumn label="Line Amount">
+                                        <lightning:formattedNumber value="{#salesInvoiceLine.Line_Amount__c}" minimumFractionDigits="2" maximumFractionDigits="2"/>
+                                    </c:FlexDataTableColumn>
+                                </aura:set> -->
+                            <!-- </c:FlexDataTable> -->
+                        <!-- </aura:set> -->
+                    <!-- </aura:if> -->
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12">
+                    <lightning:layout>
+                        <lightning:layoutItem size="8" padding="horizontal-small">
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="2" padding="horizontal-small">
+                            <b>Amount: <lightning:formattedNumber style="currency" currencyCode="USD" value="{!v.total}"/></b>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="2" padding="horizontal-small">
+                            <b>Amount Including Tax: <lightning:formattedNumber style="currency" currencyCode="USD" value="{!v.totalInclTax}"/></b>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </lightning:layout>
+    </lightning:card>
+    <!--
+    </c:CollapsibleSection>
+    -->
+</aura:component>

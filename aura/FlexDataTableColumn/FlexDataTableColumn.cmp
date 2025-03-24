@@ -1,0 +1,9 @@
+<aura:component implements="force:appHostable" access="global">
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="style" type="String" access="public"/>
+    <aura:attribute name="checkbox" type="String" access="public"/>
+    <!--ticket 20808-->
+    <aura:attribute name="sortable" type="String" access="public"/>
+    <!--ticket 20808-->
+</aura:component>

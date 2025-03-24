@@ -1,0 +1,38 @@
+<aura:component description="SelectJobTaskTemplateLine">
+    <!--attributes-->
+    <aura:attribute name="jobTaskTemplateLine" type="Object" access="public"/>
+
+    <!--body-->
+    <tr class="slds-hint-parent">
+        <td scope="row">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.jobTaskTemplateLine.Selected}" onchange="{!c.handleSelectChange}"/>
+        </td>
+        <td scope="row">            
+                <span style="display:inline-flex; width:85px;">
+               		 <lightning:input type="number" variant="label-hidden" value="{!v.jobTaskTemplateLine.Quantity__c}" onchange="{!c.handleQuantityChange}" min="0"/>
+            	</span>
+                <span style="display:inline-flex;" class="slds-p-left--xxx-small">
+                    <lightning:buttonIcon iconName="utility:clear" size="medium" onclick="{!c.handleClearQuantity}"/>
+                </span>
+        </td>
+        <td scope="row">
+            {!v.jobTaskTemplateLine.Category__c}
+        </td>
+        <td scope="row">
+            <aura:if isTrue="{!v.jobTaskTemplateLine.Resource_Type__r}">
+                {!v.jobTaskTemplateLine.Resource_Type__r.Name}
+            </aura:if>
+            <aura:if isTrue="{!v.jobTaskTemplateLine.Resource__r}">
+                {!v.jobTaskTemplateLine.Resource__r.Name}
+            </aura:if>
+        </td>
+        <td scope="row">
+            {!v.jobTaskTemplateLine.Description__c}
+        </td>
+        <td scope="row">
+            <aura:if isTrue="{!v.jobTaskTemplateLine.Unit_of_Measure__r}">
+                {!v.jobTaskTemplateLine.Unit_of_Measure__r.Name}
+            </aura:if>
+        </td>
+    </tr>
+</aura:component>

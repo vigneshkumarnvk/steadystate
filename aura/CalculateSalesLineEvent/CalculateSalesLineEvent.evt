@@ -1,0 +1,7 @@
+<!--
+ - Created by Kevin on 1/9/2020.
+ -->
+
+<aura:event type="COMPONENT" description="CalculateSalesLineEvent">
+    <aura:attribute name="lineNo" type="Integer" access="public"/>
+</aura:event>

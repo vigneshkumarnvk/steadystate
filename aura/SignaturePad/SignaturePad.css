@@ -1,0 +1,7 @@
+.THIS {
+}
+
+.THIS .toggle-checkbox {
+    display: inline-flex;
+    width: auto;
+}

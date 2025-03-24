@@ -1,0 +1,74 @@
+<aura:component description="CollapsibleSection">
+    <!--attributes-->
+    <aura:attribute name="collapsed" type="Boolean" default="true" access="public"/>
+    <aura:attribute name="title" type="Object" access="public"/>
+    <aura:attribute name="label" type="Object" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:attribute name="iconSize" type="String" access="public"/>
+    <aura:attribute name="header" type="Object" access="public"/>
+    <aura:attribute name="actions" type="Object" access="public"/>
+    <aura:attribute name="body" type="Object" access="public"/>
+    <aura:attribute name="activeMessage" type="String" access="public"/>
+    <aura:attribute name="inactiveMessage" type="String" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <ul class="slds-accordion">
+        <li class="slds-accordion__list-item" style="margin: 0px;padding: 0px">
+            <section aura:id="section" class="{!if(v.collapsed == true, 'slds-accordion__section slds-is-closed', 'slds-accordion__section slds-is-open')}">
+                <div>
+                    <aura:if isTrue="{!v.iconName}">
+                        <lightning:icon iconName="{!v.iconName}" size="{!v.iconSize}" class="slds-p-right--small"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.title}">
+                        <span class="slds-text-title_bold slds-p-right--xxx-small" style="vertical-align: middle;">
+                            {!v.title}
+                        </span>
+                    </aura:if>
+                </div>
+                <div class="slds-accordion__summary">
+                    <h3 class="slds-accordion__summary-heading">
+                        <div onclick="{!c.collapseSection}" style="cursor:pointer;">
+                            <lightning:icon iconName="{!if(v.collapsed == true, 'utility:right', 'utility:down')}" size="x-small"/>
+                            <aura:if isTrue="{!v.label}">
+                                <span class="slds-p-left--xx-small" style="display: inline-block;">{!v.label}</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.inactiveMessage &amp;&amp; v.activeMessage}">
+                                <aura:if isTrue="{!v.collapsed == true}">
+                                    {!v.activeMessage}
+                                    <aura:set attribute="else">
+                                        {!v.inactiveMessage}
+                                    </aura:set>
+                                </aura:if>
+                            </aura:if>
+                        </div>
+                        <aura:if isTrue="{!v.header != null}">
+                            <div class="slds-accordion__summary-content">
+                                {!v.header}
+                            </div>
+                        </aura:if>
+                    </h3>
+                    <div>
+                        {!v.actions}
+                    </div>
+                </div>
+                <div class="slds-accordion__content">
+                    {!v.body}
+                </div>
+                <!--
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                        {!v.body}
+                    </lightning:layoutItem>
+                </lightning:layout>
+                -->
+            </section>
+        </li>
+    </ul>
+</aura:component>

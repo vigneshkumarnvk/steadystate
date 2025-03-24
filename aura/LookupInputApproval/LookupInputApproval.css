@@ -1,0 +1,40 @@
+.THIS .slds-input:focus { /*hide input border*/
+    box-shadow: none;
+}
+
+.THIS .disabled-background {
+    background: rgb(233, 234, 236);
+}
+
+.THIS span.disabled-background>button.slds-pill__remove {
+    display: none !important;
+}
+
+.THIS .lookup-input input {
+    line-height: 1.215rem !important;
+    min-height: 1.125rem !important;
+    padding: 0.125rem !important;
+    margin: 0.03125rem !important;
+}
+
+.THIS .slds-pill-container {
+    border: 1px solid rgb(221, 219, 218);
+    padding: 0.125rem;
+    display: flex;
+    min-height: calc(1.875rem + 2px);
+    border-radius: 0.25rem;
+}
+
+.THIS .slds-pill__label {
+    white-space: normal;
+}
+
+.THIS .word-break { /*pill wrap text*/
+    white-space: normal;
+    word-break: break-word;
+}
+
+/*
+.THIS .slds-lookup__menu {
+    padding: 0px;
+}*/

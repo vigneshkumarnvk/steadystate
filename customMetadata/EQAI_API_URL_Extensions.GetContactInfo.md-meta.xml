@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>GetContactInfo</label>
+    <protected>false</protected>
+    <values>
+        <field>API_Extension_Name__c</field>
+        <value xsi:type="xsd:string">GetContactInfo</value>
+    </values>
+    <values>
+        <field>API_Extension__c</field>
+        <value xsi:type="xsd:string">/Gateway/Contact/contacts</value>
+    </values>
+    <values>
+        <field>API_Key__c</field>
+        <value xsi:type="xsd:string">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAscBGNlaAnyE9RgNIyW0ciHMSRCKc8sK4Bu7jDion/3DUC7dfmeWX/qpmLCiBFXlRXFrRDd5MbRO2Gc03TZVKaGwyQV0gZijzPaVs/MPNDeZsxB8igwy0baC91i7lx83jyLKqo5N1xH1zSSs3TnzdRQimFjM5l701UMz+sWXmav1L3LyAskF1jYzPvHHSttqpFS50VGviCACE6xrvv6lsjRXvMNnWxx7e0QWeN8T2Elo1CTepJ+KB70nSmN3Fn0NSTpJFVExwFtEXKpYPRT3K2n7Pmi03y/qIDF+f6lqyrR8Zxov5Srdeg7meM3RdFWxssYyaICsfeFhwvjTsp85VGQIDAQAB</value>
+    </values>
+    <values>
+        <field>API_Token__c</field>
+        <value xsi:type="xsd:string">eyJvcmdpbiI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJTYW1wbGVDUk0ifQ.lbuypGRVhkZ84-VgmFFChs9ffS-37GyhUQiipxZyKuE</value>
+    </values>
+</CustomMetadata>

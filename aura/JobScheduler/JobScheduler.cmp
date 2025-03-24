@@ -1,0 +1,179 @@
+<aura:component controller="JobSchedulerController" extends="c:BaseComponent" implements="force:hasRecordId,force:appHostable">
+    <!--attributes-->
+    <aura:attribute name="jobs" type="List" default="[]" access="private"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <div style="z-index: 9999;">
+            <lightning:spinner variant="brand" size="large" alternativeText="loading" class="slds-spinner_container"/>
+        </div>
+    </aura:if>
+
+    <!--body-->
+    <lightning:card title="Job Scheduler" iconName="standard:schedule_objective">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button label="Add Job" variant="brand" onclick="{!c.addJob}"/>
+                <lightning:button label="Refresh" onclick="{!c.doInit}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+            <thead>
+            <tr class="slds-line-height_reset">
+                <th class="" scope="col" style="width:20%">
+                    <div class="slds-truncate">Job Name</div>
+                </th>
+                <!--
+                <th scope="col" style="width: 10%;">
+                    <div class="slds-truncate">Batch Size</div>
+                </th>
+                -->
+                <th class="" scope="col" style="width: 30%">
+                    <div class="slds-truncate">Frequency</div>
+                </th>
+                <th class="slds-border--right" scope="col" style="width: 40%">
+                    <div class="slds-truncate">State</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.jobs}" var="job" indexVar="index">
+                <tr class="slds-hint-parent">
+                    <th scope="row">
+                        <div class="slds-truncate">
+                            {!job.label}
+                        </div>
+                    </th>
+                    <!--
+                    <td class="slds-align-bottom">
+                        <lightning:input type="number" variant="label-hidden" max="200" min="1" aura:id="batch-size" value="{!job.BatchSize}"/>
+                    </td>
+                    -->
+                    <td class="slds-align-bottom">
+                        <div style="width: 100%">
+                            <span style="display: inline-flex">
+                                <lightning:select aura:id="frequency" label="Daily/Hourly" value="{!job.Frequency}" disabled="{!job.ApexJobId != null}">
+                                    <option value="" label=""/>
+                                    <option value="Weekly" label="Weekly"/>
+                                    <option value="Daily" label="Daily"/>
+                                    <option value="Hourly" label="Hourly"/>
+                                </lightning:select>
+                            </span>
+                            <aura:if isTrue="{!job.Frequency == 'Weekly'}">
+                                        <span style="display: inline-flex" class="slds-p-horizontal--x-small">
+                                            <lightning:select aura:id="weekdays" label="Day" value="{!job.WeekDay}" disabled="{!job.ApexJobId != null}">
+                                                <option value="" label=""/>
+                                                <option value="1" label="SUN"/>
+                                                <option value="2" label="MON"/>
+                                                <option value="3" label="TUE"/>
+                                                <option value="4" label="WED"/>
+                                                <option value="5" label="THR"/>
+                                                <option value="6" label="FRI"/>
+                                                <option value="7" label="SAT"/>
+                                            </lightning:select>
+                                        </span>
+                            </aura:if>
+                            <aura:if isTrue="{!job.Frequency == 'Daily' || job.Frequency == 'Weekly'}">
+                                <span style="display: inline-flex" class="slds-p-horizontal--x-small">
+                                    <lightning:select aura:id="hours" label="Hour" value="{!job.Hour}" disabled="{!job.ApexJobId != null}">
+                                        <option value="" label=""/>
+                                        <option value="01" label="01"/>
+                                        <option value="02" label="02"/>
+                                        <option value="03" label="03"/>
+                                        <option value="04" label="04"/>
+                                        <option value="05" label="05"/>
+                                        <option value="06" label="06"/>
+                                        <option value="07" label="07"/>
+                                        <option value="08" label="08"/>
+                                        <option value="09" label="09"/>
+                                        <option value="10" label="10"/>
+                                        <option value="11" label="11"/>
+                                        <option value="12" label="12"/>
+                                    </lightning:select>
+                                </span>
+                            </aura:if>
+                            <aura:if isTrue="{!job.Frequency == 'Daily' || job.Frequency == 'Hourly' || job.Frequency == 'Weekly'}">
+                                <span style="display: inline-flex" class="slds-p-horizontal--x-small">
+                                    <lightning:select aura:id="minutes" label="Minute" value="{!job.Minute}" disabled="{!job.ApexJobId != null}">
+                                        <option value="" label=""/>
+                                        <option value="00" label="00"/>
+                                        <option value="05" label="05"/>
+                                        <option value="10" label="10"/>
+                                        <option value="15" label="15"/>
+                                        <option value="20" label="20"/>
+                                        <option value="25" label="25"/>
+                                        <option value="30" label="30"/>
+                                        <option value="35" label="35"/>
+                                        <option value="40" label="40"/>
+                                        <option value="45" label="45"/>
+                                        <option value="50" label="50"/>
+                                        <option value="55" label="55"/>
+                                    </lightning:select>
+                                </span>
+                            </aura:if>
+                            <aura:if isTrue="{!job.Frequency == 'Daily' || job.Frequency == 'Weekly'}">
+                                <span style="display: inline-flex" class="slds-p-horizontal--x-small">
+                                    <lightning:select aura:id="meridiem" label="AM/PM" value="{!job.Meridiem}" disabled="{!job.ApexJobId != null}">
+                                        <option value="" label=""/>
+                                        <option value="AM" label="AM"/>
+                                        <option value="PM" label="PM"/>
+                                    </lightning:select>
+                                </span>
+                            </aura:if>
+                            <span style="display: inline-flex" class="slds-p-horizontal--x-small slds-align-bottom">
+                                <aura:if isTrue="{!job.ApexJobId != null}">
+                                    <lightning:button label="Unschedule" variant="destructive" value="{!index}" onclick="{!c.unschedule}"/>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!and(job.Frequency != null, job.Frequency != '')}">
+                                            <lightning:button label="Schedule" variant="brand" value="{!index}" onclick="{!c.schedule}"/>
+                                            <aura:set attribute="else">
+                                                <lightning:button label="Run Now" variant="brand-outline" value="{!index}" onclick="{!c.runNow}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="slds-border--right">
+                        <aura:if isTrue="{!job.ApexJobId != null}">
+                            <div style="display: inline-flex;">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-01">Last Run Time</label>
+                                    <div class="slds-form-element__control">
+                                        <lightning:formattedDateTime id="form-element-01" value="{!job.LastRunTime}" year="2-digit" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: inline-flex;" class="slds-p-horizontal--x-small">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-02">State</label>
+                                    <div class="slds-form-element__control">
+                                        {!job.ScheduleState}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: inline-flex;" class="slds-p-horizontal--x-small">
+                                <div class="slds-form-element">
+                                    <label class="slds-form-element__label" for="form-element-02">Next Run Time</label>
+                                    <div class="slds-form-element__control">
+                                        <lightning:formattedDateTime id="form-element-02" value="{!job.NextRunTime}" year="2-digit" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <aura:set attribute="else">
+                                Not Scheduled
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                </tr>
+            </aura:iteration>
+            </tbody>
+        </table>
+
+    </lightning:card>
+</aura:component>

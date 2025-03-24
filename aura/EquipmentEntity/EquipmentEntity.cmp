@@ -1,0 +1,239 @@
+<aura:component extends="c:TMBase">        
+    <!--attributes-->
+    <aura:attribute name="lineIndex" type="Integer" required="true"/>
+    <aura:attribute name="data" type="sObject"/>
+    <aura:attribute name="size" type="Integer" default="12"/>
+    <aura:attribute name="smallDeviceSize" type="Integer" default="12"/>
+    <aura:attribute name="mediumDeviceSize" type="Integer" default="6"/>
+    <aura:attribute name="largeDeviceSize" type="Integer" default="6"/>
+    
+    <aura:attribute name="expanded" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="hours" type="String" access="private"/>
+    <aura:attribute name="lastEnteredTime" type="String" access="private" description="memorize time entered in the last time field and used for next entry."/>
+    
+    <!--events-->
+    <aura:registerEvent name="deleteTMLineEvent" type="c:DeleteTMLineEvent"/>
+    <aura:registerEvent name="copyTimeEvent" type="c:CopyTimeEvent"/>
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.data}" action="{!c.doPendingChangesStatus}"/>
+                  
+    <!--method-->
+    <aura:method name="expand" action="{!c.expand}"/>
+    <aura:method name="collapse" action="{!c.collapse}"/>
+    
+    <!--body-->    
+    <c:ModalDialog aura:id="modal"/>  
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    
+    <lightning:card aura:id="card" class="{!v.expanded == true ? 'slds-card_boundary slds-show' : 'slds-card_boundary slds-show'}">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete" iconName="utility:delete" onclick="{!c.doDelete}" class="{!v.expanded == true ? 'slds-show' : 'slds-hide'}"/>	
+                    <lightning:button label="Copy Time" iconName="utility:copy" onclick="{!c.doCopyTime}" class="{!v.expanded == true ? 'slds-show' : 'slds-hide'}"/>
+                    <lightning:button label="{!v.expanded == true ? 'Collapse' : 'Expand'}" iconName="{!v.expanded == true ? 'utility:dash' : 'utility:add'}" onclick="{!c.toggleDetail}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        
+        <aura:set attribute="title">
+            <lightning:layout class="slds-grid_vertical-align-center">
+                <lightning:layoutItem>
+                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!v.data.Selected}" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small">
+                    <lightning:icon iconName="standard:custom"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem>
+                    {!v.data.Resource_Type__r.Name + ': ' + v.data.Resource_Name__c}
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+
+        <div aura:id="detail" class="{!v.expanded == true ? 'slds-show' : 'slds-hide'}">
+            <lightning:layout>
+                <lightning:layoutItem padding="around-small" size="4">
+                    <!--c:customLookup aura:id="resourceTypeLookup" label="Type" objectAPIName="Resource_Type__c" fieldNames="['Name']" fieldLabels="['Name']" additionalFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c', 'Fleet_No_Required__c']" filters="Blocked__c!=TRUE AND Category__c='Equipment'" IconName="standard:picklist_type" selectedRecord="{!v.data.Resource_Type__r}" customLookupSelectEvent="{!c.handleResourceTypeSelect}"/-->
+                    <c:LookupInput aura:id="resourceTypeLookup" label="Type" value="{!v.data.Resource_Type__r}" SObjectName="Resource_Type__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Description__c', 'Unit_of_Measure__r.Hours_UOM__c']" filter="Blocked__c!=TRUE AND Category__c='Equipment'" onchange="{!c.handleResourceTypeChange}"/>
+                </lightning:layoutItem>
+                <!--05.17.2019-->
+                <lightning:layoutItem padding="around-small" size="2">
+                    <!--c:customLookup aura:id="serviceCenterLookup" label="Service Center" objectAPIName="Service_Center__c" fieldNames="['Name', 'Description__c']" fieldLabels="['No.', 'Description']" filters="" IconName="standard:picklist_type" selectedRecord="{!v.data.Service_Center__r}" customLookupSelectEvent="{!c.handleServiceCenterSelect}"/-->
+                    <c:LookupInput aura:id="serviceCenterLookup" label="Service Center" value="{!v.data.Service_Center__r}" SObjectName="Service_Center__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" columns="[{label: 'No.', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" onchange="{!c.handleServiceCenterChange}"/>
+                </lightning:layoutItem>
+                <!--05.17.2019-->
+                <lightning:layoutItem padding="around-small" size="3">
+                    <!--
+                    <div class="slds-grid">
+                        <div class="slds-col" style="width:100%">
+					-->
+                            <!--06.17.2019-->
+                            <!--
+                            <c:customLookup aura:id="resourceLookup" label="Equipment" objectAPIName="Resource__c" field="Name" fieldNames="['Name', 'Description__c']" fieldLabels="['No.', 'Name']" filters="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\' AND Resource_Type__c=\'' + v.data.Resource_Type__r.Id + '\' AND Service_Center__c=\'' + v.data.Service_Center__c + '\''}" IconName="standard:custom" selectedRecord="{!v.data.Resource__r}" customLookupSelectEvent="{!c.handleResourceSelect}"/>
+							-->
+                            <!--c:customLookup aura:id="resourceLookup" label="Equipment" objectAPIName="Resource__c" field="Name" fieldNames="['Name', 'Description__c', 'Resource_Type__r.Name', 'Service_Center__r.Name']" additionalFields="['Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c']" fieldLabels="['No.', 'Name', 'Resource Type', 'Service Center']" filters="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\' '}" IconName="standard:custom" selectedRecord="{!v.data.Resource__r}" customLookupSelectEvent="{!c.handleResourceSelect}"/-->
+                            <aura:if isTrue="{!v.data.Service_Center__r.Name != '99 - Temp'}">
+                                <c:LookupInput aura:id="resourceLookup"
+                                               label="Equipment"
+                                               value="{!v.data.Resource__r}"
+                                               SObjectName="Resource__c"
+                                               pill="{iconName: 'standard:custom', fieldName: 'Name'}"
+                                               columns="[{label: 'Name', fieldName: 'Name'},
+                                                            {label: 'Description', fieldName: 'Description__c'},
+                                                            {label: 'SC', fieldName: 'Service_Center__r.Name', style: 'width: 50px;'}]"
+                                               queryFields="['Name', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Name',
+                                                                'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c']"
+                                               filter="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\''}"
+                                               onchange="{!c.handleResourceChange}"/>
+                                <aura:set attribute="else">
+                                    <c:LookupInput aura:id="resourceLookup"
+                                                   label="Equipment"
+                                                   value="{!v.data.Resource__r}"
+                                                   SObjectName="Resource__c"
+                                                   pill="{iconName: 'standard:custom', fieldName: 'Name'}"
+                                                   columns="[{label: 'Name', fieldName: 'Name'},
+                                                        {label: 'Description', fieldName: 'Description__c'},
+                                                        {label: 'SC', fieldName: 'Service_Center__r.Name', style: 'width: 50px;'}]"
+                                                   queryFields="['Name', 'Resource_Type__r.Unit_of_Measure__c',
+                                                            'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c']"
+                                                   filter="{!'Blocked__c!=TRUE AND Category__c=\'Equipment\' AND Service_Center__c=\'' + v.data.Service_Center__c + '\''}"
+                                                   onchange="{!c.handleResourceChange}"/>
+                                </aura:set>
+                            </aura:if>
+                            <!--06.17.2019-->
+                    <!--
+                        </div>
+                        <div class="slds-col slds-m-left_xxx-small">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="scanButton">&nbsp;</label>
+                                <div class="slds-form-element__control">
+                                    <c:BarcodeScanner aura:id="resourceScanner" displayScanResult="false"/>
+                                    <lightning:buttonIcon iconName="utility:photo" onclick="{!c.doScanResource}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    				-->
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="3">
+                    <aura:if isTrue="{!v.data.Service_Center__r.Name == '99 - Temp'}">
+                        <lightning:input label="Equipment Name" value="{!v.data.Resource_Name__c}"/>
+                    </aura:if>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem padding="around-small" size="4">
+                    <!--c:customLookup aura:id="laborLineLookup" label="Labor" objectAPIName="TM_Line__c" field="Resource_Name__c" fieldNames="['Resource_Type__r.Name', 'Resource_Name__c']" additionalFields="['Job_Start_Time__c', 'Job_End_Time__c']" fieldLabels="['Resource Type', 'Resource Name']" filters="{!'TM__c=\'' + v.data.TM__c + '\' AND Category__c=\'Labor\''}" IconName="standard:avatar" selectedRecord="{!v.data.Linked_Line__r}" customLookupSelectEvent="{!c.handleLaborLineSelect}"/-->
+                    <c:LookupInput aura:id="laborLineLookup" label="Labor" value="{!v.data.Linked_Line__r}" SObjectName="TM_Line__c" pill="{iconName: 'standard:avatar', fieldName: 'Resource_Name__c'}" columns="[{label: 'Resource Type', fieldName: 'Resource_Type__r.Name'}, {label: 'Resource Name', fieldName: 'Resource_Name__c'}]" queryFields="['Name', 'Site_Start_Time__c', 'Job_Start_Time__c', 'Job_End_Time__c', 'Site_End_Time__c', 'Quantity__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Description__c', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'TM__c=\'' + v.data.TM__c + '\' AND Category__c=\'Labor\''}" onchange="{!c.handleLaborLineChange}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="2">
+                    <!--05.17.2019-->
+                    <!--<lightning:input type="time" label="Job Start Time" value="{!v.data.Job_Start_Time__c}" onchange="{!c.doJobStartTimeChange}" class="slds-truncate"/>-->
+                    <c:InputTime label="Job Start Time" value="{!v.data.Job_Start_Time__c}" onchange="{!c.handleJobStartTimeChange}" onfocus="{!c.handleJobStartTimeFocus}"/>
+                    <!--05.17.2019-->
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="2">
+                    <!--05.17.2019-->
+                    <!--<lightning:input type="time" label="Job End Time" value="{!v.data.Job_End_Time__c}" onchange="{!c.doJobEndTimeChange}" class="slds-truncate"/>-->
+                    <c:InputTime label="Job End Time" value="{!v.data.Job_End_Time__c}" onchange="{!c.handleJobEndTimeChange}" onfocus="{!c.handleJobEndTimeFocus}"/>
+                    <!--05.17.2019-->
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="2">
+                    <lightning:input type="number" label="Quantity" value="{!v.data.Quantity__c}" disabled="{!v.data.Resource_Type__r.Fleet_No_Required__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="2">
+                    <c:LookupInput  aura:id="unitOfMeasureLookup" label="Unit of Measure" value="{!v.data.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" pill="{iconName: 'standard:picklist_type', fieldName: 'Description__c'}" columns="[{label: 'No.', fieldName: 'Name'}, {label: 'Name', fieldName: 'Description__c'}]" queryFields="['Name']" filter="Blocked__c!=TRUE" disabled="true"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    
+    <div aura:id="summary" class="{!v.expanded != true ? 'slds-show' : 'slds-hide'}">
+        <aura:if isTrue="{!v.lineIndex >=0}">
+            <!--column header-->
+            <lightning:layout horizontalAlign="space" multipleRows="true">
+                <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Equipment Type</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Equipment No.</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Job Start Time</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Job End Time</label>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Quantity</label>
+                    </div>
+                </lightning:layoutItem>
+                <!--
+                <lightning:layoutItem size="9" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Expand</label>
+                    </div>
+                </lightning:layoutItem>
+				-->
+        	</lightning:layout>
+			<!--column header-->
+		</aura:if>            
+        <lightning:layout horizontalAlign="space" multipleRows="true">
+            <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedText type="text" value="{!v.data.ResourceTypeName}"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedText type="text" value="{!v.data.Resource_Name__c}" class="slds-truncate"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedTime value="{!v.data.Job_Start_Time__c}"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedTime value="{!v.data.Job_End_Time__c}"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="5" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                		<lightning:formattedNumber value="{!v.data.Quantity__c}" style="decimal"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+            <!--
+            <lightning:layoutItem size="9" smallDeviceSize="1" mediumDeviceSize="1" largeDeviceSize="1">
+                <div class="slds-form-element">
+  					<div class="slds-form-element__control">
+                        <lightning:button label="{!v.expanded == true ? '' : ''}" variant="base" iconName="{!v.expanded == true ? 'utility:dash' : 'utility:add'}" onclick="{!c.toggleDetail}"/>
+                    </div>
+                </div>
+            </lightning:layoutItem>
+			-->
+        </lightning:layout>
+    </div>
+</aura:component>

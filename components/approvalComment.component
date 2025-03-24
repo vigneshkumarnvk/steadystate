@@ -1,0 +1,29 @@
+<apex:component id="approvalComment" controller="ApprovalComment" access="global">
+    <apex:attribute name="objectId" description="Record Id" type="Id" assignTo="{!recordId}" />
+
+    <apex:outputPanel rendered="{!approvalCommensWraps.size > 0}">
+        <table>
+            <tbody>
+            <tr>
+                <th colspan="3" style="text-align: left">Approval Comments</th>
+            </tr>
+            <tr>
+                <td style="width: 150px; border-bottom: black solid 1px;">By</td>
+                <td style="width: 300px; border-bottom: black solid 1px;">Comment</td>
+                <td style="width: 200px; border-bottom: black solid 1px;">Date/Time</td>
+            </tr>
+            <apex:repeat value="{!approvalCommensWraps}" var="approvalComment">
+                <tr>
+                    <td>{!approvalComment.actor}</td>
+                    <td>{!approvalComment.comment}</td>
+                    <td>
+                        <apex:outputText value="{0, date, yyyy-mm-dd hh:mm:ss}">
+                            <apex:param value="{!approvalComment.createdDate}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </apex:repeat>
+            </tbody>
+        </table>
+    </apex:outputPanel>
+</apex:component>

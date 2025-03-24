@@ -1,0 +1,45 @@
+<apex:component access="global" selfClosing="true">
+    <apex:attribute access="global" name="loadingtext" type="String" default="" description="Loading Text"/>
+    <style>
+        #loadingstatusdiv{ background-color:white; padding: 15px 20px; position:fixed; text-align:center;
+            z-index: 999; border-radius: 5px; top:40%; left: 50%; display:none; }
+        #overlaymask { background-color: #000; height:100%; width:100%; opacity: 0.5;
+            z-index: 998; position:fixed; left:0; top:0; display:none; }
+    </style>
+
+    <apex:actionStatus id="loadingstatus" onstart="showLoadingStatus()" onstop="hideLoadingStatus()">
+
+    </apex:actionStatus>
+    <div id="loadingstatusdiv">
+        <img src="/img/loading32.gif" width="32"/>
+        <apex:outputPanel layout="none" rendered="{!loadingtext!=null && loadingtext!=''}">
+            &nbsp;&nbsp;&nbsp;
+            <span style="position:relative; top:-11px;"><b>{!loadingtext}</b></span>
+        </apex:outputPanel>
+    </div>
+    <div id="overlaymask"></div>
+    <script>
+        function showLoadingStatus() {
+            document.getElementById('loadingstatusdiv').style.display = 'block';
+            document.getElementById('overlaymask').style.display = 'block';
+            adjustStatusDivInCenter();
+        }
+        function hideLoadingStatus() {
+            document.getElementById('loadingstatusdiv').style.display = 'none';
+            document.getElementById('overlaymask').style.display = 'none';
+        }
+        function adjustStatusDivInCenter()
+        {
+            try
+            {
+                divId = 'loadingstatusdiv'; // id of the div that you want to show in center
+
+                var objDiv = document.getElementById(divId);
+                //objDiv.style.marginTop = '-' + (objDiv.offsetHeight / 2) + 'px' ;
+                objDiv.style.marginLeft = '-' + (objDiv.offsetWidth / 2) + 'px' ;
+            }
+            catch (e) {}
+        }
+    </script>
+
+</apex:component>

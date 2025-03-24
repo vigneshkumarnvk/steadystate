@@ -1,0 +1,39 @@
+<aura:component extensible="false" implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <ltng:require styles="/resource/SLDS102/styles/salesforce-lightning-design-system.css" />
+    <!--event-->
+    <aura:registerEvent name="onScanComplete" type="c:BarcodeScanCompleteEvent"/>
+    
+    <!--attribute-->
+    <aura:attribute name="displayScanResult" type="Boolean" default="true" />
+    <aura:attribute name="barcode" type="String" default="" />
+    <aura:attribute name="callerComponent" type="Aura.Component" access="private"/>
+    <aura:attribute name="callerEvent" type="Object" access="private"/>
+    <aura:attribute name="callback" type="Object" access="private"/>
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="onScanComplete" type="c:BarcodeScanCompleteEvent" action="{!c.handleScanComplete}"/>
+    
+    <!--method-->
+	<aura:method name="scan" action="{!c.scanBarcode}">
+        <aura:attribute name="callerComponent" type="Aura.Component"/>
+        <aura:attribute name="callerEvent" type="Object"/>
+    	<aura:attribute name="callback" type="Object"/>
+    </aura:method>
+    
+    <!--body-->
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:spinner aura:id="_spinner" variant="brand" size="large" class="slds-hide"/>
+        <div class="slds-hide" >
+            <input aura:id="uploadBarcode" type="file" multiple="false" accept="image/*" onchange="{!c.uploadBarcode}"/>
+        </div>
+    	<!--
+    	<span>
+            <lightning:buttonIcon variant="border-filled" iconName="utility:photo" onclick="{!c.scanBarcode}" alternativeText="Scan"/>
+        </span>
+		-->
+        <div class="slds-hide" aura:id="_barcodeImageContainer">
+            <img aura:id="barcodeImage" class="barcodeContainer" src=""/>
+        </div>
+        <iframe src="/resource/barcodeScanner/quaggajs.html" style="width:100%;" aura:id="_quaggaFrame" frameborder="0" class="slds-hide" ></iframe>
+</aura:component>

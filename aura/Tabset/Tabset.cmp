@@ -1,0 +1,37 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="tabs" type="List" access="private"/>
+    <aura:attribute name="selectedTabId" type="String" access="public"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.selectedTabId}" action="{!c.handleSelectedTableIdChange}"/>
+
+    <!--event-->
+    <aura:registerEvent name="onchange" type="c:TabChangeEvent"/>
+
+    <!--body-->
+    <div class="slds-tabs_scoped">
+        <ul class="slds-tabs_scoped__nav" role="tablist">
+            <aura:iteration items="{!v.tabs}" var="tab">
+                <li class="{!if(v.selectedTabId == tab.id, 'slds-tabs_scoped__item slds-is-active', 'slds-tabs_scoped__item')}" title="{!tab.label}" role="presentation">
+                    <a class="slds-tabs_scoped__link" href="javascript:void(0);" role="tab" tabindex="{!if(v.selectedTabId == tab.id, 0, -1)}" id="{!tab.id}" onclick="{!c.handleTabClick}">
+                        <span class="slds-tabs__left-icon">
+                            <lightning:icon iconName="{!tab.iconName}" size="small"/>
+                        </span>
+                        {!tab.label}
+                    </a>
+                </li>
+            </aura:iteration>
+        </ul>
+        
+        <!--
+        <aura:iteration items="{!v.tabs}" var="tab">
+        	<div id="{tab.id}" data-value="{!tab.id}" aura:id="{!tab.id}" class="{!if(v.selectedTabId == tab.id, 'slds-tabs_scoped__content slds-show',  'slds-tabs_scoped__content slds-show')}" role="tabpanel" aria-labelledby="{!tab.id}">
+            </div>
+        </aura:iteration>
+        -->
+        <div aura:id="container"/>
+
+    </div>
+</aura:component>

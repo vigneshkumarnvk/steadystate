@@ -1,0 +1,24 @@
+<aura:component controller="Mobile_CustomPicklistController">
+    
+  	<!--attributes-->
+    <aura:attribute name="name" type="String"/>
+   	<aura:attribute name="objectName" type="String" />
+    <aura:attribute name="controlValue" type="String"/>
+    <aura:attribute name="fieldName" type="String" />
+    <aura:attribute name="label" type="String"/>
+    <aura:attribute name="value" type="String" default=""/>
+    <aura:attribute name="options" type="Object" access="private"/>
+    <!--events-->
+    <aura:registerEvent name="valueChangeEvent" type="c:ValueChangeEvent"/>    
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.controlValue}" action="{!c.doInit}"/>
+    
+    <!--body-->
+    <lightning:select aura:id="{!v.name}" label="{!v.label}" value="{!v.value}" onchange="{!c.fireEvent}">
+        <aura:iteration items="{!v.options}" var="option">
+            <option value="{!option.value}" selected="{!option.value == v.value}">{!option.label}</option>
+        </aura:iteration>
+    </lightning:select>
+</aura:component>

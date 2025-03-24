@@ -1,0 +1,41 @@
+<!--cache control-->
+<!-- 
+<aura:component extends="c:BaseComponent" implements="force:appHostable">
+-->
+<aura:component extends="c:BaseComponent" controller="MobileTMController" implements="force:appHostable">
+    <aura:attribute name="currentUser" type="User" access="public"/>
+    <force:recordData aura:id="recordLoader" recordId="{!$SObjectType.CurrentUser.Id}" fields="Allow_Mobile_TM_via_Desktop__c" targetFields="{!v.currentUser}"/>
+    <aura:attribute name="version" type="String" access="public"/>
+    <aura:attribute name="formFactor" type="String" access="public"/>
+    <!--cache control-->
+    <!--attributes-->
+    <aura:attribute name="tmId" type="Id" access="public"/>
+    <aura:attribute name="page" type="String" default="home" access="public"/>
+
+    <!--handlers-->
+    <!--cache control-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--cache control-->
+
+    <!--events--> 
+    <aura:handler name="tmNavigationEvent" event="c:TMNavigationEvent" action="{!c.handleTMNavigationEvent}"/>
+    
+    <!--body-->
+    <aura:if isTrue="{!v.formFactor != 'DESKTOP' || v.currentUser.Allow_Mobile_TM_via_Desktop__c == true}">
+        <aura:if isTrue="{!v.page == 'home'}">
+            <!--cache control-->
+            <c:MobileTMHome version="{!v.version}"/>
+            <!--cache control-->
+            <aura:set attribute="else">
+                <c:MobileTMContainer aura:id="container" tmId="{!v.tmId}" page="{!v.page}"/>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="else">
+            <div aura:id="page-container">
+                <lightning:card>
+                    Mobile TM is not allowed in desktop browser!
+                </lightning:card>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

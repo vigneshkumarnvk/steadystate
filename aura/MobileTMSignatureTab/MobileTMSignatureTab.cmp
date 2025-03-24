@@ -1,0 +1,231 @@
+<aura:component extends="c:MobileTMBase">
+    <!--attributes-->
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="groupedJobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="activeSections" type="List" default="['']" access="private"/>
+    <aura:attribute name="jobLog" type="String" access="private"/>
+    <!--ticket 19408-->
+    <aura:attribute name="errors" type="List" access="private"/>
+    <!--ticket 19408-->
+
+    <aura:attribute name="siteEmailAddress" type="String"/>
+    <aura:attribute name="supervisorSignatureWrapper" type="Object"/>
+    <aura:attribute name="customerASignatureWrapper" type="Object"/>
+    <aura:attribute name="customerBSignatureWrapper" type="Object"/>
+
+    <aura:attribute name="afterSaveCallback" type="Object"/>
+
+    <aura:handler name="showTermsAndConditionsEvent" event="c:ShowTermsAndConditionsEvent" action="{!c.handleShowTermsAndConditionsEvent}"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.tm}" action="{!c.handleTMChange}"/>
+    <aura:handler name="showTermsAndConditionsEvent" event="c:ShowTermsAndConditionsEvent" action="{!c.handleShowTermsAndConditionsEvent}"/>
+    <aura:handler name="mobileTMSendPDFEvent" event="c:MobileTMSendPDFEvent" action="{!c.handleMobileTMSendPDFEvent}"/>
+
+    <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+        <div class="scrollable-container">
+            <aura:iteration items="{!v.groupedJobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                <c:CollapsibleSection title="JOB TASK" label="{!jobTaskWrapper.JobTask.Name}" collapsed="false">
+                    <aura:if isTrue="{!jobTaskWrapper.LaborLines.length > 0}">
+                        <!--<lightning:card title="{!'LABOR Total Hours: ' + jobTaskWrapper.TotalLaborHours}">-->
+                        <lightning:card title="LABOR">
+                            <c:DataTable items="{!jobTaskWrapper.LaborLines}" var="tmLine">
+                                <aura:set attribute="template">
+                                    <c:DataColumn label="Resource Type">
+                                        {!tmLine.Resource_Type__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Resource Name">
+                                        {!tmLine.Resource_Name__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Hours">
+                                        {!tmLine.TotalHours}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!jobTaskWrapper.EquipmentLines.length > 0}">
+                        <!--<lightning:card title="{!'EQUIPMENT Total Hours: ' + jobTaskWrapper.TotalEquipmentHours}">-->
+                        <lightning:card title="EQUIPMENT">
+                            <c:DataTable items="{!jobTaskWrapper.EquipmentLines}" var="tmLine">
+                                <aura:set attribute="template">
+                                    <c:DataColumn label="Equipment Type*">
+                                        {!tmLine.Description__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Equipment No. (Fleet ID)">
+                                        {!tmLine.Resource__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Quantity">
+                                        <!--ticket 19982-->
+                                        <!--
+                                        {!tmLine.Quantity__c}
+                                        -->
+                                        <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                                        <!--ticket 19982-->
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Unit of Measure">
+                                        {!tmLine.Unit_of_Measure__r.Name}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!jobTaskWrapper.MaterialLines.length > 0}">
+                        <lightning:card title="MATERIAL">
+                            <c:DataTable items="{!jobTaskWrapper.MaterialLines}" var="tmLine">
+                                <aura:set attribute="template">
+                                    <c:DataColumn label="Material">
+                                        {!tmLine.Resource__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Quantity">
+                                        <!--ticket 19982-->
+                                        <!--
+                                        {!tmLine.Quantity__c}
+                                        -->
+                                        <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                                        <!--ticket 19982-->
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Unit of Measure">
+                                        {!tmLine.Unit_of_Measure__r.Name}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!jobTaskWrapper.WasteDisposalLines.length > 0}">
+                        <lightning:card title="WASTE DISPOSAL">
+                            <c:DataTable items="{!jobTaskWrapper.WasteDisposalLines}" var="tmLine">
+                                <aura:set attribute="template">
+                                    <c:DataColumn label="Manifest #">
+                                        {!tmLine.BOL_Manifest__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Description">
+                                        {!tmLine.Description__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Quantity">
+                                        <!--ticket 19982-->
+                                        <!--
+                                        {!tmLine.Quantity__c}
+                                        -->
+                                        <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                                        <!--ticket 19982-->
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Unit of Measure">
+                                        {!tmLine.Unit_of_Measure__r.Name}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Facility">
+                                        {!tmLine.Facility__r.Name}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!jobTaskWrapper.SubcontractorLines.length > 0}">
+                        <lightning:card title="COST PLUS">
+                            <c:DataTable items="{!jobTaskWrapper.SubcontractorLines}" var="tmLine">
+                                <aura:set attribute="template">
+                                    <c:DataColumn label="Description">
+                                        {!tmLine.Description__c}
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Quantity">
+                                        <!--ticket 19982-->
+                                        <!--
+                                        {!tmLine.Quantity__c}
+                                        -->
+                                        <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                                        <!--ticket 19982-->
+                                    </c:DataColumn>
+                                    <c:DataColumn label="Unit of Measure">
+                                        {!tmLine.Unit_of_Measure__r.Name}
+                                    </c:DataColumn>
+                                </aura:set>
+                            </c:DataTable>
+                        </lightning:card>
+                    </aura:if>
+
+                </c:CollapsibleSection>
+            </aura:iteration>
+
+            <lightning:card title="">
+                <aura:set attribute="actions">
+                    <lightning:buttonGroup>
+                        <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                            <!--ticket 19408-->
+                            <!--<lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.tm.Status__c != 'Scheduled' || v.jobLog == null}"/>-->
+                            <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.tm.Status__c != 'Scheduled' || v.tm.Customer_Comments__c == null}"/>
+                            <!--ticket 19408-->
+                        </aura:if>
+                    </lightning:buttonGroup>
+                </aura:set>
+
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem padding="horizontal-small" size="12">
+                        <!--ticket 19408-->
+                        <!--<lightning:textarea label="Job Log" value="{!v.jobLog}" class="text-box-size" required="true"/>-->
+                        <lightning:textarea label="Job Log" value="{!v.tm.Customer_Comments__c}" class="text-box-size" required="true"/>
+                        <!--ticket 19408-->
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small" size="12">
+                        <lightning:input type="toggle" label="Job Complete" variant="label-stacked" checked="{!v.tm.Job_Complete__c}" messageToggleActive="Yes" messageToggleInactive="No" onchange="{!c.handleJobComplete}" class="toggle-checkbox"/>
+                    </lightning:layoutItem>
+
+                    <!--ticket 19408-->
+                    <lightning:layoutItem padding="horizontal-small" size="12" class="slds-text-align--center">
+                        <div style="width: fit-content;display: inline-block">
+                            <aura:iteration items="{!v.errors}" var="error">
+                                <div class="slds-m-around--x-small slds-p-around--small" style="color:rgb(255, 255, 255);background-color:rgb(194, 57, 52);border-radius:0.25rem;">
+                                    <lightning:icon iconName="utility:error" variant="inverse" size="small"/>
+                                    <span class="slds-p-left--small toastMessage slds-text-heading--small forceActionsText" style="font-weight: 300;vertical-align:middle;">{!error}</span>
+                                </div>
+                            </aura:iteration>
+                        </div>
+                    </lightning:layoutItem>
+                    <!--ticket 19408-->
+
+                    <lightning:layoutItem padding="horizontal-small" size="12">
+                        <aura:if isTrue="{!v.unsavedChanges != true &amp;&amp; v.tm.Customer_Comments__c != null}">
+                            <lightning:card title="SIGNATURES">
+                                <lightning:layout multipleRows="true" horizontalAlign="center">
+                                    <lightning:layoutItem padding="around-small" flexibility="auto">
+                                        <!--ticket 19408-->
+                                        <!--<c:SignaturePad label="Supervisor" signatureWrapper="{!v.supervisorSignatureWrapper}" hideNotAvailableCheckbox="true" hideAcceptTermsCheckbox="true" hideEmailAddress="true" width="400" height="300"/>-->
+                                        <c:SignaturePad aura:id="supervisor-signature-box" label="Supervisor" signatureWrapper="{!v.supervisorSignatureWrapper}" fireBeforeSaveEvent="true" beforeSignatureSave="{!c.beforeSupervisorSignatureSave}" hideNotAvailableCheckbox="true" hideAcceptTermsCheckbox="true" hideEmailAddress="true" width="400" height="300"/>
+                                        <!--ticket 19408-->
+                                    </lightning:layoutItem>
+                                    <aura:if isTrue="{!v.supervisorSignatureWrapper.Signed == true}">
+                                        <aura:if isTrue="{!v.tm.Bill_to_Customer__r.Requires_2_Signatures_on_TM__c != true}">
+                                            <lightning:layoutItem padding="around-small" flexibility="auto">
+                                                <c:SignaturePad label="Customer" signatureWrapper="{!v.customerASignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                            </lightning:layoutItem>
+                                            <aura:set attribute="else">
+                                                <lightning:layoutItem padding="around-small" flexibility="auto">
+                                                    <c:SignaturePad label="Signature One" signatureWrapper="{!v.customerASignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                                </lightning:layoutItem>
+                                                <lightning:layoutItem padding="around-small" flexibility="auto">
+                                                    <c:SignaturePad label="Signature Two" signatureWrapper="{!v.customerBSignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                                </lightning:layoutItem>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:if>
+                                </lightning:layout>
+                            </lightning:card>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.tm.Customer_Comments__c == '' || v.tm.Customer_Comments__c == null}">
+                                    <div style="text-align:center"><p style="font-weight: bold;">** You must complete the job log and save to see the signature boxes.</p></div>
+                                    <aura:set attribute="else">
+                                        <div style="text-align:center"><p style="font-weight: bold;">** Please save to see the signature boxes.</p></div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </div>
+    </aura:if>
+</aura:component>

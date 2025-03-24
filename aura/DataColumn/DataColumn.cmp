@@ -1,0 +1,14 @@
+<aura:component>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="headerClass" type="String" access="public"/>
+    <aura:attribute name="headerStyle" type="String" access="public"/>
+    <aura:attribute name="cellClass" type="String" access="public"/>
+    <aura:attribute name="cellStyle" type="String" access="public"/>
+    <aura:attribute name="filterField" type="String" access="public"/>
+    <aura:attribute name="filterFieldType" type="String" access="public"/>
+    <aura:attribute name="selectAllCheckbox" type="String" access="public" description="checkbox field name"/>
+
+    <!--ticket 20808-->
+    <aura:attribute name="sortable" type="String" access="public"/>
+    <!--ticket 20808-->
+</aura:component>

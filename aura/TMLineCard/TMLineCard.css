@@ -1,0 +1,11 @@
+.slds-card-position.THIS {
+    position: initial;
+}
+
+.THIS .label-hidden > label {
+    display: none;
+}
+
+.THIS .slds-card__body {
+    /*margin-bottom: 225px;*/
+}

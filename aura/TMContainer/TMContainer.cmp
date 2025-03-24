@@ -1,0 +1,55 @@
+<aura:component extends="c:TMBase"> 
+
+    <!--events-->
+    <aura:registerEvent name="tmNavigationEvent" type="c:TMNavigationEvent"/>
+    
+    <!--methods-->
+    <aura:method name="loadTM" action="{!c.loadTM}">
+        <aura:attribute name="pageName" type="String"/>
+        <aura:attribute name="tmId" type="Id"/>
+    </aura:method>
+    
+	<!--body-->
+    <div aura:id="container">
+        <lightning:card>
+            <aura:set attribute="actions">
+                <lightning:buttonGroup>
+                    <lightning:button label="T&amp;M HOME" onclick="{!c.navigate}" value="TMSearch"/>
+                    <lightning:button label="T&amp;M DETAIL" variant="{!v.pageName == 'TMCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="TMCard"/>
+                    <aura:if isTrue="{!v.tm.Status__c != 'Open'}">
+                        <lightning:button label="LABOR" variant="{!v.pageName == 'LaborList' || v.pageName == 'LaborCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="LaborList"/>
+                        <lightning:button label="EQUIPMENT" variant="{!v.pageName == 'EquipmentList' || v.pageName == 'EquipmentCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="EquipmentList"/>
+                        <lightning:button label="MATERIAL" variant="{!v.pageName == 'MaterialList' || v.pageName == 'MaterialCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="MaterialList"/>
+                        <lightning:button label="WASTE DISPOSAL" variant="{!v.pageName == 'WasteDisposalList' || v.pageName == 'WasteDisposalCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="WasteDisposalList"/>
+                        <lightning:button label="COST PLUS" variant="{!v.pageName == 'CostPlusList' || v.pageName == 'CostPlusCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="CostPlusList"/>
+                        <lightning:button label="SIGNATURE" variant="{!v.pageName == 'SignatureCard' ? 'brand' : 'neutral'}" onclick="{!c.navigate}" value="SignatureCard"/>
+                    </aura:if>
+                </lightning:buttonGroup>
+            </aura:set>
+            <div aura:id="tab" class="tab">
+                <aura:if isTrue="{!v.pageName == 'TMCard'}">
+                    <c:TMCard pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.pageName == 'LaborList'}">
+                    <c:LaborList pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.pageName == 'EquipmentList'}">
+                    <c:EquipmentList pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.pageName == 'MaterialList'}">
+                    <c:MaterialList pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.pageName == 'WasteDisposalList'}">
+                    <c:WasteDisposalList pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.pageName == 'CostPlusList'}">
+                    <c:CostPlusList pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.pageName == 'SignatureCard'}">
+                    <c:SignatureCard pageName="{!v.pageName}" tmId="{!v.tmId}" tm="{!v.tm}" pendingChangesStatus="{!v.pendingChangesStatus}"/>
+                </aura:if>
+            </div>
+        </lightning:card>
+    </div>
+</aura:component>

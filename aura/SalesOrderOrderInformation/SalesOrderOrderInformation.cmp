@@ -1,0 +1,643 @@
+<!--
+    Ticket#17051
+        - Update Sales Order Type lookup query to include Rate Sheet info.
+        - Add Rate Sheet field to the component
+    Ticket#21908
+        - add Blocked field
+        - prevent record from editing after blocked.
+     Ticket#80939
+        - Changed surcharge type picklist field from "Energy & Insurance" to "Energy and Environmental Compliance Fee"
+    Ticket#85807
+        - Changed surcharge type picklist field from "Energy and Environmental Compliance Fee" to "EEC Fee"
+    Ticket#DE35515
+        - remove logic to create contact from quote contact field    
+	* Prabhu Rathakrishnan 10-13-2024 US127188 - Salesforce - Modifications to allow ESIC Surcharge Type
+-->
+<aura:component extends="c:SalesOrderBase">
+    <aura:attribute name="newContactRecordParams" type="Object"/>
+    <aura:attribute name="recalculateDuration" type="Boolean" default="false" /> <!-- Ticket#24326 -->
+    <aura:handler name="change" value="{!v.salesOrder.Bill_to_Customer_No__r}" action="{!c.setNewContactRecordParams}"/>
+
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:layout multipleRows="true">
+            <!-- Line 1 Quote Only: Quote Status, Quote Type,
+                    Line 2 Quote Contact, Oppotunity-->
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:select label="Quote Status" value="{!v.salesOrder.Quote_Status__c}"
+                                      disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                        <option value=""></option>
+                        <option value="Pending">Pending</option>
+                        <option value="Won">Won</option>
+                        <option value="Lost">Lost</option>
+                        <option value="Canceled">Canceled</option>
+                    </lightning:select>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:select aura:id="quote-type" label="Quote Type"
+                                      value="{!v.salesOrder.Quote_Type__c}"
+                                      required="{!v.salesOrder.Document_Type__c == 'Sales Quote'}"
+                                      messageWhenValueMissing="This field is mandatory"
+                                      disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                        <option value=""></option>
+                        <option value="One_Time">One Time</option>
+                        <option value="Recurrence">Recurrence</option>
+                    </lightning:select>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput aura:id="quote-contact"
+                                   label="Quote Contact"
+                                   value="{!v.salesOrder.Quote_Contact__r}"
+                                   SObjectName="Contact"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}]"
+                                   filter="{!'Contact_Type__c INCLUDES (\'Quote\') AND AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Blocked__c != TRUE'}"
+                                   pill="{iconName: 'standard:contact', fieldName: 'Name'}"
+                                   fetchLimit="25"
+                                   required="{!v.salesOrder.Document_Type__c == 'Sales Quote'}"
+                                   messageWhenValueMissing="This field is mandatory"
+                                   onchange="{!c.handleQuoteContactChange}"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                                   <!-- DE35366  -->
+                                   <!-- newRecordComponentName="c:SalesOrderContactCard"
+                                   newRecordParams="{!v.newContactRecordParams}"
+                                   newRecordCreateMethod="createRecord" -->
+                                    <!-- DE35366  -->
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput label="Opportunity" value="{!v.salesOrder.Opportunity__r}"
+                                   SObjectName="Opportunity"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Close Date', fieldName: 'CloseDate', fieldType: 'Date'}]"
+                                   filter="{!'AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\''}"
+                                   pill="{iconName: 'standard:opportunity', fieldName: 'Name'}"
+                                   fetchLimit="50"
+                                   onchange="{!c.handleOpportunityChange}"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+                </lightning:layoutItem>
+            </aura:if>
+
+            <!-- Line 3 Project Manager, Estimated Job Start Date -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput aura:id="project-manager"
+                               label="Project Manager"
+                               value="{!v.salesOrder.Project_Coordinator__r}"
+                               SObjectName="Salesperson__c"
+                               columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]"
+                               filter="Status__c='Active'"
+                               pill="{iconName: 'standard:user', fieldName: 'Name'}"
+                               fetchLimit="25"
+                               onchange="{!c.handleProjectCoordinatorChange}"
+                               required="true"
+                               disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input aura:id="estimated-job-start-date"
+                                 type="date"
+                                 label="Estimated Job Start Date"
+                                 value="{!v.salesOrder.Estimated_Job_Start_Date__c}"
+                                 dateStyle="short"
+                                 onchange="{!c.handleEstimatedJobStartDateChange}"
+                                 required="true"
+                                 messageWhenValueMissing="This field is mandatory"
+                                 autocomplete="none"
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 4: Surcharge Type, Duration -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                    <!-- Ticket#21836 -->
+                    <!--
+                    <lightning:select aura:id="surcharge-type"
+                                 label="Surcharge Type"
+                                 value="{!v.salesOrder.Surcharge_Type__c}"
+                                 onchange="{!c.handleSurchargeTypeChange}"
+                                 required="true"
+                                 messageWhenValueMissing="This field is mandatory"
+                                 disabled="{!
+                                    v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true
+                                    ||
+                                    (
+                                        v.setupData.User.Profile.Name != 'System Administrator'
+                                        &amp;&amp;
+                                        (
+                                            (
+                                                v.salesOrder.Document_Type__c == 'Sales Quote'
+                                                &amp;&amp;
+                                                (v.salesOrder.Contract__r != null &amp;&amp; v.salesOrder.Contract__r.Surcharge_Type__c != null)
+
+                                            )
+                                            ||
+                                            (
+                                                v.salesOrder.Document_Type__c == 'Sales Order'
+                                                &amp;&amp;
+                                                (
+                                                    (
+                                                        v.salesOrder.Contract__c == null
+                                                        &amp;&amp;
+                                                        (v.salesOrder.Sales_Order_Type__r != null &amp;&amp; v.salesOrder.Sales_Order_Type__r.Single_Sales_Order__c == true)
+                                                    )
+                                                    ||
+                                                    (
+                                                        v.salesOrder.Contract__r != null
+                                                        &amp;&amp;
+                                                        (
+                                                            v.salesOrder.Contract__r.Surcharge_Type__c != null
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                }">
+                    <option value=""></option>
+                    <option value="N/A">N/A</option>
+                    <option value="Energy &amp; Insurance">Energy &amp; Insurance</option>
+                    <option value="Fuel Surcharge">Fuel Surcharge</option>
+                </lightning:select>
+                -->
+                <aura:if isTrue="{!v.salesOrder.Contract__c != null}">
+                    <aura:if isTrue="{!v.salesOrder.Contract__r.Surcharge_Type__c == 'EEC Fee'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="true">
+                            <option value="EEC Fee">EEC Fee</option>
+                            <option value="ESIC">ESIC</option>
+                        </lightning:select>
+                    </aura:if>   
+                    <aura:if isTrue="{!v.salesOrder.Contract__r.Surcharge_Type__c == 'Fuel Surcharge'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="true">
+                            <option value="Fuel Surcharge">Fuel Surcharge</option>
+                            <option value="ESIC">ESIC</option>
+                        </lightning:select>
+                    </aura:if>   
+                    <aura:if isTrue="{!v.salesOrder.Contract__r.Surcharge_Type__c == 'ESIC'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="true">
+                            <option value="ESIC">ESIC</option>
+                        </lightning:select>
+                    </aura:if> 
+                	<aura:if isTrue="{!v.salesOrder.Contract__r.Surcharge_Type__c == 'N/A'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="true">
+                            <option value="N/A">N/A</option>
+                        </lightning:select>
+                    </aura:if>   
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.setupData.User.Profile.Name != 'System Administrator'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="{(v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; (v.salesOrder.Surcharge_Type__c != 'N/A' &amp;&amp; v.salesOrder.Surcharge_Type__c !='')) || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                            <option value="EEC Fee">EEC Fee</option>
+                            <option value="ESIC">ESIC</option>
+                        </lightning:select>
+                        </aura:if>    
+                        <aura:if isTrue="{!v.setupData.User.Profile.Name == 'System Administrator'}">
+                        <lightning:select aura:id="surcharge-type"
+                                          label="Surcharge Type"
+                                          value="{!v.salesOrder.Surcharge_Type__c}"
+                                          onchange="{!c.handleSurchargeTypeChange}"
+                                          required="true"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          disabled="{(v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; (v.salesOrder.Surcharge_Type__c != 'N/A' &amp;&amp; v.salesOrder.Surcharge_Type__c !='')) || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}">
+                            <option value=""></option>
+                            <option value="N/A">N/A</option>
+                            <option value="EEC Fee">EEC Fee</option>
+                            <option value="Fuel Surcharge">Fuel Surcharge</option>
+                            <option value="ESIC">ESIC</option>
+                        </lightning:select>
+                        </aura:if>    
+                        
+                    </aura:set>
+                </aura:if>
+                <!-- Ticket#21836 -->
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LightningInput aura:id="duration"
+                                  type="number"
+                                  label="Duration"
+                                  value="{!v.salesOrder.Duration__c}"
+                                  onchange="{!c.handleDurationChange}"
+                                  required="true"
+                                  messageWhenValueMissing="This field is mandatory"
+                                  disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 5: Surcharge %, Estimated Job End Date -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <!-- Ticket#21836 -->
+                <!--
+                <c:LightningInput aura:Id="surcharge-percentage"
+                                  type="number"
+                                  label="Surcharge %"
+                                  value="{!v.salesOrder.Surcharge_Pct__c}"
+                                  step="0.001"
+                                  min="0.001"
+                                  onchange="{!c.handleSurchargePctChange}"
+                                  required="{!v.salesOrder.Surcharge_Type__c == 'Energy &amp; Insurance' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge'}"
+                                  messageWhenValueMissing="This field is mandatory"
+                                  messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                  disabled="{!v.salesOrder.Document_Status__c != 'Open'
+                                        ||
+                                        (
+                                            v.userInfoWrapper.User.Profile.Name != 'System Administrator'
+                                            &amp;&amp;
+                                            (
+                                                v.salesOrder.Document_Type__c == 'Sales Order'
+                                                ||
+                                                v.salesOrder.Contract__c != null
+                                            )
+                                        )
+                                  }"/>
+                -->
+                <aura:if isTrue="{!v.salesOrder.Contract__c != null}">
+                    <aura:if isTrue="{!v.salesOrder.Contract__r.Surcharge_Type__c == 'ESIC' || v.salesOrder.Contract__r.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Contract__r.Surcharge_Type__c == 'Fuel Surcharge'}">
+                        <c:LightningInput aura:Id="surcharge-percentage"
+                                          type="number"
+                                          label="Surcharge %"
+                                          value="{!v.salesOrder.Surcharge_Pct__c}"
+                                          step="0.001"
+                                          min="0.001"
+                                          onchange="{!c.handleSurchargePctChange}"
+                                          required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge' || v.salesOrder.Surcharge_Type__c == 'ESIC'}"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                          disabled="true"/>
+                        <aura:set attribute="else">
+                            <c:LightningInput aura:Id="surcharge-percentage"
+                                          type="number"
+                                          label="Surcharge %"
+                                          value="{!v.salesOrder.Surcharge_Pct__c}"
+                                          step="0.001"
+                                          min="0.001"
+                                          onchange="{!c.handleSurchargePctChange}"
+                                          required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge' || v.salesOrder.Surcharge_Type__c == 'ESIC'}"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                          disabled="{(!v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; (v.salesOrder.Contract__c != null &amp;&amp; v.salesOrder.Contract__c.Surcharge_Pct__c!=null)) || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:set>
+                    </aura:if>
+                	<aura:set attribute="else">
+                        <aura:if isTrue="{!v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; v.salesOrder.Surcharge_Type__c == 'EEC Fee'}">
+                            <c:LightningInput aura:Id="surcharge-percentage"
+                                          type="number"
+                                          label="Surcharge %"
+                                          value="{!v.salesOrder.Surcharge_Pct__c}"
+                                          step="0.001"
+                                          min="0.001"
+                                          onchange="{!c.handleSurchargePctChange}"
+                                          required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge' || v.salesOrder.Surcharge_Type__c == 'ESIC'}"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                          disabled="true"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; v.salesOrder.Surcharge_Type__c == 'ESIC'}">
+                            <c:LightningInput aura:Id="surcharge-percentage"
+                                          type="number"
+                                          label="Surcharge %"
+                                          value="{!v.salesOrder.Surcharge_Pct__c}"
+                                          step="0.001"
+                                          min="0.001"
+                                          onchange="{!c.handleSurchargePctChange}"
+                                          required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge' || v.salesOrder.Surcharge_Type__c == 'ESIC'}"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                          disabled="{(!v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; (v.salesOrder.Contract__c != null &amp;&amp; v.salesOrder.Contract__c.Surcharge_Pct__c!=null)) || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.setupData.User.Profile.Name == 'System Administrator'}">
+                            <c:LightningInput aura:Id="surcharge-percentage"
+                                          type="number"
+                                          label="Surcharge %"
+                                          value="{!v.salesOrder.Surcharge_Pct__c}"
+                                          step="0.001"
+                                          min="0.001"
+                                          onchange="{!c.handleSurchargePctChange}"
+                                          required="{!v.salesOrder.Surcharge_Type__c == 'EEC Fee' || v.salesOrder.Surcharge_Type__c == 'Fuel Surcharge' || v.salesOrder.Surcharge_Type__c == 'ESIC'}"
+                                          messageWhenValueMissing="This field is mandatory"
+                                          messageWhenRangeUnderflow="Surcharge % must be greater than zero."
+                                          disabled="{(!v.setupData.User.Profile.Name != 'System Administrator' &amp;&amp; (v.salesOrder.Contract__c != null &amp;&amp; v.salesOrder.Contract__c.Surcharge_Pct__c!=null)) || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                        </aura:if>
+                        <!-- Ticket#21836 -->
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="date" label="Estimated Job End Date" value="{!v.salesOrder.Estimated_Job_End_Date__c}" dateStyle="short" disabled="true"/>
+            </lightning:layoutItem>
+
+            <!-- Line 6: Quote Date, Estimated Job Start Time -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input aura:id="quote-date" type="date"
+                                 label="{!v.salesOrder.Document_Type__c == 'Sales Quote' ? 'Quote Date' : 'Order Date'}"
+                                 value="{!v.salesOrder.Quote_Date__c}"
+                                 dateStyle="short" onchange="{!c.handleQuoteDateChange}"
+                                 required="{!v.salesOrder.Document_Type__c == 'Sales Quote' || (v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp; v.saleOrder.Contract__c == null)}"
+                                 messageWhenValueMissing="This field is mandatory"
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:MilitaryTimeInput aura:id="estimated-job-start-time"
+                                     label="Estimated Job Start Time"
+                                     value="{!v.salesOrder.Estimated_Job_Start_Time__c}"
+                                     onchange="{!c.handleEstimatedJobStartTimeChange}"
+                                     required="{!v.salesOrder.Document_Type__c == 'Sales Quote'}"
+                                     messageWhenValueMissing="This field is mandatory"
+                                     disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 7: Sales Order Type, Estimated Job End Time -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp; v.salesOrder.Bill_to_Customer_No__r.AccountNumber == null}">
+                    <c:LookupInput aura:id="sotype-order"
+                                   label="Sales Order Type"
+                                   value="{!v.salesOrder.Sales_Order_Type__r}"
+                                   SObjectName="Sales_Order_Type__c"
+                                   columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', style: 'width:60%', 'class': 'slds-cell-wrap'}]"
+                                   queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']"
+                                   filter="Blocked__c!=TRUE AND Single_Sales_Order__c=TRUE"
+                                   pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                                   onchange="{!c.handleSalesOrderTypeChange}"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="sotype"
+                                       label="Sales Order Type"
+                                       value="{!v.salesOrder.Sales_Order_Type__r}"
+                                       SObjectName="Sales_Order_Type__c"
+                                       columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', style: 'width:60%', 'class': 'slds-cell-wrap'}]"
+                                       queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']"
+                                       filter="Blocked__c!=TRUE"
+                                       pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                                       onchange="{!c.handleSalesOrderTypeChange}"
+                                       disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </aura:set>
+                </aura:if>
+                <!--US114833--><aura:if isTrue="{!v.soType.displayWaringMsg}">                    
+                <ui:message title="" severity="warning" closable="false">
+                    <lightning:icon iconName="utility:warning" alternativeText="Warning!" variant="warning"
+                                    title="" size="small" />
+                    Your Sales Order Type Has Changed. Please notify D365 Project Start Team to update the Sales Order's D365 Project ID.
+                </ui:message>
+                </aura:if><!--US114833-->
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:MilitaryTimeInput aura:id="estimated-job-end-time"
+                                     label="Estimated Job End Time"
+                                     value="{!v.salesOrder.Estimated_Job_End_Time__c}"
+                                     defaultTime="{!v.salesOrder.Estimated_Job_Start_Time__c}"
+                                     onchange="{!c.handleEstimatedJobEndTimeChange}"
+                                     required="{!v.salesOrder.Document_Type__c == 'Sales Quote'}"
+                                     messageWhenValueMissing="This field is mandatory"
+                                     disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 8: Job Description, Billing Owner -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input aura:id="job-description"
+                                 label="Job Description"
+                                 value="{!v.salesOrder.CMR_Description__c}"
+                                 messageWhenPatternMismatch="Job Description cannot exceed 40 characters"
+                                 pattern=".{0,40}"
+                                 required="true"
+                                 messageWhenValueMissing="This field is mandatory"
+                                 
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput label="Billing Owner"
+                                   value="{!v.salesOrder.Billing_Owner__r}"
+                                   SObjectName="User"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'Service_Center__c'}]"
+                                   pill="{iconName: 'standard:user', fieldName: 'Name'}"
+                                   fetchLimit="25"
+                                   onchange="{!c.handleBillingOwnerChange}"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                </lightning:layoutItem>
+            </aura:if>
+    
+            <!-- Line 9: Include Weekend, Include Holiday -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox"
+                                 label="Include Weekend"
+                                 variant="label-stacked"
+                                 checked="{!v.salesOrder.Include_Weekend__c}"
+                                 onchange="{!c.handleIncludeWeekendChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox"
+                                 label="Include Holiday"
+                                 variant="label-stacked"
+                                 checked="{!v.salesOrder.Include_Holiday__c}"
+                                 onchange="{!c.handleIncludeHolidayChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 10: Account Executive, Prevailing Wage Job -->
+            <!--  <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Account Executive"
+                               value="{!v.salesOrder.Account_Executives__r}"
+                               SObjectName="Salesperson__c"
+                               columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]"
+                               filter="Status__c='Active' AND Account_Executive__c=TRUE"
+                               pill="{iconName: 'standard:user', fieldName: 'Name'}"
+                               fetchLimit="25"
+                               onchange="{!c.handleAccountExecutiveChange}"
+                               disabled="{!v.setupData.User.Profile.Name != 'System Administrator' || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem> -->
+			<lightning:layoutItem size="6" padding="horizontal-small">
+                 <c:LookupInput label="Account Executive" aura:id="account-executive"
+                               value="{!v.salesOrder.Account_Executives__r}"
+                               SObjectName="Salesperson__c"
+                               columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]"
+                               filters="{!'[&quot;Id IN ('+ v.accountExecutiveIds +') AND Account_Executive__c = TRUE&quot;]'}"
+                               pill="{iconName: 'standard:user', fieldName: 'Name'}"
+                               fetchLimit="25"
+                               required="true"
+                               messageWhenValueMissing="This field is mandatory"                               
+                               onchange="{!c.handleAccountExecutiveChange}"
+                               disabled="{!(v.setupData.User.Profile.Name != 'System Administrator'  &amp;&amp; v.setupData.User.Profile.Name != 'ACV Standard User') || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" aura:id="prevailing-wage-job"
+                                 label="Prevailing Wage Job"
+                                 variant="label-stacked"
+                                 checked="{!v.salesOrder.Prevailing_Wage_Job__c}"
+                                 onchange="{!c.handlePrevailingWageJobChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <!-- Line 11: Owner, Pay Rule -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput aura:id="owner" label="Owner" value="{!v.salesOrder.Owner}" SObjectName="User"
+                               columns="[{label: 'Name', fieldName: 'Name', style: 'width:200px'}, {label: 'Service Center', fieldName: 'Service_Center__c', style: 'width:100px'}]"
+                               pill="{iconName: 'standard:user', fieldName: 'Name'}" fetchLimit="25"
+                               onchange="{!c.handleOwnerChange}"
+                               required="true"
+                               messageWhenValueMissing="This field is mandatory"
+                               disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.salesOrder.Prevailing_Wage_Job__c == true}">
+                    <c:LookupInput aura:id="pay-rule" label="Pay Rule"
+                                   value="{!v.salesOrder.Pay_Rule__r}"
+                                   SObjectName="Pay_Rule__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Type', fieldName: 'Type__c'}]"
+                                   filter="Type__c IN ('Prevailing Wage', 'Contract', 'Union') AND Blocked__c != TRUE"
+                                   pill="{iconName: 'standard:picklist_choice', fieldName: 'Name'}"
+                                   fetchLimit="50"
+                                   onchange="{!c.handlePayRuleChange}"
+                                   disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                   required="true"
+                                   messageWhenValueMissing="This field is mandatory"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput label="Pay Rule"
+                                       value="{!v.salesOrder.Pay_Rule__r}"
+                                       SObjectName="Pay_Rule__c"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Type', fieldName: 'Type__c'}]"
+                                       filter="Type__c IN ('Prevailing Wage', 'Contract', 'Union') AND Blocked__c != TRUE"
+                                       pill="{iconName: 'standard:picklist_choice', fieldName: 'Name'}"
+                                       fetchLimit="50"
+                                       onchange="{!c.handlePayRuleChange}"
+                                       disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+
+            <!-- Line 12: Service Center, Document Type -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput aura:id="service-center" label="Service Center" value="{!v.salesOrder.Service_Center__r}" SObjectName="Service_Center__c"
+                               pill="{iconName: 'standard:household', fieldName: 'Name'}"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                               queryFields="['Subsidiary_Company__c', 'Subsidiary_Company__r.Name', 'Blocked__c', 'Standard_AC_Opt1__c','Standard_AC_Opt2__c',
+                                                'Standard_AC_Opt3__c','Standard_AC_Opt4__c','Disposal_Related_Asm_Cont_Opt1__c','Disposal_Related_Asm_Cont_Opt2__c',
+                                                'Disposal_Related_Asm_Cont_Opt3__c','Disposal_Related_Asm_Cont_Opt4__c','Disposal_Related_Asm_Cont_Opt5__c',
+                                                'Disposal_Related_Asm_Cont_Opt6__c','Disposal_Related_Asm_Cont_Opt7__c','Term_Conditions_Opt1__c','Term_Conditions_Opt2__c',
+                                                'Term_Conditions_Opt3__c','Term_Conditions_Opt4__c','Term_Conditions_Opt5__c','Term_Conditions_Opt6__c','Term_Conditions_Opt7__c',
+                                                'Term_Conditions_Opt8__c','Term_Conditions_Opt9__c','Term_Conditions_Opt10__c','Term_Conditions_Opt11__c','Term_Conditions_Opt12__c',
+                                                'Term_Conditions_Opt13__c','Term_Conditions_Opt14__c','Term_Conditions_Opt15__c','Term_Conditions_Opt16__c','Term_Conditions_Opt17__c',
+                                                'Term_Conditions_Opt18__c','Term_Conditions_Opt19__c','Term_Conditions_Opt20__c', 'Prevent_New_and_Cloned_Sales_Orders__c', 'Include_SO_in_EQAI_Invoice_Integration__c','Advanced_Disposal__c']"
+                               fieldsToSearch="['Name']"
+                               filter="{!'Name=\'' + v.userInfoWrapper.User.Service_Center__c + '\' AND Blocked__c != TRUE'}"
+                               filters="{!'[&quot;Id IN (SELECT Service_Center__c FROM User_Service_Center__c WHERE User__c=\'' + v.setupData.User.Id + '\') AND Blocked__c != TRUE&quot;]'}"
+                               onchange="{!c.handleServiceCenterChange}" required="true" messageWhenValueMissing="This field is mandatory" disabled="{!v.salesOrder.Id != null}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:select aura:id="document-type" label="Document Type" value="{!v.salesOrder.Document_Type__c}" disabled="true" required="true" messageWhenValueMissing="This field is mandatory">
+                    <option value=""></option>
+                    <option value="Sales Quote">Sales Quote</option>
+                    <option value="Sales Order">Sales Order</option>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <!-- Line 13: Payment Term, Document Status -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Payment Term" value="{!v.salesOrder.Payment_Term__r}" SObjectName="Payment_Term__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}, {label: 'Discount %', fieldName: 'Discount_Pct__c'}]" pill="{iconName: 'standard:survey', fieldName: 'Name'}" fetchLimit="20" disabled="true"/>
+            </lightning:layoutItem>
+
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:select aura:id="document-status" label="Document Status" value="{!v.salesOrder.Document_Status__c}" disabled="true" required="true" messageWhenValueMissing="This field is mandatory">
+                        <option value=""></option>
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </aura:if>
+            
+
+            <!-- Line 14: Ratesheet, Blocked -->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Rate Sheet"
+                               value="{!v.salesOrder.Rate_Sheet__r}"
+                               SObjectName="Rate_Sheet__c"
+                               columns="[{label: 'No.', fieldName: 'Name'}]"
+                               pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                               fetchLimit="25"
+                               onchange="{!c.handleRateSheetChange}"
+                               disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true ||
+                                    (v.salesOrder.Document_Type__c == 'Sales Quote' &amp;&amp; v.salesOrder.Sales_Order_Type__r.Name != 'Virus Decon')
+                                    || v.salesOrder.Document_Type__c == 'Sales Order'  || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:layoutItem>
+
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Quote'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input type="checkbox" label="Blocked" variant="label-stacked" checked="{!v.salesOrder.Blocked__c}"
+                                         onchange="{!c.handleBlockedChange}"
+                                         disabled="{!v.setupData.User.Profile.Name != 'System Administrator'}"/>
+                    </lightning:layoutItem>
+                </lightning:layoutItem>
+            </aura:if>
+
+            <!-- D365 Project Id -->
+            <!-- Commenting D365 Project Id US141063-->
+            <!--
+            <aura:if isTrue="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c &amp;&amp; v.salesOrder.Document_Type__c == 'Sales Order'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input label="D365 Project ID"
+                                    value="{!v.salesOrder.D365_Project_ID__c}"
+                                    maxlength="80"
+                                    disabled="{!v.setupData.User.Profile.Name != 'System Administrator'}" />
+                </lightning:layoutItem>
+            </aura:if>
+            -->
+            <!-- Name of Worker Responsible, Worker Responsible -->
+            <aura:if isTrue="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+               <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput aura:id="name-of-worker-responsible"
+                                label="Name of Worker Responsible"
+                                value="{!v.salesOrder.Name_of_Worker_Responsible__r}"
+                                SObjectName="Resource__c"
+                                columns="[{label: 'Name', fieldName: 'Description__c'}, {label: 'No.', fieldName: 'Name'}, {label: 'Resource Type', fieldName: 'Resource_Type__r.Name'}]"
+                                queryFields="['RSG_EIN__c']"
+                                filter="Resource_Type__r.Name='BUFM' AND Status__c != 'Inactive'"
+                                pill="{iconName: 'standard:user', fieldName: 'Description__c'}"
+                                fetchLimit="25"
+                                required="true"
+                                messageWhenValueMissing="This field is mandatory"
+                                onchange="{!c.handleNameOfWorkerResponsibleChange}"
+                                disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input aura:id="worker-responsible"
+                                label="Worker-Responsible"
+                                value="{!v.salesOrder.Name_of_Worker_Responsible__r.RSG_EIN__c}"
+                                type="string"
+                                SObjectName="Resource__c"
+                                required="true"
+                                messageWhenValueMissing="This field is mandatory"
+                                onchange="{!c.handleNameOfWorkerResponsibleChange}"
+                                disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+                </lightning:layoutItem>
+            </aura:if>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ACV</label>
+    <protected>false</protected>
+    <values>
+        <field>API2PDF_Key__c</field>
+        <value xsi:type="xsd:string">77cbf0eb-f654-4014-a51a-fd097bed5487</value>
+    </values>
+    <values>
+        <field>Default_Resource_Type_for_FA__c</field>
+        <value xsi:type="xsd:string">a1Sf4000001MWT6EAO</value>
+    </values>
+    <values>
+        <field>Default_Retainage_Resource_Id__c</field>
+        <value xsi:type="xsd:string">a0r1V000009qNTmQAM</value>
+    </values>
+    <values>
+        <field>Fixed_Price_Job_Resource__c</field>
+        <value xsi:type="xsd:string">a0r1L00001aeT4JQAU</value>
+    </values>
+    <values>
+        <field>Mobile_TM_Version_No__c</field>
+        <value xsi:type="xsd:string">2.4.6</value>
+    </values>
+    <values>
+        <field>Name__c</field>
+        <value xsi:type="xsd:string">ACV Enviro</value>
+    </values>
+    <values>
+        <field>Payroll_Blockout_End_Minute__c</field>
+        <value xsi:type="xsd:double">30.0</value>
+    </values>
+    <values>
+        <field>Payroll_Blockout_Start_Hour__c</field>
+        <value xsi:type="xsd:double">10.0</value>
+    </values>
+    <values>
+        <field>Payroll_Blockout_Start_Minute__c</field>
+        <value xsi:type="xsd:double">10.0</value>
+    </values>
+    <values>
+        <field>Quote_Signature_Token_Expiration_Hours__c</field>
+        <value xsi:type="xsd:double">168.0</value>
+    </values>
+    <values>
+        <field>Retainage_Receivable_GL_Account_Id__c</field>
+        <value xsi:type="xsd:string">a1I1V00001MXAAZUA5</value>
+    </values>
+    <values>
+        <field>Rinse_Out_Fee_Resource_Id__c</field>
+        <value xsi:type="xsd:string">a0r1V00000BDZUQQA5</value>
+    </values>
+    <values>
+        <field>Sandbox_Email_Recipients__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Sandbox__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Signature_Request_Reminding_Days__c</field>
+        <value xsi:type="xsd:double">2.0</value>
+    </values>
+    <values>
+        <field>TM_Signature_Site_URL__c</field>
+        <value xsi:type="xsd:string">https://acvenviro.secure.force.com/tm</value>
+    </values>
+    <values>
+        <field>TM_Signature_Token_Expiration_Hours__c</field>
+        <value xsi:type="xsd:double">168.0</value>
+    </values>
+    <values>
+        <field>X2023_Billing_Rule_Start_Date__c</field>
+        <value xsi:type="xsd:date">2023-03-17</value>
+    </values>
+</CustomMetadata>

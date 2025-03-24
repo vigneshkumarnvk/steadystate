@@ -1,0 +1,22 @@
+<aura:component extends="c:BaseComponent" controller="BillingWorksheetController" extensible="true">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="Id" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="index" type="Integer" access="public"/>
+    <aura:attribute name="worksheetLine" type="Object" access="public"/>
+    <aura:attribute name="setupData" type="Object" access="public"/>
+    <aura:attribute name="costPlusMESResourceId" type="String" />
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="sampleComponentEvent" event="c:compEvent" action="{!c.handleComponentEvent}"/>
+
+    <!--events-->
+    <aura:registerEvent name="worksheetLineUpdateEvent" type="c:BillingWorksheetLineUpdateEvent"/>
+    <aura:registerEvent name="worksheetLineDeleteEvent" type="c:BillingWorksheetLineDeleteEvent"/>
+    <aura:registerEvent name="worksheetLineViewEvent" type="c:BillingWorksheetLineViewEvent"/>
+    <aura:registerEvent name="worksheetLineSelectEvent" type="c:BillingWorksheetLineSelectEvent"/>
+
+    <!--body-->
+    {!v.body}
+</aura:component>

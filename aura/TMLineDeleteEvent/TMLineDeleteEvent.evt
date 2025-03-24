@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="TMLineDeleteEvent">
+    <aura:attribute name="rowIndex" type="Integer"/>
+</aura:event>

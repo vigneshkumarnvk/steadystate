@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="InlineEditComponentCloseEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="value" type="Object" access="public"/>
+    <aura:attribute name="callback" type="Object" access="public"/>
+</aura:event>

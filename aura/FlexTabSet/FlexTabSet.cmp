@@ -1,0 +1,22 @@
+<aura:component description="FlexTabSet">
+    <aura:dependency resource="c:FlexTab"/>
+    <aura:dependency resource="c:FlexTabContent"/>
+
+    <!--attributes-->
+    <aura:attribute name="tabs" type="Aura.componentDefRef[]" access="public"/>
+    <aura:attribute name="contents" type="Aura.componentDefRef[]" access="public"/>
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <div class="slds-tabs_default">
+        <ul aura:id="tabs" class="slds-tabs_default__nav" style="flex-wrap:wrap;" role="tablist">
+            {!v.tabs}
+        </ul>
+    </div>
+    <p class="slds-p-horizontal--small">
+        {!v.contents}
+    </p>
+</aura:component>

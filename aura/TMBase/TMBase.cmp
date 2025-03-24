@@ -1,0 +1,26 @@
+<aura:component controller="ACVTMController" extensible="true" extends="c:BaseComponent" implements="flexipage:availableForAllPageTypes" >
+    <!--attributes-->
+    <aura:attribute name="variables" type="Object" access="public"/>
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="jobTaskOptions" type="List" default="[]" access="public" description="for task selection"/>
+    <aura:attribute name="nextJobTaskLineNo" type="Integer" access="public"/>
+    <aura:attribute name="nextTMLineNo" type="Integer" default="1" access="public"/>
+    <aura:attribute name="wizardCompleted" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="pendingChangesStatus" type="Boolean" access="public"/>
+    <aura:attribute name="pageName" type="String" access="public"/>
+    <aura:attribute name="tmId" type="String" access="public"/>
+             
+    <!--events-->
+
+    <!--method-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public">
+        <aura:attribute name="validateAsStatus" type="String" access="public"/>
+    </aura:method>
+
+    <!-- handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--body-->
+    {!v.body}
+</aura:component>

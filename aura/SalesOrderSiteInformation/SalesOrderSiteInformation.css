@@ -1,0 +1,28 @@
+.THIS {
+     
+   }
+/*US131745*/
+.THIS .CustomIcon{
+
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.THIS .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.THIS .input-field {
+    flex: 1; /* Allows input to take up available space */
+}
+
+.THIS .clear-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+}

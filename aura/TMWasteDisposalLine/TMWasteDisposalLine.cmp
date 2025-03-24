@@ -1,0 +1,46 @@
+<aura:component extends="c:TMLineEditBase" description="TMWasteDisposalLine">
+    <!-- Waste Disposal -->
+    <td>
+        <span style="{!if(v.tmLine.Is_Child_Resource__c == true &amp;&amp; v.tmLine.Dereferenced_Child_Resource__c == true, 'display: block; color: red;', 'display: block;')}" 
+              title="{!if(v.tmLine.Is_Child_Resource__c == true &amp;&amp; v.tmLine.Dereferenced_Child_Resource__c == true, 'This child resource is not referenced by a parent.', '')}">
+            {!v.tmLine.Resource__r.Name}
+        </span>
+        <aura:if isTrue="{!v.tmLine.errorText}">
+            <span class="boxed-error-message">
+                {!v.tmLine.errorText}
+            </span>
+        </aura:if>
+    </td>
+    
+    <!-- Description -->
+    <td>
+        {!v.tmLine.Description__c}
+    </td>
+    
+    <!-- Facility -->
+    <td>
+        {!v.tmLine.Facility__r.Name}
+    </td>
+    
+    <!-- Profile Approval -->
+    <aura:if isTrue="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+        <td>
+            {!v.tmLine.Approval_Id__c}
+        </td>
+    </aura:if>
+    
+    <!-- BOL/Manifest -->
+    <td>
+        {!v.tmLine.BOL_Manifest__c}
+    </td>
+    
+    <!-- Unit of Measure (UOM) -->
+    <td>
+        {!v.tmLine.Unit_of_Measure__r.Name}
+    </td>
+    
+    <!-- Quantity -->
+    <td>
+        <lightning:formattedNumber value="{!v.tmLine.Quantity__c}" minimumFractionDigits="2" maximumFractionDigits="4"/>
+    </td>
+</aura:component>

@@ -1,0 +1,29 @@
+<aura:component description="UserServiceCenter">
+    <aura:attribute name="userServiceCenters" type="List" access="public"/>
+    <aura:attribute name="userServiceCenter" type="Object" access="public"/>
+    <aura:attribute name="index" type="Integer" access="public"/>
+
+    <tr class="slds-hint-parent">
+        <td>
+            <lightning:button label="Delete" variant="destructive" onclick="{!c.handleDelete}"/>
+        </td>
+        <td>
+            <c:LookupInput name="service-center"
+                           value="{!v.userServiceCenter.Service_Center__r}"
+                           SObjectName="Service_Center__c" columns="[{label: 'Name', fieldName: 'Name'}]"
+                           pill="{iconName: 'standard:groups', fieldName: 'Name'}"
+                           onchange="{!c.handleServiceCenterChange}"/>
+        </td>
+        <td>
+            <lightning:input type="checkbox"
+                             label="User"
+                             variant="label-hidden"
+                             value="{!v.userServiceCenter.Default__c}"
+                             checked="{!v.userServiceCenter.Default__c}"
+                             onchange="{!c.handleDefaultChange}"/>
+        </td>
+        <td>
+            <lightning:input type="checkbox" label="User" variant="label-hidden" checked="{!v.userServiceCenter.Manager_of_SC__c}"/>
+        </td>
+    </tr>
+</aura:component>

@@ -1,0 +1,6 @@
+<aura:component description="ProcessInstanceHistory">
+    <aura:attribute name="processInstanceHistory" type="ProcessInstanceHistory" />
+    <p>{!v.processInstanceHistory.Actor.Name} - {!v.processInstanceHistory.StepStatus}</p>
+    <p>{!v.processInstanceHistory.Comments}</p>
+    <p><lightning:formattedDateTime value="{!v.processInstanceHistory.CreatedDate}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true" /></p>
+</aura:component>

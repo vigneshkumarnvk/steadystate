@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT">
+    <aura:attribute name="method" type="String" access="public"/>
+    <aura:attribute name="suggestWeekendAndHoliday" type="Boolean" access="public"/>
+</aura:event>

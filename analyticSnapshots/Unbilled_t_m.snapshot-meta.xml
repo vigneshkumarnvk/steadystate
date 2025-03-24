@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticSnapshot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Reporting Snapshot for the Unbilled t&amp;m</description>
+    <groupColumn>GRAND_SUMMARY</groupColumn>
+    <mappings>
+        <aggregateType>Sum</aggregateType>
+        <sourceField>TM__c.Amount__c</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Unbilled_t_m__c.Amount__c</targetField>
+    </mappings>
+    <mappings>
+        <sourceField>FORMULA1</sourceField>
+        <sourceType>summary</sourceType>
+        <targetField>Unbilled_t_m__c.Average_t_M__c</targetField>
+    </mappings>
+    <name>Unbilled t&amp;m</name>
+    <runningUser>rvandra@acvenviro.com</runningUser>
+    <sourceReport>unfiled$public/Unbilled_T_M_Age_Average</sourceReport>
+    <targetObject>Unbilled_t_m__c</targetObject>
+</AnalyticSnapshot>

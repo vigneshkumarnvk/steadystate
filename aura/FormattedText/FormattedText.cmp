@@ -1,0 +1,16 @@
+<aura:component description="FormattedText">
+    <!--attributes-->
+    <aura:attribute name="value" type="Object" access="public"/>
+    <aura:attribute name="options" type="Object" default="{}" access="public"/>
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="displayValue" type="Object" access="private"/>
+
+    <!--handlers=-->
+    <aura:handler name="init" value="{!this}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+
+    <!--body-->
+    <span class="{!v.class}">
+        {!v.displayValue}
+    </span>
+</aura:component>

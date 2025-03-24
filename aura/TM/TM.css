@@ -1,0 +1,22 @@
+.THIS {
+    /*min-height: 100%;*/
+}
+
+.THIS .slds-card__body {
+    margin-bottom: 0px;
+}
+
+.THIS.oneRecordActionWrapper {
+    display: block !important;
+}
+.THIS .oneRecordActionWrapper {
+    display: block !important;
+}
+
+.THIS.overridePresent {
+    display: block !important;
+}
+
+.THIS .overridePresent {
+    display: block !important;
+}

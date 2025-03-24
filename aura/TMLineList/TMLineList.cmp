@@ -1,0 +1,92 @@
+<aura:component extends="c:TMBase">
+    <!--attributes-->
+
+    <!--
+    <aura:attribute name="nextJobTaskLineNo" type="Integer" access="public"/>
+    <aura:attribute name="nextTMLineNo" type="Integer" access="public"/>
+    -->
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.jobTaskWrappers}" action="{!c.handleJobTaskWrappersChange}"/>
+    <aura:handler name="tmLinesMoveEvent" event="c:JobTaskLinesMoveEvent" action="{!c.handleTMLinesMoveEvent}"/>
+
+    <!--methods-->
+    <aura:method name="refreshTasks" action="{!c.refreshTasks}" access="public"/>
+    <!--
+    <aura:method name="combineTMLines" action="{!c.combineTMLines}" access="public"/>
+    -->
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}" access="public"/>
+    <aura:method name="validate" action="{!c.validate}" access="public">
+        <aura:attribute name="status" type="String" access="public"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card title="Job Tasks">
+        <aura:set attribute="actions">
+            <!-- <lightning:buttonGroup> -->
+            <div class="c-container">
+                <lightning:layout>
+                    <aura:if isTrue="{!(v.tm.Mobile_TM__c == true &amp;&amp; v.tm.Status__c == 'Mobile Review') || (v.tm.Mobile_TM__c != true &amp;&amp; v.tm.Status__c == 'Scheduled') || v.tm.Status__c == 'Confirmed'}">
+                        <lightning:layoutItem>
+                            <!--
+                            <ligtning:input type="checkbox" label="Project Manager Reviewed" variant="label-stacked" checked="{!v.tm.Project_Manager_Reviewed__c}" disabled="{!v.tm.Project_Manager_Reviewed__c == true}" />
+                            -->
+
+                            <lightning:input aura:id="pmReviewButton"
+                                             type="toggle"
+                                             label="Project Manager Review"
+                                             variant="label-stacked"
+                                             messageToggleActive="PM Reviewed"
+                                             messageToggleInactive="Pending PM Review"
+                                             checked="{!v.tm.Project_Manager_Reviewed__c}"
+                                             disabled="{!v.tm.Project_Manager_Reviewed__c == true}" />
+
+                            <!--  &amp;&amp; v.variables.User.Profile.Name != 'System Administrator' }" -->
+                        </lightning:layoutItem>
+                    </aura:if>
+                    <lightning:layoutItem>
+                        <lightning:button value="import-from-sales-order" label="Get Job Task from Sales Order" iconName="utility:arrowdown" onclick="{!c.importJobTasks}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            <!-- </lightning:buttonGroup> -->
+            </div>
+        </aura:set>
+
+        <!--
+        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+            <c:TMJobTaskLine aura:id="job-task-line" jobTaskWrapperIndex="{!index}"
+                             tm="{!v.tm}"
+                             variables="{!v.variables}"
+                             jobTaskWrapper="{!jobTaskWrapper}"
+                             ondelete="{!c.handleJobTaskWrapperDelete}"
+                             nextTMLineNo="{!v.nextTMLineNo}"/>
+        </aura:iteration>
+        -->
+<!--
+<div>
+        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+            <div>{!jobTaskWrapper.JobTask.Name}</div>
+            <aura:iteration items="{!jobTaskWrapper.TMLines}" var="tmLine">
+                <div>{!tmLine.Line_No__c}</div>
+            </aura:iteration>
+        </aura:iteration>
+</div>
+-->
+        <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+            <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                <lightning:tab id="{!'tab' + index}" label="{!'Task ' + jobTaskWrapper.JobTask.Task_No__c + ' - ' + jobTaskWrapper.JobTask.Name}" iconName="standard:task">
+                    <c:TMJobTaskLine aura:id="job-task-line" jobTaskWrapperIndex="{!index}"
+                                     tm="{!v.tm}"
+                                     variables="{!v.variables}"
+                                     jobTaskWrapper="{!jobTaskWrapper}"
+                                     jobTaskOptions="{!v.jobTaskOptions}"
+                                     onchange="{!c.handleJobTaskWrapperChange}"
+                                     ondelete="{!c.handleJobTaskWrapperDelete}"
+                                     nextTMLineNo="{!v.nextTMLineNo}"/>
+                </lightning:tab>
+            </aura:iteration>
+        </lightning:tabset>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,35 @@
+<aura:component controller="MultiPicklistInputController">
+    
+    <!--attributes-->
+    <aura:attribute name="SObjectName" type="String" access="public" required="true"/>
+    <aura:attribute name="controllingValue" type="String" access="public"/>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="fieldName" type="String"  access="public" required="true"/>
+    <aura:attribute name="value" type="String" default="" access="public"/>
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="onblur" type="Aura.Action" access="public"/>
+    <aura:attribute name="onfocus" type="Aura.Action" access="public"/>
+    <aura:attribute name="onchange" type="Aura.Action" access="public"/>
+    <aura:attribute name="disabled" type="Boolean" access="public"/>
+    <aura:attribute name="required" type="Boolean" access="public"/>
+    <aura:attribute name="messageWhenValueMissing" type="String" access="public"/>
+    <aura:attribute name="validity" type="Object" access="public"/>
+    <aura:attribute name="sourceLabel" type="String" access="public"/>
+    <aura:attribute name="selectedLabel" type="String" access="public"/>
+    <aura:attribute name="size" type="Integer" access="public"/>
+    <aura:attribute name="requiredOptions" type="List" access="public"/>
+    
+    <aura:attribute name="options" type="List" default="[]" access="private"/>
+    <aura:attribute name="values" type="List" default="[]" access="private"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.controllingValue}" action="{!c.doInit}"/>
+    
+    <!--methods-->
+    <!--aura:method name="showHelpMessageIfInvalid" action="{!c.showHelpMessageIfInvalid}"/-->
+    
+    <!--body-->
+    <lightning:dualListbox label="{!v.label}" sourceLabel="{!v.sourceLabel}" selectedLabel="{!v.selectedLabel}" options="{!v.options}" requiredOptions="{!v.requiredOptions}" value="{!v.values}" onchange="{!c.handleChange}" size="{!v.size}"/>
+
+</aura:component>

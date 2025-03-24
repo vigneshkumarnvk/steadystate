@@ -1,0 +1,8 @@
+.THIS .icon-color svg {
+    fill: darkorange !important;
+}
+
+.THIS .custom-overlay-class .slds-model__container {
+    max-width: 70rem !important;
+    width:90% !important;
+}

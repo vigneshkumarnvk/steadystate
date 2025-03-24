@@ -1,0 +1,7 @@
+.THIS textarea {
+    height: 90px;
+}
+.THIS .date-style {
+    min-width: fit-content;
+    white-space: nowrap;
+}

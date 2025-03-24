@@ -1,0 +1,9 @@
+.THIS .boxed-error-message {
+    display: block;
+    position: absolute;
+    background-color: lightgoldenrodyellow;
+    color: darkred;
+    border: 1px solid darkred;
+    border-radius:3px;
+    padding: 2px;
+}

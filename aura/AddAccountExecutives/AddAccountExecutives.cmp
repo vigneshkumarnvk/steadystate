@@ -1,0 +1,52 @@
+<!--*************************************************************************************************
+* Name         :  AddAccountExecutives 
+* Description  :  Aura component to add additional multiple account executives
+*
+*
+* Modification Log :
+* Developer                 Date                   Description
+* ***********************************************************************************************
+* Pavithra P				10/03/2024             US124701 : [Continued] [Continued] [Unplanned]  Update  Salesforce Assign Multiple Salespeople to an Account and Sales Orders
+*************************************************************************************************-->
+
+<aura:component controller="AddAccountExecutiveController" implements="lightning:hasPageReference,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="selectedExecutiveId" type="String"/>
+    <aura:attribute name="accountExecutives" type="List" access="public"/>
+    <aura:import library="lightning:prompt" property="LightningPrompt" />
+    <aura:attribute name="pillValues" type="Boolean" default="false"/>
+    <!-- Attribute to store toggle state -->
+    <aura:attribute name="isExpanded" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <lightning:card class="customCard" >
+        <!-- Lightning Accordion to handle collapse/expand -->
+        <lightning:accordion allowMultipleSectionsOpen="true" onsectiontoggle="{!c.handleSectionToggle}">
+            <lightning:accordionSection name="section1" label="Additional Account Executives">
+                
+                <c:LookupInput label="Additional Account Executives"
+                               value="{!v.accountExecutives}"
+                               SObjectName="Salesperson__c"
+                               columns="[{label: 'Code', fieldName: 'Salesperson_Code__c'}, {label: 'Name', fieldName: 'Name'}, {label: 'Service Center', fieldName: 'User__r.Service_Center__c'}]"
+                               filter="Status__c='Active' AND Account_Executive__c=TRUE"
+                               pill="{iconName: 'standard:user', fieldName: 'Name'}"
+                               fetchLimit="25"
+                               onchange="{!c.handleAccountExecutiveChange}"
+                               allowMultipleValues="true"
+                               />
+                
+                <div class="slds-align_absolute-center slds-p-top_medium">
+                    <lightning:buttonGroup >                        
+                        <aura:if isTrue="{!v.pillValues == true}">
+                            <lightning:button label="Save" variant="brand" onclick="{! c.handleClickSave }"/>
+                            <aura:set attribute="else">                                
+                                <lightning:button label="Save" variant="brand" onclick="{! c.handleClickSave }" disabled="true"/>
+                            </aura:set>
+                        </aura:if>
+                    </lightning:buttonGroup> 
+                </div>
+            </lightning:accordionSection>
+        </lightning:accordion>
+        
+    </lightning:card>
+</aura:component>

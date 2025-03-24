@@ -1,0 +1,33 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+    Ticket#28846 - Re-Ordering page layout
+-->
+<aura:component extends="c:SalesOrderBase">
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea aura:id="project-scope"
+                                    label="Project Scope"
+                                    value="{!v.salesOrder.Site_Scope__c}"
+                                    required="true"
+                                    messageWhenValueMissing="This field is mandatory"
+                                    disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                    class="textarea-project-scope" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+    	        <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Customer Billing Instructions" value="{!v.salesOrder.Customer_Billing_Instructions__c}" disabled="true" />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Sales Order Billing Instructions" value="{!v.salesOrder.Sales_Order_Instructions__c}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}" />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Internal Comments" value="{!v.salesOrder.Internal_Comments__c}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

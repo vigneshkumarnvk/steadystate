@@ -1,0 +1,163 @@
+<aura:component extends="c:BillingWorksheetBase" implements="lightning:isUrlAddressable,lightning:hasPageReference">
+    <aura:dependency resource="c:BillingWorksheetLine"/>
+    <aura:dependency resource="c:BillingWorksheetLineEdit"/>
+
+    <!--attributes-->
+    <!-- move to BillingWorksheetBase Component-->
+    
+    <aura:attribute name="salesOrder" type="Object" access="global"/>
+    
+    <!-- move to BillingWorksheetBase-->
+    <aura:attribute name="worksheets" type="List" access="public"/>
+    <aura:attribute name="activeWorksheets" type="List" default="[]" access="public"/>
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+    <aura:attribute name="unsavedChanges" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="lineTotals" type="List" default="[]" access="private"/>
+    <aura:attribute name="maxWorksheetLineCount" type="Integer" default="0" access="private"/>
+    <aura:attribute name="MAX_WORKSHEET_LINES_EDIT_COUNT" type="Integer" default="400" access="private"/>
+
+    <!--handles-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.handlePageChange}"/>
+    <aura:handler name="change" value="{!v.activeWorksheets}" action="{!c.handleWorksheetsChange}"/>
+    <aura:handler name="unsavedChangesEvent" event="c:UnsavedChangesEvent" action="{!c.handleUnsavedChangesEvent}"/>
+    <aura:handler name="worksheetUpdateEvent" event="c:BillingWorksheetUpdateEvent" action="{!c.handleWorksheetUpdateEvent}"/>
+    <aura:handler name="worksheetLinesMoveEvent" event="c:JobTaskLinesMoveEvent" action="{!c.handleWorksheetLinesMoveEvent}"/>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="title">
+            Billing Worksheet - {!v.salesOrder.Name} - {!v.salesOrder.Bill_to_Customer_No__r.Name}
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            <!--
+            <lightning:button label="Print Billing T&amp;M" variant="neutral" onclick="{!c.print}" disabled="{!v.activeWorksheets.length == 0 || v.unsavedChanges == true}"/>
+            -->
+            <aura:if isTrue = "{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                <lightning:button label="Review Billing Package Lines" variant="brand" onclick="{!c.navigateToInvoiceReview}" disabled="{!v.unsavedChanges == true}"/>
+            	<lightning:button label="Create EQAI Billing Package" variant="brand" onclick="{!c.createInvoice}" disabled="{!v.activeWorksheets.length == 0 || v.maxWorksheetLineCount > v.MAX_WORKSHEET_LINES_EDIT_COUNT}"/>
+            <aura:set attribute="else">
+                <lightning:button label="REVIEW 'To-Invoice' T&amp;M Lines" variant="brand" onclick="{!c.navigateToInvoiceReview}" disabled="{!v.unsavedChanges == true}"/>
+            	<lightning:button label="Create Invoice" variant="brand" onclick="{!c.createInvoice}" disabled="{!v.activeWorksheets.length == 0 || v.maxWorksheetLineCount > v.MAX_WORKSHEET_LINES_EDIT_COUNT}"/>
+            </aura:set>
+            </aura:if>
+            <lightning:button label="Quick Save" variant="brand" onclick="{!c.quickSave}"/>
+            <lightning:button label="Save" variant="brand" onclick="{!c.save}"/>
+        </aura:set>
+
+        <p class="slds-p-horizontal--small">
+            <c:DataTable items="{!v.worksheets}" var="worksheet" indexVar="index" onRowAction="{!c.handleRowAction}">
+                <aura:set attribute="template">
+                    <c:DataColumn label="" headerStyle="width:3%;" cellStyle="vertical-align:top;">
+                        <span name="jobTaskCheckBox">
+                            <lightning:input type="checkbox" variant="label-hidden" checked="{!worksheet.Selected}"/>
+                        </span>
+                    </c:DataColumn>
+                    <c:DataColumn label="Job Task" headerStyle="width:15%;" cellStyle="slds-cell-wrap;vertical-align:top;">
+                        {#'Task ' + worksheet.SalesOrderJobTask.Task_No__c + ' - ' + worksheet.SalesOrderJobTask.Name}
+                    </c:DataColumn>
+
+                    <c:DataColumn label="Billing Type" headerStyle="width:7%;" cellStyle="vertical-align:top;">
+                        {!worksheet.SalesOrderJobTask.Billing_Type__c}
+                    </c:DataColumn>
+                    <c:DataColumn label="T&amp;Ms" headerStyle="width:45%;" cellStyle="vertical-align:top;">
+                        <div style="max-height: 100px;overflow-y: auto">
+                            <lightning:layout multipleRows="true">
+                                <aura:iteration items="{!worksheet.RelatedInfos}" var="relatedInfo" indexVar="tmIndex">
+                                    <lightning:layoutItem size="4" padding="horizontal-small" class="slds-cell-wrap">
+                                    <span name="tmCheckbox" style="display: inline-block" data-order-task-id="{!worksheet.SalesOrderJobTask.Id}" data-tm-id="{!relatedInfo.TM.Id}" data-tm-index="{!tmIndex}">
+                                        <lightning:input type="checkbox" variant="label-hidden" value="test" checked="{!relatedInfo.TM.Selected}"/>
+                                    </span>
+                                        <span style="display: inline-block">
+                                        <lightning:formattedUrl label="{#relatedInfo.TM.Name}" value="{#'/' + relatedInfo.TM.Id}" target="_blank"/>
+                                    </span>
+                                        <span style="display: inline-block" class="slds-p-horizontal--small">
+                                        <c:FormattedDate value="{#relatedInfo.TM.Scheduled_Date__c}"/>
+                                    </span>
+                                        <aura:if isTrue="{#relatedInfo.FieldTMPDFUrl != null}">
+                                        <span style="display: inline-block">
+                                            <a href="{#relatedInfo.FieldTMPDFUrl}" target="_blank" class="slds-p-left--xx-small">
+                                                <lightning:icon iconName="doctype:pdf" size="small"/>
+                                            </a>
+                                        </span>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                </aura:iteration>
+                            </lightning:layout>
+                        </div>
+                    </c:DataColumn>
+                    <c:DataColumn label="Bundled Lines" cellStyle="slds-cell-wrap;vertical-align:top;" headerStyle="width:30%;">
+                        <lightning:layout multipleRows="true">
+                            <aura:iteration items="{#worksheet.LumpSumLines}" var="lumpSumLine" indexVar="index">
+                                <lightning:layoutItem size="12" class="slds-cell-wrap">
+                                    <span class="slds-item slds-p-right--small">{#index + 1}) {#lumpSumLine.Description__c}</span>
+                                </lightning:layoutItem>
+                            </aura:iteration>
+                        </lightning:layout>
+                    </c:DataColumn>
+                </aura:set>
+            </c:DataTable>
+
+        <p class="slds-p-top--medium">
+            <!--
+            <aura:if isTrue="{!v.activeWorksheets.length > 0}">
+                <lightning:card title="Profit &amp; Margin" iconName="standard:lightning_usage">
+                    <c:DataTable items="{!v.lineTotals}" var="lineTotal">
+                        <aura:set attribute="template">
+                            <c:DataColumn label="Category" headerStyle="width:25%">
+                                <lightning:formattedText label="Category" value="{!lineTotal.Category}" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Subtotal" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Subtotal" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Profit Margin" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Profit Margin" value="{!lineTotal.ProfitMargin}" style="percent" minimumFractionDigits="2" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Total Cost" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Total Cost" value="{!lineTotal.LineCost}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Tax" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Tax" value="{!lineTotal.Tax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                            <c:DataColumn label="Total" headerStyle="width:15%">
+                                <lightning:formattedNumber label="Total" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                            </c:DataColumn>
+                        </aura:set>
+                    </c:DataTable>
+                </lightning:card>
+            </aura:if>
+            -->
+            <c:BillingWorksheetInvoiceProfitMargin aura:id="profit-margin" worksheets="{!v.activeWorksheets}"/>
+        </p>
+
+        <p class="slds-p-top--medium">
+            <!--ticket 20170-->
+            <!--
+            <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+                <aura:iteration items="{!v.activeWorksheets}" var="activeWorksheet" indexVar="index">
+                    <lightning:tab label="{!'Task ' + activeWorksheet.SalesOrderJobTask.Task_No__c + ' -' + activeWorksheet.SalesOrderJobTask.Name}" id="{!'tab' + index}" iconName="standard:task">
+                        <c:BillingWorksheetJobTaskLine aura:id="active-worksheet" salesOrderId="{!v.salesOrderId}" salesOrder="{!v.salesOrder}" worksheetIndex="{!index}" worksheet="{!activeWorksheet}" nextWorksheetLineNo="{!v.nextWorksheetLineNo}" setupData="{!v.setupData}" jobTaskOptions="{!v.jobTaskOptions}"/>
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+            -->
+            <c:FlexTabSet aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+                <aura:set attribute="tabs">
+                    <aura:iteration items="{!v.activeWorksheets}" var="activeWorksheet" indexVar="tabIndex">
+                        <c:FlexTab tabIndex="{!tabIndex}" label="{!'Task ' + activeWorksheet.SalesOrderJobTask.Task_No__c + ' -' + activeWorksheet.SalesOrderJobTask.Name}" iconName="standard:task" error="{!activeWorksheet.error}"/>
+                    </aura:iteration>
+                </aura:set>
+                <aura:set attribute="contents">
+                    <aura:iteration items="{!v.activeWorksheets}" var="activeWorksheet" indexVar="tabIndex">
+                        <c:FlexTabContent tabIndex="{!tabIndex}">
+                            <c:BillingWorksheetJobTaskLine aura:id="active-worksheet" salesOrderId="{!v.salesOrderId}" salesOrder="{!v.salesOrder}" worksheetIndex="{!tabIndex}" worksheet="{!activeWorksheet}" nextWorksheetLineNo="{!v.nextWorksheetLineNo}" setupData="{!v.setupData}" jobTaskOptions="{!v.jobTaskOptions}"/>
+                        </c:FlexTabContent>
+                    </aura:iteration>
+                </aura:set>
+            </c:FlexTabSet>
+            <!--ticket 20170-->
+        </p>
+        </p>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,27 @@
+.THIS {
+}
+
+.THIS tbody {
+    transform: none;
+}
+
+.THIS td {
+    position: initial;
+}
+
+/* Fixed Headers */
+.THIS.fixed-table-headers table thead th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.THIS.fixed-table-headers {
+    overflow-y: auto !important;
+    outline: none !important;
+}
+
+.THIS.horizontal-scroll {
+    overflow-x:auto;
+}

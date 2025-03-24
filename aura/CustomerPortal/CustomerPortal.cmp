@@ -1,0 +1,49 @@
+<aura:component extends="c:CustomerPortalBase">
+    <!--attributes-->
+    <aura:attribute name="title" type="String" access="private"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="loginEvent" event="c:LoginEvent" action="{!c.handleLogin}"/>
+    
+    <!--body-->    
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="6" padding="around-small">
+            Republic Services Customer Portal
+        </lightning:layoutItem> 
+        <lightning:layoutItem size="6" padding="around-small" class="align-right">
+            <aura:if isTrue="{!v.loginInfo != null &amp;&amp; v.loginInfo.Authorized == true}">
+                Welcome, {!v.loginInfo.PortalLogin.Name}!<br/>
+                <lightning:buttonGroup>
+                    <lightning:button label="Log out" variant="base" value="logout" onclick="{!c.handleLogout}"/>
+                </lightning:buttonGroup>
+            </aura:if>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem size="12" padding="around-small">
+            <aura:if isTrue="{!v.loginInfo == null || v.loginInfo.Authorized != true}">        
+                <div class="center-screen">
+                    <c:UserLogin/>
+                </div>
+                
+                <aura:set attribute="else">
+                    <lightning:layout>
+                        <lightning:layoutItem padding="around-small" class="navigation-pane-width">
+                            <lightning:verticalNavigationSection label="My Account">
+                                <aura:if isTrue="{!v.loginInfo.StagingAccountId != null}">
+                                	<lightning:verticalNavigationItemIcon label="Billing Address" name="account-information" iconName="standard:account" onclick="{!c.handleNavigationMenuItemClick}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.loginInfo.StagingContactId != null}">
+                                	<lightning:verticalNavigationItemIcon label="Contact Information" name="contact-information" iconName="standard:contact" onclick="{!c.handleNavigationMenuItemClick}"/>
+                                </aura:if>
+                            </lightning:verticalNavigationSection>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                            <div aura:id="content-container"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:set>
+            </aura:if>     
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

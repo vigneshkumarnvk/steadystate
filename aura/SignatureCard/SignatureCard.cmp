@@ -1,0 +1,125 @@
+<aura:component extends="c:TMBase">
+    <!--attributes-->
+    <aura:attribute name="data" type="sObject"/>
+    <aura:attribute name="laborData" type="Object"/>
+    <aura:attribute name="equipmentData" type="Object"/>
+    <aura:attribute name="materialData" type="Object"/>
+    <aura:attribute name="wasteDisposalData" type="Object"/>
+    <aura:attribute name="costPlusData" type="Object"/>
+    <aura:attribute name="laborColumns" type="List"/>
+    <aura:attribute name="equipmentColumns" type="List"/>
+    <aura:attribute name="materialColumns" type="List"/>
+    <aura:attribute name="wasteDisposalColumns" type="List"/>
+    <aura:attribute name="costPlusColumns" type="List"/>
+    <aura:attribute name="pendingChangesStatus" type="String" />
+    <aura:attribute name="siteEmailAddress" type="String"/>
+
+    <aura:attribute name="supervisorSignatureWrapper" type="Object"/>
+    <aura:attribute name="customerASignatureWrapper" type="Object"/>
+    <aura:attribute name="customerBSignatureWrapper" type="Object"/>
+
+    <!--events-->
+    <aura:registerEvent name="TMNavigationEvent" type="c:TMNavigationEvent"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.data}" action="{!c.doPendingChangesStatus}"/>
+
+    <!--body-->
+    <!--
+	<c:ModalDialog aura:id="modal"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+	-->
+
+    <lightning:card title="">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Refresh" variant="neutral" onclick="{!c.doRefresh}"/>
+                    <!--lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.pendingChangesStatus != 'Pending_Changes'}"/-->
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <div class="slds container" aura:id="container" style="border-top:1px solid #ccc">
+            <ui:scrollerWrapper aura:id="scroller" class="scroller-size">
+                <ul class="lds-list--vertical">
+                    <aura:if isTrue="{!!empty(v.laborData)}">
+                        <lightning:card title="{!'LABOR (total hours submitted: ' + v.data.TotalLaborHours + ')'}">
+                            <lightning:datatable columns="{!v.laborColumns}" data="{!v.laborData}" keyField="Id" hideCheckboxColumn="true"  showRowNumberColumn="true"/>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!!empty(v.equipmentData)}">
+                        <lightning:card title="{!'EQUIPMENT (total hours submitted: ' + v.data.TotalEquipmentHours + ')'}">
+                            <lightning:datatable columns="{!v.equipmentColumns}" data="{!v.equipmentData}" keyField="Id" hideCheckboxColumn="true" showRowNumberColumn="true"/>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!!empty(v.materialData)}">
+                        <lightning:card title="MATERIAL">
+                            <lightning:datatable columns="{!v.materialColumns}" data="{!v.materialData}" keyField="Id" hideCheckboxColumn="true" showRowNumberColumn="true"/>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!!empty(v.wasteDisposalData)}">
+                        <lightning:card title="WASTE DISPOSAL">
+                            <lightning:datatable columns="{!v.wasteDisposalColumns}" data="{!v.wasteDisposalData}" keyField="Id" hideCheckboxColumn="true" showRowNumberColumn="true"/>
+                        </lightning:card>
+                    </aura:if>
+
+                    <aura:if isTrue="{!!empty(v.costPlusData)}">
+                        <lightning:card title="COST PLUS">
+                            <lightning:datatable columns="{!v.costPlusColumns}" data="{!v.costPlusData}" keyField="Id" hideCheckboxColumn="true" showRowNumberColumn="true"/>
+                        </lightning:card>
+                    </aura:if>
+
+                    <lightning:card title="Comments">
+                        <aura:set attribute="actions">
+                            <lightning:buttonGroup>
+                                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                                    <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.pendingChangesStatus != 'Pending_Changes'}"/>
+                                </aura:if>
+                            </lightning:buttonGroup>
+                        </aura:set>
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:textarea label="Job Log" value="{!v.data.Customer_Comments__c}" class="comment-box-size" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                                <lightning:input type="checkbox" label="Job Complete" variant="label-stacked" checked="{!v.data.Job_Complete__c}" disabled="{!v.tm.Status__c != 'Scheduled'}"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:card>
+                    <aura:if isTrue="{!v.pendingChangesStatus == ''}">
+                        <lightning:card title="SIGNATURES">
+                            <lightning:layout multipleRows="true" horizontalAlign="center">
+                                <lightning:layoutItem padding="around-small" flexibility="auto">
+                                    <c:SignaturePad label="Supervisor" signatureWrapper="{!v.supervisorSignatureWrapper}" hideNotAvailableCheckbox="true" hideAcceptTermsCheckbox="true" hideEmailAddress="true" width="400" height="300"/>
+                                </lightning:layoutItem>
+                                <aura:if isTrue="{!v.supervisorSignatureWrapper.Signed == true}">
+                                    <aura:if isTrue="{!v.data.Bill_to_Customer__r.Requires_2_Signatures_on_TM__c != true}">
+                                        <lightning:layoutItem padding="around-small" flexibility="auto">
+                                            <c:SignaturePad label="Customer" signatureWrapper="{!v.customerASignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                        </lightning:layoutItem>
+                                        <aura:set attribute="else">
+                                            <lightning:layoutItem padding="around-small" flexibility="auto">
+                                                <c:SignaturePad label="Signature One" signatureWrapper="{!v.customerASignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem padding="around-small" flexibility="auto">
+                                                <c:SignaturePad label="Signature Two" signatureWrapper="{!v.customerBSignatureWrapper}" acceptTermsDialog="{!c.showTermsDialog}" afterSignatureSaved="{!c.afterSignatureSaved}" width="400" height="300"/>
+                                            </lightning:layoutItem>
+                                        </aura:set> 
+                                    </aura:if>
+                                </aura:if>
+                            </lightning:layout>
+                        </lightning:card>
+                        <aura:set attribute="else">
+                            <div style="text-align:center"><p>Please note, the signature boxes will show after you save the changes!</p></div>
+                        </aura:set>
+                    </aura:if>
+                </ul>
+            </ui:scrollerWrapper>
+        </div>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>PALAU</label>
+    <protected>false</protected>
+    <values>
+        <field>EQAI_Field_Name__c</field>
+        <value xsi:type="xsd:string">country_code</value>
+    </values>
+    <values>
+        <field>EQAI_Field_Value__c</field>
+        <value xsi:type="xsd:string">PLW</value>
+    </values>
+    <values>
+        <field>EQAI_Table_Name__c</field>
+        <value xsi:type="xsd:string">WorkOrderQuoteHeader</value>
+    </values>
+    <values>
+        <field>Salesforce_Field_API_Name__c</field>
+        <value xsi:type="xsd:string">Service_Center__r.Name</value>
+    </values>
+    <values>
+        <field>Salesforce_Field_Value__c</field>
+        <value xsi:type="xsd:string">PALAU</value>
+    </values>
+</CustomMetadata>

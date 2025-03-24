@@ -1,0 +1,74 @@
+<!--
+    Ticket#22270 - Allow ER T&M link with Non-ER sales order.
+-->
+<aura:component extends="c:BaseComponent" controller="ACVTMController" description="LinkTMToSalesOrderCard">
+    <!--attributes-->
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrappers" type="List" default="[]" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="private"/>
+    <aura:attribute name="salesOrderJobTasks" type="List" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="save" action="{!c.save}" access="public">
+        <aura:attribute name="callback" type="Function" access="public"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+        </aura:set>
+        <p class="slds-p-horizontal--small">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="6"  padding="around-small">
+                    {!v.tm.Emergency_Response__c}
+                    <!-- filter="{!'Document_Type__c=\'Sales Order\' AND Service_Center__c=\'' + v.tm.Service_Center__c + '\'' +
+                                        if(v.tm.Emergency_TM__c==TRUE, ' AND Sales_Order_Type__r.Emergency_Response__c=TRUE', '')}" -->
+                    <c:LookupInput label="Sales Order"
+                                   aura:id="sales-order"
+                                   value="{!v.salesOrder}"
+                                   SObjectName="Sales_Order__c"
+                                   columns="[{label: 'No.', fieldName: 'Name'},{label: 'Customer Name', fieldName: 'Bill_to_Customer_No__r.Name'}]"
+                                   filter="{!'Document_Type__c=\'Sales Order\' AND Service_Center__c=\'' + v.tm.Service_Center__c + '\''}"
+                                   pill="{iconName: 'standard:quotes', fieldName: 'Name'}"
+                                   onchange="{!c.handleSalesOrderChange}" datatable="true"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="horizontal-small" size="6" class="header">
+                            T&amp;M Job Task
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="6" class="header">
+                            Sales Order Job Task
+                        </lightning:layoutItem>
+                        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper">
+                            <lightning:layoutItem padding="around-small" size="6">
+                                <lightning:input variant="label-hidden" value="{!jobTaskWrapper.JobTask.Name}" disabled="true"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem padding="around-small" size="6">
+                                <!--ticket 19674-->
+                                <!--
+                                <lightning:select variant="label-hidden" class="label-hidden" value="{!jobTaskWrapper.JobTask.Sales_Order_Job_Task__c}">
+                                    <option label="" value=""/>
+                                    <aura:iteration items="{!v.salesOrderJobTasks}" var="salesOrderJobTask">
+                                        <option label="{!'Task ' + salesOrderJobTask.Task_No__c + ' - ' + salesOrderJobTask.Name}" value="{!salesOrderJobTask.Id}" selected="{!salesOrderJobTask.Id == jobTaskWrapper.JobTask.Sales_Order_Job_Task__c}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                                -->
+                                <lightning:select variant="label-hidden" class="label-hidden" value="{!jobTaskWrapper.NewSalesOrderJobTaskId}">
+                                    <option label="" value=""/>
+                                    <aura:iteration items="{!v.salesOrderJobTasks}" var="salesOrderJobTask">
+                                        <option label="{!'Task ' + salesOrderJobTask.Task_No__c + ' - ' + salesOrderJobTask.Name}" value="{!salesOrderJobTask.Id}" selected="{!salesOrderJobTask.Id == jobTaskWrapper.NewSalesOrderJobTaskId}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <!--ticket 19674-->
+                            </lightning:layoutItem>
+                        </aura:iteration>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </p>
+    </lightning:card>
+</aura:component>

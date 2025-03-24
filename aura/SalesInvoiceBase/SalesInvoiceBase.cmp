@@ -1,0 +1,19 @@
+<aura:component description="SalesInvoiceBase" extensible="true" extends="c:BaseComponent" controller="ACVSalesInvoiceController">
+    <!--attributes-->
+    <aura:attribute name="setupData" type="Object" access="public"/>
+    <aura:attribute name="salesInvoice" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="nextJobTaskLineNo" type="Integer" access="public"/>
+    <aura:attribute name="nextInvoiceLineNo" type="Integer" access="public"/>
+    <aura:attribute name="unsavedChanges" type="Boolean" access="public"/>
+    <aura:attribute name="documentType" type="String" access="public"/>
+
+    <!--handlers-->
+
+    <!--events-->
+
+    <!--methods-->
+
+    <!--body-->
+    {!v.body}
+</aura:component>

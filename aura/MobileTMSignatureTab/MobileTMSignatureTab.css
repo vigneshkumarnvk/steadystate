@@ -1,0 +1,13 @@
+.THIS .slds-accordion__summary-action {
+    padding: 4px;
+    background-color: rgb(200, 235, 245);
+}
+
+.THIS .text-box-size textarea {
+    height:100px;
+}
+
+.THIS .toggle-checkbox {
+    display: inline-flex;
+    width: auto;
+}

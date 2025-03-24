@@ -1,0 +1,29 @@
+.THIS {
+    /*position: inherit !important;*/
+    /*need display setting for tab*/
+    /*display: table-row-group !important;*/ /*fix the issue where the lookup dropdown show behind the slds-header and body*/
+
+}
+
+.THIS .slds-card__body {
+    /*margin-bottom: 0px;*/
+}
+
+.THIS .slds-card__header .slds-text-heading_small {
+    /*background-color: #94b9d1;*/
+    /*font-size: small;*/ 
+    /*font-weight: bold;*/
+}
+
+.THIS .slds-card__footer {
+    /*display: none;*/
+}
+
+.THIS .icon-color svg {
+    /*fill: var(--lwc-brandAccessible,rgb(0, 112, 210)) !important;*/
+}
+
+
+.THIS .checkbox-inline {
+    display: inline-block;
+}

@@ -1,0 +1,148 @@
+<aura:component extends="c:MobileTMLineBase" description="MobileTMWasteDisposalLine">
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="uomItems" type="List" access="public"/>
+   
+    <!--events-->
+    <aura:registerEvent name="copyManifestEvent" type="c:TMLineCopyManifestEvent"/>
+    <aura:handler name="sampleComponentEvent" event="c:compEvent" action="{!c.handleComponentEvent}"/>
+    
+    <!--body-->
+    <lightning:card class="slds-card_boundary">
+        <aura:set attribute="title">
+            <lightning:layout>
+                <lightning:layoutItem>
+                    <lightning:input type="checkbox" label="" variant="label-hidden" checked="{!v.tmLine.Selected}" disabled="{!v.tm.Status__c != 'Scheduled'}" datatable="false"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto">
+                    {!v.tmLine.Description__c}
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:set>
+        
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <lightning:button label="Delete" iconName="utility:delete" onclick="{!c.doDelete}"/>
+                    <lightning:button label="Copy Manifest" iconName="utility:copy" onclick="{!c.doCopyManifest}"/>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        
+        <lightning:layout multipleRows="true">
+            
+            <!-- Waste Disposal -->
+            <lightning:layoutItem padding="around-small" size="5">
+                <c:LookupInput label="Waste Disposal" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c" pill="{iconName: 'standard:product', fieldName: 'Description__c'}" columns="[{label: 'Name', fieldName: 'Description__c', style: 'width:50%;', 'class': 'slds-cell-wrap'}, {label: 'No.', fieldName: 'Name', style: 'width:50%;', 'class': 'slds-cell-wrap'}]" queryFields="['Name', 'Unit_of_Measure__r.Name']" filter="{!'Blocked__c!=TRUE AND Category__c=\'Waste Disposal\''}" onchange="{!c.handleResourceChange}" hideLookupGlass="true" datatable="false"/>
+            </lightning:layoutItem>
+            
+            <!-- Description -->
+            <lightning:layoutItem padding="around-small" size="4">
+                <lightning:input label="Description" value="{!v.tmLine.Description__c}" disabled="{!v.tmLine.Approval_Id__c!=null}" oncommit="{!c.fireTMLineChange}"/>
+            </lightning:layoutItem>
+            
+            <!-- Facility -->
+            <lightning:layoutItem padding="around-small" size="2">
+                <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                    <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+                        <c:LookupInputFacility aura:id="facility" 
+                                               label="Facility" 
+                                               value="{!v.tmLine.Facility__r}" 
+                                               SObjectName="Facility__c" 
+                                               pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" 
+                                               columns="[{label: 'TSDF Code', fieldName: 'TSDF_Code__c'}, {label: 'TSDF Name', fieldName: 'Name'},{label: 'Address', fieldName: 'Street__c'},{label: 'City', fieldName: 'City__c'},{label: 'State', fieldName: 'State__c'}]" 
+                                               filter="TSDF_Status__c='A'"
+                                               queryFields="['Name','EPA_ID__c','Postal_Code__c','Country__c']"
+                                               onchange="{!c.handleFacilityChange}" 
+                                               hideLookupGlass="true" 
+                                               datatable="false"/>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="facility" 
+                                       label="Facility" 
+                                       value="{!v.tmLine.Facility__r}" 
+                                       SObjectName="Facility__c" 
+                                       pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" 
+                                       columns="[{label: 'TSDF Code', fieldName: 'TSDF_Code__c'}, {label: 'TSDF Name', fieldName: 'Name'},{label: 'Address', fieldName: 'Street__c'},{label: 'City', fieldName: 'City__c'},{label: 'State', fieldName: 'State__c'}]" 
+                                       filter="TSDF_Status__c='A'"
+                                       queryFields="['Name','EPA_ID__c','Postal_Code__c','Country__c']"
+                                       onchange="{!c.handleFacilityChange}" 
+                                       hideLookupGlass="true" 
+                                       datatable="false"/>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+            
+            <!-- Profile Approval -->
+            <aura:if isTrue="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+                <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                    <lightning:layoutItem padding="around-small" size="2">
+                        <c:LookupInputApproval aura:id="profile-approval"
+                                               label="Profile Approval"  
+                                               value="{!v.tmLine.Approval_Id__c}"
+                                               name="{!v.tmLine.TM__r.Id}"
+                                               facility="{!v.tmLine.Facility__r.Id}"
+                                               SObjectName="TM_Line__c"
+                                               columns="[{label: 'Approval', fieldName: 'Approval'},{label: 'Profile ID', fieldName: 'ProfileID'}, {label: 'Bill Unit Code', fieldName: 'UOM'},   {label: 'Description', fieldName: 'Description'},{label: 'Waste Code', fieldName: 'WasteCode'},{label: 'Expiration Date', fieldName: 'ExpirationDate'}]"
+                                               pill="{fieldName: 'Approval'}" hideLookupGlass="true" datatable="true"
+                                               onchange="{!c.handleApprovalChange}"/>
+                    </lightning:layoutItem>
+                </aura:if>
+                <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                    <lightning:layoutItem padding="around-small" size="2">
+                        <c:LookupInputManifest  
+                                               aura:id="bol-manifest"                
+                                               label="BOL Manifest"                
+                                               value="{!v.tmLine.BOL_Manifest__c}"
+                                               name="{!v.tmLine.TM__r.Id}"
+                                               tsdfApprovalCode="{!v.tmLine.Approval_Id__c}"
+                                               columns="[{label: 'Manifest', fieldName: 'Manifest'},{label: 'Generator Name', fieldName: 'GeneratorName'},{label: 'Work Order ID', fieldName: 'WorkorderId'}]"
+                                               pill="{fieldName: 'Manifest'}" hideLookupGlass="true" datatable="true"
+                                               onchange="{!c.handleManifestChange}"/>
+                    </lightning:layoutItem>
+                </aura:if>
+                <aura:set attribute="else">
+                    <lightning:layoutItem padding="around-small" size="2">
+                        <lightning:input aura:id="bol-manifest" label="BOL Manifest" value="{!v.tmLine.BOL_Manifest__c}" oncommit="{!c.fireTMLineChange}"/>
+                    </lightning:layoutItem>
+                </aura:set>
+            </aura:if>
+            
+            <!-- Unit of Measure (UOM) -->
+            
+            
+            <lightning:layoutItem padding="around-small" size="2">
+                <aura:if isTrue="{!v.tmLine.Approval_Id__c == null}">
+                <c:LookupInput aura:id="unit-of-measure"
+                               label="Unit of Measure"
+                               value="{!v.tmLine.Unit_of_Measure__r}"
+                               SObjectName="ResourceUOMAssociation__c"
+                               pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                               queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                               filter="{!'Resource__c=\'' + v.tmLine.Resource__c + '\''}"
+                               hideLookupGlass="true"
+                               datatable="false"
+                               onchange="{!c.handleUnitOfMeasureChange}"/>
+               <aura:set attribute="else">   
+        			<c:LookupInput aura:id="unit-of-measure"  value="{!v.tmLine.Unit_of_Measure__r}"
+                       SObjectName="ResourceUOMAssociation__c"
+                       label="Unit of Measure"
+                       columns="[{label: 'Name', fieldName: 'Name'}]"
+                       queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                       filters="{!'[&quot;(Resource__c =\'' + v.tmLine.Resource__c + '\') AND Name IN (' + v.uomItems + ') &quot;]'}"
+                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="false"
+                       onchange="{!c.handleUnitOfMeasureChange}"
+                      
+                       disabled="false"/>
+       		</aura:set>
+   		</aura:if>
+            </lightning:layoutItem>
+            
+            <!-- Quantity -->
+            <lightning:layoutItem padding="around-small" size="1">
+                <lightning:input type="number" label="Quantity" value="{!v.tmLine.Quantity__c}" oncommit="{!c.fireTMLineChange}" required="{!v.tmLine.Resource__r.Unit_of_Measure__r.Name != null}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

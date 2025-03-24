@@ -1,0 +1,14 @@
+.THIS {
+    --sds-c-checkbox-toggle-color-background: #014486;
+    --sds-c-checkbox-toggle-color-background-checked: #009900;
+    --lwc-colorBackgroundToggleDisabled: #009900;
+}
+
+.THIS .slds-accordion__summary-action {
+    background-color: rgb(200, 235, 245);
+}
+
+.THIS .slds-checkbox_toggle span {
+    font-weight: bold;
+    font-size: 0.75rem;
+}

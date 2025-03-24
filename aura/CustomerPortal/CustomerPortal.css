@@ -1,0 +1,18 @@
+.THIS .center-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*text-align: center;*/
+    min-height: 80vh;
+}
+.THIS .full-height {
+    min-height: 80vh !important;
+}
+
+.THIS .navigation-pane-width {
+    min-width: 250px;
+}
+.THIS .align-right {
+    text-align: right;
+}

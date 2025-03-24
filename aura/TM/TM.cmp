@@ -1,0 +1,88 @@
+<aura:component extends="c:TMBase" implements="lightning:hasPageReference,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickAction" access="global">
+    <!--attributes-->
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="private"/>
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.handlePageChange}"/>
+
+    <!--ticket 19130-->
+    <aura:html tag="style">
+        .oneRecordActionWrapper {
+            display: block !important;
+        }
+    </aura:html>
+    <!--ticket 19130-->
+
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="title">
+            {!v.tm.Name + ' - ' + v.tm.Status__c}
+            <aura:if isTrue="{!v.tm.Scheduled_Date__c != null}">
+                -
+                <c:FormattedDate value="{!v.tm.Scheduled_Date__c}"/>
+            </aura:if>
+            {!if(v.tm.Emergency_TM__c == true, ' - Emergency T&amp;M', '')}
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            <!--<lightning:button label="Calculate" onclick="{!c.calculate}"/>-->
+            <aura:if isTrue="{!v.tm.Status__c == 'Open'}">
+                <lightning:button label="Save &amp; Change to Scheduled" variant="brand" onclick="{!c.saveAsScheduled}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Mobile Review'}">
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled' &amp;&amp; v.tm.Mobile_TM__c == true}">
+                    <lightning:button label="Save &amp; Change to Mobile Review" variant="brand" onclick="{!c.saveAsMobileReview}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="Save &amp; Change to Confirmed" variant="brand" onclick="{!c.saveAsConfirmed}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+            <lightning:button label="Quick Save" variant="brand" onclick="{!c.quickSave}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+            <lightning:button label="Save" variant="brand" onclick="{!c.save}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+        </aura:set>
+
+        <!--
+        <aura:set attribute="footer">
+            <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            <aura:if isTrue="{!v.tm.Status__c == 'Open'}">
+                <lightning:button label="Save &amp; Change to Scheduled" variant="brand" onclick="{!c.saveAsScheduled}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Mobile Review'}">
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled' &amp;&amp; v.tm.Mobile_TM__c == true}">
+                    <lightning:button label="Save &amp; Change to Mobile Review" variant="brand" onclick="{!c.saveAsMobileReview}"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="Save &amp; Change to Confirmed" variant="brand" onclick="{!c.saveAsConfirmed}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:if>
+            <lightning:button label="Save" variant="brand" onclick="{!c.save}"/>
+        </aura:set>
+        -->
+
+        <p class="slds-p-horizontal--small">
+            <!--ticket 19674--> 
+            <aura:if isTrue="{!v.tm != null}">
+            <!--ticket 19674-->
+                <c:Tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+                    <c:Tab id="tab0" label="T&amp;M Details" iconName="standard:survey">
+                        <c:TMDetails aura:id="step" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrappers="{!v.jobTaskWrappers}"/>
+                    </c:Tab>
+                    <c:Tab id="tab1" label="Site Information" iconName="standard:store_group">
+                        <c:TMSiteInformation aura:id="step" tm="{!v.tm}"/>
+                    </c:Tab>
+                    <c:Tab id="tab2" label="Instructions" iconName="standard:work_order_item">
+                        <c:TMInstructions aura:id="step" tm="{!v.tm}"/>
+                    </c:Tab>
+                    <c:Tab id="tab3" label="T&amp;M Lines" iconName="utility:rows" style="margin-bottom:50px;">
+                        <aura:if isTrue="{!v.jobTaskWrappers.length > 0}">
+                            <c:TMLineList aura:id="tm-lines" tm="{!v.tm}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextTMLineNo="{!v.nextTMLineNo}" variables="{!v.variables}" jobTaskWrappers="{!v.jobTaskWrappers}"/>
+                        </aura:if>
+                    </c:Tab>
+                </c:Tabset>
+            <!--ticket 19674-->
+            </aura:if>
+            <!--ticket 19674-->
+        </p>
+    </lightning:card>
+
+</aura:component>

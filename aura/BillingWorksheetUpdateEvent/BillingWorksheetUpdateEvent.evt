@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="BillingWorksheetUpdateEvent">
+    <aura:attribute name="index" type="Integer" access="public"/>
+    <aura:attribute name="worksheet" type="Object" access="public"/>
+</aura:event>

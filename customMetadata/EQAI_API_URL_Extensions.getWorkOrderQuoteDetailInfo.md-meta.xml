@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>getWorkOrderQuoteDetailInfo</label>
+    <protected>false</protected>
+    <values>
+        <field>API_Extension_Name__c</field>
+        <value xsi:type="xsd:string">getWorkOrderQuoteDetailInfo</value>
+    </values>
+    <values>
+        <field>API_Extension__c</field>
+        <value xsi:type="xsd:string">/Gateway/QuoteOrderDetail/InsertQuoteOrderDetails</value>
+    </values>
+    <values>
+        <field>API_Key__c</field>
+        <value xsi:type="xsd:string">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9K3txEvxZ8vpeqxW5OZburEDSH7qdtpdTsCrer/SlpT8prmG/28DUqXb+X7dV5/1gbXUKk8BAucJHJGFJoaCQgJw6dbGFXsGUjAyLqlvuAHZvM3pyhhDZtHgoCfV8dKseQHqvXDsyMnmKxccpDjOdA5nBC0OiIZZuh31OtBPTH7/TWZEp0oN8Z9cmga0SueNClPijkbEownINYLgSztL4cHPBK2d+B/ZDQXi5ibLAnzhbuNzpU6pwkRPsW/OKIn21I4CeRHOViyRa3FQTfdM1eU904Tp1vTLUozF01wcMlzFlbhcHYXUE+tzb1vD3dbdjlZ1zPSJ+EdflRo+fEQDaQIDAQAB</value>
+    </values>
+    <values>
+        <field>API_Token__c</field>
+        <value xsi:type="xsd:string">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJDUk0ifQ.atR6jVljMAtllrl5-2pYPZWrcb2F_JLaMj2iJ5Px</value>
+    </values>
+</CustomMetadata>

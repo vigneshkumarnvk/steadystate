@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="SalesLineUpdateEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="field" type="String" access="public"/>
+    <aura:attribute name="salesLine" type="Object" access="public"/>
+</aura:event>

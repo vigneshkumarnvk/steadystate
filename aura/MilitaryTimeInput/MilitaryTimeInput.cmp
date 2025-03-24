@@ -1,0 +1,69 @@
+<aura:component>
+    <aura:attribute name="name" type="String" access="public"/>
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="value" type="String" access="public"/>
+    <aura:attribute name="xValue" type="String" access="public"/>
+    <aura:attribute name="defaultTime" type="String" access="public"/>
+    <aura:attribute name="disabled" type="Boolean" access="public"/>
+    <aura:attribute name="required" type="Boolean" access="public"/>
+    <aura:attribute name="messageWhenValueMissing" type="String" access="public"/>
+    <aura:attribute name="validity" type="Object" access="public"/>
+    <aura:attribute name="variant" type="String" access="public"/>
+    <aura:attribute name="dropdownOnBottom" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="lostFocusTime" type="DateTime" access="private" description="control dropdown showtime"/>
+    <aura:attribute name="times" type="List" default="[]" access="private"/>
+
+    <!--temp fix for display the dropdown in the datatable-->
+    <aura:attribute name="datatable" type="Boolean" default="false" access="public"/>
+    <!--temp fix for display the dropdown in the datatable-->
+
+    <!--events-->
+    <aura:registerEvent name="onchange" type="c:MilitaryTimeChangeEvent"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+
+    <!--methods-->
+    <aura:method name="showHelpMessageIfInvalid" action="{!c.showHelpMessageIfInvalid}" access="public"/>
+
+    <!--body-->
+    <!-- fix overflow:auto dropdown issue
+    <div name="{!v.name}" aura:id="time-picklist" onmouseleave="{!c.handleMouseLeave}" onmouseenter="{!c.handleMouseEnter}" class="slds-lookup slds-is-close slds-form-element"  data-select="single">
+    -->
+    <div aura:id="time-container" name="{!v.name}" onmouseleave="{!c.handleMouseLeave}" onmouseenter="{!c.handleMouseEnter}" class="slds-lookup slds-is-close" style="position: initial" data-select="single">
+        <!--
+        <aura:if isTrue="{!v.variant != 'label-hidden'}">
+            <label aura:id="label" class="slds-form-element__label" style="vertical-align: middle !important;">
+                <aura:if isTrue="{!v.required == true}"><abbr class="slds-required" title="required">* </abbr></aura:if>
+                <aura:if isTrue="{!v.label != null}">{!v.label}</aura:if>
+            </label>
+        </aura:if>
+        -->
+
+        <div aura:id="input-container" class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right" style="z-index: 0">
+            <lightning:buttonIcon class="slds-input__icon right-icon-display" iconName="utility:clock" tabindex="-1"/>
+            <span aura:id="time-input" onkeydown="{!c.handleKeyDown}">
+                <lightning:input id="input" aura:id="input" class="lookup-input" label="{!v.label}" type="text" variant="{!v.variant}" value="{!v.xValue}" onclick="{!c.handleTimeClick}" oncommit="{!c.handleTimeChange}"
+                             required="{!v.required}" messageWhenValueMissing="{!v.messageWhenValueMissing}" validity="{!v.validity}" disabled="{!v.disabled}" autocomplete="off"/>
+            </span>
+        </div>
+
+        <div aura:id="dropdown" class="slds slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu dropdown" onclick="{!c.handleTimeSelect}">
+            <ui:scrollerWrapper aura:id="scroller-wrapper" class="scroller-wrapper">
+                <table border="0">
+                    <tbody>
+                    <aura:iteration items="{!v.times}" var="time">
+                        <tr>
+                            <td><span aura:id="time-slot" name="{!time.cells[0]}" value="{!time.hour}" class="time-slot">{!time.cells[0]}</span></td>
+                            <td><span aura:id="time-slot" name="{!time.cells[1]}" class="time-slot">{!time.cells[1]}</span></td>
+                            <td><span aura:id="time-slot" name="{!time.cells[2]}" class="time-slot">{!time.cells[2]}</span></td>
+                            <td><span aura:id="time-slot" name="{!time.cells[3]}" class="time-slot">{!time.cells[3]}</span></td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+            </ui:scrollerWrapper>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="PathMarkCompleteEvent">
+    <aura:attribute name="value" type="Object" access="public"/>
+</aura:event>

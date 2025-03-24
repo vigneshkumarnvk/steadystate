@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Human Resources</label>
+    <tabs>Resource__c</tabs>
+    <tabs>Week_Number__c</tabs>
+    <tabs>Personnel_Roster</tabs>
+    <tabs>Timesheet__c</tabs>
+    <tabs>Payroll__c</tabs>
+    <tabs>Resource_Type__c</tabs>
+    <tabs>Administration</tabs>
+    <tabs>Detailed_Cust_Ledg_Entry__c</tabs>
+    <tabs>Billing_Worksheet_Line__c</tabs>
+    <tabs>New_Hire_Request__c</tabs>
+    <tabs>Employee_Clocked_Time_for_Kronos__c</tabs>
+</CustomApplication>

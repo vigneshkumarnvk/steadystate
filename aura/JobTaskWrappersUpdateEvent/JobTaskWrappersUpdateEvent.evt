@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="JobTaskWrappersUpdateEvent">
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="source" type="String" access="public"/>
+    <aura:attribute name="reRender" type="Boolean" access="public" default="use this variable to control if the component should be rerendered or just the attribute"/>
+</aura:event>

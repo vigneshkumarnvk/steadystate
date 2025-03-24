@@ -1,0 +1,69 @@
+<aura:component extends="c:BaseComponent" controller="ACVContactController">
+    <!--attributes-->
+    <aura:attribute name="record" type="Object" access="public"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+           
+    <!--methods-->
+    <aura:method name="createRecord" action="{!c.doSave}">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+    
+    <lightning:card title="Create New Contact">
+        <p class="slds-p-horizontal_small">
+            <!--<aura:if isTrue="{!v.record != null}">-->
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:LookupInput aura:id="account" label="Account Name" value="{!v.record.Account}" SObjectName="Account" pill="{iconName: 'standard:account', fieldName: 'Name'}" disabled="{!v.record.AccountId != null}" required="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12" padding="horizontal-small">
+                        <c:MultiPicklistInput label="Contact Type" value="{!v.record.Contact_Type__c}" SObjectName="Contact" fieldName="Contact_Type__c" requiredOptions="{!v.contactTypes}" size="3"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:PicklistInput label="Salutation" value="{!v.record.Salutation}" SObjectName="Contact" fieldName="Salutation"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="First Name" value="{!v.record.FirstName}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Middle Name" value="{!v.record.MiddleName}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input aura:id="last-name" label="Last Name" value="{!v.record.LastName}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Title" value="{!v.record.Title}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Phone" value="{!v.record.Phone}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="MobilePhone" value="{!v.record.MobilePhone}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Email" value="{!v.record.Email}"/>
+                    </lightning:layoutItem>
+                    
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:textarea label="Street" value="{!v.record.MailingStreet}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="City" value="{!v.record.MailingCity}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:PicklistInput label="State" value="{!v.record.MailingStateCode}" SObjectName="State"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <lightning:input label="Postal Code" value="{!v.record.MailingPostalCode}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="6" padding="horizontal-small">
+                        <c:PicklistInput label="Country" value="{!v.record.MailingCountryCode}" SObjectName="Country"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+           <!-- </aura:if>-->
+        </p>
+    </lightning:card>
+</aura:component>

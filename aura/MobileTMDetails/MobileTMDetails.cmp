@@ -1,0 +1,190 @@
+<aura:component extends="c:MobileTMBase">
+    <!--attributes-->
+    
+    <!--events-->
+    
+    <!--handlers-->
+    <aura:handler name="change" value="{!v.tm}" action="{!c.handleTMChange}"/>
+    
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <aura:if isTrue="{!v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Open'}">
+                <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.unsavedChanges != true}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.tm.Status__c == 'Mobile Review'}">
+                <lightning:button label="Change to Scheduled" variant="brand" onclick="{!c.changeStatusToScheduled}"/>
+            </aura:if>
+        </aura:set>
+        
+        <aura:if isTrue="{!v.tm.Status__c == 'Open' &amp;&amp; v.tm.Emergency_TM__c == true}">
+            <p class="slds-p-horizontal--small slds-text-color--error slds-text-heading_small">This is an emergency T&amp;M. You must change status to Scheduled to continue.</p>
+        </aura:if>
+        
+        <div class="scrollable-container">
+            <lightning:layout>
+                <lightning:layoutItem size="6">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="horizontal-small" size="12">
+                            <lightning:input label="T&amp;M #" value="{!v.tm.Name}" disabled="true"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="horizontal-small" size="12">
+                            <lightning:select label="Status" value="{!v.tm.Status__c}" onchange="{!c.handleStatusChange}" disabled="{!v.tm.Status__c != 'Open'}">
+                                <option value="Open">Open</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Mobile Review">Mobile Review</option>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6" >
+                    <lightning:textarea label="Site Scope" value="{!v.tm.Site_Scope__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input type="date" label="Scheduled Date" value="{!v.tm.Scheduled_Date__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}" dateStyle="short" class="date-style"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Sales Order #" value="{!v.tm.Sales_Order__r.Name}" disabled="true"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Customer" value="{!v.tm.Bill_to_Customer__r.Name}" disabled="true"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Sales Order Type" value="{!v.tm.Sales_Order__r.Sales_Order_Type__r.Name + ' - '  + v.tm.Sales_Order__r.Sales_Order_Type__r.Description__c}" disabled="true"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            <lightning:layout>
+                <!--site address-->
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <fieldset class="slds-form-element slds-form_compound">
+                        <legend class="slds-form-element__legend slds-form-element__label">Site Address</legend>
+                        <div class="slds-form-element__control">
+                            <lightning:formattedAddress street="{!v.tm.Site_Street__c}"
+                                                        city="{!v.tm.Site_City__c}"
+                                                        country="{!v.tm.Site_Country__c}"
+                                                        province="{!v.tm.Site_State__c}"
+                                                        postalCode="{!v.tm.Site_Potal_Code__c}"
+                                                        />
+                        </div>
+                    </fieldset>
+                </lightning:layoutItem>
+                <!--Billing Address-->
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <fieldset class="slds-form-element slds-form_compound">
+                        <legend class="slds-form-element__legend slds-form-element__label">Billing Address</legend>
+                        <div class="slds-form-element__control">
+                            <lightning:formattedAddress street="{!v.tm.Bill_to_Customer__r.BillingStreet}"
+                                                        city="{!v.tm.Bill_to_Customer__r.BillingCity}"
+                                                        country="{!v.tm.Bill_to_Customer__r.BillingCountryCode}"
+                                                        province="{!v.tm.Bill_to_Customer__r.BillingStateCode}"
+                                                        postalCode="{!v.tm.Bill_to_Customer__r.BillingPostalCode}"
+                                                        />
+                        </div>
+                    </fieldset>
+                </lightning:layoutItem>
+                
+            </lightning:layout>
+            <lightning:layout>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <!--
+                    <c:LookupInput label="Site Contact"
+                                   value="{!v.tm.Site_Contact_2__r}"
+                                   SObjectName="Contact"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                                   filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Site\') AND Blocked__c !=TRUE'}"
+                                   pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                                   disabled="{!v.tm.Status__c == 'Mobile Review'}"
+                                   onchange="{!c.handleSiteContactChange}"/>
+                    -->
+                    <!-- Ticket#21076 - add MobilePhone to query -->
+                    <c:LookupInput label="Site Contact"
+                                   value="{!v.tm.Site_Contact_2__r}"
+                                   SObjectName="Contact"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                                   queryFields="['MobilePhone']"
+                                   filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Site\') AND Blocked__c !=TRUE'}"
+                                   pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                                   disabled="{!v.tm.Status__c == 'Mobile Review'}"
+                                   onchange="{!c.handleSiteContactChange}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <!--ticket 21357-->
+                    <aura:if isTrue="{!v.tm.Bill_to_Customer__r.Contact_Type_Filter__c != null}">
+                        <c:LookupInput label="Billing Contact"
+                                       value="{!v.tm.Contact__r}"
+                                       SObjectName="Contact"
+                                       pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                                       queryFields="['Id', 'Name']"
+                                       filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES ' + v.tm.Bill_to_Customer__r.Contact_Type_Filter__c + ' AND Blocked__c !=TRUE'}"
+                                       onchange="{!c.handleBillingContactChange}"
+                                       disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                        <aura:set attribute="else">
+                            <c:LookupInput label="Billing Contact"
+                                           value="{!v.tm.Contact__r}"
+                                           SObjectName="Contact"
+                                           pill="{iconName: 'standard:avatar', fieldName: 'Name'}"
+                                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Phone', fieldName: 'Phone'}, {label: 'Email', fieldName: 'Email'}]"
+                                           queryFields="['Id', 'Name']"
+                                           filter="{!'AccountId=\'' + v.tm.Bill_to_Customer__c + '\' AND Contact_Type__c INCLUDES (\'Billing\') AND Blocked__c !=TRUE'}"
+                                           onchange="{!c.handleBillingContactChange}"
+                                           disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                        </aura:set>
+                    </aura:if>
+                    <!--ticket 21357-->
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+            <lightning:layout>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Site Name" value="{!v.tm.Site_Name__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Phone #" value="{!v.tm.Site_Phone_No__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+            <lightning:layout>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <fieldset class="slds-form-element slds-form_compound">
+                        <div class="slds-form-element__control">
+                            <div class="slds-form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size_1-of-1">
+                                        <lightning:input label="Street" value="{!v.tm.Site_Street__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size_4-of-6">
+                                        <lightning:input label="City" value="{!v.tm.Site_City__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                                    </div>
+                                    <div class="slds-form-element slds-size_2-of-6">
+                                        <c:PicklistInput label="State" value="{!v.tm.Site_State__c}" SObjectName="TM__c" fieldName="Site_State__c" controllingValue="{!v.tm.Site_Country__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size_4-of-6">
+                                        <lightning:input label="Postal Code" value="{!v.tm.Site_Postal_Code__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                                    </div>
+                                    <div class="slds-form-element slds-size_2-of-6">
+                                        <c:PicklistInput label="State" value="{!v.tm.Site_Country__c}" SObjectName="TM__c" fieldName="Site_Country__c" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="horizontal-small" size="6">
+                    <lightning:input label="Customer PO #" value="{!v.tm.Customer_PO_No__c}" disabled="{!v.tm.Status__c == 'Mobile Review'}"/>
+                    <!--US140219-->  
+                        <lightning:input label="D365 Project ID" value="{!v.tm.D365_Project_ID__c}" disabled="true"/>                    
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+        </div>
+    </lightning:card>
+</aura:component>

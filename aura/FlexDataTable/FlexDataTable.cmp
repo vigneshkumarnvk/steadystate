@@ -1,0 +1,80 @@
+<aura:component> 
+    <!--public attributes-->
+    <aura:attribute name="name" type="String" default="" access="public"/>
+    <aura:attribute name="items" type="List" default="[]" access="public" required="true"/>
+    <aura:attribute name="xItems" type="List" default="[]" access="public" required="true" description="copy of items before the last change"/>
+    <aura:attribute name="var" type="Object" access="public" required="true"/>
+    <aura:attribute name="indexVar" type="String" access="public" default="rowIndex" required="true"/>
+    <aura:attribute name="template" type="Aura.componentDefRef[]" access="public" required="true"/>
+    <aura:attribute name="collapsible" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="collapseButtonPosition" type="String" default="right" description="left of right" access="public"/>
+    <aura:attribute name="collapsed" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="keyName" type="String" access="public" default=""/>
+    <aura:attribute name="linkedToKeyName" type="String" access="public" default=""/>
+    <aura:attribute name="validity" type="Object" access="public"/>
+    <aura:attribute name="sorts" type="List" access="public"/>
+    <aura:attribute name="param1" type="Object" access="public" description="passing more parameters from parent"/>
+
+    <!--private attributes-->
+    <aura:attribute name="columnHeaders" type="Object" access="private"/>
+    <!--job task-->
+    <aura:attribute name="rows" type="Object" access="private"/>
+    <aura:attribute name="nested" type="Object" access="private"/>
+    <aura:attribute name="rowOrders" type="Map" default="{}" access="private"/>
+    <aura:attribute name="valueProviderAdded" type="Boolean" default="false" access="private"/>
+    <!--job task-->
+    <aura:attribute name="auraIds" type="List" access="private"/>
+
+    <!--events-->
+    <aura:registerEvent name="onrowaction" type="c:FlexDataTableRowEvent" access="public"/>
+    <aura:registerEvent name="onSelectAll" type="c:FlexDataTableSelectAllEvent"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.items}" action="{!c.handleItemsChange}"/>
+
+    <aura:method name="showHelpMessageIfInvalid" action="{!c.showHelpMessageIfInvalid}">
+        <aura:attribute name="fields" type="List"/>
+    </aura:method>
+
+    <!--body-->
+    <!--
+    <table name="{!v.name}" aria-multiselectable="true" class="slds-table slds-table_bordered slds-table-fixed-layout">
+    -->
+    <table name="{!v.name}" aria-multiselectable="true" class="slds-table slds-table_bordered">
+        <thead>
+        <tr class="slds-line-height_reset">
+            <aura:iteration items="{!v.columnHeaders}" var="columnHeader" indexVar="index">
+                <th class="{!'slds-cell-wrap ' + columnHeader.class}" style="{!'vertical-align:bottom;' + columnHeader.style}" scope="col">
+                    <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                        <aura:if isTrue="{!columnHeader.checkbox != null}">
+                            <lightning:input aura:id="header-checkbox" type="checkbox" label="{!columnHeader.label}" value="{!columnHeader.checkbox}" onchange="{!c.handleCheckboxChange}"/>
+                            <aura:set attribute="else">
+                                <span title="{!columnHeader.label}">{!columnHeader.label}</span>
+                            </aura:set>
+                        </aura:if>
+                        <!--ticket 20808-->
+                        <aura:if isTrue="{!columnHeader.sortable}">
+                            <span class="slds-p-left--xx-small">
+                                <lightning:buttonIcon variant="bare" value="{!index}" iconName="utility:sort" size="small" onclick="{!c.sortColumn}"/>
+                            </span>
+                        </aura:if>
+                        <!--ticket 20808-->
+                    </div>
+                </th>
+            </aura:iteration>
+        </tr>
+        </thead>
+        <tbody>
+        <aura:if isTrue="{!v.collapsible == true || (v.sorts != null &amp;&amp; v.sorts.length > 0)}">
+            <aura:if isTrue="{!v.valueProviderAdded == true}">
+                <aura:iteration items="{!flexDataTable.rowOrders}" var="{!v.var}" indexVar="{!v.indexVar}" template="{!v.template}"/>
+            </aura:if>
+            <aura:set attribute="else">
+                <aura:iteration items="{!v.items}" var="{!v.var}" indexVar="{!v.indexVar}" template="{!v.template}">
+                </aura:iteration>
+            </aura:set>
+        </aura:if>
+        </tbody>
+    </table>
+</aura:component>

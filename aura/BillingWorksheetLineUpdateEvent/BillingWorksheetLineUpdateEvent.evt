@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="BillingWorksheetLineUpdateEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="worksheetLine" type="Object" access="public"/>
+    <aura:attribute name="causedByField" type="String" access="public"/>
+</aura:event>

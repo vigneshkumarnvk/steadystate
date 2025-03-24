@@ -1,0 +1,9 @@
+<aura:component controller="CustomerPortalController" extensible="true" extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="loginInfo" type="Object"  access="public"/> 
+    
+    <!--body-->
+    {!v.body} 
+    
+    
+</aura:component>

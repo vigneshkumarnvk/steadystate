@@ -1,0 +1,123 @@
+<aura:component extends="c:MobileTMLinesBase" description="MobileTMWasteDisposalLines">
+    <!--attributes-->
+    <aura:attribute name="totalHours" default="0" type="Decimal" access="private"/>
+    
+    <!--handlers-->
+    <aura:handler name="change" value="{!v.jobTaskWrapper.TMLines}" action="{!c.handleTMLinesChange}"/>
+    <aura:handler name="copyManifestEvent" event="c:TMLineCopyManifestEvent" action="{!c.handleCopyManifestEvent}"/>
+    
+    <!--body-->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Scheduled'}">
+                    <aura:if isTrue="{!v.mode == 'edit'}">
+                        <lightning:button label="View Lines" value="view" onclick="{!c.toggleView}"/>
+                        <lightning:button label="Delete Lines" variant="neutral" onclick="{!c.doDeleteLines}" />
+                        <lightning:button label="Move Lines" variant="neutral" onclick="{!c.doMoveLines}" />
+                        <lightning:button label="Add Line" variant="neutral" onclick="{!c.doNewLine}" />
+                        <aura:set attribute="else">
+                            <lightning:button label="Edit Lines" value="edit" onclick="{!c.toggleView}"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+        <div aura:id="edit-section" >
+            <aura:iteration items="{!v.jobTaskWrapper.TMLines}" var="tmLine" indexVar="index">
+                <div class="slds-m-bottom--small">
+                    <c:MobileTMWasteDisposalLine aura:id="tm-lines" tm="{!v.tm}" rowIndex="{!index}" tmLine="{!tmLine}"/>
+                </div>
+            </aura:iteration>
+        </div>
+        <!--US128845-->
+        <aura:if isTrue="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+            <aura:if isTrue="{!v.mode == 'view'}">
+                <c:FlexDataTable items="{!v.jobTaskWrapper.TMLines}" var="tmLine">
+                    <aura:set attribute="template">
+                        <aura:if isTrue="{!tmLine.Resource__c != null}">
+                            <!-- Waste Disposal -->
+                            <c:FlexDataTableColumn label="Waste Disposal">
+                                {!tmLine.Resource__r.Name}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- Description -->
+                            <c:FlexDataTableColumn label="Description">
+                                {!tmLine.Description__c}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- Facility -->
+                            <c:FlexDataTableColumn label="Facility" style="width:125px;">
+                                {!tmLine.Facility__r.Name}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- Profile Approval -->
+                            <c:FlexDataTableColumn label="Profile Approval" style="width:125px;">
+                                {!tmLine.Approval_Id__c}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- BOL Manifest -->
+                            <c:FlexDataTableColumn label="BOL Manifest" style="width:125px;">
+                                {!tmLine.BOL_Manifest__c}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- Unit of Measure (UOM) -->
+                            <c:FlexDataTableColumn label="Unit of Measure" style="width:125px;">
+                                {!tmLine.Unit_of_Measure__r.Name}
+                            </c:FlexDataTableColumn>
+                            
+                            <!-- Quantity -->
+                            <c:FlexDataTableColumn label="Quantity" style="width:125px;">
+                                <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                            </c:FlexDataTableColumn>
+                        </aura:if>
+                    </aura:set>
+                </c:FlexDataTable>
+            </aura:if>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.mode == 'view'}">
+                    <c:FlexDataTable items="{!v.jobTaskWrapper.TMLines}" var="tmLine">
+                        <aura:set attribute="template">
+                            <aura:if isTrue="{!tmLine.Resource__c != null}">
+                                <!-- Waste Disposal -->
+                                <c:FlexDataTableColumn label="Waste Disposal">
+                                    {!tmLine.Resource__r.Name}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- Description -->
+                                <c:FlexDataTableColumn label="Description">
+                                    {!tmLine.Description__c}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- Facility -->
+                                <c:FlexDataTableColumn label="Facility" style="width:125px;">
+                                    {!tmLine.Facility__r.Name}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- Profile Approval -->
+                                <c:FlexDataTableColumn label="Profile Approval" style="width:125px;">
+                                    {!tmLine.Approval_Id__c}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- BOL Manifest -->
+                                <c:FlexDataTableColumn label="BOL Manifest" style="width:125px;">
+                                    {!tmLine.BOL_Manifest__c}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- Unit of Measure (UOM) -->
+                                <c:FlexDataTableColumn label="Unit of Measure" style="width:125px;">
+                                    {!tmLine.Unit_of_Measure__r.Name}
+                                </c:FlexDataTableColumn>
+                                
+                                <!-- Quantity -->
+                                <c:FlexDataTableColumn label="Quantity" style="width:125px;">
+                                    <lightning:formattedNumber value="{!tmLine.Quantity__c}" maximumFractionDigits="4" minimumFractionDigits="2"/>
+                                </c:FlexDataTableColumn>
+                            </aura:if>
+                        </aura:set>
+                    </c:FlexDataTable>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

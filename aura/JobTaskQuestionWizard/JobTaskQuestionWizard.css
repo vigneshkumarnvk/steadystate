@@ -1,0 +1,9 @@
+.THIS {
+    height: 100%;
+}
+
+.THIS .slds-card__footer{
+    height: 75px;
+    vertical-align: middle !important;
+    background-color: var(--lwc-colorBackground,rgb(243, 242, 242));
+}

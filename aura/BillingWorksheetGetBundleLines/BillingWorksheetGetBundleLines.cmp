@@ -1,0 +1,52 @@
+<aura:component extends="c:BaseComponent" controller="BillingWorksheetController" description="BillingWorksheetGetBundleLines">
+    <!--attributes-->
+    <aura:attribute name="salesOrderJobTaskId" type="Id" access="public"/>
+    <aura:attribute name="bundleLines" type="List" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="getLines" action="{!c.getLines}" access="public">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card>
+        <p class="slds-p-horizontal--small">
+            <c:DataTable items="{!v.bundleLines}" var="bundleLine" indexVar="index">
+                <aura:set attribute="template">
+                    <c:DataColumn label="" headerStyle="width:25px;">
+                        <span name="select">
+                            <lightning:input type="checkbox" variant="label-hidden" checked="{!bundleLine.Selected}"/>
+                        </span>
+                    </c:DataColumn>
+                    <c:DataColumn label="Resource Type" headerStyle="width:250px;">
+                        {#bundleLine.Resource_Type__r.Name}
+                    </c:DataColumn>
+                    <c:DataColumn label="Description" headerStyle="width:250px;">
+                        {#bundleLine.Description__c}
+                    </c:DataColumn>
+                    <c:DataColumn label="UOM" headerStyle="width:80px;">
+                        {#bundleLine.Unit_of_Measure__r.Name}
+                    </c:DataColumn>
+                    <c:DataColumn label="Quantity" headerStyle="width:100px;">
+                        <lightning:formattedNumber value="{#bundleLine.Quantity__c}" minimumFractionDigits="2"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Bundled Price" headerStyle="width:100px;">
+                        <lightning:formattedNumber value="{#bundleLine.Unit_Price__c}" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Unit Cost" headerStyle="width:100px;">
+                        <lightning:formattedNumber value="{#bundleLine.Unit_Cost__c}" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Line Amount" headerStyle="width:100px;">
+                        <lightning:formattedNumber value="{#bundleLine.Line_Amount__c}" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+                    <c:DataColumn label="Line Cost" headerStyle="width:100px;">
+                        <lightning:formattedNumber value="{#bundleLine.Line_Cost__c}" style="currency" currencyCode="USD"/>
+                    </c:DataColumn>
+                </aura:set>
+            </c:DataTable>
+        </p>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="InlineEditComponentOpenEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="name" type="String" access="public"/>
+</aura:event>

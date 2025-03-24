@@ -1,0 +1,48 @@
+<aura:component controller="ACVSalesOrderController" extensible="true" extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="name" type="String" access="public"/>
+	<aura:attribute name="recordId" type="Id" access="public"/>    
+    <aura:attribute name="title" type="String" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+
+    <aura:attribute name="modelCreatePromise" type="Aura.Component"/>
+    <lightning:overlayLibrary aura:id="overlayLibCreateSalesOrder" />
+    <!--job task-->
+    <!--
+    <aura:attribute name="salesLines" type="List" access="public"/>
+    -->
+    <aura:attribute name="nextJobTaskLineNo" type="Integer" default="1" access="public"/>
+    <aura:attribute name="nextSalesLineNo" type="Integer" default="1" access="public"/>
+    <aura:attribute name="jobTaskWrappers" type="List" access="public"/>
+    <aura:attribute name="billToContacts" type="List" access="public"/>
+    <aura:attribute name="accountExecutives" type="List" access="public"/>
+    <aura:attribute name="accountExecutiveIds" type="List" access="public"/>
+    <aura:attribute name="billingProjectName" type = "String" access ="public"/>
+    <aura:attribute name="isBillingProjectVisible" type="Boolean" default="false" />
+    <aura:attribute name="soType" type="Object" default="" access="public"/>	<!--US114833-->
+    <aura:attribute name="callQuoteOrderLOAReminder" type="Boolean" access="public" default="false"/> <!--US141018--> 
+    <aura:attribute name="showWarning" type="Boolean" access="public" default="false"/> <!--US141018-->
+
+    <!--job task-->
+
+    <!--before-save calculation-->
+    <aura:attribute name="unsavedChanges" type="Boolean" default="false" access="public"/>
+    <!--before-save calculation-->
+
+    <!--contract specific resource-->
+    <!--
+    <aura:attribute name="userInfoWrapper" type="Object" access="public"/>
+    -->
+    <aura:attribute name="setupData" type="Object" access="public"/>
+    <!--contract specific resource-->
+
+    <!--methods-->
+    <aura:method name="validateFields" access="public"/>
+
+    <!--body-->    
+    {!v.body} 
+    <!--US141018-->
+    <aura:if isTrue="{!v.callQuoteOrderLOAReminder == true}">
+        <c:quoteOrder_LOA_Reminder aura:id="quoteOrderLOAReminder" ongetLWCResult="{!c.handleLWCResponse}"></c:quoteOrder_LOA_Reminder>
+    </aura:if>
+</aura:component>

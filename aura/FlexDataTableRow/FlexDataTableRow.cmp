@@ -1,0 +1,4 @@
+<aura:component >
+    <aura:attribute name="class" type="String" access="public"/>
+    <aura:attribute name="style" type="String" access="public"/>
+</aura:component>

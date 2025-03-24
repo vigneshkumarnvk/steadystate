@@ -1,0 +1,27 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="record" type="Object" access="public"/>
+    <aura:attribute name="fieldName" type="String" access="public"/>
+    <aura:attribute name="type" type="String" access="public"/>
+    <aura:attribute name="typeAttributes" type="Object" access="public"/>
+    <aura:attribute name="cellAttributes" type="Object" access="public"/>
+    <aura:attribute name="value" type="String" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <div title="{!v.fieldName}">
+        <aura:if isTrue="{!v.type == 'Date'}">
+            <lightning:formattedDateTime value="{!v.value}" year="2-digit" month="2-digit" day="2-digit"/>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.type == 'Currency'}">
+                    <lightning:formattedNumber value="{!v.value}" style="currency" currencyCode="USD"/>
+                    <aura:set attribute="else">
+                        {!v.value}
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

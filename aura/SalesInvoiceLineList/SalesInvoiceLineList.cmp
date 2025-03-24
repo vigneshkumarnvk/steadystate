@@ -1,0 +1,70 @@
+<aura:component description="SalesInvoiceLineList" extends="c:SalesInvoiceBase">
+    <!--attributes-->
+    <aura:attribute name="lineTotals" type="List" access="private"/>
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="salesInvoiceLinesChangedEvent" event="c:SalesInvoiceLinesChangedEvent" action="{!c.handleSalesInvoiceLinesChanged}"/>
+    <!--events-->
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateLines}" access="public"/>
+
+    <!--body-->
+    <aura:if isTrue="{!v.jobTaskWrappers.length > 0}">
+        <!--job task-->
+        <lightning:card title="Profit &amp; Margin" class="slds-card_boundary" iconName="standard:lightning_usage">
+            <p class="slds-p-horizontal_small">
+                <c:DataTable items="{!v.lineTotals}" var="lineTotal">
+                    <aura:set attribute="template">
+                        <c:DataColumn label="Category">
+                            <lightning:formattedText label="Category" value="{!lineTotal.Category}" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Subtotal">
+                            <lightning:formattedNumber label="Subtotal" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Profit Margin">
+                            <lightning:formattedNumber label="Profit Margin" value="{!lineTotal.ProfitMargin}" style="percent" minimumFractionDigits="2" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Total Cost">
+                            <lightning:formattedNumber label="Total Cost" value="{!lineTotal.LineCost}" style="currency" currencyCode="USD" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Tax">
+                            <lightning:formattedNumber label="Tax" value="{!lineTotal.Tax}" style="currency" currencyCode="USD" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Total">
+                            <lightning:formattedNumber label="Total" value="{!lineTotal.LineAmountIncludingTax}" style="currency" currencyCode="USD" class="{!if(lineTotal.Category == 'Totals', 'total-bold slds-cell-wrap', 'slds-cell-wrap')}"/>
+                        </c:DataColumn>
+                    </aura:set>
+                </c:DataTable>
+            </p>
+        </lightning:card>
+    </aura:if>
+    <br/>
+
+    <!--
+    <aura:if isTrue="{!v.salesInvoice.Document_Type__c == 'Retainage Invoice' || v.salesInvoice.Document_Type__c == 'Misc. Credit Memo' || v.salesInvoice.Document_Type__c == 'Rental Invoice'}">
+        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+            <c:SalesInvoiceJobTaskLine aura:id="job-task-line" setupData="{!v.setupData}" salesInvoice="{!v.salesInvoice}" jobTaskWrapperIndex="{!index}" jobTaskWrapper="{!jobTaskWrapper}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextInvoiceLineNo="{!v.nextInvoiceLineNo}" unsavedChanges="{!v.unsavedChanges}"/>
+        </aura:iteration>
+
+        <aura:set attribute="else">
+            <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+                <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                    <lightning:tab label="{!jobTaskWrapper.JobTask.Name}" iconName="standard:task" id="{!'tab' + index}">
+                        <c:SalesInvoiceJobTaskLine aura:id="job-task-line" setupData="{!v.setupData}" salesInvoice="{!v.salesInvoice}" jobTaskWrapperIndex="{!index}" jobTaskWrapper="{!jobTaskWrapper}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextInvoiceLineNo="{!v.nextInvoiceLineNo}" unsavedChanges="{!v.unsavedChanges}"/>
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+        </aura:set>
+    </aura:if>
+    -->
+    <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+            <lightning:tab label="{!'Task ' + jobTaskWrapper.JobTask.Task_No__c + ' - ' + jobTaskWrapper.JobTask.Name}" iconName="standard:task" id="{!'tab' + index}">
+                <c:SalesInvoiceJobTaskLine aura:id="job-task-line" setupData="{!v.setupData}" salesInvoice="{!v.salesInvoice}" jobTaskWrapperIndex="{!index}" jobTaskWrapper="{!jobTaskWrapper}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextInvoiceLineNo="{!v.nextInvoiceLineNo}" unsavedChanges="{!v.unsavedChanges}"/>
+            </lightning:tab>
+        </aura:iteration>
+    </lightning:tabset>
+</aura:component>

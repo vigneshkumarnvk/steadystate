@@ -1,0 +1,212 @@
+<!--
+    Ticket#21908
+        - prevent record from editing after blocked.
+    Ticket#DE35515
+        - remove logic to create contact from site contact field
+-->
+<aura:component extends="c:SalesOrderBase" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+
+    
+
+    <!--overlayLibrary-->
+    <aura:attribute name="modelCreatePromise" type="Aura.Component"/>
+    <lightning:overlayLibrary aura:id="overlayLibCreateSalesOrder" />
+    <lightning:messageChannel aura:id="messageChannel" type="GeneratorMessageChannelForCreate__c" scope="APPLICATION" onMessage="{!c.handleCreateSalesOrderMessage}" />
+    <lightning:messageChannel type="SalesOrderSiteFieldControlChannel__c" scope="APPLICATION" onMessage="{!c.handleMessage}" />
+
+    <aura:attribute name="newSiteAddressRecordParams" type="Object"/>    
+    <aura:handler name="change" value="{!v.salesOrder.Bill_to_Customer_No__r}" action="{!c.setNewSiteAddressRecordParams}"/>
+    <aura:attribute name="newSiteContactRecordParams" type="Object"/>
+    <aura:attribute name="fieldsDisabled" type="Boolean" default="true" />  
+    <!--<aura:handler name="change" value="{!v.salesOrder.Bill_to_Customer_No__r}" action="{!c.setNewSiteContactRecordParams}"/>
+    <aura:handler name="change" value="{!v.salesOrder.Site_Street__c}" action="{!c.handlevalueChange}" />-->
+    
+    <!--body-->
+    <lightning:card title="{!v.title}">
+<!--Prabhu_ReleaseFlag-->
+    <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+        <lightning:layoutItem size="12" padding="horizontal-small" class="slds-m-vertical_small">
+            <div class="slds-grid slds-align_absolute_center slds-grid_vertical-align-center">
+                <lightning:button class="CustomIcon" label="Generator Lookup" variant="brand" onclick="{!c.navigateToCreateGeneratorLookup}"/>
+                <!-- US131745: Salesforce - Add tooltip for Generator Lookup on Site Information tab of Sales Order -->    		
+                <lightning:helptext  class="slds-m-left_small" content='"Use the Generator Lookup" to search for the Generator/Site Location in EQAI before selecting a new one. For Waste Disposal, a Generator is required to submit a billing package to EQAI.'/>
+                <aura:if isTrue="{!v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true}">
+                    <p class="slds-m-left_small">Please use the Generator Lookup before selecting an "Available Site" or entering a new site address.</p>
+                </aura:if>
+            </div>
+        </lightning:layoutItem>
+    </aura:if>
+    	<lightning:layout multipleRows="true">
+            
+        	<!--<lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+                    <c:LookupInput name="site" label="Available Site"
+                                   value="{!v.salesOrder.Alternate_Site_Address__r}" 
+                                   SObjectName="Site_Address__c" 
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'City', fieldName: 'Site_City__c'}, {label: 'State', fieldName: 'Site_State__c'}]" 
+                                   queryFields="['Site_Contact__c', 'Contact__c', 'Contact__r.Name', 'Site_Street__c', 'Site_City__c', 'Site_State__c', 'Site_Postal_Code__c', 'Site_Country__c', 'Site_Phone_No__c', 'Site_Email_Address__c', 'Tax_Area__c', 'Tax_Area__r.Name', 'Print_Site_Name__c']"
+                                   filter="{!'Customer__c=\'' + v.salesOrder.Bill_to_Customer_No__c + '\''}" 
+                                   pill="{iconName: 'standard:people', fieldName: 'Name'}" 
+                                   onchange="{!c.handleSiteAddressChange}" 
+                                   disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                   />
+                    <aura:set attribute="else">
+                        <c:LookupInput name="site" label="Available Site"
+                                       value="{!v.salesOrder.Alternate_Site_Address__r}" 
+                                       SObjectName="Site_Address__c" 
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'City', fieldName: 'Site_City__c'}, {label: 'State', fieldName: 'Site_State__c'}]" 
+                                       queryFields="['Site_Contact__c', 'Contact__c', 'Contact__r.Name', 'Site_Street__c', 'Site_City__c', 'Site_State__c', 'Site_Postal_Code__c', 'Site_Country__c', 'Site_Phone_No__c', 'Site_Email_Address__c', 'Tax_Area__c', 'Tax_Area__r.Name', 'Print_Site_Name__c']"
+                                       filter="{!'Customer__c=\'' + v.salesOrder.Bill_to_Customer_No__c + '\''}" 
+                                       pill="{iconName: 'standard:people', fieldName: 'Name'}" 
+                                       onchange="{!c.handleSiteAddressChange}"
+                                       newRecordComponentName="c:SalesOrderSiteAddressCard" 
+                                       newRecordParams="{!v.newSiteAddressRecordParams}"
+                                       newRecordCreateMethod="createRecord"
+                                       disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                       /> 
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>-->
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Name"
+                                 value="{!v.salesOrder.Site_Name__c}"
+                                 onchange="{!c.handleSiteNameChange}"
+                                 required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)  || v.salesOrder.EqaiGeneratorId__c !=null}"
+                                 maxlength="40"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <!-- Ticket#21076 - add MobilePhone to query -->
+                <c:LookupInput label="Site Contact" 
+                               value="{!v.salesOrder.Site_Contact_2__r}" 
+                               SObjectName="Contact" 
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Mobile Phone', fieldName: 'MobilePhone'}, {label: 'Email', fieldName: 'Email'}]"
+                               queryFields="['MobilePhone']"
+                               filter="{!'AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Contact_Type__c INCLUDES (\'Site\') AND Blocked__c != TRUE'}"
+                               pill="{iconName: 'standard:avatar', fieldName: 'Name'}" 
+                               onchange="{!c.handleSiteContactChange}" 
+                               disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                <!-- ticket DE35366  -->
+                <!-- newRecordComponentName="c:SalesOrderContactCard" 
+                               newRecordParams="{!v.newSiteContactRecordParams}"
+                               newRecordCreateMethod="createRecord"  -->
+                <!-- ticket DE35366  -->
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea aura:id="site-street"
+                                    label="Site Street"
+                                    value="{!v.salesOrder.Site_Street__c}"
+                                    onchange="{!c.handleSiteStreetChange}"
+                                    disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)  || v.salesOrder.EqaiGeneratorId__c !=null}"
+                                    maxlength="255"
+                                    required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Phone No."
+                                 value="{!v.salesOrder.Site_Phone_No__c}"
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                 maxlength="10"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input aura:id="site-city"
+                                 label="Site City"
+                                 value="{!v.salesOrder.Site_City__c}"
+                                 onchange="{!c.handleSiteCityChange}"
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)  || v.salesOrder.EqaiGeneratorId__c !=null}"
+                                 maxlength="30"
+                                 required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input label="Site Email Address"
+                                 value="{!v.salesOrder.Site_Email_Address__c}"
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"
+                                 maxlength="80"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput aura:id="site-state"
+                                 label="Site State"
+                                 value="{!v.salesOrder.Site_State__c}"
+                                 SObjectName="Sales_Order__c"
+                                 fieldName="Site_State__c"
+                                 controllingValue="{!v.salesOrder.Site_Country__c}"
+                                 onchange="{!c.handleSiteStateChange}" 
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)  || v.salesOrder.EqaiGeneratorId__c !=null}"
+                                 required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+            	<c:LookupInput aura:id="tax-area"
+                               label="Tax Area"
+                               value="{!v.salesOrder.Tax_Area__r}"
+                               SObjectName="Tax_Area__c"
+                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                               filter="Blocked__c&lt;>TRUE" pill="{iconName: 'standard:picklist_type', expression: '{Name} - {Description__c}'}"
+                               fetchLimit="25"
+                               onchange="{!c.handleTaxAreaChange}"
+                               required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"
+                               messageWhenValueMissing="This field is mandatory"
+                               disabled="{!(v.salesOrder.Document_Status__c != 'Open' ||
+                                            v.salesOrder.Approval_Status__c == 'Pending_Approval' ||
+                                            v.salesOrder.Expired__c == true ||
+                                            v.salesOrder.Blocked__c == true ||
+                                            (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) ||
+                                            v.salesOrder.Bill_to_Customer_No__r.Inter_co_Account__c == true) &amp;&amp; (v.setupData.User.Profile.Name != 'System Administrator')}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input aura:id="site-postal-code" label="Site Postal Code" value="{!v.salesOrder.Site_Postal_Code__c}" onchange ="{!c.handleSitePostalCodeChange}" disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)  || v.salesOrder.EqaiGeneratorId__c !=null}" maxlength="20" required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Print Site Name" variant="label-stacked" checked="{!v.salesOrder.Print_Site_Name__c}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput aura:id="site-country" 
+                                 label="Site Country" 
+                                 value="{!v.salesOrder.Site_Country__c}" 
+                                 SObjectName="Sales_Order__c" 
+                                 fieldName="Site_Country__c" 
+                                 onchange ="{!c.handleSiteCountryChange}" 
+                                 disabled="{!(v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Advanced_Disposal__c == true &amp;&amp; v.fieldsDisabled) || v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) || v.salesOrder.EqaiGeneratorId__c != null}"
+                                 required="{!v.salesOrder.Quote_Type__c != 'Rate_Sheet'}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:input type="checkbox" label="Taxable" variant="label-stacked" checked="{!v.salesOrder.Tax_Liable__c}" onchange="{!c.handleTaxLiableChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+            </lightning:layoutItem>
+            <!--Prabhu_ReleaseFlag-->
+            <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="text-input-01">Generator ID</label>        
+                        <div class="slds-input-has-icon slds-input-has-icon_right">
+                            <!-- Input Field -->
+                            <input id="text-input-01" value="{!v.salesOrder.EqaiGeneratorId__c}" 
+                                   class="slds-input" 
+                                   aria-owns="option-list-01" 
+                                   role="combobox" 
+                                   aria-activedescendant="" 
+                                   disabled="true"
+                                   maxlength="18"
+                                   onchange="{!c.handleInputGeneratorChange}"
+                                   aria-expanded="true"/>
+                            
+                            <!-- Clear (X) Button -->
+                            <aura:if isTrue="{!not(empty(v.salesOrder.EqaiGeneratorId__c))}">
+                                <lightning:buttonIcon iconName="utility:close" 
+                                                      class="slds-input__icon slds-input__icon_right slds-button_icon" 
+                                                      variant="bare" 
+                                                      onclick="{!c.clearGeneratorId}" 
+                                                      alternativeText="Clear"/>
+                            </aura:if>
+                        </div>        
+                    </div>
+                    <lightning:input label="EPA ID"
+                                     value="{!v.salesOrder.EPA_ID__c}"                                 
+                                     disabled="{! v.salesOrder.EqaiGeneratorId__c != null}"
+                                     maxlength="18"/>
+                </lightning:layoutItem>
+                
+            </aura:if>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:PicklistInput label="Distance to Job Site" value="{!v.salesOrder.Distance_to_Job_Site__c}" SObjectName="Sales_Order__c" fieldName="Distance_to_Job_Site__c" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null) }"/>
+            </lightning:layoutItem>
+        </lightning:layout>       
+    </lightning:card>
+</aura:component>

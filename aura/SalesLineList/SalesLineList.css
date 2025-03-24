@@ -1,0 +1,28 @@
+.THIS #data-table .slds-th__action .slds-th__action-button {
+    display: none;
+}
+
+.THIS #data-table thead th span {
+    font-weight: bold;
+    text-transform: none;
+}
+
+.THIS #data-table .slds-table_header-fixed_container {
+    min-height: 200px;
+    background-color: #FFF;
+}
+.THIS .indentation {
+    padding-left: 25px !important;
+    display: block;
+} 
+.THIS .total-bold {
+    font-weight: bold;
+}
+
+.THIS .invalid-number {
+    color: red !important;
+}
+
+.THIS .slds-accordion__summary-action {
+    background-color: rgb(200, 235, 245);
+}

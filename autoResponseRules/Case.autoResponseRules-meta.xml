@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?><AutoResponseRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <autoResponseRule>
+        <fullName>Case Received</fullName>
+        <active>false</active>
+        <ruleEntry>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email</value>
+            </criteriaItems>
+            <notifyCcRecipients>true</notifyCcRecipients>
+            <replyToEmail>salesforce@acvenviro.com</replyToEmail>
+            <senderEmail>no-reply@acvenviro.com</senderEmail>
+            <senderName>Salesforce Support</senderName>
+            <template>unfiled$public/Case_Request</template>
+        </ruleEntry>
+    </autoResponseRule>
+    <autoResponseRule>
+        <fullName>Contract Manager case received</fullName>
+        <active>false</active>
+    </autoResponseRule>
+    <autoResponseRule>
+        <fullName>IT Support Case Created</fullName>
+        <active>true</active>
+        <ruleEntry>
+            <booleanFilter>1 AND 2</booleanFilter>
+            <criteriaItems>
+                <field>Case.Status</field>
+                <operation>equals</operation>
+                <value>New</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>IT Support</value>
+            </criteriaItems>
+            <notifyCcRecipients>false</notifyCcRecipients>
+            <replyToEmail>support@acvenviro.com</replyToEmail>
+            <senderEmail>no-reply-salesforce@republicservices.com</senderEmail>
+            <senderName>ACV IT Support</senderName>
+            <template>unfiled$public/IT_Support_Case_Created</template>
+        </ruleEntry>
+        <ruleEntry>
+            <booleanFilter>1 AND 2 AND 3 and 4</booleanFilter>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Salesforce Support</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Status</field>
+                <operation>equals</operation>
+                <value>New</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email-SF</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.SuppliedEmail</field>
+                <operation>notContain</operation>
+                <value>@microdatanet.zendesk.com</value>
+            </criteriaItems>
+            <notifyCcRecipients>true</notifyCcRecipients>
+            <replyToEmail>salesforce@republicservices.com</replyToEmail>
+            <senderEmail>no-reply-salesforce@republicservices.com</senderEmail>
+            <senderName>Salesforce Support</senderName>
+            <template>unfiled$public/Salesforce_Case_Created</template>
+        </ruleEntry>
+        <ruleEntry>
+            <booleanFilter>1 AND 2 AND 3</booleanFilter>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>AP Inquiries</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email-AP</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Status</field>
+                <operation>equals</operation>
+                <value>New</value>
+            </criteriaItems>
+            <notifyCcRecipients>false</notifyCcRecipients>
+            <replyToEmail>apinquiries@acvenviro.com</replyToEmail>
+            <senderEmail>no-reply-salesforce@republicservices.com</senderEmail>
+            <senderName>ACV AP Support</senderName>
+            <template>unfiled$public/AP_Inquiries_Case_Created</template>
+        </ruleEntry>
+        <ruleEntry>
+            <criteriaItems>
+                <field>Case.Status</field>
+                <operation>equals</operation>
+                <value>New</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.Origin</field>
+                <operation>equals</operation>
+                <value>Email-PR</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Case.RecordTypeId</field>
+                <operation>equals</operation>
+                <value>Payroll Support</value>
+            </criteriaItems>
+            <notifyCcRecipients>true</notifyCcRecipients>
+            <replyToEmail>sf-payroll@acvenviro.com</replyToEmail>
+            <senderEmail>no-reply@acvenviro.com</senderEmail>
+            <senderName>Payroll Support</senderName>
+            <template>unfiled$public/Payroll_Case_Created</template>
+        </ruleEntry>
+    </autoResponseRule>
+</AutoResponseRules>

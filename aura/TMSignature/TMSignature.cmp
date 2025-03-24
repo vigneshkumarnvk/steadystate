@@ -1,0 +1,167 @@
+<aura:component extends="c:BaseComponent" controller="TMSiteController">
+    <ltng:require scripts="{!$Resource.sPad}" afterScriptsLoaded="{!c.loadSignaturePad}"/>
+
+    <!--attributes-->
+    <aura:attribute name="token" type="String" access="public" required="true"/>
+    <aura:attribute name="signatureWrapper" type="Object" access="public"/>
+    <aura:attribute name="signaturePad" type="Object" access="private"/>
+    <aura:attribute name="error" type="Boolean" access="private"/>
+    <aura:attribute name="errorDescription" type="String" access="private"/>
+    <aura:attribute name="clientIpAddress" type="String" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <div align="center" class="slds-p-horizontal--small" style="max-width: 600px;">
+        <aura:if isTrue="{!v.error == true}">
+            {!v.errorDescription}
+
+            <aura:set attribute="else">
+                <div aura:id="container" align="left">
+                    <!--ticket 21113-->
+                    <!--
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem size="12" padding="around-small"><div class="slds-text-title-??-caps">Please sign here</div></lightning:layoutItem>
+                        <lightning:layoutItem size="12" padding="horizontal-small">
+                            <canvas id="sPad" aura:id="sPad" width="400" height="300" style="border:1px solid rgb(221, 219, 218); border-radius: 0.25rem;"/>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.signatureWrapper.Signed != true}">
+                            <lightning:layoutItem size="12" padding="around-small" class="slds-text-align-??-center">
+                                <lightning:button label="Clear" onclick="{!c.doClear}"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+                        <aura:if isTrue="{!v.signatureWrapper.Signed == true}">
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <div>
+                                    Signed by <i><u>{!v.signatureWrapper.PrintName}</u></i> on
+                                    <i>
+                                        <lightning:formattedDateTime value="{!v.signatureWrapper.SignatureDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                     minute="2-digit" timeZoneName="short" hour12="true"/>
+                                    </i>
+                                </div>
+                                <aura:if isTrue="{!v.signatureWrapper.Email != null}">
+                                    <div>E-mail: <i>{!v.signatureWrapper.Email}</i></div>
+                                </aura:if>
+                            </lightning:layoutItem>
+
+                            <aura:set attribute="else">
+                                <lightning:layoutItem size="12" padding="around-small">
+                                    <lightning:input aura:id="print-name" label="Print Name" value="{!v.signatureWrapper.PrintName}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12" padding="around-small">
+                                    <lightning:input type="email" aura:id="email" label="Email" value="{!v.signatureWrapper.Email}" disabled="{!v.signatureWrapper.Signed == true}"/>
+                                </lightning:layoutItem>
+
+                                <lightning:layoutItem size="12" padding="around-small">
+                                    <div>
+                                        <lightning:input aura:id="accept-terms" type="checkbox" label="I accept terms and conditions" checked="{!v.signatureWrapper.AcceptTerms}" disabled="{!v.signatureWrapper.Signed == true}"/>
+                                    </div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12" padding="horizontal-small">
+                                    <c:CollapsibleSection activeMessage="Show terms and conditions" inactiveMessage="Hide terms and conditions">
+                                        <div style="display:block;max-height:250px;overflow-y:auto;border:1px solid lightgrey">
+                                            <lightning:formattedRichText value="{!v.signatureWrapper.TermsAndConditions}"/>
+                                        </div>
+                                    </c:CollapsibleSection>
+                                </lightning:layoutItem>
+                            </aura:set>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.signatureWrapper.Signed != true}">
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <lightning:button label="Save" variant="success" onclick="{!c.doSave}"
+                                                  disabled="{!!v.signatureWrapper.PrintName || (v.hideAcceptTermsCheckbox != true &amp;&amp; v.signatureWrapper.AcceptTerms != true)}"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+                    </lightning:layout>
+                    -->
+
+                    <lightning:layout multipleRows="true">
+                        <aura:if isTrue="{!v.signatureWrapper.Declined == true}">
+                            <lightning:layoutItem size="12" padding="horizontal-small">
+                                Declined by <i><u>{!v.signatureWrapper.PrintName}</u></i> on
+                                <i>
+                                    <lightning:formattedDateTime value="{!v.signatureWrapper.SignatureDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                 minute="2-digit" timeZoneName="short" hour12="true"/>
+                                </i>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" padding="horizontal-small">
+                                <div>E-mail: <i>{!v.signatureWrapper.Email}</i></div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" padding="horizontal-small">
+                                <div>Customer Comment: <i>{!v.signatureWrapper.CustomerComment}</i></div>
+                            </lightning:layoutItem>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.signatureWrapper.Declined != true}">
+                            <lightning:layoutItem size="12" padding="around-small"><div class="slds-text-title--caps">Please sign here</div></lightning:layoutItem>
+                            <lightning:layoutItem size="12" padding="horizontal-small">
+                                <canvas id="sPad" aura:id="sPad" width="400" height="300" style="border:1px solid rgb(221, 219, 218); border-radius: 0.25rem;"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.signatureWrapper.Signed == true}">
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <div>
+                                    Signed by <i><u>{!v.signatureWrapper.PrintName}</u></i> on
+                                    <i>
+                                        <lightning:formattedDateTime value="{!v.signatureWrapper.SignatureDate}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                     minute="2-digit" timeZoneName="short" hour12="true"/>
+                                    </i>
+                                </div>
+                                <aura:if isTrue="{!v.signatureWrapper.Email != null}">
+                                    <div>E-mail: <i>{!v.signatureWrapper.Email}</i></div>
+                                </aura:if>
+                            </lightning:layoutItem>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.signatureWrapper.Signed != true &amp;&amp; v.signatureWrapper.Declined != true}">
+                            <lightning:layoutItem size="12" padding="around-small" class="slds-text-align-??-center">
+                                <lightning:button label="Clear Signature" onclick="{!c.doClear}"/>
+                            </lightning:layoutItem>
+
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <lightning:input aura:id="print-name" label="Print Name" value="{!v.signatureWrapper.PrintName}" required="true"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <lightning:input type="email" aura:id="email" label="Email" value="{!v.signatureWrapper.Email}" required="true"/>
+                            </lightning:layoutItem>
+
+
+                            <aura:if isTrue="{!v.signatureWrapper.RelatedToObjectName == 'Sales_Order__c'}">
+                                <lightning:layoutItem size="12" padding="around-small">
+                                    <lightning:input label="Customer PO No." value="{!v.signatureWrapper.CustomerPONo}" placeholder="Enter your order number here if available"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12" padding="around-small">
+                                    <lightning:textarea label="Comment" value="{!v.signatureWrapper.CustomerComment}"/>
+                                </lightning:layoutItem>
+                            </aura:if>
+
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <div>
+                                    <lightning:input aura:id="accept-terms" type="checkbox" label="I accept terms and conditions" checked="{!v.signatureWrapper.AcceptTerms}"/>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" padding="horizontal-small">
+                                <c:CollapsibleSection activeMessage="Show terms and conditions" inactiveMessage="Hide terms and conditions">
+                                    <div style="display:block;max-height:250px;overflow-y:auto;border:1px solid lightgrey">
+                                        <lightning:formattedRichText value="{!v.signatureWrapper.TermsAndConditions}"/>
+                                    </div>
+                                </c:CollapsibleSection>
+                            </lightning:layoutItem>
+
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <lightning:button label="Submit Signature" variant="success" onclick="{!c.doSave}" value="SUBMIT"/>
+                                <lightning:button label="Decline" variant="destructive" onclick="{!c.doSave}" value="DECLINE"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+                    </lightning:layout>
+
+                    <!--ticket 21113-->
+
+                </div>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

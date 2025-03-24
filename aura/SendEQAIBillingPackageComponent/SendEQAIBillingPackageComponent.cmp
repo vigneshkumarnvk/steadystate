@@ -1,0 +1,57 @@
+<aura:component extends="c:BaseComponent" controller = "SendEQAIBillingPackageCtrl" implements="lightning:isUrlAddressable,lightning:hasPageReference,flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="channel" type="String"/>
+    <aura:attribute name="hasSubmitted" type="Boolean" default="false"/>
+    <aura:attribute name="salesInvoice" type="Sales_Invoice__c" />
+    <aura:attribute name="preventBilling" type="Boolean" default = "false"/>
+    <!--<aura:html tag="style">.toastMessage.forceActionsText{
+        white-space : pre-line !important;
+        }</aura:html>-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:html tag="style">
+        .slds-p-around–medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+    </aura:html>
+   <!--<aura:if isTrue="{!v.preventBilling==false}">-->
+    <div class="slds-modal__content slds-p-around–x-small slds-align_absolute-center slds-size_1-of-1 slds-is-relative">
+        <aura:if isTrue="{!v.hasSubmitted}">
+            <div class="slds-align_absolute-center" style="font-weight: bold;font-size: 100%;padding-bottom: 2%;">
+                Please click Proceed to begin the Billing Project function:
+            </div>
+            
+            <aura:set attribute="else">
+                <div class="demo-only demo-only_viewport" style="height:6rem;position:relative">
+                    <div role="status" class="slds-spinner slds-spinner_medium">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+                <c:fileUploader aura:id='Attachment' channel="{!v.channel}" recordId= "{!v.recordId}" onclose="{!c.closeQuickAction1}" onclose1="{!c.closeQuickAction}"></c:fileUploader>
+                
+            </aura:set>
+        </aura:if>
+        
+        
+    </div>
+    <aura:if isTrue="{!v.hasSubmitted}">
+        <div class="slds-align_absolute-center">
+            <!--<lightning:button variant="Brand"  label="Close" onclick="{!c.handleSave}" />-->
+            <lightning:button variant="Brand"  label="Proceed" onclick="{!c.handleSave}" />
+            <!-- <lightning:button variant="Neutral"  label="Cancel" onclick="{!c.closeQuickAction}" /> -->
+        </div>
+    </aura:if>
+  <!--  </aura:if> -->
+    
+    
+    
+</aura:component>

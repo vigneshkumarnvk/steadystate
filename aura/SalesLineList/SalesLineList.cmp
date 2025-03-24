@@ -1,0 +1,60 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+-->
+<aura:component controller="ACVSalesLineController" extends="c:SalesOrderBase">
+    <aura:attribute name="lineTotals" type="List" access="private"/>
+    <aura:attribute name="jobTasks" type="List" access="public"/>
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="public"/>
+    <aura:registerEvent name="salesOrderCalculateEvent" type="c:SalesOrderCalculateEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="change" value="{!v.jobTaskWrappers}" action="{!c.handleJobTaskWrappersChange}"/>
+    <aura:handler name="jobTaskWrapperDeleteEvent" event="c:JobTaskWrapperDeleteEvent" action="{!c.handleJobTaskWrapperDeleteEvent}"/>
+    <aura:handler name="jobTaskWrapperUpdateEvent" event="c:JobTaskWrapperUpdateEvent" action="{!c.handleJobTaskWrapperUpdateEvent}"/>
+    <aura:handler name="jobTaskWrapperCloneEvent" event="c:JobTaskWrapperCloneEvent" action="{!c.handleJobTaskWrapperCloneEvent}"/>
+
+    <!--body-->
+    <aura:if isTrue="{!v.jobTaskWrappers.length > 0}">
+        <lightning:card title="Profit &amp; Margin" class="slds-card_boundary" iconName="standard:lightning_usage">
+            <p class="slds-p-horizontal_small">
+                <c:DataTable items="{!v.lineTotals}" var="lineTotal">
+                    <aura:set attribute="template">
+                        <c:DataColumn label="Category">
+                            <lightning:formattedText label="Category" value="{!lineTotal.Category}" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Subtotal">
+                            <lightning:formattedNumber label="Subtotal" value="{!lineTotal.LineAmount}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Profit Margin">
+                            <lightning:formattedNumber label="Profit Margin" value="{!lineTotal.ProfitMargin}" style="percent" minimumFractionDigits="2" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Total Cost">
+                            <lightning:formattedNumber label="Total Cost" value="{!lineTotal.LineCost}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Tax">
+                            <lightning:formattedNumber label="Tax" value="{!lineTotal.Tax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                        <c:DataColumn label="Total">
+                            <lightning:formattedNumber label="Total" value="{!lineTotal.LineAmountIncludingTax}" style="currency" currencyCode="USD" class="{!lineTotal.class}"/>
+                        </c:DataColumn>
+                    </aura:set>
+                </c:DataTable>
+            </p>
+        </lightning:card>
+    </aura:if>
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button value="create-task" label="New Job Task" iconName="utility:add" onclick="{!c.addJobTask}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+        <lightning:tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}">
+            <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                <lightning:tab label="{!'Task ' + jobTaskWrapper.JobTask.Task_No__c + ' - ' + jobTaskWrapper.JobTask.Name}" id="{!'tab' + index}" iconName="standard:task">
+                    <c:SalesOrderJobTaskLine aura:id="job-task-line" salesOrder="{!v.salesOrder}" jobTaskWrapperIndex="{!index}" jobTaskWrapper="{!jobTaskWrapper}" jobTasks="{!v.jobTasks}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextSalesLineNo="{!v.nextSalesLineNo}" unsavedChanges="{!v.unsavedChanges}" setupData="{!v.setupData}"/>
+                </lightning:tab>
+            </aura:iteration>
+        </lightning:tabset>
+    </lightning:card>
+    <!--job task-->
+</aura:component>

@@ -1,0 +1,60 @@
+<aura:component extends="c:TMLineEditBase" description="TMEquipmentLine">
+    <td>
+        <!--ticket 19130-->
+        <!--<span style="display: block;">-->
+        <span style="{!if(v.tmLine.Is_Child_Resource__c == true &amp;&amp; v.tmLine.Dereferenced_Child_Resource__c == true, 'display: block; color: red;', 'display: block;')}" title="{!if(v.tmLine.Is_Child_Resource__c == true &amp;&amp; v.tmLine.Dereferenced_Child_Resource__c == true, 'This child resource is not referenced by a parent.', '')}">
+        <!--ticket 19130-->
+            {!v.tmLine.Resource_Type__r.Name}
+        </span>
+        <aura:if isTrue="{!v.tmLine.errorText}">
+            <span class="boxed-error-message">
+                {!v.tmLine.errorText}
+            </span>
+        </aura:if>
+    </td>
+    <td>
+        {!v.tmLine.Service_Center__r.Name}
+    </td>
+    <td>
+        {!v.tmLine.Resource__r.Name}
+    </td>
+    <td>
+        {!v.tmLine.Resource_Name__c}
+    </td>
+    <td>
+        {!v.tmLine.Description__c}
+    </td>
+    <td>
+        {!v.tmLine.Linked_Line__r.Resource_Name__c}
+    </td>
+    <td>
+        <c:FormattedTime value="{!v.tmLine.Job_Start_Time__c}"/>
+    </td>
+    <td>
+        <c:FormattedTime value="{!v.tmLine.Job_End_Time__c}"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.tmLine.Total_Job_Hours__c}" minimumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.tmLine.Quantity__c}" minimumFractionDigits="2"/>
+    </td>
+    <td>
+        {!v.tmLine.Unit_of_Measure__r.Name}
+    </td>
+    <!-- Ticket#19917 Hide Contract Line on T&M
+    <td>
+        <aura:if isTrue="{!v.tmLine.Contract_Line__c}">
+            <lightning:formattedUrl label="{#v.tmLine.Contract_Line__r.Name}" value="{#'/' + v.tmLine.Contract_Line__c}" target="_blank"/>
+        </aura:if>
+    </td>
+    -->
+    <!--
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.tmLine.Invoiced__c}" disabled="true"/>
+    </td>
+    <td>
+        {!v.tmLine.Parent_Line__r.Line_No__c}
+    </td>
+    -->
+</aura:component>

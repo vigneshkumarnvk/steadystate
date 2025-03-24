@@ -1,0 +1,66 @@
+<aura:component extends="c:MobileTMBase" description="MobileTMContainer">
+    <!--attributes-->
+    <aura:attribute name="tmId" type="Id" required="true" access="public"/>
+    <aura:attribute name="page" type="String" access="public"/>
+
+    <!--events-->
+    <!--
+    <aura:registerEvent name="tmNavigationEvent" type="c:TMNavigationEvent"/>
+    -->
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="unsavedChangesEvent" event="c:UnsavedChangesEvent" action="{!c.handleUnsavedChangesEvent}"/>
+
+    <!--methods--> 
+    <aura:method name="reloadTM" action="{!c.doInit}" access="public"/>
+
+    <!--body-->
+    <div aura:id="tm-container">
+        <lightning:card title="{!v.tm.Name}">
+            <aura:set attribute="actions">
+                <lightning:buttonGroup>
+                    <lightning:button label="T&amp;M Home" value="home" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Details" variant="{!if(v.page=='details', 'brand', 'neutral')}" value="details" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Labor" variant="{!if(v.page=='labor', 'brand', 'neutral')}" value="labor" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Equipment" variant="{!if(v.page=='equipment', 'brand', 'neutral')}" value="equipment" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Material" variant="{!if(v.page=='material', 'brand', 'neutral')}" value="material" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Cost Plus" variant="{!if(v.page=='subcontractor', 'brand', 'neutral')}" value="subcontractor" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Waste Disposal" variant="{!if(v.page=='waste disposal', 'brand', 'neutral')}" value="waste disposal" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Signature" variant="{!if(v.page=='signature', 'brand', 'neutral')}" value="signature" onclick="{!c.handleMenuButtonClick}"/>
+                    <lightning:button label="Upload" value="upload" onclick="{!c.doUploadFile}"/>
+                </lightning:buttonGroup>
+            </aura:set>
+
+            <aura:if isTrue="{!v.tm != null}">
+                <aura:if isTrue="{!v.page == 'details'}">
+                    <c:MobileTMDetails tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'labor'}">
+                    <c:MobileTMLaborTab category="Labor" tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'equipment'}">
+                    <c:MobileTMEquipmentTab category="Equipment" tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'material'}">
+                    <c:MobileTMMaterialTab category="Materials" tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'subcontractor'}">
+                    <c:MobileTMSubcontractorTab category="Subcontractors" tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'waste disposal'}">
+                    <c:MobileTMWasteDisposalTab category="Waste Disposal" tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+
+                <aura:if isTrue="{!v.page == 'signature'}">
+                    <c:MobileTMSignatureTab tm="{!v.tm}" unsavedChanges="{!v.unsavedChanges}"/>
+                </aura:if>
+            </aura:if>
+        </lightning:card>
+    </div>
+</aura:component>

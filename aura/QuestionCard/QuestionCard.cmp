@@ -1,0 +1,279 @@
+<aura:component>
+    <!--attributes-->
+    <!--ticket 19130-->
+    <aura:attribute name="sourceObjectType" type="String" access="public"/>
+    <aura:attribute name="summaryLine" type="Object" default="{}" access="private"/>
+    <aura:attribute name="relations" type="List" default="[]" access="private"/>
+    <!--ticket 19130-->
+    <aura:attribute name="contractId" type="Id" access="public"/>
+    <aura:attribute name="templateLine" type="Object" access="public"/>
+    <aura:attribute name="xFields" type="Object" access="private"/>
+    <aura:attribute name="isVisible" type="Boolean" default="true" access="private" description="use to clear error message"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.templateLine}" action="{!c.handleTemplateLineChange}"/>
+
+    <!--methods-->
+    <aura:method name="clearErrors" action="{!c.clearErrors}" access="public"/>
+    <!--ticket 19130-->
+    <!--
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+    -->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public">
+        <aura:attribute name="YesOrNo" type="String"/>
+    </aura:method>
+    <!--ticket 19130-->
+
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="6" padding="horizontal-small">
+            <aura:if isTrue="{!v.templateLine.Category__c == 'Subcontractors'}">
+                <lightning:input label="Category" value="Cost Plus Materials, Equipment and Services" disabled="true"/>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.templateLine.Category__c == 'Demurrage'}">
+                        <lightning:input label="Category" value="Transportation, Demurrage and Fees" disabled="true"/>
+                        <aura:set attribute="else">
+                            <lightning:input label="Category" value="{!v.templateLine.Category__c}" disabled="true"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="6" padding="horizontal-small">
+            <!--ticket 19130-->
+            <!--
+            <aura:if isTrue="{!v.templateLine.Category__c == 'Labor' || v.templateLine.Category__c == 'Equipment' || v.templateLine.Category__c == 'LumpSum'}">
+            -->
+            <aura:if isTrue="{!v.templateLine.Category__c == 'Labor' || v.templateLine.Category__c == 'Equipment' || v.templateLine.Category__c == 'Bundled'}">
+            <!--ticket 19130-->
+                <aura:if isTrue="{!v.xFields.ResourceType.show == true}">
+                    <c:LookupInput aura:id="resource-type" label="Resource Type" value="{!v.templateLine.Resource_Type__r}" SObjectName="Resource_Type__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name']" filter="{!'Category__c=\'' + v.templateLine.Category__c + '\' AND Blocked__c!=TRUE'}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateResourceType}" required="{!v.xFields.ResourceType.required}" disabled="true"/>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.xFields.Resource.show == true}">
+                        <c:LookupInput aura:id="resource" label="Resource" value="{!v.templateLine.Resource__r}" SObjectName="Resource__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Has_Container__c', 'Has_Weight_Volume__c']" filter="{!'Category__c=\'' + v.templateLine.Category__c + '\' AND Resource_Type__c=\'' + v.templateLine.Resource_Type__c + '\' AND Blocked__c!=TRUE'}" pill="{iconName: 'custom:custom6', fieldName: 'Name'}" onchange="{!c.validateResource}" required="{!v.xFields.Resource.required}" disabled="true"/>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <lightning:input label="Description" value="{!v.templateLine.Description__c}" disabled="true"/>
+        </lightning:layoutItem>
+
+        <aura:if isTrue="{!v.xFields.UnitOfMeasure.show == true}">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <!--
+                <aura:if isTrue="{!v.templateLine.Resource_Type__c != null}">
+                    <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name', style: 'width: 100px;'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c', style: 'width: 200px;'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource_Type__c=\'' + v.templateLine.Resource_Type__c + '\''}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure1}" required="{!v.xFields.UnitOfMeasure.required}" disabled="true"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.templateLine.Resource__c != null &amp;&amp; (v.templateLine.Category__c == 'Waste Disposal' &amp;&amp; (v.templateLine.Resource__r.Name == 'WD' || (v.templateLine.Resource__r.Has_Container__c != true &amp;&amp; v.templateLine.Resource__r.Has_Weight_Volume__c != true)))}">
+                            <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Name', style: 'width: 100px;'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c', style: 'width: 200px;'}]" queryFields="['Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']" filter="{!'Resource__c=\'' + v.templateLine.Resource__c + '\''}" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure2}" required="{!v.xFields.UnitOfMeasure.required}" disabled="true"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name', style: 'width:100px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;'}]" queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE" pill="{iconName: 'standard:work_type', fieldName: 'Name'}" onchange="{!c.validateUnitOfMeasure3}" required="{!v.xFields.UnitOfMeasure.required}" disabled="true"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+                -->
+                <aura:if isTrue="{!v.templateLine.Resource_Type__c != null}">
+                    <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}"
+                                   SObjectName="Unit_of_Measure__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}]"
+                                   queryFields="['Hours_UOM__c']"
+                                   filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceTypeUOMAssociation__c WHERE Resource_Type__c =\'' + v.templateLine.Resource_Type__c + '\')&quot;,'
+                                                        + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource_Type__c WHERE Contract__c=\'' + v.contractId + '\' AND Resource_Type__c=\'' + v.templateLine.Resource_Type__c + '\')&quot;]'}"
+                                   pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                   required="{!v.xFields.UnitOfMeasure.required}"
+                                   onchange="{!c.validateUnitOfMeasure3}"
+                                   datatable="true"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.templateLine.Resource__c != null}">
+                            <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}"
+                                           SObjectName="Unit_of_Measure__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}]"
+                                           queryFields="['Hours_UOM__c']"
+                                           filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceUOMAssociation__c WHERE Resource__c =\'' + v.templateLine.Resource__c + '\')&quot;,'
+                                                                + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource__c WHERE Contract__c=\'' + v.contractId + '\' AND Resource__c=\'' + v.templateLine.Resource__c + '\')&quot;]'}"
+                                           pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                           required="{!v.xFields.UnitOfMeasure.required}"
+                                           onchange="{!c.validateUnitOfMeasure3}"
+                                           datatable="true"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="unit-of-measure" label="Unit of Measure" value="{!v.templateLine.Unit_of_Measure__r}"
+                                           SObjectName="Unit_of_Measure__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}, {label: 'Container Size', fieldName: 'Container_Size__c'}]"
+                                           queryFields="['Hours_UOM__c']"
+                                           filter="Blocked__c!=TRUE"
+                                           pill="{iconName: 'standard:work_type', fieldName: 'Name'}"
+                                           required="{!v.xFields.UnitOfMeasure.required}"
+                                           onchange="{!c.validateUnitOfMeasure3}"
+                                           datatable="true"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <!--Waste001
+        <aura:if isTrue="{!v.xFields.CostMethod.show == true}">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:select aura:id="cost-method" label="Cost Method" value="{!v.templateLine.Cost_Method__c}" onchange="{!c.validateCostMethod}" required="{!v.xFields.CostMethod.required}">
+                    <option value=""></option>
+                    <option value="Unit_Weight_Vol">Unit/Weight Volume</option>
+                    <option value="Container">Container</option>
+                </lightning:select>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <aura:if isTrue="{!v.xFields.UnitWeightVolume.show}">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.templateLine.Cost_Method__c == 'Unit_Weight_Vol'}">
+                    <c:LookupInput aura:id="unit-weight-volume" label="Unit Weight/Volume" value="{!v.templateLine.Unit_Weight_Vol__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]" queryFields="['Unit_of_Measure__c', 'Container_Size__c']" keyFields="['Unit_of_Measure__c']" filter="{!'Resource__c=\'' + v.templateLine.Resource__c + '\' AND Unit_of_Measure__r.Weight_Volume__c = true'}" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleUnitWeightVolumeChange1}" required="{!v.xFields.UnitWeightVolume.required}" disabled="true"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="unit-weight-volume" label="Unit Weight/Volume" value="{!v.templateLine.Unit_Weight_Vol__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Weight_Volume__c=TRUE AND Blocked__c!=TRUE" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleUnitWeightVolumeChange2}" disabled="true"/>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <aura:if isTrue="{!v.xFields.ContainerSize.show == true}">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <aura:if isTrue="{!v.templateLine.Cost_Method__c == 'Container'}">
+                    <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]" keyFields="['Unit_of_Measure__c']"  filter="{!'Resource__c=\'' + v.templateLine.Resource__c + '\' AND Unit_of_Measure__r.Container_Size__c=true'}" pill="{iconName: 'standard:template', fieldName: 'Name'}"  required="{!v.xFields.ContainerSize.required}" messageWhenValueMissing="This field is mandatory." onchange="{!c.handleContainerSizeChange1}" disabled="true"/>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.templateLine.Cost_Method__c == 'Unit_Weight_Vol' &amp;&amp; v.templateLine.Unit_Weight_Vol__c != null &amp;&amp; v.templateLine.Resource_UOM__r.Container_Size__c != null}">
+                            <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.Container_Size__r}" SObjectName="ResourceUOMAssociation__c" columns="[{label: 'Name', fieldName: 'Container_Size__r.Name'}, {label: 'Description', fieldName: 'Container_Size__r.Description__c'}]" queryFields="['Container_Size__r.Name']" keyFields="['Container_Size__c']"  filter="{!'Resource__c=\'' + v.templateLine.Resource__c + '\' AND Unit_of_Measure__c=\'' + v.templateLine.Unit_Weight_Vol__c + '\''}" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleContainerSizeChange2}" disabled="true"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="container-size" label="Container Size" value="{!v.templateLine.Container_Size__r}" SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" filter="Container_Size__c=TRUE AND Blocked__c!=TRUE" pill="{iconName: 'standard:template', fieldName: 'Name'}" onchange="{!c.handleContainerSizeChange3}" disabled="true"/>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </lightning:layoutItem>
+        </aura:if>
+
+        <aura:if isTrue="{!v.xFields.ContainerSize.show == true}">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <c:LookupInput label="Facility" value="{!v.templateLine.Facility__r}" SObjectName="Facility__c" queryFields="['Third_Party_Facility__c']" pill="{iconName: 'standard:household', fieldName: 'Name'}" onchange="{!c.handleFacilityChange}" disabled="true"/>
+            </lightning:layoutItem>
+        </aura:if>
+        -->
+
+        <lightning:layoutItem padding="horizontal-small" size="6">
+            <!--<aura:if isTrue="{!v.isVisible == true}">-->
+                <!--ticket 19130-->
+                <!--<lightning:input aura:id="quantity" type="number" label="Quantity" value="{!v.templateLine.Quantity__c}" step="0.01" required="{!v.xFields.Quantity.required}" oncommit="{!c.validateQuantity}" min="0.01" messageWhenRangeUnderflow="Quantity must be greater than 0"/>-->
+            <lightning:input aura:id="quantity" type="number" label="Quantity" value="{!v.templateLine.Quantity__c}" step="0.01" required="{!v.xFields.Quantity.required}" oncommit="{!c.validateQuantity}" min="0"/>
+                <!--ticket 19130-->
+            <!--</aura:if>-->
+        </lightning:layoutItem>
+
+        <!--ticket 19130-->
+        <aura:if isTrue="{!v.sourceObjectType == 'SalesOrder' &amp;&amp; (v.templateLine.Category__c == 'Labor' || v.templateLine.Category__c == 'Equipment')}">
+            <lightning:layoutItem padding="horizontal-small" size="6">
+                <lightning:input aura:id="uom-qty" type="number" label="UOM Qty." value="{!v.templateLine.UOM_Qty__c}" step="0.01" required="{!v.xFields.UOMQty.required}" oncommit="{!c.validateUOMQty}" min="0"/>
+            </lightning:layoutItem>
+        </aura:if>
+        <!--ticket 19130-->
+
+        <!--ticket 19130-->
+        <aura:if isTrue="{!v.templateLine.Parent_Lines__r &amp;&amp; v.templateLine.Parent_Lines__r.records}">
+            <lightning:layoutItem size="12">
+                <lightning:card title="Related Parent Resource Types/Resources">
+                    <p class="slds-p-horizontal--small">
+                    <!--ticket 19130-->
+                    <!--
+                    <c:FlexDataTable items="{!v.templateLine.Parent_Lines__r.records}" var="relation">
+                        <aura:set attribute="template">
+                            <c:FlexDataTableColumn label="Parent Resource">
+                                <lightning:formattedText label="Category" variant="label-hidden" value="{!if(relation.Parent_Line__r.Category__c == 'Subcontractors', 'Cost Plus Materials, Equipment and Services', if(relation.Parent_Line__r.Category__c == 'Bundled', 'Bundled', relation.Parent_Line__r.Category__c))}"/>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Parent Resource">
+                                <aura:if isTrue="{!relation.Parent_Line__r.Resource_Type__r}">
+                                    {!relation.Parent_Line__r.Resource_Type__r.Name}
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!relation.Parent_Line__r.Resource__r}">
+                                            {!relation.Parent_Line__r.Resource__r.Name}
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </c:FlexDataTableColumn>
+                        </aura:set>
+                    </c:FlexDataTable>
+                    -->
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">Parent Resource</th>
+                                <th class="" scope="col">Quantity</th>
+                                <!--ticket 19130-->
+                                <!--
+                                <th class="" scope="col">Unit of Measure</th>
+                                <th class="" scope="col">Child Resource</th>
+                                -->
+                                <!--ticket 19130-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!--ticket 19130-->
+                        <!--<aura:iteration items="{!v.templateLine.Parent_Lines__r.records}" var="relation">-->
+                        <aura:iteration items="{!v.relations}" var="relation">
+                        <!--ticket 19130-->
+                            <tr class="slds-hint-parent">
+                                <td>
+                                    <aura:if isTrue="{!relation.Parent_Line__r.Resource_Type__r}">
+                                        {!relation.Parent_Line__r.Resource_Type__r.Name}
+                                        <aura:set attribute="else">
+                                            <aura:if isTrue="{!relation.Parent_Line__r.Resource__r}">
+                                                {!relation.Parent_Line__r.Resource__r.Name}
+                                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                </td>
+                                <td>
+                                    <lightning:formattedNumber label="Quantity"
+                                                               variant="label-hidden"
+                                                               value="{!relation.Parent_Line__r.Quantity__c}"
+                                                               minimumFractionDigits="2"/>
+                                </td>
+                                <!--ticket 19130-->
+                                <!--
+                                <td>
+                                    {!relation.Parent_Line__r.Unit_of_Measure__r.Name}
+                                </td>
+                                <td>
+                                    <aura:if isTrue="{!v.param1.Resource_Type__r}">
+                                        {!v.param1.Resource_Type__r.Name}
+                                        <aura:set attribute="else">
+                                            <aura:if isTrue="{!v.param1.Resource__r}">
+                                                {!v.param1.Resource__r.Name}
+                                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                </td>
+                                -->
+                                <!--ticket 19130-->
+                            </tr>
+                        </aura:iteration>
+                        <tr>
+                            <th style="color: rgb(68, 68, 68)"><b>Estimated Resource Quantity</b></th>
+                            <td style="color: rgb(68, 68, 68)">
+                                <lightning:formattedNumber label="Quantity"
+                                                           variant="label-hidden"
+                                                           value="{!v.summaryLine.Quantity}"
+                                                           minimumFractionDigits="2"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!--ticket 19130-->
+                    </p>
+                </lightning:card>
+            </lightning:layoutItem>
+        </aura:if>
+        <!--ticket 19130-->
+    </lightning:layout>
+</aura:component>

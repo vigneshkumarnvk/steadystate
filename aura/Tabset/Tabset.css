@@ -1,0 +1,11 @@
+/**
+ * Created by Kevin on 5/7/2020.
+ */
+
+.THIS {
+
+}
+
+.THIS .slds-tabs_scoped__item { /* fix the issue where label shows in front of the lookup dropdown */
+    position: inherit !important;
+}

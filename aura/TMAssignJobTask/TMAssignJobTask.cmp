@@ -1,0 +1,28 @@
+<aura:component extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="fromJobTask" type="Object" access="public"/>
+    <aura:attribute name="jobTaskOptions" type="List" default="[]" access="public"/>
+    <aura:attribute name="jobTaskLine" type="Integer" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="save" action="{!c.save}" access="public">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card class="slds-card-position slds-m-around--small">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12" padding="around-small">
+                <lightning:select label="Move to Job Task" value="{!v.jobTaskLine}">
+                    <option/>
+                    <aura:iteration items="{!v.jobTaskOptions}" var="jobTaskOption">
+                        <option value="{!jobTaskOption.value}">{!jobTaskOption.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

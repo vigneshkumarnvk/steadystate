@@ -1,0 +1,41 @@
+<aura:component >
+    <aura:attribute name="currentPageNumber" type="Integer" required="true" default="1" />
+    <aura:attribute name="maxPageNumber" type="Integer" required="true" />
+    <aura:attribute name="showFirst" type="boolean" required="true" />
+    <aura:attribute name="showPrev" type="boolean" required="true" />
+    <aura:attribute name="showPageNumber" type="boolean" required="true" />
+    <aura:attribute name="showNext" type="boolean" required="true" />
+    <aura:attribute name="showLast" type="boolean" required="true" />
+
+    <div class="slds-button-group" role="group">
+        <aura:if isTrue="{!v.showFirst}">
+            <button onclick="{!c.firstPage}" disabled="{!v.currentPageNumber == 1}" class="slds-button slds-button--neutral">
+                First
+            </button>
+        </aura:if>
+
+        <aura:if isTrue="{!v.showPrev}">
+            <button onclick="{!c.prevPage}" disabled="{!v.currentPageNumber == 1}" class="slds-button slds-button--neutral">
+                Prev
+            </button>
+        </aura:if>
+
+        <aura:if isTrue="{!v.showPageNumber}">
+            <button class="slds-button slds-button--neutral">
+                {!v.currentPageNumber}/{!v.maxPageNumber}
+            </button>
+        </aura:if>
+
+        <aura:if isTrue="{!v.showNext}">
+            <button onclick="{!c.nextPage}" disabled="{!v.currentPageNumber == v.maxPageNumber}" class="slds-button slds-button--neutral">
+                Next
+            </button>
+        </aura:if>
+
+        <aura:if isTrue="{!v.showLast}">
+            <button onclick="{!c.lastPage}" disabled="{!v.currentPageNumber == v.maxPageNumber}" class="slds-button slds-button--neutral">
+                Last
+            </button>
+        </aura:if>
+    </div>
+</aura:component>

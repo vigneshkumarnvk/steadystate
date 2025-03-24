@@ -1,0 +1,57 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="stages" type="List" default="[]" access="public"/>
+    <aura:attribute name="value" type="Object" access="public"/>
+    <aura:attribute name="hideMarkComplete" type="Boolean" access="public"/>
+    <aura:attribute name="noSkip" type="Boolean" access="public"/>
+    <aura:attribute name="forwardOnly" type="Boolean" access="public"/>
+    <aura:attribute name="singleStage" type="Boolean" access="public"/>
+    <aura:attribute name="xValue" type="Object" access="private"/>
+    <aura:attribute name="stageValues" type="List" default="[]" access="private"/>
+    <aura:attribute name="markStatusLabel" type="String" default="Mark Status as Complete" access="public"/>
+
+    <!--events-->
+    <aura:registerEvent name="onstagechange" type="c:PathMarkStageEvent"/>
+    <aura:registerEvent name="onstagecomplete" type="c:PathMarkCompleteEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.singleStage}" action="{!c.handleSingleStageChange}"/>
+
+    <!--methods-->
+    <aura:method name="setStage" access="public" action="{!c.setStage}">
+        <aura:attribute name="status" type="String" access="public"/>
+    </aura:method>
+
+    <!--body-->
+    <div class="slds-path">
+        <div class="slds-grid slds-path__track slds-has-overflow">
+            <div class="slds-grid slds-path__scroller-container">
+                <div class="slds-path__scroller" role="application">
+                    <div class="slds-path__scroller_inner">
+                        <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                            <aura:iteration items="{!v.stages}" var="stage">
+                                <li class="{!if(stage.state == 'current', 'slds-path__item slds-is-active slds-is-current', if(stage.state == 'complete', 'slds-path__item slds-is-complete', 'slds-path__item slds-is-incomplete'))}" role="presentation" name="{!stage.value}" onclick="{!c.markStage}">
+                                    <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-41" role="stage" tabindex="-1">
+                                        <aura:if isTrue="{!stage.state == 'complete'}">
+                                            <span class="slds-p-right--x-small">
+                                                <lightning:icon iconName="utility:check" size="x-small" class="check-icon"/>
+                                            </span>
+                                        </aura:if>
+                                        <span class="slds-path__title">{!stage.label}</span>
+                                    </a>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <aura:if isTrue="{!v.hideMarkComplete != true}">
+                <div class="slds-grid slds-path__action">
+                    <lightning:button iconName="utility:check" variant="brand" label="{!v.markStatusLabel}" onclick="{!c.markComplete}"/>
+                </div>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

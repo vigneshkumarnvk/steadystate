@@ -1,0 +1,62 @@
+<aura:component >
+	<!-- attribute -->
+    <aura:attribute name="caller" type="String"/>
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="message" type="String"/>
+    <aura:attribute name="variant" type="String"/>
+    <aura:attribute name="size" type="String"/>
+    <aura:attribute name="callerComponent" type="Aura.Component" access="private"/>
+    <aura:attribute name="callerEvent" type="Object" access="private"/>
+    <aura:attribute name="callback" type="Object" access="private"/>
+    
+    <!-- method -->
+    <aura:method name="open" action="{!c.openModal}">
+        <aura:attribute name="caller" type="String"/>
+    	<aura:attribute name="title" type="String"/>
+    	<aura:attribute name="message" type="String"/>
+    	<aura:attribute name="variant" type="String" />
+        <aura:attribute name="callerComponent" type="Aura.Component"/>
+        <aura:attribute name="callerEvent" type="Object"/>
+    	<aura:attribute name="callback" type="Object"/>
+    </aura:method>
+    
+    <!-- instead of using display property of css, use aria-hidden from HTML5 -->
+    
+    <div aura:id="modal" aria-hidden="false" aria-modal="true" role="dialog" class="modal slds-modal slds-fade-in-close" style="height:100vh;">
+        <div class="slds-modal__container slds-modal--prompt" style="{!if(v.variant=='confirmation', 'width:50%;', 'width:75%')}">
+            <div class="slds-modal__header">                        
+                <h2 class="slds-text-heading--medium">{!v.title}</h2>
+            </div> 
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="slds-m-around--medium">
+                    <aura:unescapedHtml value="{!v.message}"/>
+                </div>                        
+            </div>
+            <aura:if isTrue="{!v.variant == 'confirmation'}">
+                <div class="slds-modal__footer">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col--padded slds-size--1-of-2">
+                            <button class="slds-button slds-button--neutral slds-button--brand slds-float--left" onclick="{!c.doYes}">Yes</button>
+                        </div>
+                        <div class="slds-col--padded slds-size--1-of-2">
+                            <button class="slds-button slds-button--neutral slds-button--brand slds-float--right" onclick="{!c.doNo}">No</button>
+                        </div>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.variant == 'information'}">
+                        <div class="slds-modal__footer">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col--padded slds-size--1-of-1">
+                                    <button class="slds-button slds-button--neutral slds-button--brand slds-float--center" onclick="{!c.doYes}">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                </aura:set>
+			</aura:if>
+        </div> 
+    </div>
+    
+    <div aura:id="backdrop" class="slds-backdrop slds-backdrop--close"></div>
+</aura:component>

@@ -1,0 +1,114 @@
+<aura:component extends="c:BaseComponent" controller="TMWizardController">
+    <aura:attribute name="tm" type="Object" access="public" description="for inserting new TM Lines"/>
+    <aura:attribute name="jobTaskWrappers" type="List" access="public" description="for inserting new TM Lines"/>
+    <aura:attribute name="nextTMLineNo" type="Integer" access="public" description="for inserting new TM Lines"/>
+    <aura:attribute name="jobTaskTemplateId" type="Id" access="public"/>
+    <aura:attribute name="completeCallback" type="Object" access="public"/>
+    <aura:attribute name="cancelCallback" type="Object" access="public"/>
+
+    <aura:attribute name="prompts" type="List" access="public"/>
+    <aura:attribute name="promptIndex" type="Integer" default="0" access="private"/>
+    <aura:attribute name="prompt" type="Object" access="private"/>
+    <aura:attribute name="answers" type="List" default="[]" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <aura:if isTrue="{!v.prompt != null}">
+        <lightning:card title="{!v.prompt.title}">
+            <aura:set attribute="footer">
+                <lightning:layout>
+                    <lightning:layoutItem flexibility="auto">
+                        <lightning:button label="Cancel" onclick="{!c.doCancel}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto">
+                        <aura:if isTrue="{!v.prompt.templateLineIndex &lt; v.prompt.templateLines.length}">
+                            <lightning:button label="No" onclick="{!c.doNo}"/>
+                        </aura:if>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto">
+                        <aura:if isTrue="{!v.prompt.templateLineIndex &lt; v.prompt.templateLines.length}">
+                            <lightning:button label="Yes" variant="brand" onclick="{!c.doYes}"/>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.promptIndex == (v.prompts.length - 1) &amp;&amp; v.prompt.templateLineIndex == v.prompt.templateLines.length}">
+                                    <lightning:button label="Finish" variant="brand" onclick="{!c.doCompletePrompts}"/>
+                                    <aura:set attribute="else">
+                                        <lightning:button label="Finish &amp; Next" variant="brand" onclick="{!c.doCompletePrompt}"/>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:set>
+
+            <div class="slds-p-horizontal--small slds-scrollable_y">
+                <aura:if isTrue="{!v.prompt.templateLineIndex &lt; (v.prompt.templateLines.length)}">
+                    <c:JobTaskQuestionWizard aura:id="question-wizard" templateLines="{!v.prompt.templateLines}" templateLineIndex="{!v.prompt.templateLineIndex}"/>
+                    <aura:set attribute="else">
+                        <c:FlexDataTable items="{!v.prompt.templateLines}" var="templateLine" indexVar="index"
+                                         onrowaction="{!c.handleRowAction}"
+                                         sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]"
+                                         keyName="Line_No__c" linkedToKeyName="Parent_Line__r.Line_No__c" collapsed="false" collapsible="false" collapseButtonPosition="left">
+                            <aura:set attribute="template">
+                                <c:FlexDataTableColumn label="Action" style="width:10%;text-align:center;">
+                                    <span name="edit-answer">
+                                        <lightning:button label="Edit" variant="bare"/>
+                                    </span>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Category" style="width:10%;">
+                                    <div class="{!if(templateLine.Parent_Line__r != null &amp;&amp; templateLine.Parent_Line__r.Line_No__c != null, 'slds-cell-wrap slds-p-left--small', 'slds-cell-wrap')}">
+                                        <aura:if isTrue="{!templateLine.Category__c == 'Subcontractors'}">
+                                            Cost Plus Materials, Equipment and Services
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!templateLine.Category__c == 'Demurrage'}">
+                                                    Transportation, Demurrage and Fees
+                                                    <aura:set attribute="else">
+                                                        {!templateLine.Category__c}
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </c:FlexDataTableColumn>
+
+                                <c:FlexDataTableColumn label="Question" style="width:30%">
+                                    {!templateLine.Question__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Answer" style="width:15%;text-align:center;">
+                                    <lightning:badge label="{!templateLine.answer}" class="{!if(templateLine.answer == 'Yes', 'slds-theme_success', if(templateLine.answer == 'No', 'slds-theme_warning', ''))}"/>
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Description" style="width:25%">
+                                    {!templateLine.answerLine.Description__c}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Unit of Measure" style="width:10%">
+                                    <!--Waste001
+                                    <aura:if isTrue="{!templateLine.answerLine.Cost_Method__c == null}">
+                                        {!templateLine.answerLine.Unit_of_Measure__r.Name}
+                                        <aura:set attribute="else">
+                                            <aura:if isTrue="{!templateLine.answerLine.Cost_Method__c == 'Unit_Weight_Vol'}">
+                                                {!templateLine.answerLine.Unit_Weight_Vol__r.Name}
+                                                <aura:set attribute="else">
+                                                    {!templateLine.answerLine.Container_Size__r.Name}
+                                                </aura:set>
+                                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                    -->
+                                    {!templateLine.answerLine.Unit_of_Measure__r.Name}
+                                </c:FlexDataTableColumn>
+                                <c:FlexDataTableColumn label="Quantity" style="width:10%">
+                                    <aura:if isTrue="{!templateLine.answer == 'Yes'}">
+                                        <lightning:formattedNumber value="{!templateLine.answerLine.Quantity__c}" minimumFractionDigits="2"/>
+                                    </aura:if>
+                                </c:FlexDataTableColumn>
+                            </aura:set>
+                        </c:FlexDataTable>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </lightning:card>
+    </aura:if>
+</aura:component>

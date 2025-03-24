@@ -1,0 +1,50 @@
+<aura:component>
+    <aura:attribute name="label" type="String" default="" access="public"/>
+    <aura:attribute name="id" type="String" default="" access="public"/>
+    <aura:attribute name="name" type="String" default="" access="public"/>
+    <aura:attribute name="value" type="String" default="" access="public"/>
+    <!--fix.null.fields-->
+    <!--
+    <aura:attribute name="stringValue" type="String" default="00:00:00.000Z" access="public"/>
+    -->
+    <aura:attribute name="xValue" type="String" default="0" access="public"/>
+    <!--fix.null.fields-->
+    <aura:attribute name="variant" type="String" access="public"/>
+    <aura:attribute name="required" type="Boolean" access="public"/>
+    <aura:attribute name="messageWhenValueMissing" type="String" access="public"/>
+    <aura:attribute name="min" type="Decimal" access="public"/>
+    <aura:attribute name="messageWhenRangeUnderflow" type="String" access="public"/>
+    <aura:attribute name="defaultTimeOption" type="String" access="public"/>
+    <aura:attribute name="disabled" type="Boolean" access="public"/>
+    <aura:attribute name="validity" type="Object" access="public"/>
+    <aura:attribute name="ignoreFocusEvent" type="Boolean" access="private"/>
+
+
+    <!--events-->
+    <aura:registerEvent name="onchange" type="c:TimeInputChangeEvent"/>
+
+    <!--handlers-->
+    <!--fix.null.fields-->
+    <!--
+    <aura:handler name="init" value="{!this}" action="{!c.handleValueChange}"/>
+    -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--fix.null.fields-->
+    <aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+
+    <!--methods-->
+    <aura:method name="focus" action="{!c.focus}"/>
+    <aura:method name="setCustomValidity" action="{!c.setCustomValidity}">
+        <aura:attribute name="message" type="String"/>
+    </aura:method>
+    <aura:method name="reportValidity" action="{!c.reportValidity}"/>
+    <aura:method name="showHelpMessageIfInvalid" action="{!c.showHelpMessageIfInvalid}"/>
+ 
+    <!--body-->
+    <!--fix.null.fields-->
+    <!--
+    <lightning:input aura:id="input" id="{!v.id}" name="{!v.name}" type="time" label="{!v.label}" variant="{!v.variant}" value="{!v.stringValue}" onchange="{!c.handleTimeChange}" required="{!v.required}" messageWhenValueMissing="{!v.messageWhenValueMissing}" autocomplete="none" disabled="{!v.disabled}"/>
+    -->
+    <lightning:input aura:id="input" id="{!v.id}" name="{!v.name}" type="time" label="{!v.label}" variant="{!v.variant}" value="{!v.value}" onfocus="{!c.handleFocus}" onchange="{!c.handleTimeChange}" required="{!v.required}" messageWhenValueMissing="{!v.messageWhenValueMissing}" min="{!v.min}" messageWhenRangeUnderflow="{!v.messageWhenRangeUnderflow}" autocomplete="none" disabled="{!v.disabled}"/>
+    <!--fix.null.fields-->
+</aura:component>

@@ -1,0 +1,153 @@
+<aura:component extends="c:BaseComponent" >
+    <!--attributes-->
+    <!--ticket 19130-->
+    <aura:attribute name="sourceObjectType" type="String" access="public"/>
+    <aura:attribute name="xTemplateLine" type="Object" access="public" description="save a copy of the original line"/>
+    <!--ticket 19130-->
+    <aura:attribute name="contractId" type="Id" access="public"/>
+    <aura:attribute name="questionSet" type="Object" access="public"/>
+    <aura:attribute name="templateLine" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="doYes" action="{!c.doYes}"/>
+    <aura:method name="doNo" action="{!c.doNo}"/>
+
+    <!--body-->
+    <lightning:card title="{!v.questionSet.title}">
+        <lightning:card>
+            <aura:set attribute="title">
+                <aura:if isTrue="{!v.questionSet.questionIndex &lt; v.questionSet.templateLines.length}">
+                    <lightning:icon iconName="utility:question" size="small"/>
+                    <!--19130-->
+                    <!--<span class="slds-m-horizontal-small">-->
+                    <span class="slds-m-horizontal--small" style="white-space: normal;">
+                    <!--19130-->
+                        <aura:unescapedHtml value="{!v.templateLine.Question__c}"/>
+                    </span>
+                    <aura:if isTrue="{!v.templateLine.answer != null}">
+                        <lightning:badge label="{!v.templateLine.answer}" class="{!if(v.templateLine.answer == 'Yes', 'slds-theme_success', if(v.templateLine.answer == 'No', 'slds-theme_warning', ''))}"/>
+                    </aura:if>
+                    <!--
+                    <aura:set attribute="else">
+                        <div class="slds-text-heading_small">
+                            <aura:if isTrue="{!v.questionSet.completed == true}">
+                                <lightning:icon iconName="action:approval" size="xx-small" class="slds-m-right-x-small"/>
+                                You have completed all questions.
+                                <aura:set attribute="else">
+                                    <lightning:icon iconName="utility:warning" size="small" class="slds-m-right-x-small"/>
+                                    You have not answered all questions.
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </aura:set>
+                    -->
+                </aura:if>
+            </aura:set>
+        </lightning:card>
+
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <!--19130-->
+                <!--
+                <aura:if isTrue="{!v.questionSet.questionIndex &lt; v.questionSet.templateLines.length}">
+                    <span class="slds-text-heading_medium slds-p-right- -small slds-align-middle">{!(v.questionSet.questionIndex + 1) + '/' + v.questionSet.templateLines.length}</span>
+                </aura:if>
+                <lightning:buttonIcon iconName="utility:left" value="previous" onclick="{!c.handleButtonClick}"/>
+                <lightning:buttonIcon iconName="utility:right" value="next" onclick="{!c.handleButtonClick}"/>
+                -->
+                <aura:if isTrue="{!v.questionSet.questionIndex &lt; v.questionSet.templateLines.length}">
+                    <span class="slds-text-heading_medium slds-p-right--small slds-align-middle">{!(v.questionSet.questionIndex + 1) + '/' + v.questionSet.templateLines.length}</span>
+                    <lightning:buttonIcon iconName="utility:left" value="previous" onclick="{!c.handleButtonClick}"/>
+                    <lightning:buttonIcon iconName="utility:right" value="next" onclick="{!c.handleButtonClick}"/>
+                </aura:if>
+                <!--19130-->
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <aura:if isTrue="{!v.questionSet.questionIndex &lt; (v.questionSet.templateLines.length)}">
+            <!--ticket 19130-->
+            <!--
+            <c:QuestionCard aura:id="question-card" templateLine="{!v.templateLine}" contractId="{!v.contractId}"/>
+            -->
+            <aura:if isTrue="{!v.templateLine != null}">
+                <c:QuestionCard aura:id="question-card" sourceObjectType="{!v.sourceObjectType}" templateLine="{!v.templateLine}" contractId="{!v.contractId}"/>
+            </aura:if>
+            <!--ticket 19130-->
+
+            <aura:set attribute="else">
+                <c:FlexDataTable items="{!v.questionSet.templateLines}" var="templateLine" indexVar="index"
+                                 onrowaction="{!c.handleRowAction}"
+                                 sorts="[{ fieldName: 'Category__c', ascending: true, custom: ['Labor', 'Equipment', 'Materials', 'Subcontractors', 'Waste Disposal', 'Misc. Charges And Taxes', 'Demurrage', 'Bundled']}]">
+                    <aura:set attribute="template">
+                        <c:FlexDataTableColumn label="Action" style="width:5%;text-align:center;">
+                                    <span name="edit-answer">
+                                        <lightning:button label="Edit" variant="bare"/>
+                                    </span>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Category" style="width:15%;">
+                            <div class="{!if(templateLine.Parent_Line__r != null &amp;&amp; templateLine.Parent_Line__r.Line_No__c != null, 'slds-cell-wrap slds-p-left--small', 'slds-cell-wrap')}">
+                                <aura:if isTrue="{!templateLine.Category__c == 'Subcontractors'}">
+                                    Cost Plus Materials, Equipment and Services
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!templateLine.Category__c == 'Demurrage'}">
+                                            Transportation, Demurrage and Fees
+                                            <aura:set attribute="else">
+                                                {!templateLine.Category__c}
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Description" style="width:25%">
+                            {!templateLine.Description__c}
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="UOM" style="width:5%">
+                            {!templateLine.Unit_of_Measure__r.Name}
+                        </c:FlexDataTableColumn>
+
+                        <!--
+                        <c:FlexDataTableColumn label="UOM" style="width:5%">
+                            <aura:if isTrue="{!templateLine.Cost_Method__c == null}">
+                                {!templateLine.Unit_of_Measure__r.Name}
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!templateLine.Cost_Method__c == 'Unit_Weight_Vol'}">
+                                        {!templateLine.Unit_Weight_Vol__r.Name}
+                                        <aura:set attribute="else">
+                                            {!templateLine.Container_Size__r.Name}
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                        </c:FlexDataTableColumn>
+                        -->
+
+                        <c:FlexDataTableColumn label="Question" style="width:30%">
+                            <aura:unescapedHtml value="{!templateLine.Question__c}"/>
+                        </c:FlexDataTableColumn>
+                        <c:FlexDataTableColumn label="Answer" style="width:10%;text-align:center;">
+                            <lightning:badge label="{!templateLine.answer}" class="{!if(templateLine.answer == 'Yes', 'slds-theme_success', if(templateLine.answer == 'No', 'slds-theme_warning', ''))}"/>
+                        </c:FlexDataTableColumn>
+
+                        <c:FlexDataTableColumn label="Quantity" style="width:10%">
+                            <!--ticket 19130-->
+                            <!--
+                            <aura:if isTrue="{!templateLine.answer == 'Yes'}">
+                                <lightning:formattedNumber value="{!templateLine.Quantity__c}" minimumFractionDigits="2"/>
+                            </aura:if>
+                            -->
+                            <lightning:formattedNumber value="{!templateLine.Quantity__c}" minimumFractionDigits="2"/>
+                            <!--ticket 19130-->
+                        </c:FlexDataTableColumn>
+                    </aura:set>
+                </c:FlexDataTable>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

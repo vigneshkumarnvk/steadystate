@@ -1,0 +1,110 @@
+<aura:component extends="c:TMLineEditBase">
+    <!-- Waste Disposal -->
+   
+    <td>
+        <span style="display: block;">
+            <c:LookupInput variant="label-hidden" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c"
+                           columns="[{label: 'Name', fieldName: 'Name', style: 'max-width:200px;', 'class': 'slds-cell-wrap'}, {label: 'Description', fieldName: 'Description__c', style: 'max-width:250px;', 'class': 'slds-cell-wrap'}]"
+                           queryFields="['Service_Center__c', 'Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Has_Container__c', 'Has_Weight_Volume__c']"
+                           filter="{!'Blocked__c!=TRUE AND Category__c=\'' + v.tmLine.Category__c + '\''}"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleResourceChange}"
+                           disabled="{!v.tmLine.Invoiced__c == true || v.tmLine.System_Calculated_Line__c == true}"/>
+        </span>
+        <aura:if isTrue="{!v.tmLine.errorText}">
+            <span class="boxed-error-message">
+                {!v.tmLine.errorText}
+            </span>
+        </aura:if>
+    </td>
+    
+    <!-- Description -->
+    <td>
+        <!-- Ticket#23028-->
+        <lightning:input variant="label-hidden" value="{!v.tmLine.Description__c}"
+                         disabled="{!v.tmLine.Invoiced__c == true || v.tmLine.Approval_Id__c!=null}" oncommit="{!c.handleDescriptionChange}"/>
+    </td>
+    
+    <!-- Facility -->
+    <td>
+        <c:LookupInputFacility variant="label-hidden" value="{!v.tmLine.Facility__r}"
+                               SObjectName="Facility__c"
+                               queryFields="['EPA_ID__c','Postal_Code__c','Country__c']"
+                               columns="[{label: 'TSDF Code', fieldName: 'TSDF_Code__c'}, {label: 'TSDF Name', fieldName: 'Name'},{label: 'Address', fieldName: 'Street__c'},{label: 'City', fieldName: 'City__c'},{label: 'State', fieldName: 'State__c'}]"
+                               filters="{!'[&quot;Blocked__c != TRUE AND TSDF_Status__c=\'A\'&quot;]'}"
+                               pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                               onchange="{!c.handleFacilityChange}"
+                               disabled="{!v.tmLine.Invoiced__c == true || v.tmLine.System_Calculated_Line__c == true || v.tmLine.Resource__r.Name == 'Manifest Fee'}"/>
+    </td>
+    
+    <!-- Profile Approval -->
+    <!-- BOL/Manifest -->
+    <!--US128845 US129137-->
+    <aura:if isTrue="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+        <td>
+            <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                <c:LookupInputApproval variant="label-hidden" value="{!v.tmLine.Approval_Id__c}"
+                                       name="{!v.tmLine.TM__r.Id}"
+                                       facility="{!v.tmLine.Facility__r.Id}"
+                                       SObjectName="TM_Line__c"
+                                       columns="[{label: 'Approval', fieldName: 'Approval'},{label: 'Profile ID', fieldName: 'ProfileID'},{label: 'Bill Unit Code', fieldName: 'UOM'}, {label: 'Description', fieldName: 'Description'},{label: 'Waste Code', fieldName: 'WasteCode'},{label: 'Expiration Date', fieldName: 'ExpirationDate'}]"
+                                       pill="{fieldName: 'Approval'}" hideLookupGlass="true" datatable="true"
+                                       onchange="{!c.handleApprovalChange}"
+                                       disabled="{!v.tmLine.Invoiced__c == true || v.tmLine.System_Calculated_Line__c == true || v.tmLine.Resource__r.Name == 'Manifest Fee'}"/>
+            </aura:if>
+        </td>
+        <td>
+            <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                <!--<lightning:input variant="label-hidden" value="{!v.tmLine.BOL_Manifest__c}" oncommit="{!c.handleBOLManifestChange}"/>-->
+                <td>
+                    <c:LookupInputManifest variant="label-hidden" value="{!v.tmLine.BOL_Manifest__c}"
+                                           name="{!v.tmLine.TM__r.Id}"
+                                           tsdfApprovalCode="{!v.tmLine.Approval_Id__c}"
+                                           columns="[{label: 'Manifest', fieldName: 'Manifest'},{label: 'Generator Name', fieldName: 'GeneratorName'},{label: 'Work Order ID', fieldName: 'WorkorderId'}]"
+                                           pill="{fieldName: 'Manifest'}" hideLookupGlass="true" datatable="true"
+                                           onchange="{!c.handleManifestChange}"
+                                           disabled="{!v.tmLine.Invoiced__c == true || v.tmLine.System_Calculated_Line__c == true || v.tmLine.Resource__r.Name == 'Manifest Fee'}"/>
+                </td>
+            </aura:if>
+        </td>
+        <aura:set attribute="else">
+            <td>
+                <aura:if isTrue="{!v.tmLine.System_Calculated_Line__c != true}">
+                    <lightning:input variant="label-hidden" value="{!v.tmLine.BOL_Manifest__c}" oncommit="{!c.handleBOLManifestChange}"/>
+                </aura:if>
+            </td>
+        </aura:set>
+    </aura:if>
+    
+    <!-- Unit of Measure (UOM) -->
+    <td>
+     <aura:if isTrue="{!v.tmLine.Approval_Id__c == null}">
+        <c:LookupInput variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}"
+                       SObjectName="Unit_of_Measure__c"
+                       columns="[{label: 'Name', fieldName: 'Name'}]"
+                       queryFields="['Hours_UOM__c']"
+                       filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceUOMAssociation__c WHERE Resource__c =\'' + v.tmLine.Resource__c + '\')&quot;]'}"
+                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                       onchange="{!c.handleWasteDisposalUnitOfMeasureChange}"
+                       disabled="{!v.tmLine.Invoiced__c == true}"/>
+      <aura:set attribute="else">   
+        <c:LookupInput variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}"
+                       SObjectName="Unit_of_Measure__c"
+                       columns="[{label: 'Name', fieldName: 'Name'}]"
+                       queryFields="['Hours_UOM__c']"
+                       filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceUOMAssociation__c WHERE Resource__c =\'' + v.tmLine.Resource__c + '\') AND Name IN (' + v.uomItems + ') &quot;]'}"
+                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                       onchange="{!c.handleWasteDisposalUnitOfMeasureChange}"
+                       disabled="{!v.tmLine.Invoiced__c == true}"/>
+       </aura:set>
+   </aura:if>
+    
+    </td>
+    <td>
+        <lightning:input type="number" name="quantity" variant="label-hidden"
+                         value="{!v.tmLine.Quantity__c}"
+                         step="0.0001"
+                         disabled="{!v.tmLine.Invoiced__c == true}" oncommit="{!c.handleQuantityChange}"/>
+        <!--ticket 25570-->
+    </td>
+</aura:component>

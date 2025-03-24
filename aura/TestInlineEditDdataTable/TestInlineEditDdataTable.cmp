@@ -1,0 +1,93 @@
+<aura:component description="InlineEditDataTable">
+
+    <!--attributes-->
+    <aura:attribute name="name" type="String" access="public"/>
+    <aura:attribute name="items" type="List" access="public" required="true"/>
+    <aura:attribute name="var" type="String" access="public" required="true"/>
+    <aura:attribute name="indexVar" type="String" access="public" required="true"/>
+    <aura:attribute name="template" type="Aura.componentDefRef[]" access="public" required="true"/>
+    <aura:attribute name="rowComponentName" type="String" access="public"/>
+    <aura:attribute name="rowComponentParams" type="Object" access="public"/>
+    <aura:attribute name="inlineEditComponentName" type="String" access="public"/>
+    <aura:attribute name="inlineEditComponentParams" type="Object" access="public"/>
+    <aura:attribute name="inlineEditValidationMethod" type="String" access="public"/>
+    <aura:attribute name="noneInlineFields" type="List" default="[]" access="public"/>
+    <aura:attribute name="height" type="String" default="300px" access="public"/>
+
+    <aura:attribute name="parentLinkField" type="String" access="public"/>
+    <aura:attribute name="childLinkField" type="String" access="public"/>
+
+    <aura:attribute name="showRowNumbers" type="Boolean" access="public"/>
+    <aura:attribute name="disabled" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="verticalScroll" type="Boolean" default="Boolean" access="public"/>
+    <aura:attribute name="horizontalScroll" type="Boolean" default="Boolean" access="public"/>
+    <aura:attribute name="fixedColumns" type="Integer" default="0" access="public"/>
+    <aura:attribute name="fixedHeaders" type="Boolean" default="false" access="public"/>
+
+    <aura:attribute name="iterationTemplate" type="Aura.componentDefRef[]" access="private"/>
+    <aura:attribute name="columnHeaders" type="List" access="private"/>
+    <aura:attribute name="columns" type="Aura.componentDefRef[]" access="private"/>
+    <aura:attribute name="inlineEditRowIndex" type="Integer" access="private"/>
+    <aura:attribute name="mapParentRowsByIndex" type="Map" access="private"/>
+    <aura:attribute name="mapFilterRowsByIndex" type="Map" access="private"/>
+    <aura:attribute name="mapRowVisibleByIndex" type="Map" access="private"/>
+    <aura:attribute name="columnWidths" type="List" access="private"/>
+    <aura:attribute name="tableClass" type="String" default="" access="private"/>
+    <aura:attribute name="tableStyle" type="String" default="" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.items}" action="{!c.handleItemsChange}"/>
+
+    <!--events-->
+    <aura:registerEvent name="onRowAction" type="c:InlineEditDataTableRowActionEvent" access="public"/>
+    <aura:registerEvent name="onSelectAll" type="c:InlineEditDataTableSelectAllEvent" access="public"/>
+    <aura:registerEvent name="onInlineEditOpen" type="c:InlineEditComponentOpenEvent" access="public"/>
+    <aura:registerEvent name="onInlineEditClose" type="c:InlineEditComponentCloseEvent" access="public"/>
+
+    <!--methods-->
+    <aura:method name="scrollToBottom" action="{!c.scrollToBottom}" access="public"/>
+    <aura:method name="openInlineEdit" action="{!c.openInlineEdit}" access="public">
+        <aura:attribute name="rowIndex" type="Integer"/>
+    </aura:method>
+    <aura:method name="isInlineEditMode" action="{!c.isInlineEditMode}" access="public"/>
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}" access="public">
+        <aura:attribute name="callback" type="Function" access="public"/>
+    </aura:method>
+    <aura:method name="clearAllFilters" action="{!c.clearAllFilters}" access="public"/>
+    <aura:method name="refreshTable" action="{!c.refreshTable}" access="public"/>
+
+    <!--body-->
+    <!--<div id="scrollable-container" class="{!if(v.verticalScroll == true, if(v.horizontalScroll == true, 'fixed-table-headers horizontal-scroll', 'fixed-table-headers'), if(v.horizontalScroll == true, 'horizontal-scroll', ''))}" style="{!if((v.verticalScroll == true &amp;&amp; v.height), 'max-height:' + v.height + ';min-height:50px;', 'min-height:50px;')}">-->
+    <div id="scrollable-container" class="{!v.tableClass}" style="{!v.tableStyle}">
+        <table aria-multiselectable="true" class="slds-table slds-table_bordered slds-m-bottom--large">
+            <thead>
+            <tr aura:id="column-headers" class="slds-line-height_reset">
+                <aura:iteration items="{!v.columnHeaders}" var="columnHeader" indexVar="index">
+                    <th class="{!'slds-align-bottom slds-cell-wrap ' + columnHeader.headerClass}" style="{!columnHeader.headerStyle}" scope="col">
+                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                <span aura:id="column-header" title="{#columnHeader.label}" class="slds-lookup slds-is-close">
+                                    {#columnHeader.label}
+                                    <aura:if isTrue="{#columnHeader.filterField != null}">
+                                        <span class="slds-p-left--xx-small">
+                                            <c:InlineEditDataTableFilterDialog aura:id="filter-dialog" columnIndex="{#index}" type="{#columnHeader.filterFieldType}" options="{#columnHeader.filterFieldOptions}" value="{!columnHeader.filterValue}" onfilter="{!c.filter}"/>
+                                        </span>
+                                    </aura:if>
+                                    <aura:if isTrue="{#columnHeader.selectAllCheckbox != null}">
+                                        <div class="slds-p-right--xx-small" style="display: block;">
+                                            <lightning:input aura:id="header-checkbox" type="checkbox" variant="label-hidden" value="{#index}" checked="{!columnHeader.checked}" onchange="{!c.handleCheckboxChange}"/>
+                                        </div>
+                                    </aura:if>
+                                </span>
+                        </div>
+                    </th>
+                </aura:iteration>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.items}" var="{!v.var}" indexVar="{!v.indexVar}" template="{!v.iterationTemplate}">
+            </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+</aura:component>

@@ -1,0 +1,102 @@
+<aura:component extends="c:TMBase">
+    <!--attributes-->
+    <aura:attribute name="nextTMLineNo" type="Integer" access="public"/>
+    <aura:attribute name="jobTaskWrapperIndex" type="Integer" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="sectionLinesList" type="List" access="public"/>
+
+    <!--events-->
+    <aura:registerEvent name="onchange" type="c:JobTaskWrapperUpdateEvent"/>
+    <aura:registerEvent name="ondelete" type="c:JobTaskWrapperDeleteEvent"/>
+    <aura:registerEvent name="tmLinesMoveEvent" type="c:JobTaskLinesMoveEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<aura:handler name="tmCalculateLinesEvent" event="c:TMCalculateLinesEvent" action="{!c.handleTMCalculateLinesEvent}"/>-->
+    <aura:handler name="onInlineEditOpen" event="c:InlineEditComponentOpenEvent" action="{!c.handleInlineEditOpen}"/>
+
+    <!--methods-->
+    <aura:method name="groupTMLines" action="{!c.groupTMLines}" access="public"/>
+    <!--
+    <aura:method name="combineTMLines" action="{!c.combineTMLines}" access="public"/>
+    -->
+    <aura:method name="isInlineEditMode" action="{!c.isInlineEditMode}" access="public"/>
+    <aura:method name="closeInlineEdit" action="{!c.closeInlineEdit}" access="public"/>
+    <aura:method name="validate" action="{!c.validate}" access="public">
+        <aura:attribute name="status" type="String" access="public"/>
+    </aura:method>
+    <aura:method name="calculateLines" action="{!c.calculateLines}" access="public"/>
+    <aura:method name="calculateFlatPays" action="{!c.calculateFlatPays}" access="public"/>
+    <!--body-->
+
+    <!--
+    <c:CollapsibleSection title="JOB TASK" label="{!v.jobTaskWrapper.JobTask.Name + if(v.jobTaskWrapper.JobTask.Billing_Type__c != null, ' (' + v.jobTaskWrapper.JobTask.Billing_Type__c + ')', '')}" collapsed="{!v.jobTaskWrapper.Collapsed}">
+    -->
+    <lightning:card>
+        <aura:set attribute="actions">
+            <aura:if isTrue="{!v.tm.Status__c == 'Open' || v.tm.Status__c == 'Scheduled' ||  v.tm.Status__c == 'Mobile Review'}">
+                <lightning:button label="Move Lines" onclick="{!c.moveLines}"/>
+                <lightning:buttonMenu iconName="utility:rows" value="{!index}" menuAlignment="right" onselect="{!c.handleMenuSelect}">
+                    <!--
+                    <lightning:menuItem value="create-lines-from-template" label="Create Lines from Template" prefixIconName="utility:insert_template"/>
+                    -->
+                    <lightning:menuItem value="import-lines-from-sales-order" label="Import Lines from Sales Order" prefixIconName="utility:quote"/>
+                    <lightning:menuDivider/>
+                    <lightning:menuItem prefixIconName="utility:delete" value="delete-task" label="Delete Task"/>
+                </lightning:buttonMenu>
+            </aura:if>
+        </aura:set>
+
+        <aura:set attribute="body">
+            <!--ticket 19130-->
+            <!--
+            <div class="slds-p-bottom- -small">
+                <c:TMLaborLines aura:id="section" category="Labor" title="Labor" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[0]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMEquipmentLines aura:id="section" category="Equipment" title="Equipment" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[1]}" nextTMLineNo="{!v.nextTMLineNo}" laborLines="{!v.sectionLinesList[0]}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMMaterialLines aura:id="section" category="Materials" title="Material" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[2]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMSubcontractorLines aura:id="section" category="Subcontractors" title="Cost Plus Materials, Equipment and Services" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[3]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMWasteDisposalLines aura:id="section" category="Waste Disposal" title="Waste Disposal" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[4]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMDemurrageLines aura:id="section" category="Demurrage" title="Transportation, Demurrage and Fees" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[5]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom- -small">
+                <c:TMMiscChargeLines aura:id="section" category="Misc. Charges And Taxes" title="Misc. Charges and Taxes" tm="{!v.tm}" variables="{!v.variables}" jobTask="{!v.jobTaskWrapper.JobTask}" tmLines="{!v.sectionLinesList[6]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            -->
+            <div class="slds-p-bottom--small">
+                <c:TMLaborLines aura:id="section" category="Labor" title="Labor" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[0]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMEquipmentLines aura:id="section" category="Equipment" title="Equipment" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[1]}" nextTMLineNo="{!v.nextTMLineNo}" laborLines="{!v.sectionLinesList[0]}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMMaterialLines aura:id="section" category="Materials" title="Material" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[2]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMSubcontractorLines aura:id="section" category="Subcontractors" title="Cost Plus Materials, Equipment and Services" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[3]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMWasteDisposalLines aura:id="section" category="Waste Disposal" title="Waste Disposal" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[4]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMDemurrageLines aura:id="section" category="Demurrage" title="Transportation, Demurrage and Fees" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[5]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <div class="slds-p-bottom--small">
+                <c:TMMiscChargeLines aura:id="section" category="Misc. Charges And Taxes" title="Misc. Charges and Taxes" tm="{!v.tm}" variables="{!v.variables}" jobTaskWrapper="{!v.jobTaskWrapper}" tmLines="{!v.sectionLinesList[6]}" nextTMLineNo="{!v.nextTMLineNo}" onchange="{!c.handleTMLinesChangeEvent}"/>
+            </div>
+            <!--ticket 19130-->
+        </aura:set>
+    </lightning:card>
+    <!--
+    </c:CollapsibleSection>
+    -->
+</aura:component>

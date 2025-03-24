@@ -1,0 +1,122 @@
+<!--
+************************************************************************
+ Class Name   : CloneSalesOrder
+ Created Date : 12/11/2023
+ Description  :
+ Author       : Steven
+ Contributors  :
+ ***************************** Update Logs *****************************
+ ***********************************************************************
+ -->
+
+<aura:component description="CloneSalesOrder" extends="c:SalesOrderBase" controller="CloneSalesOrderController" implements="lightning:hasPageReference,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickActionWithoutHeader" access="global">
+    <aura:attribute name="selectedServiceCenter" type="String" access="private"/>
+    <aura:attribute name="selectedCloneToRecordType" type="String" access="private" default="Quote"/>
+    <aura:attribute name="jobDescription" type="String" access="private" />
+    <aura:attribute name="poNumber" type="String" access="private" />
+    <aura:attribute name="selectedBillTo" type="Object" access="private" />
+    <aura:attribute name="updateDate" type="DateTime" default="{!'2021-02-01T00:00:00.000Z'}" access="private" />
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--method-->
+    <aura:method name="clone" action="{!c.clone}" access="public" />
+    <lightning:navigation aura:id="navigation"/>
+    <aura:html tag="style">
+        .DESKTOP > .slds-modal > .slds-modal__container {
+            min-width: 45vw;
+            width: 45vw;
+            min-height: 80vh;
+            max-height: 60vh;
+            top: 0;
+            overscroll-behavior-y: contain;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content {
+            height: 80% !important;
+            max-height: 100% !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper {
+            max-height: 100%;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel {
+            max-height: none !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel > .slds-modal__content {
+            max-height: none !important;
+            height: 60% !important;
+        }
+    </aura:html>
+
+    <lightning:card title="Clone Sales Quote or Order">
+        <p class="slds-p-horizontal_small">
+            <aura:if isTrue="{!v.salesOrder.CreatedDate >= v.updateDate}">
+                <aura:if isTrue="{!v.setupData.quoteSigned == false}">
+                    <div class="slds-align_absolute-center">
+                        <lightning:icon iconName="utility:warning" size="medium" class="slds-p-right_x-small icon-color"/>
+                        <span class="slds-text-heading_medium slds-text-color_warning" style="font-weight: bold;">
+                                Customer has not signed the quote.
+                            </span>
+                    </div>
+                </aura:if>
+
+                <lightning:select aura:id="record-type-to-create" name="record-type-to-create" label="Clone to Create" onchange="{!c.handleSelectCloneToTypeChange}">
+                    <option value="Quote">Quote</option>
+                    <option value="Order">Order</option>
+                </lightning:select>
+                <lightning:select aura:id="service-centers" name="service-centers" label="Clone to Service Center" value="{!v.selectedServiceCenter}" onchange="{!c.handleServiceCenterChange}">
+                    <aura:iteration items="{!v.setupData.serviceCenters}" var="serviceCenter">
+                        <aura:if isTrue="{!v.selectedServiceCenter == serviceCenter.Id}">
+                            <option value="{!serviceCenter.Id}" selected="selected">{!serviceCenter.Name} - {!serviceCenter.Description__c}</option>
+                            <aura:set attribute="else">
+                                <option value="{!serviceCenter.Id}">{!serviceCenter.Name} - {!serviceCenter.Description__c}</option>
+                            </aura:set>
+                        </aura:if>
+                    </aura:iteration>
+                </lightning:select>
+                <aura:if isTrue="{!v.selectedCloneToRecordType == 'Quote'}">
+                    <c:LookupInput aura:id="bill-to-customer"
+                                   label="Bill-to Customer"
+                                   value="{!v.salesOrder.Bill_to_Customer_No__r}"
+                                   SObjectName="Account"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Billing City', fieldName: 'BillingCity'}, {label: 'Billing State', fieldName: 'BillingStateCode'}, {label: 'Type', fieldName: 'Type'}]"
+                                   queryFields="['AccountNumber', 'Subsidiary_Company__c', 'ParentId', 'Subsidiary_Company__r.Name']"
+                                   filter="{!'Subsidiary_Company__c=\'' + v.salesOrder.Service_Center__r.Subsidiary_Company__c +'\' AND (Type=\'Customer\' OR Type=\'Prospect\') AND (Customer_Status__c = \'Active\' OR (Customer_Status__c = \'InActive\' AND Subsidiary_Company__r.Name =\'1-REPUBLIC SERVICES\')) '}"
+                                   pill="{iconName: 'standard:account', fieldName: 'Name'}"
+                                   onchange="{!c.handleBillToCustomerChange}"
+                                   required="true"
+                                   messageWhenValueMissing="This field is mandatory"
+                    />
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="bill-to-customer"
+                                       label="Bill-to Customer"
+                                       value="{!v.salesOrder.Bill_to_Customer_No__r}"
+                                       SObjectName="Account"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Billing City', fieldName: 'BillingCity'}, {label: 'Billing State', fieldName: 'BillingStateCode'}, {label: 'Type', fieldName: 'Type'}]"
+                                       queryFields="['AccountNumber', 'Subsidiary_Company__c', 'ParentId', 'Subsidiary_Company__r.Name']"
+                                       filter="{!'Subsidiary_Company__c=\'' + v.salesOrder.Service_Center__r.Subsidiary_Company__c +'\' AND Type=\'Customer\' AND (Customer_Status__c = \'Active\' OR (Customer_Status__c = \'InActive\' AND Subsidiary_Company__r.Name =\'1-REPUBLIC SERVICES\')) '}"
+                                       pill="{iconName: 'standard:account', fieldName: 'Name'}"
+                                       onchange="{!c.handleBillToCustomerChange}"
+                                       required="true"
+                                       messageWhenValueMissing="This field is mandatory"
+                        />
+                    </aura:set>
+                </aura:if>
+                <lightning:input type="text" aura:id="jobDescription" label="Job Description" value="{!v.jobDescription}" pattern=".{0,40}" messageWhenPatternMismatch="Job Description cannot exceed 40 characters"/>
+                <aura:if isTrue="{!v.selectedCloneToRecordType == 'Order'}">
+                    <lightning:input type="text" aura:id="poNumber" label="Customer PO No." value="{!v.poNumber}" />
+                </aura:if>
+                <div class="slds-align_absolute-center" style="height:5rem">
+                    <lightning:button label="Clone" variant="brand" onclick="{!c.clone}" />
+                    <lightning:button label="Cancel" variant="destructive" onclick="{!c.handleClose}"/>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-align_absolute-center">
+                        <lightning:icon iconName="utility:warning" size="medium" class="slds-p-right_x-small icon-color"/>
+                        <span class="slds-text-heading_medium slds-text-color_error" style="font-weight: bold;">
+                            Cloning is disabled on this record due to incompatible data resulting from recent system improvements. Please create a new {!v.salesOrder.Document_Type__c}.
+                        </span>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

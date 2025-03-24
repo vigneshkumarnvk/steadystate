@@ -1,0 +1,32 @@
+<aura:component extends="c:CustomerPortalBase">
+    <!--attributes-->
+    <aura:attribute name="username" type="String" access="private"/>
+    <aura:attribute name="password" type="String" access="private"/>
+    <aura:attribute name="error" type="String" access="private"/>
+
+    <!--events-->
+    <aura:registerEvent name="loginEvent" type="c:LoginEvent"/>
+    
+    <!--body-->
+    <div style="max-width:350px">
+        <lightning:card title="Customer Portal Login">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:input label="Username" value="{!v.username}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:input type="Password" label="Password" value="{!v.password}" autocomplete="off"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:button label="Login" variant="neutral" onclick="{!c.doLogin}"/>
+                </lightning:layoutItem>
+                <aura:if isTrue="{!v.error != null}">
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <lightning:formattedText value="{!v.error}" class="font-red"/>
+                    </lightning:layoutItem>
+                </aura:if>
+            </lightning:layout>
+        </lightning:card>
+    </div>
+    
+</aura:component>

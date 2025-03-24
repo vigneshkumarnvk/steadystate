@@ -1,0 +1,168 @@
+<!--
+    Ticket#23145 - prevent inactive customer from creating T&M.
+    Task#78352 - Salesforce - When Choosing Facility on SQ vs SO
+-->
+<aura:component extends="c:BaseComponent" controller="ACVTMController" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader">
+    <!--attributes-->
+    <aura:attribute name="salesOrder" type="Object" />
+    <aura:attribute name="jobTaskWrappers" type="List" default="private"/>
+    <!--//Task#78352-->
+    <aura:attribute name="faciltyas3rdParty" type="Boolean" default="false"/>
+    <aura:attribute name="groupASC" type="Boolean" default="false"/>
+    <aura:attribute name="payruleBlocked" type="Boolean" default="false"/>
+    <aura:attribute name="nopayruleSelected" type="Boolean" default="false"/>
+    
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <!--control width the modal when open from quick action button-->
+    <aura:html tag="style">
+        .DESKTOP > .slds-modal > .slds-modal__container {
+        	min-width: 70vw;
+        	top: 50%;
+        	transform: translateY(-50%);
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content {
+            /*ticket 19130*/
+            /*height: 80vh !important;*/
+            /*ticket 19130*/
+            max-height: none !important; /*overwrite the height of the quick action*/
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .forceChatterBasePublisher > .forceChatterPublisherPresentationPanel > .container > .cuf-content {
+        	padding: 0px !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__header > .slds-modal__close {
+        	display: none;
+        }
+        /*ticket 19130 */
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel {
+        	max-height: none !important;
+        }
+        .DESKTOP > .slds-modal > .slds-modal__container > .slds-modal__content > .runtime_platform_actionsQuickActionWrapper > .quick-actions-panel > .slds-modal__content {
+        	max-height: none !important;
+        	height: 100% !important;
+        }
+        /*ticket 19130*/
+    </aura:html>
+
+    <div class="slds-border--bottom">
+        <p class="slds-text-heading_small slds-text-align_center slds-p-around--small">T&amp;M Creation</p>
+    </div>
+
+    <div class="slds-scrollable_y" style="height: calc(80vh - 110px) !important;">
+        <aura:if isTrue="{!v.salesOrder != null}">
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp;
+                                v.salesOrder.Document_Status__c != 'Closed' &amp;&amp;
+                                v.salesOrder.CMR_Description__c != null &amp;&amp;
+                                v.salesOrder.Tax_Area__c != null &amp;&amp;
+                             	v.salesOrder.Account_Executives__c != null &amp;&amp;
+                                v.salesOrder.Site_Street__c != null &amp;&amp;
+                                v.salesOrder.Site_City__c != null &amp;&amp;
+                                v.salesOrder.Site_State__c != null &amp;&amp;
+                                v.salesOrder.Site_Postal_Code__c != null &amp;&amp;
+                                (v.salesOrder.Site_Contact_2__c == null || (v.salesOrder.Site_Contact_2__c != null &amp;&amp;v.salesOrder.Site_Contact_2__r.Blocked__c != true)) &amp;&amp;
+                                v.salesOrder.Bill_to_Contact__c != null &amp;&amp;
+                                v.salesOrder.Bill_to_Contact__r.Blocked__c != true &amp;&amp;
+                                v.faciltyas3rdParty != true &amp;&amp;
+                             	v.payruleBlocked !=true &amp;&amp;
+                                v.nopayruleSelected !=true &amp;&amp;
+                             	v.salesOrder.Service_Center__r.Prevent_TM_Creation__c != true &amp;&amp;
+                             	v.groupASC != true
+                                }">
+                <lightning:card title="">
+                    <aura:set attribute="title">
+                        <aura:if isTrue="{!v.salesOrder.Bill_to_Customer_No__r.Credit_Hold__c == true}">
+                            <lightning:icon iconName="utility:warning" size="small" class="slds-p-right--x-small icon-color"/> Customer is on credit hold!
+                        </aura:if>
+                    </aura:set>
+                    <p class="slds-p-horizontal--small">
+                    <div style="height: 100%;">
+                        <aura:iteration items="{!v.jobTaskWrappers}" var="jobTaskWrapper" indexVar="index">
+                            <c:SalesOrderJobTaskSelection jobTaskWrapper="{!jobTaskWrapper}"/>
+                        </aura:iteration>
+                    </div>
+                    </p>
+                </lightning:card>
+                <aura:set attribute="else">
+                    <div aura:id="message" class="slds-text-heading_small slds-text-align_center slds-align-middle" style="display:flex !important;height:100%;vertical-align:middle;justify-content:center;align-items:center;">
+                        <div style="text-align: left;">
+                            <aura:if isTrue="{!v.salesOrder.Document_Type__c != 'Sales Order'}">
+                                <span style="display: block;">You cannot create T&amp;M from a sales quote.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Document_Status__c == 'Closed'}">
+                                <span style="display: block;">Sales order has been closed.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.CMR_Description__c == null}">
+                                <span style="display: block;">Job description is required.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.payruleBlocked == true}">
+                                <span style="display: block;">T&amp;M Creation is not permitted because the assigned Pay rule has been blocked.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.nopayruleSelected == true}">
+                                <span style="display: block;">T&amp;M Creation is not permitted because no Pay rule is selected.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Account_Executives__c == null}">
+                                <span style="display: block;">Account executive is required.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Tax_Area__c == null}">
+                                <span style="display: block;">Tax area is required.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Site_Street__c == null || v.salesOrder.Site_City__c == null || v.salesOrder.Site_State__c == null || v.salesOrder.Site_Postal_Code__c == null}">
+                                <span style="display: block;">Complete site address is required.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Bill_to_Contact__c == null}">
+                                <span style="display: block;">T&amp;M cannot be created Bill to Contact is required.</span>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!v.salesOrder.Bill_to_Contact__r.Blocked__c}">
+                                        <span style="display: block;">T&amp;M cannot be created Bill Contact has been blocked/inactive.</span>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Site_Contact_2__c != null &amp;&amp; v.salesOrder.Site_Contact_2__r.Blocked__c == true}">
+                                <span style="display: block;">T&amp;M cannot be created Site Contact has been blocked/inactive.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.salesOrder.Service_Center__r.Prevent_TM_Creation__c == true}">
+                                <span style="display: block;">T&amp;M Creation is not permitted for this Service Center.</span>
+                            </aura:if>
+                            <aura:if isTrue="{!v.groupASC == true}">
+                                <span style="display: block;">T&amp;M Creation is not permitted because the Sales Order has not been sent to EQAI.</span>
+                            </aura:if>
+                            <!--Task#78352-->
+                            <aura:if isTrue="{!v.faciltyas3rdParty == true}">
+                                <span style="display: block;">You cannot create T&amp;M, Your have a Waste Line referencing 3rd Party. You must select an approved facility.</span>
+                            </aura:if>
+                        </div>
+                    </div>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </div>
+
+    <div class="slds-border--top" style="width: 100%;">
+        <div class="slds-p-around--small slds-text-align--right">
+            <lightning:button label="Cancel"  onclick="{!c.cancelCreation}"/>
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp;
+                        v.salesOrder.Document_Status__c != 'Closed' &amp;&amp;
+                        v.salesOrder.CMR_Description__c != null &amp;&amp;
+                        v.salesOrder.Account_Executives__c != null &amp;&amp;
+                        v.salesOrder.Tax_Area__c != null &amp;&amp;
+                        v.salesOrder.Site_Street__c != null &amp;&amp;
+                        v.salesOrder.Site_City__c != null &amp;&amp;
+                        v.salesOrder.Site_State__c != null &amp;&amp;
+                        v.salesOrder.Site_Postal_Code__c != null &amp;&amp;
+                        (v.salesOrder.Site_Contact_2__c == null || (v.salesOrder.Site_Contact_2__c != null &amp;&amp; v.salesOrder.Site_Contact_2__r.Blocked__c != true)) &amp;&amp;
+                        v.salesOrder.Bill_to_Contact__c != null &amp;&amp;
+                        v.salesOrder.Bill_to_Contact__r.Blocked__c != true &amp;&amp;
+                        v.payruleBlocked !=true &amp;&amp;
+                        v.nopayruleSelected !=true &amp;&amp;
+                        v.salesOrder.Service_Center__r.Prevent_TM_Creation__c != true &amp;&amp;
+                         v.groupASC !=true   
+                       }">
+                <lightning:button label="Create" variant="brand" onclick="{!c.create}" disabled="{!v.faciltyas3rdParty}"/>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

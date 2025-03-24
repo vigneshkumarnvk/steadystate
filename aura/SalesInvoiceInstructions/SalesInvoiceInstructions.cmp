@@ -1,0 +1,32 @@
+<aura:component description="SalesInvoiceInstructions" extends="c:SalesInvoiceBase">
+    <!--attributes-->
+
+    <!--handlers-->
+
+    <!--events-->
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <!--body-->
+    <lightning:card title="{!v.title}">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:textarea aura:id="project-scope" label="Project Scope" value="{!v.salesInvoice.Site_Scope__c}" required="true" messageWhenValueMissing="This field is mandatory" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" class="textarea-project-scope"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Customer Billing Instructions" value="{!v.salesInvoice.Customer_Billing_Instructions__c}" disabled="true"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Internal Comments" value="{!v.salesInvoice.Internal_Comments__c}" disabled="{!v.salesInvoice.Document_Status__c != 'Open' || v.salesInvoice.Approval_Status__c == 'Pending_Approval'}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12">
+                        <lightning:textarea label="Invoice Note" value="{!v.salesInvoice.Invoice_Note__c}" disabled="{!v.salesInvoice.Approval_Status__c == 'Pending_Approval'}" maxlength="80" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

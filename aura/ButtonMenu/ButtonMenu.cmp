@@ -1,0 +1,31 @@
+<aura:component description="ButtonMenu">
+    <!--attributes-->
+    <aura:attribute name="label" type="String" access="public"/>
+    <aura:attribute name="iconName" type="String" access="public"/>
+    <aura:attribute name="menuItems" type="List" access="public"/>
+    <aura:attribute name="onclick" type="Object" access="public"/>
+
+    <aura:attribute name="menuItemsVisible" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="mouseLeaveTime" type="Datetime" access="private"/>
+
+    <!--events-->
+
+
+    <!--body-->
+    <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" onmouseleave="{!c.handleMouseLeave}" onmouseenter="{!c.handleMouseEnter}">
+        <lightning:button label="{!v.label}" iconName="{!v.iconName}" onclick="{!c.handleMenuButtonClick}"/>
+        <aura:if isTrue="{!v.menuItemsVisible == true}">
+        <div class="slds-dropdown slds-dropdown_left" style="width: 100%">
+            <ul class="slds-dropdown__list" role="menu">
+                <aura:iteration items="{!v.menuItems}" var="menuItem">
+                    <li class="slds-dropdown__item" role="presentation">
+                        <a href="" role="menuitem" tabindex="0">
+                            <span class="slds-truncate" title="{!menuItem.title}" data-value="{!menuItem.value}" onclick="{!v.onclick}">{!menuItem.label}</span>
+                        </a>
+                    </li>
+                </aura:iteration>
+            </ul>
+        </div>
+        </aura:if>
+    </div>
+</aura:component>

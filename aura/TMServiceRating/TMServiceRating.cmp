@@ -1,0 +1,65 @@
+<aura:component controller="MobileTMController" extends="c:BaseComponent">
+    <!--attributes--> 
+    <aura:attribute name="tmId" type="Id" access="public"/>
+    <aura:attribute name="customerName" type="String" access="public"/>
+    <aura:attribute name="customerEmail" type="String" access="public"/>
+    <aura:attribute name="rating" type="Object" access="public"/>
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="numbers" type="List" default="[1,2,3,4,5]"/>
+
+    <aura:attribute name="showRatingRequiredMessage" type="Boolean" default="false"/>
+    <aura:attribute name="showFeedbackRequiredMessage" type="Boolean" default="false"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="saveServiceRating" action="{!c.save}" access="public">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card>
+        <p class="slds-p-horizontal--small">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem padding="around-small" size="12">
+                    <!--
+                    <span class="slds-text-heading_small">How would you rate the service {!v.tm.Subsidiary_Company__r.Display_Name__c}ACV Environmental provided to you today?</span>
+                    -->
+                    <span class="slds-text-heading_small">How would you rate the service {!v.tm.Display_Company_Name__c} provided to you today?</span>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="12">
+                    <span style="display: block">
+                    <aura:iteration items="{!v.numbers}" var="number" indexVar="index">
+                        <span class="slds-p-horizontal--small" onclick="{!c.handleRatingChange}" data-index="{!index + 1}">
+                            <aura:if isTrue="{!v.rating.Rating__c > index}">
+                                <lightning:icon src="{!$Resource.icons + '#goldstar'}" size="large"/>
+                                <aura:set attribute="else">
+                                    <lightning:icon src="{!$Resource.icons + '#emptystar'}" size="large"/>
+                                </aura:set>
+                            </aura:if>
+                        </span>
+                    </aura:iteration>
+                    </span>
+                    <span class="slds-p-around--small slds-text-heading_small" style="display: block"><i>A rating of 1 will result in a follow up from our management team with you. 5-star ratings contribute to our employee recognition program.</i></span>
+                    <aura:if isTrue="{!v.showRatingRequiredMessage == true}">
+                        <div class="slds-text-color--error">Please rate our service</div>
+                    </aura:if>
+                </lightning:layoutItem>
+                <lightning:layoutItem padding="around-small" size="12">
+                    <!--
+                    <aura:if isTrue="{!v.rating.Rating__c &lt;= 2}">
+                    -->
+                        <span class="slds-text-heading_small">Please provide us any feedback related to your service (optional)</span>
+                        <lightning:textarea label="" variant="label-hidden" value="{!v.rating.Customer_Review__c}" class="textarea"/>
+                        <aura:if isTrue="{!v.showFeedbackRequiredMessage == true}">
+                            <span class="slds-text-color--error">Please enter your feedback.</span>
+                        </aura:if>
+                    <!--
+                    </aura:if>
+                    -->
+                </lightning:layoutItem>
+            </lightning:layout>
+        </p>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,95 @@
+<aura:component extends="c:TMLineEditBase">
+    <td>
+        <!-- Ticket#23028
+            -Update line editability logic
+                disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+        -->
+        <span style="display: block;">
+            <c:LookupInput name="resource" label="" variant="label-hidden" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c"
+                           columns="[{label: 'Name', fieldName: 'Name', style: 'width:250px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:250px;'}]"
+                           queryFields="['Service_Center__c', 'Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name']"
+                           filter="{!'Blocked__c!=TRUE AND Category__c=\'' + v.tmLine.Category__c + '\''}"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                            onchange="{!c.handleResourceChange}"
+                           disabled="{!v.tmLine.Invoiced__c == true}"/>
+        </span>
+        <aura:if isTrue="{!v.tmLine.errorText}">
+            <span class="boxed-error-message">
+                {!v.tmLine.errorText}
+            </span>
+        </aura:if>
+    </td>
+    <td>
+        <!-- Ticket#23028
+            -Update line editability logic
+                disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+        -->
+        <!--ticket 25570-->
+        <!--
+        <lightning:input variant="label-hidden" value="{!v.tmLine.Description__c}"
+                         disabled="{!v.tmLine.Invoiced__c == true}"/>
+         -->
+        <lightning:input variant="label-hidden" value="{!v.tmLine.Description__c}"
+                         disabled="{!v.tmLine.Invoiced__c == true}" oncommit="{!c.handleDescriptionChange}"/>
+        <!--ticket 25570-->
+    </td>
+    <td>
+        <!-- Ticket#23028
+            -Update line editability logic
+                disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+        -->
+        <!--ticket 25570-->
+        <!--
+        <lightning:input type="number" name="quantity" variant="label-hidden"
+                         value="{!v.tmLine.Quantity__c}"
+                         step="0.0001"
+                         disabled="{!v.tmLine.Invoiced__c == true}"/>
+         -->
+        <lightning:input type="number" name="quantity" variant="label-hidden"
+                         value="{!v.tmLine.Quantity__c}"
+                         step="0.0001"
+                         disabled="{!v.tmLine.Invoiced__c == true}" oncommit="{!c.handleQuantityChange}"/>
+        <!--ticket 25570-->
+    </td>
+    <td>
+        <!-- Ticket#23028
+            -Update line editability logic
+                disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+        -->
+        <aura:if isTrue="{!v.tmLine.Resource__c != null}">
+            <c:LookupInput name="unit-of-measure" label="" variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}"
+                           SObjectName="ResourceUOMAssociation__c"
+                           columns="[{label: 'Name', fieldName: 'Name'}]"
+                           queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                           filter="{!'Resource__c=\'' + v.tmLine.Resource__c + '\''}"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleUnitOfMeasure1Change}" 
+                           disabled="{!v.tmLine.Invoiced__c == true}"/>
+            <aura:set attribute="else">
+                <c:LookupInput name="unit-of-measure" label="" variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}"
+                               SObjectName="Unit_of_Measure__c"
+                               columns="[{label: 'Name', fieldName: 'Name'}]"
+                               queryFields="['Hours_UOM__c']"
+                               filter="Blocked__c!=TRUE"
+                               pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                               onchange="{!c.handleUnitOfMeasure3Change}" 
+                               disabled="{!v.tmLine.Invoiced__c == true}"/>
+            </aura:set>
+        </aura:if>
+    </td>
+    <!-- Ticket#19917 Hide Contract Line on T&M
+    <td>
+        <aura:if isTrue="{!v.tmLine.Contract_Line__c}">
+            <lightning:formattedUrl label="{#v.tmLine.Contract_Line__r.Name}" value="{#'/' + v.tmLine.Contract_Line__c}" target="_blank"/>
+        </aura:if>
+    </td>
+    -->
+    <!--
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.tmLine.Invoiced__c}" disabled="true"/>
+    </td>
+    <td>
+        {!v.tmLine.Parent_Line__r.Line_No__c}
+    </td>
+    -->
+</aura:component>

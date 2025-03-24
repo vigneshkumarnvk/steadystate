@@ -1,0 +1,26 @@
+<aura:component description="ApprovalComments" controller="ProcessInstanceStepController"
+                implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="processInstanceHistories" type="Object[]" />
+    <aura:attribute name="processInstanceHistory" type="ProcessInstanceHistory" />
+
+    <aura:handler name="init" value="{! this}" action="{!c.doInit}"/>
+    <lightning:card title="Approver Comments" class="slds-is-relative">
+        <div class="slds-p-left_medium slds-p-right_medium">
+            <ul class="slds-list_vertical slds-has-dividers_top-space">
+                <aura:if isTrue="{!v.processInstanceHistories.length > 0}">
+                    <aura:iteration items="{!v.processInstanceHistories}" var="item">
+                        <li class="slds-list__item">
+                            <c:ProcessInstanceHistory processInstanceHistory="{!item}" />
+                        </li>
+                    </aura:iteration>
+                    <aura:set attribute="else">
+                        <li class="slds-list__item">
+                            <h3 class="slds-text-small slds-text-color_error">No Comment.</h3>
+                        </li>
+                    </aura:set>
+                </aura:if>
+            </ul>
+        </div>
+    </lightning:card>
+</aura:component>

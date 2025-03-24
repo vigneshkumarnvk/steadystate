@@ -1,0 +1,363 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+-->
+<aura:component extends="c:SalesLineBase" description="SalesLineEdit">
+    <!--events-->
+    <aura:registerEvent name="jobTaskWrapperUpdateEvent" type="c:JobTaskWrapperUpdateEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <!--ticket 19130-->
+    <!--
+    <td>
+        <aura:if isTrue="{!v.salesOrder.Document_Status__c == 'Open' &amp;&amp; v.salesOrder.Approval_Status__c != 'Pending_Approval' &amp;&amp; v.salesOrder.Blocked__c != true}">
+            <span style="display: inline-block;">
+                <lightning:input type="checkbox" checked="{!v.salesLine.Selected}" disabled="{!v.salesLine.Bundle_Line__r != null || v.salesLine.Parent_Line__r != null || v.salesLine.System_Calculated_Line__c == true}"/>
+            </span>
+            <span style="display: inline-block;">
+                <lightning:button name="delete" label="Del" variant="base" value="{!rowIndex}" onclick="{!c.deleteSalesLine}" disabled="{!v.salesLine.Bill_as_Lump_Sum__c == true || v.salesLine.System_Calculated_Line__c == true || v.salesLine.Parent_Line__r != null}"/>
+            </span>
+            <span style="display: inline-block;" class="slds-p-horizontal- -xx-small">|</span>
+        </aura:if>
+        <span style="display: inline-block;">
+            <lightning:button name="edit" label="Edit" variant="base" value="{!rowIndex}" onclick="{!c.viewSalesLine}"
+                              disabled="{!(v.salesLine.System_Calculated_Line__c == true &amp;&amp; v.salesLine.Category__c != 'Waste Disposal'
+                                        &amp;&amp; v.salesLine.Resource__c != v.setupData.CompanySetting.Rinse_Out_Fee_Resource_Id__c
+                                        &amp;&amp; v.salesLine.Parent_Line__r == null) || v.salesOrder.Blocked__c == true}"/>
+        </span>
+    </td>
+    <td>
+        {!v.salesLine.Line_No__c}
+    </td>
+    <td>
+        {!v.salesLine.Parent_Line__r.Line_No__c}
+    </td>
+	-->
+    <!--ticket 19130-->
+    <td>
+        <span>
+            <lightning:formattedText label="Category" variant="label-hidden" value="{!if(v.salesLine.Category__c == 'Subcontractors', 'Cost Plus Materials, Equipment and Services', if(v.salesLine.Category__c == 'Bundled', 'Bundled', v.salesLine.Category__c))}" class="{!if(v.salesLine.Bundle_Line__r != null, 'slds-cell-wrap indentation', 'slds-cell-wrap')}"/>
+        </span>
+    </td>
+
+    <td>
+        <aura:if isTrue="{!v.salesLine.System_Calculated_Line__c == true &amp;&amp;
+                            v.salesLine.Category__c != 'Waste Disposal' &amp;&amp;
+                            v.salesLine.Resource__c != v.setupData.CompanySetting.Rinse_Out_Fee_Resource_Id__c}">
+            <!--ticket 19982-->
+            <!--
+            <lightning:formattedNumber label="Quantity"
+                                       variant="label-hidden"
+                                       value="{!v.salesLine.Quantity__c}"
+                                       minimumFractionDigits="2"
+                                       class="{!if(v.salesLine.Quantity__c == 0, 'invalid-number', '')}"/>
+            -->
+            <lightning:formattedNumber label="Quantity"
+                                       variant="label-hidden"
+                                       value="{!v.salesLine.Quantity__c}"
+                                       minimumFractionDigits="2"
+                                       maximumFractionDigits="4"
+                                       class="{!if(v.salesLine.Quantity__c == 0, 'invalid-number', '')}"/>
+            <!--ticket 19982-->
+            <aura:set attribute="else">
+                <span name="quantity">
+                <!--ticket 19982-->
+                <!--
+                <lightning:input type="number" variant="label-hidden"
+                                 value="{!v.salesLine.Quantity__c}"
+                                 min="0.01"
+                                 step="0.01"
+                                 messageWhenValueMissing="Quantity is required"
+                                 messageWhenRangeUnderflow="Quantity must be greater than 0."
+                                 oncommit="{!c.handleQuantityChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval'}"/>
+				-->
+                <lightning:input type="number" variant="label-hidden"
+                                 value="{!v.salesLine.Quantity__c}"
+                                 min="0.01"
+                                 step="0.0001"
+                                 messageWhenValueMissing="Quantity is required"
+                                 messageWhenRangeUnderflow="Quantity must be greater than 0."
+                                 oncommit="{!c.handleQuantityChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                <!--ticket 19982-->
+                </span>
+                <!-- Ticket# 19386 -->
+                <!-- <aura:if isTrue="{!v.salesLine.Category__c == 'Waste Disposal' &amp;&amp; v.salesLine.Min_Sell_Qty__c > v.salesLine.Quantity__c}"> -->
+                <aura:if isTrue="{!v.salesLine.Category__c == 'Waste Disposal' &amp;&amp; v.salesLine.Min_Sell_Qty__c != null &amp;&amp; v.salesLine.Min_Sell_Qty__c > 0}">
+                    <span style="font-size: x-small">Min. {!v.salesLine.Min_Sell_Qty__c}</span>
+                </aura:if>
+                <!-- Ticket# 19386 -->
+            </aura:set>
+        </aura:if>
+    </td>
+
+    <!--ticket 19130-->
+    <td>
+        <span name="isChildResource">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.salesLine.Is_Child_Resource__c}" disabled="{!v.salesLine.Dereferenced_Child_Resource__c != true}" onchange="{!c.handleIsChildResourceChange}"/>
+        </span>
+    </td>
+    <!--ticket 19130-->
+    
+    <td>
+		<!--ticket 19130-->
+        <!--
+		<aura:if isTrue="{!v.salesLine.Resource_Type__c != null}">
+			<lightning:formattedText label="Resource Type" variant="label-hidden" value="{!v.salesLine.Resource_Type__r.Name}" class="slds-cell-wrap"/>
+			<aura:set attribute="else">
+				<lightning:formattedText label="Resource" variant="label-hidden" value="{!v.salesLine.Resource__r.Name}" class="slds-cell-wrap"/>
+			</aura:set>
+		</aura:if>
+		-->
+        <aura:if isTrue="{!v.salesLine.Resource_Type__c != null}">
+            <span style="{!if(v.salesLine.Is_Child_Resource__c == true &amp;&amp; v.salesLine.Dereferenced_Child_Resource__c == true, 'color: red', '')}" class="slds-cell-wrap" title="{!if(v.salesLine.Is_Child_Resource__c == true &amp;&amp; v.salesLine.Dereferenced_Child_Resource__c == true, 'This child resource type is not referenced by a parent.', '')}">
+                {!v.salesLine.Resource_Type__r.Name}
+            </span>
+            <aura:set attribute="else">
+                <span style="{!if(v.salesLine.Is_Child_Resource__c == true &amp;&amp; v.salesLine.Dereferenced_Child_Resource__c == true, 'color: red', '')}" class="slds-cell-wrap" title="{!if(v.salesLine.Is_Child_Resource__c == true &amp;&amp; v.salesLine.Dereferenced_Child_Resource__c == true, 'This child resource is not referenced by a parent.', '')}">
+                    {!v.salesLine.Resource__r.Name}
+                </span>
+            </aura:set>
+        </aura:if>
+        <!--ticket 19130-->
+    </td>
+    <td>
+        <lightning:formattedText label="Description" variant="label-hidden" value="{!v.salesLine.Description__c}" class="slds-cell-wrap"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Labor' || v.salesLine.Category__c == 'Equipment'}">
+            <span name="uomQty">
+                <lightning:input type="number" variant="label-hidden"
+                                 value="{!v.salesLine.UOM_Qty__c}"
+                                 min="0.01"
+                                 step="0.01"
+                                 messageWhenValueMissing="UOM Qty. is required"
+                                 messageWhenRangeUnderflow="UOM Qty. must be greater than 0."
+                                 oncommit="{!c.handleUOMQtyChange}"
+                                 disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+            </span>
+            <!--
+            <aura:set attribute="else">
+                <lightning:formattedNumber label="UOM Qty." variant="label-hidden" value="{!v.salesLine.UOM_Qty__c}" minimumFractionDigits="2" class="{!if(v.salesLine.UOM_Qty__c == 0, 'invalid-number', '')}"/>
+            </aura:set>
+            -->
+        </aura:if>
+    </td>
+    <td>
+        <!--Waste001
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Waste Disposal' || v.salesLine.System_Calculated_Line__c == true}">
+            <aura:if isTrue="{!v.salesLine.Category__c == 'Waste Disposal' &amp;&amp; v.salesLine.System_Calculated_Line__c != true}">
+                <aura:if isTrue="{!v.salesLine.Cost_Method__c == 'Container'}">
+                    <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!v.salesLine.Container_Size__r.Name}"/>
+                    <aura:set attribute="else">
+                        <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!v.salesLine.Unit_Weight_Vol__r.Name}"/>
+                    </aura:set>
+                </aura:if>
+                <aura:set attribute="else">
+                    <lightning:formattedText label="Unit of Measure" variant="label-hidden" value="{!v.salesLine.Unit_of_Measure__r.Name}"/>
+                </aura:set>
+            </aura:if>
+            <aura:set attribute="else">
+            -->
+            <aura:if isTrue="{!v.salesLine.Resource_Type__c != null}">
+                <aura:if isTrue="{!v.salesOrder.Contract__c != null &amp;&amp; v.salesLine.Contract_Line__c != null}">
+                    <c:LookupInput aura:id="unit-of-measure"
+                                   variant="label-hidden"
+                                   value="{!v.salesLine.Unit_of_Measure__r}"
+                                   SObjectName="Unit_of_Measure__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}, {label: 'Container Size', fieldName: 'Container_Size__c'}]"
+                                   queryFields="['Hours_UOM__c']"
+                                   filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceTypeUOMAssociation__c WHERE Resource_Type__c =\'' + v.salesLine.Resource_Type__c + '\')&quot;,'
+                                                                    + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource_Type__c WHERE Contract__c=\'' + v.salesOrder.Contract__c + '\' AND Resource_Type__c=\'' + v.salesLine.Resource_Type__c + '\')&quot;]'}"
+                                   pill="{fieldName: 'Name'}"
+                                   onchange="{!c.handleUnitOfMeasureChange3}"
+                                   required="{!v.xFields.UnitOfMeasure.required}"
+                                   messageWhenValueMissing="This field is mandatory"
+                                   disabled="{!v.xFields.UnitOfMeasure.disabled == true || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"
+                                    datatable="true" hideLookupGlass="true"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput aura:id="unit-of-measure"
+                                       variant="label-hidden"
+                                       value="{!v.salesLine.Unit_of_Measure__r}"
+                                       SObjectName="ResourceTypeUOMAssociation__c"
+                                       columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}]"
+                                       queryFields="['Unit_of_Measure__r.Hours_UOM__c']"
+                                       filter="{!'Resource_Type__c=\'' + v.salesLine.Resource_Type__c + '\''}"
+                                       pill="{fieldName: 'Name'}"
+                                       onchange="{!c.handleUnitOfMeasureChange1}" required="{!v.xFields.UnitOfMeasure.required}" messageWhenValueMissing="This field is mandatory"
+                                       disabled="{!v.xFields.UnitOfMeasure.disabled == true || v.salesLine.Contract_Line__c != null || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"
+                                       datatable="true" hideLookupGlass="true"/>
+                    </aura:set>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.salesLine.Resource__c != null}">
+                        <aura:if isTrue="{!v.salesOrder.Contract__c != null &amp;&amp; v.salesLine.Contract_Line__c != null}">
+                            <c:LookupInput aura:id="unit-of-measure"
+                                           variant="label-hidden"
+                                           value="{!v.salesLine.Unit_of_Measure__r}"
+                                           SObjectName="Unit_of_Measure__c"
+                                           columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]"
+                                           queryFields="['Hours_UOM__c']"
+                                           filters="{!'[&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM ResourceUOMAssociation__c WHERE Resource__c =\'' + v.salesLine.Resource__c + '\')&quot;,'
+                                                                                        + '&quot;Blocked__c != TRUE AND Id IN (SELECT Unit_of_Measure__c FROM Contract_Resource__c WHERE Contract__c=\'' + v.salesOrder.Contract__c + '\' AND Resource__c=\'' + v.salesLine.Resource__c + '\')&quot;]'}"
+                                           pill="{fieldName: 'Name'}"
+                                           onchange="{!c.handleUnitOfMeasureChange3}"
+                                           required="{!v.xFields.UnitOfMeasure.required}"
+                                           messageWhenValueMissing="This field is mandatory"
+                                           disabled="{!v.xFields.UnitOfMeasure.disabled == true || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"
+                                           datatable="true" hideLookupGlass="true"/>
+                            <aura:set attribute="else">
+                                <c:LookupInput aura:id="unit-of-measure"
+                                               variant="label-hidden"
+                                               value="{!v.salesLine.Unit_of_Measure__r}"
+                                               SObjectName="ResourceUOMAssociation__c"
+                                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Unit_of_Measure__r.Description__c'}, {label: 'Facility', fieldName: 'Facility__r.Name'}]"
+                                               queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                                               filter="{!'Resource__c=\'' + v.salesLine.Resource__c + '\' AND Unit_of_Measure__r.Blocked__c!=TRUE'}"
+                                               pill="{fieldName: 'Name'}"
+                                               onchange="{!c.handleUnitOfMeasureChange2}"
+                                               required="{!v.xFields.UnitOfMeasure.required}" messageWhenValueMissing="This field is mandatory"
+                                               disabled="{!v.xFields.UnitOfMeasure.disabled == true || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"
+                                               datatable="true" hideLookupGlass="true"/>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <c:LookupInput aura:id="unit-of-measure"
+                                           variant="label-hidden"
+                                           value="{!v.salesLine.Unit_of_Measure__r}"
+                                           SObjectName="Unit_of_Measure__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}, {label: 'Container Size', fieldName: 'Container_Size__c'}]"
+                                           queryFields="['Hours_UOM__c']"
+                                           filter="Blocked__c!=TRUE"
+                                           pill="{fieldName: 'Name'}"
+                                           onchange="{!c.handleUnitOfMeasureChange3}"
+                                           required="{!v.xFields.UnitOfMeasure.required}"
+                                           messageWhenValueMissing="This field is mandatory"
+                                           disabled="{!v.xFields.UnitOfMeasure.disabled == true || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"
+                                           datatable="true" hideLookupGlass="true"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        <!-- Waste001
+            </aura:set>
+        </aura:if>
+        -->
+    </td>
+    <td>
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Labor' || v.salesLine.Category__c == 'Equipment' || v.salesLine.Category__c == 'Materials'}">
+            <c:LightningInput aura:id="days-needed"
+                              type="number"
+                              variant="label-hidden"
+                              value="{!v.salesLine.Number_of_Day__c}"
+                              required="{!v.salesLine.Category__c == 'Labor' || v.salesLine.Category__c == 'Equipment'}"
+                              messageWhenValueMissing="Days Needed is required."
+                              onchange="{!c.handleNumberOfDaysChange}"
+                              disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.salesLine.Category__c != 'Labor'}">
+            <aura:if isTrue="{!v.salesLine.Bundle_Line__r == null &amp;&amp; v.salesLine.Non_Billable__c != true}">
+                <!--ticket 19982-->
+                <!--
+                <lightning:input type="number" label="unit Price" variant="label-hidden" value="{!v.salesLine.Unit_Price__c}" style="currency" formatter="currency" disabled="true" step="0.001"/>
+                <aura:set attribute="else">
+                    <lightning:input type="number" label="xUnit Price" variant="label-hidden" value="{!v.salesLine.xUnit_Price__c}" style="currency" formatter="currency" disabled="true" step="0.001"/>
+                </aura:set>
+				-->
+                <lightning:formattedNumber value="{!v.salesLine.Unit_Price__c}" minimumFractionDigits="2"/>
+                <aura:set attribute="else">
+                    <lightning:formattedNumber value="{!v.salesLine.xUnit_Price__c}" minimumFractionDigits="2"/>
+                </aura:set>
+                <!--ticket 19982-->
+            </aura:if>
+        </aura:if>
+    </td>
+
+    <td>
+        <!--ticket 19535-->
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Labor'}">
+        <!--ticket 19535-->
+            <lightning:input type="number" label="Regular Rate" variant="label-hidden" value="{!v.salesLine.Regular_Rate__c}" style="currency" formatter="currency" disabled="true"/>
+        <!--ticket 19535-->
+        </aura:if>
+        <!--ticket 19535-->
+    </td>
+    <td>
+        <!--ticket 19535-->
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Labor'}">
+        <!--ticket 19535-->
+            <lightning:input type="number" label="Overtime Rate" variant="label-hidden" value="{!v.salesLine.Overtime_Rate__c}" style="currency" formatter="currency" disabled="true"/>
+        <!--ticket 19535-->
+        </aura:if>
+        <!--ticket 19535-->
+    </td>
+    <td>
+        <!--ticket 19535-->
+        <aura:if isTrue="{!v.salesLine.Category__c == 'Labor'}">
+        <!--ticket 19535-->
+            <lightning:input type="number" label="Double Time Rate" variant="label-hidden" value="{!v.salesLine.Premium_Rate__c}" style="currency" formatter="currency" disabled="true"/>
+        <!--ticket 19535-->
+        </aura:if>
+        <!--ticket 19535-->
+    </td>
+
+    <td>
+        <!--ticket 19535-->
+        <!--<aura:if isTrue="{!v.salesLine.Bundle_Line__r == null &amp;&amp; v.salesLine.Non_Billable__c != true}">-->
+        <aura:if isTrue="{!v.salesLine.Bundle_Line__r == null}">
+
+        <!--ticket 19535-->
+            <lightning:input type="number" label="Line Amount" variant="label-hidden" value="{!v.salesLine.Line_Amount__c}" style="currency" formatter="currency" disabled="true"/>
+            <aura:set attribute="else">
+                <lightning:input type="number" label="xLine Amount" variant="label-hidden" value="{!v.salesLine.xLine_Amount__c}" style="currency" formatter="currency" disabled="true"/>
+            </aura:set>
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.salesLine.Bundle_Line__r == null}">
+            <!--ticket 19982-->
+            <!--
+            <lightning:input type="number" label="Unit Cost" variant="label-hidden" value="{!v.salesLine.Unit_Cost__c }" style="currency" formatter="currency" disabled="true" step="0.001"/>
+            <aura:set attribute="else">
+                <lightning:input type="number" label="xUnit Cost" variant="label-hidden" value="{!v.salesLine.xUnit_Cost__c }" style="currency" formatter="currency" disabled="true" step="0.001"/>
+            </aura:set>
+			-->
+            <lightning:formattedNumber value="{!v.salesLine.Unit_Cost__c}" minimumFractionDigits="2"/>
+            <aura:set attribute="else">
+                <lightning:formattedNumber value="{!v.salesLine.xUnit_Cost__c}" minimumFractionDigits="2"/>
+            </aura:set>
+            <!--ticket 19982-->
+        </aura:if>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.salesLine.Bundle_Line__r == null}">
+            <lightning:input type="number" label="Line Cost" variant="label-hidden" value="{!v.salesLine.Line_Cost__c }" style="currency" formatter="currency" disabled="true"/>
+            <aura:set attribute="else">
+                <lightning:input type="number" label="xLine Cost" variant="label-hidden" value="{!v.salesLine.xLine_Cost__c }" style="currency" formatter="currency" disabled="true"/>
+            </aura:set>
+        </aura:if>
+    </td>
+
+    <!--ticket 19535-->
+    <td>
+        <span name="nonBillable">
+            <lightning:input name="nonBillable"
+                             type="checkbox"
+                             checked="{!v.salesLine.Non_Billable__c}"
+                             onchange="{!c.handleNonBillableChange}"
+                             disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval'  || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true || (v.salesLine.T_M_Lines1__r &amp;&amp; v.salesLine.T_M_Lines1__r.records.length > 0) || (v.salesLine.Category__c == 'Misc. Charges And Taxes' &amp;&amp; (v.salesLine.Description__c == 'EEC Fee' || v.salesLine.Description__c == 'ESIC' || v.salesLine.Description__c == 'Fuel Surcharge'))}"/>
+        </span>
+    </td>
+    <!--ticket 19535-->
+    <td>
+        <lightning:input name="billAsLumpSum"
+                         type="checkbox"
+                         checked="{!v.salesLine.Bill_as_Lump_Sum__c}"
+                         onchange="{!c.handleBillAsLumpSumChange}"
+                         disabled="{!v.salesLine.Category__c == 'Bundled' || v.salesLine.System_Calculated_Line__c == true || v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+    </td>
+</aura:component>

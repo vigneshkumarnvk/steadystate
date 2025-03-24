@@ -1,0 +1,100 @@
+<aura:component extends="c:TMBase" extensible="true">
+    <!--attributes-->
+    <aura:attribute name="index" type="Integer" required="true" access="public"/>   
+    <aura:attribute name="tmLine" type="Object" access="public"/>
+     <aura:attribute name="uomItems" type="List" access="public"/>
+    <!--ticket 19130-->
+    <!--
+    <aura:attribute name="jobTask" type="Object" access="public"/>
+    -->
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <!--ticket 19130-->
+    <!-- ticket TA516601 -->
+    <aura:attribute name="costPlusMESResourceId" type="String" />
+     <!-- ticket TA516601 -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInitite}" />
+    <!--events-->
+    <aura:registerEvent name="tmLineDeleteEvent" type="c:TMLineDeleteEvent"/>
+    <aura:registerEvent name="tmLineViewEvent" type="c:TMLineViewEvent"/><!--used by labor line-->
+    <aura:handler name="sampleComponentEvent" event="c:compEvent" action="{!c.handleComponentEvent}"/>
+    <!--
+    <aura:registerEvent name="tmLinesMoveEvent" type="c:TMLinesMoveEvent"/>
+    -->
+    <aura:registerEvent name="tmLineUpdateEvent" type="c:TMLineUpdateEvent"/>
+    <!--<aura:registerEvent name="tmCalculateLinesEvent" type="c:TMCalculateLinesEvent"/>-->
+    <aura:registerEvent name="tmLineCopyTimeEvent" type="c:TMLineCopyTimeEvent"/>
+
+    <!--methods-->
+    <aura:method name="validateFields" action="{!c.validateFields}" access="public"/>
+
+    <!--body-->
+    <td>
+        <span name="select" style="display: inline-block;">
+            <lightning:input type="checkbox" variant="label-hidden" value="{!v.index}" checked="{!v.tmLine.Selected}" class="checkbox-inline"/>
+        </span>
+        <span name="delete" style="display: inline-block;">
+            <lightning:button value="{!v.index}" label="Del" variant="bare" onclick="{!c.deleteLine}" disabled="{!(v.tm.Status__c == 'Confirmed' &amp;&amp; v.tmLine.Service_Center__r &amp;&amp; v.tmLine.Service_Center__r.Temporary__c != true) || v.tmLine.Invoiced__c == true || v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+        </span>
+        <aura:if isTrue="{!v.tmLine.Category__c == 'Labor' || v.tmLine.Category__c == 'Equipment'}">
+            <span class="slds-p-horizontal--xxx-small">|</span>
+            <span name="copy" style="display: inline-block;">
+                <lightning:button value="{!v.index}" label="Copy Time" variant="bare" onclick="{!c.copyTime}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+            </span>
+        </aura:if>
+        <!-- disable the button, this for flat pay only currently
+        <aura:if isTrue="{!v.tmLine.Category__c == 'Labor' &amp;&amp; (v.tm.Status__c == 'Open' || v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Mobile Review')}">
+            <span class="slds-p-horizontal-xxx-small">|</span>
+            <span name="view" style="display: inline-block;">
+                <lightning:button value="{!v.index}" label="View" variant="bare" onclick="{!c.viewLine}" disabled="{!v.tmLine.Invoiced__c == true || v.tm.Status__c == 'Void'}"/>
+            </span>
+        </aura:if>
+        -->
+        <!--ticket 19130-->
+        <span class="slds-p-horizontal--xxx-small">|</span>
+        <span name="view" style="display: inline-block;">
+            <lightning:button value="{!v.index}" label="Edit" variant="bare" onclick="{!c.viewLine}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+        </span>
+        <!--ticket 19130-->
+    </td>
+
+    <td>
+        <!---ticket 19693-->
+        <!--{!v.tmLine.Line_No__c}-->
+        <aura:if isTrue="{!v.tmLine.Id}">
+            <lightning:formattedUrl label="{!v.tmLine.Line_No__c}" value="{!'/' + v.tmLine.Id}" target="_blank"/>
+            <aura:set attribute="else">
+                {!v.tmLine.Line_No__c}
+            </aura:set>
+        </aura:if>
+        <!---ticket 19693-->
+    </td>
+
+    {!v.body}
+
+    <!--Non-billable-->
+    <td>
+        <lightning:input type="checkbox" variant="label-hidden" checked="{!v.tmLine.Non_Billable__c}" onchange="{!c.handleNonBillableChange}" disabled="{!v.tmLine.Invoiced__c == true}"/>
+    </td>
+    <td>
+        <lightning:input type="checkbox" checked="{!v.tmLine.Invoiced__c}" disabled="true"/>
+    </td>
+
+    <td>
+        <!--ticket 19130-->
+        <!--
+        {!v.tmLine.Parent_Line__r.Line_No__c}
+        -->
+        <span name="isChildResource">
+            <lightning:input variant="label-hidden" type="checkbox" checked="{!v.tmLine.Is_Child_Resource__c}" disabled="{!v.tmLine.Dereferenced_Child_Resource__c != true}"/>
+        </span>
+        <!--ticket 19130-->
+    </td>
+
+    <!---ticket 19693-->
+    <td>
+        <aura:if isTrue="{!v.tmLine.Billing_Worksheet_Line__c}">
+            <lightning:formattedUrl label="{!v.tmLine.Billing_Worksheet_Line__r.Line_No__c}" value="{!'/' + v.tmLine.Billing_Worksheet_Line__c}" target="_blank"/>
+        </aura:if>
+    </td>
+    <!---ticket 19693-->
+</aura:component>

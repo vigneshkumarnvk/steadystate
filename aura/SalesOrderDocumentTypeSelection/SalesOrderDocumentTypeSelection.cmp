@@ -1,0 +1,131 @@
+<aura:component extends="c:SalesOrderBase">
+    <!--attributes-->
+    <aura:attribute name="documentType" type="String" access="private"/>
+    <aura:attribute name="documentTypeOptions" type="List" default="[{label: 'Quote', value: 'Sales Quote'}, {label: 'Order', value: 'Sales Order'}]" access="private"/>
+    <aura:attribute name="contracts" type="List" access="private"/>
+    <aura:attribute name="allowNewSalesOrders" type="Boolean" access="private"/>
+    <aura:attribute name="contractSelectOptions" type="List" access="private"/>
+    <aura:attribute name="contractNotRequired" type="Boolean" access="private" default="false"/>
+    <aura:attribute name="isCustomerInActive" type="Boolean" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <lightning:card title="{!v.title}">
+
+        <aura:if isTrue="{!v.allowNewSalesOrders == true}">
+            <lightning:layout>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:radioGroup aura:id="document-type" type="button" label="Document Type" value="{!v.salesOrder.Document_Type__c}" options="{!v.documentTypeOptions}" onchange="{!c.handleDocumentTypeChange}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:if>
+        <aura:if isTrue="{!v.salesOrder.Document_Type__c != null}">
+            <lightning:layout>
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <!--
+                    <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name'}, {label: 'Description', fieldName: 'Description__c'}]" queryFields="['Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name']" filter="Blocked__c!=TRUE" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" fetchLimit="25" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                    -->
+                    <!-- Task#78375 Task#78376 Bug#84091-->
+                    <aura:if isTrue="{!$Label.c.Release_Flag == 'true'}">
+                    <aura:if isTrue="{!and(
+                                     v.salesOrder.Document_Type__c == 'Sales Order',
+                                     
+									 or(
+									 or(
+                                     and(
+                                     or(
+                                     empty(v.salesOrder.Bill_to_Customer_No__r.AccountNumber),
+                                     empty(v.salesOrder.Bill_to_Customer_No__r.Sage_Customer_No__c)),
+                                     $Label.c.Account_Number_Validation == 'false'
+                                     ),
+                                     and(
+                                     empty(v.salesOrder.Bill_to_Customer_No__r.Sage_Customer_No__c),
+                                     $Label.c.Account_Number_Validation == 'true'
+                                     )
+                                     ),
+									 v.isCustomerInActive == true
+									 )
+                                     )}">
+                        <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE AND Single_Sales_Order__c=TRUE" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                        <aura:set attribute="else">
+                            <!--Task#81352-->
+                            <aura:if isTrue = "{!v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                                <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                                <aura:set attribute="else">
+                                    <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE AND Name !='LTL' AND Name!='Brokered Trans/3rd Party Disposal'" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp; v.salesOrder.Bill_to_Customer_No__r.AccountNumber == null}">
+                                <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE AND Single_Sales_Order__c=TRUE" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                                <aura:set attribute="else">
+                                    <!--Task#81352-->
+                                    <aura:if isTrue = "{!v.salesOrder.Bill_to_Customer_No__r.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                                        <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                                        <aura:set attribute="else">
+                                            <c:LookupInput aura:id="sales-order-type" label="Sales Order Type" value="{!v.salesOrder.Sales_Order_Type__r}" SObjectName="Sales_Order_Type__c" columns="[{label: 'No.', fieldName: 'Name', style: 'width:40%'}, {label: 'Description', fieldName: 'Description__c', 'class': 'slds-cell-wrap'}]" queryFields="['Single_Sales_Order__c', 'Emergency_Response__c', 'Rate_Sheet__c', 'Rate_Sheet__r.Name', 'Job_Task_Template__c', 'Job_Task_Template__r.Name']" filter="Blocked__c!=TRUE AND Name !='LTL' AND Name!='Brokered Trans/3rd Party Disposal'" pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}" onchange="{!c.handleSalesOrderTypeChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>  
+                        </aura:set>
+                    </aura:if>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input type="checkbox" aura:id="prevailing-wage-job" label="Prevailing Wage Job" variant="label-stacked" checked="{!v.salesOrder.Prevailing_Wage_Job__c}" onchange="{!c.handlePrevailingWageJobChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="{!v.salesOrder.Pay_Rule__c != null}" messageWhenValueMissing="This field must be checked when a pay rule is selected."/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <lightning:layout>
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <aura:if isTrue="{!v.salesOrder.Prevailing_Wage_Job__c == true}">
+                        <c:LookupInput aura:id="pay-rule" label="Pay Rule" value="{!v.salesOrder.Pay_Rule__r}" SObjectName="Pay_Rule__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Type', fieldName: 'Type__c'}]" filter="Type__c IN ('Prevailing Wage', 'Contract', 'Union') AND Blocked__c != TRUE" pill="{iconName: 'standard:picklist_choice', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handlePayRuleChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                        <aura:set attribute="else">
+                            <c:LookupInput label="Pay Rule" value="{!v.salesOrder.Pay_Rule__r}" SObjectName="Pay_Rule__c" columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Type', fieldName: 'Type__c'}]" filter="Type__c IN ('Prevailing Wage', 'Contract', 'Union') AND Blocked__c != TRUE" pill="{iconName: 'standard:picklist_choice', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handlePayRuleChange}" disabled="{!v.salesOrder.Document_Status__c != 'Open'}"/>
+                        </aura:set>
+                    </aura:if>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <aura:if isTrue="{!v.salesOrder.From_Sales_Quote__c == null &amp;&amp; v.contractSelectOptions.length > 0}">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <lightning:input type="checkbox" label="Contract not required" variant="label-stacked" checked="{!v.contractNotRequired}" onchange="{!c.handleContractNotRequiredChange}"/>
+                    </lightning:layoutItem>
+                    <aura:if isTrue="{!v.contractNotRequired != true}">
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <!--c:LookupInput label="Please choose a contract if applied" value="{!v.salesOrder.Contract__r}" SObjectName="contract" columns="[{label: 'Contract No.', fieldName: 'ContractNumber'}, {label: 'Name', fieldName: 'Name'}]" queryFields="['Billing_Instructions__c', 'Internal_Comments__c', 'Energy_Insurance__c ', 'Fuel_Surcharge_Pct__c']" filter="{!'AccountId=\'' + v.salesOrder.Bill_to_Customer_No__c + '\''}" pill="{iconName: 'standard:contract', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handleContractChange}"/-->
+                            <!--lightning:combobox aura:id="contract" label="Please choose a contract" value="{!v.salesOrder.Contract__c}" options="{!v.contractSelectOptions}" placeholder="" onchange="{!c.handleContractChange}"/-->
+                            <lightning:radioGroup aura:id="contract" label="Contract" type="radio" options="{!v.contractSelectOptions}" value="{!v.salesOrder.Contract__c}" onchange="{!c.handleContractChange}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                        </lightning:layoutItem>
+                    </aura:if>
+                </lightning:layout>
+            </aura:if>
+
+            <aura:if isTrue="{!v.salesOrder.Document_Type__c == 'Sales Order' &amp;&amp; v.salesOrder.Contract__c == null}">
+                <lightning:layout>
+                    <!-- Ticket#23587
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <c:LookupInput label="Quote" value="{!v.salesOrder.From_Sales_Quote__r}" SObjectName="Sales_Order__c" columns="[{label: 'Quote No.', fieldName: 'Name'}, {label: 'Quote Date', fieldName: 'Quote_Date__c'}, {label: 'Description', fieldName: 'Order_Description__c'}]" queryFields="['Quote_Date__c']" filter="{!'Bill_to_Customer_No__c=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Document_Type__c=\'Sales Quote\' AND Allow_Convert__c=TRUE'}" pill="{iconName: 'standard:quotes', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handleQuoteChange}"/>
+                    </lightning:layoutItem>
+                    -->
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <c:LookupInput label="Quote" value="{!v.salesOrder.From_Sales_Quote__r}"
+                                       SObjectName="Sales_Order__c"
+                                       columns="[{label: 'Quote No.', fieldName: 'Name'}, {label: 'Quote Date', fieldName: 'Quote_Date__c'}, {label: 'Description', fieldName: 'Order_Description__c'}]"
+                                       queryFields="['Quote_Date__c']"
+                                       filter="{!'Bill_to_Customer_No__c=\'' + v.salesOrder.Bill_to_Customer_No__c + '\' AND Document_Type__c=\'Sales Quote\' AND Service_Center__c =\'' + v.salesOrder.Service_Center__c + '\' AND Allow_Convert__c=TRUE'}"
+                                       pill="{iconName: 'standard:quotes', fieldName: 'Name'}" fetchLimit="50" onchange="{!c.handleQuoteChange}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:if>
+        </aura:if>
+    </lightning:card>
+</aura:component>

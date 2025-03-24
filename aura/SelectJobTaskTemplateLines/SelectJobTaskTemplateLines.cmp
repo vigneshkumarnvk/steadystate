@@ -1,0 +1,150 @@
+<aura:component extends="c:BaseComponent" controller="JobTaskTemplateController">
+    <!--attributes-->
+    <aura:attribute name="jobTask" type="Object" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="defaultJobTaskTemplate" type="Object" access="public"/>
+    <aura:attribute name="mode" type="String" access="public" description="create-task-from-template, create-lines-from-template, clone-task"/>
+    <aura:attribute name="jobTaskTemplateLines" type="List" access="private"/>
+    <aura:attribute name="selectAll" type="Boolean" default="true" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--method-->
+    <aura:method name="save" action="{!c.doSave}">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card>
+        <p class="slds-p-horizontal_small">
+            <aura:if isTrue="{!v.mode != 'create-lines-from-template'}">
+                <lightning:layout multipleRows="true">
+
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <lightning:input aura:id="name" label="Name" value="{!v.jobTask.Name}" required="true" maxlength="30"/>
+                    </lightning:layoutItem>
+
+                    <aura:if isTrue="{!v.mode == 'create-task-from-template'}">
+                        <aura:if isTrue="{!v.salesOrder.Service_Center__r.Include_SO_in_EQAI_Invoice_Integration__c}">
+                            <lightning:layoutItem size="6" padding="around-small">
+                                <lightning:select aura:id="billing-type"
+                                                  label="Billing Type"
+                                                  value="{!v.jobTask.Billing_Type__c}"
+                                                  required="true"
+                                                  onchange="{!c.handleBillTypeChange}"
+                                                  disabled="{!v.jobTask.Sales_Order__r != null &amp;&amp; v.jobTask.Sales_Order__r.Quote_Type__c == 'Rate_Sheet'}">
+                                    <option value=""></option>
+                                    <option value="T&amp;M">T&amp;M</option>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                        
+                        <aura:set attribute="else">
+    						<lightning:layoutItem size="6" padding="around-small">
+                                <lightning:select aura:id="billing-type"
+                                                  label="Billing Type"
+                                                  value="{!v.jobTask.Billing_Type__c}"
+                                                  required="true"
+                                                  onchange="{!c.handleBillTypeChange}"
+                                                  disabled="{!v.jobTask.Sales_Order__r != null &amp;&amp; v.jobTask.Sales_Order__r.Quote_Type__c == 'Rate_Sheet'}">
+                                    <option value=""></option>
+                                    <option value="T&amp;M">T&amp;M</option>
+                                    <option value="Fixed Price">Fixed Price</option>
+                                </lightning:select>
+                            </lightning:layoutItem>
+  						</aura:set>
+                      </aura:if>
+                    </aura:if>
+
+                </lightning:layout>
+            </aura:if>
+
+            <aura:if isTrue="{!v.mode == 'create-lines-from-template' || v.mode == 'create-task-from-template'}">
+                <lightning:card title="Get Lines from Template">
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem size="6" padding="horizontal-small" class="slds-p-bottom--small">
+                            <c:LookupInput aura:id="job-task-template" label="Job Task Template" value="{!v.jobTask.Job_Task_Template__r}"
+                                           SObjectName="Job_Task_Template__c" columns="[{label: 'Name', fieldName: 'Name'}]"
+                                           pill="{iconName: 'standard:picklist_type', fieldName: 'Name'}"
+                                           onchange="{!c.handleJobTaskTemplateChange}"/>
+                        </lightning:layoutItem>
+
+                        <lightning:layoutItem size="12" padding="horizontal-small">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th scope="col">
+                                            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.selectAll}" onchange="{!c.handleSelectAllChange}"/>
+                                        </th>
+                                        <th scope="col">
+                                            Quantity
+                                        </th>
+                                        <th scope="col">
+                                            Category
+                                        </th>
+                                        <th scope="col">
+                                            Resource Type/Resource
+                                        </th>
+                                        <th scope="col">
+                                            Description
+                                        </th>
+                                        <th scope="col">
+                                            Unit of Measure
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.jobTaskTemplateLines}" var="jobTaskTemplateLine" indexVar="index">
+                                        <c:SelectJobTaskTemplateLine jobTaskTemplateLine="{!jobTaskTemplateLine}"/>
+                                    </aura:iteration>
+                                    <aura:if isTrue="{!empty(v.jobTaskTemplateLines)}">
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                    </aura:if>
+                                </tbody>
+                            </table>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:card>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

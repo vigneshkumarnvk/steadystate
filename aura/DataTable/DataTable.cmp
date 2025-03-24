@@ -1,0 +1,68 @@
+<aura:component>
+    <!--public attributes-->
+    <aura:attribute name="name" type="String" default="" access="public"/>
+    <aura:attribute name="items" type="List" default="[]" access="public" required="true"/>
+    <aura:attribute name="var" type="Object" access="public" required="true"/>
+    <aura:attribute name="indexVar" type="String" access="public" default="rowIndex" required="true"/>
+    <aura:attribute name="template" type="Aura.componentDefRef[]" access="public" required="true"/>
+    <aura:attribute name="horizontalScroll" type="Boolean" default="Boolean" access="public"/>
+    <aura:attribute name="verticalScroll" type="Boolean" default="Boolean" access="public"/>
+    <aura:attribute name="height" type="String" default="300px" access="public"/>
+    <aura:attribute name="showRowNumbers" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="prefilters" type="String" access="public"/>
+
+    <!--ticket 20808-->
+    <aura:attribute name="sorts" type="List" access="public"/>
+    <!--ticket 20808-->
+
+    <!--private attributes-->
+    <aura:attribute name="columnHeaders" type="Object" access="private"/>
+    <!--<aura:attribute name="dataRowAttributes" type="Object" access="private"/>-->
+    <aura:attribute name="mapFilterRowsByIndex" type="Map" access="private"/>
+
+    <!--events-->
+    <aura:registerEvent name="onRowAction" type="c:DataTableRowActionEvent"/>
+    <aura:registerEvent name="onSelectAll" type="c:DataTableSelectAllEvent"/>
+
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--body-->
+    <div class="{!if(v.verticalScroll == true, if(v.horizontalScroll == true, 'fixed-table-headers horizontal-scroll', 'fixed-table-headers'), if(v.horizontalScroll == true, 'horizontal-scroll', ''))}" style="{!if((v.verticalScroll == true &amp;&amp; v.height), 'max-height:' + v.height + ';min-height:50px;', 'min-height:50px;')}">
+        <table aura:id="datatable" name="{!v.name}" aria-multiselectable="true" class="slds-table slds-table_bordered">
+            <thead>
+            <tr class="slds-line-height_reset">
+                <aura:iteration items="{!v.columnHeaders}" var="columnHeader" indexVar="index">
+                    <th class="{!'slds-align-bottom slds-cell-wrap ' + columnHeader.headerClass}" style="{!columnHeader.headerStyle}" scope="col">
+                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                <span aura:id="column-header" title="{#columnHeader.label}" class="slds-lookup slds-is-close">
+                                    <aura:if isTrue="{#columnHeader.selectAllCheckbox != null}">
+                                        <span class="slds-p-right--xx-small" style="display: inline-block;">
+                                            <lightning:input aura:id="header-checkbox" type="checkbox" variant="label-hidden" value="{!index}" checked="{!columnHeader.checked}" onchange="{!c.handleCheckboxChange}"/>
+                                        </span>
+                                    </aura:if>
+                                    {#columnHeader.label}
+                                    <!--ticket 20808-->
+                                    <aura:if isTrue="{!columnHeader.sortable}">
+                                        <span class="slds-p-left--xx-small">
+                                            <lightning:buttonIcon variant="bare" value="{!index}" iconName="utility:sort" size="small" onclick="{!c.sortColumn}"/>
+                                        </span>
+                                    </aura:if>
+                                    <!--ticket 20808-->
+                                    <aura:if isTrue="{#columnHeader.filterField != null}">
+                                        <span class="slds-p-left--xx-small">
+                                            <c:DataTableFilterDialog aura:id="filter-dialog" columnIndex="{!index}" type="{#columnHeader.filterFieldType}" value="{#columnHeader.filterValue}" onfilter="{!c.filter}"/>
+                                        </span>
+                                    </aura:if>
+                                </span>
+                        </div>
+                    </th>
+                </aura:iteration>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.items}" var="{!v.var}" indexVar="{!v.indexVar}" template="{!v.template}"/>
+            </tbody>
+        </table>
+    </div>
+</aura:component>

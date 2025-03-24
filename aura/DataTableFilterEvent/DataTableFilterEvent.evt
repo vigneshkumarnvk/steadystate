@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="DataTableFilterEvent">
+    <aura:attribute name="columnIndex" type="Integer" access="public"/>
+    <aura:attribute name="value" type="Object" access="public"/>
+</aura:event>

@@ -1,0 +1,79 @@
+<aura:component extends="c:TMLinesBase">
+    <aura:dependency resource="c:TMWasteDisposalLine"/>
+    <aura:dependency resource="c:TMWasteDisposalLineEdit"/>
+    
+    <!--attributes-->
+    
+    <!--handlers-->
+    
+    <!--methods-->
+    
+    
+    <!--body-->
+    <c:CollapsibleSection label="{!v.title}" collapsed="false">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button iconName="utility:delete" label="Delete Lines" variant="neutral" onclick="{!c.deleteLines}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+                <lightning:button iconName="utility:add" label="Add Waste Disposal" variant="neutral" onclick="{!c.addLine}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+        <!--US128845-->
+        <aura:if isTrue="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+            <aura:if isTrue="{!v.rowComponentParams &amp;&amp; v.inlineEditComponentParams}"> <!--ensure params are initialized before the table is rendered-->
+                <c:InlineEditDataTable aura:id="datatable" name="Waste Disposal" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                       onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                       rowComponentName="c:TMWasteDisposalLine" rowComponentParams="{!v.rowComponentParams}"
+                                       inlineEditComponentName="c:TMWasteDisposalLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                       noneInlineFields="['select', 'delete', 'move', 'isChildResource']"
+                                       horizontalScroll="true" advDisposalFlag="{!v.tm.Service_Center__r.Advanced_Disposal__c}">
+                    <!--ticket 19130-->
+                    <aura:set attribute="template">
+                        <c:InlineEditColumnHeader label="" headerStyle="min-width:200px;"/>
+                        <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:75px;"/>
+                        <c:InlineEditColumnHeader label="Waste Disposal" headerStyle="min-width:200px;"/>
+                        <c:InlineEditColumnHeader label="Billing Description" />
+                        <c:InlineEditColumnHeader label="Facility" headerStyle="min-width:150px;"/>
+                        <c:InlineEditColumnHeader label="Profile Approval" headerStyle="min-width:190px;"/>
+                        <c:InlineEditColumnHeader label="BOL/Manifest" headerStyle="min-width:190px;"/>
+                        <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                        <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:100px;"/>
+                        <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:100"/>
+                        <c:InlineEditColumnHeader label="Invoiced" headerStyle="min-width:65px;"/>
+                        <c:InlineEditColumnHeader label="Parent Line #" headerStyle="min-width:75px;"/>
+                        <!--ticket 19693-->
+                        <c:InlineEditColumnHeader label="Worksheet Line" headerStyle="min-width:125px;"/>
+                        <!--ticket 19693-->
+                    </aura:set>
+                </c:InlineEditDataTable>
+            </aura:if>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.rowComponentParams &amp;&amp; v.inlineEditComponentParams}"> <!--ensure params are initialized before the table is rendered-->
+                    <c:InlineEditDataTable aura:id="datatable" name="Waste Disposal" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                           onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                           rowComponentName="c:TMWasteDisposalLine" rowComponentParams="{!v.rowComponentParams}"
+                                           inlineEditComponentName="c:TMWasteDisposalLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                           noneInlineFields="['select', 'delete', 'move', 'isChildResource']"
+                                           horizontalScroll="true">
+                        <!--ticket 19130-->
+                        <aura:set attribute="template">
+                            <c:InlineEditColumnHeader label="" headerStyle="min-width:200px;"/>
+                            <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:75px;"/>
+                            <c:InlineEditColumnHeader label="Waste Disposal" headerStyle="min-width:200px;"/>
+                            <c:InlineEditColumnHeader label="Billing Description"/>
+                            <c:InlineEditColumnHeader label="Facility" headerStyle="min-width:150px;"/>
+                            <c:InlineEditColumnHeader label="BOL/Manifest" headerStyle="min-width:190px;"/>
+                            <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:100px;"/>
+                            <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:100"/>
+                            <c:InlineEditColumnHeader label="Invoiced" headerStyle="min-width:65px;"/>
+                            <c:InlineEditColumnHeader label="Parent Line #" headerStyle="min-width:75px;"/>
+                            <!--ticket 19693-->
+                            <c:InlineEditColumnHeader label="Worksheet Line" headerStyle="min-width:125px;"/>
+                            <!--ticket 19693-->
+                        </aura:set>
+                    </c:InlineEditDataTable>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </c:CollapsibleSection>
+</aura:component>

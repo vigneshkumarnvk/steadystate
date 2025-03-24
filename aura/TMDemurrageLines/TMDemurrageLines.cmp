@@ -1,0 +1,59 @@
+<aura:component extends="c:TMLinesBase"><aura:dependency resource="c:TMLaborLine"/>
+    <aura:dependency resource="c:TMDemurrageLine"/>
+    <aura:dependency resource="c:TMDemurrageLineEdit"/>
+
+    <!--attributes-->
+
+    <!--handlers-->
+
+    <!--body-->
+    <!--<lightning:card title="{!v.title}" class="zindex">-->
+    <c:CollapsibleSection label="{!v.title}" collapsed="false">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button iconName="utility:delete" label="Delete Lines" variant="neutral" onclick="{!c.deleteLines}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+                <lightning:button iconName="utility:add" label="Add Demurrage" variant="neutral" onclick="{!c.addLine}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <aura:if isTrue="{!v.rowComponentParams &amp;&amp; v.inlineEditComponentParams}"> <!--ensure params are initialized before the table is rendered-->
+            <!--ticket 19130-->
+            <!--
+            <c:InlineEditDataTable aura:id="datatable" name="Demurrage" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                   rowComponentName="c:TMDemurrageLine" rowComponentParams="{!v.rowComponentParams}"
+                                   inlineEditComponentName="c:TMDemurrageLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                   noneInlineFields="['select', 'delete', 'move']">
+           -->
+            <c:InlineEditDataTable aura:id="datatable" name="Demurrage" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                   rowComponentName="c:TMDemurrageLine" rowComponentParams="{!v.rowComponentParams}"
+                                   inlineEditComponentName="c:TMDemurrageLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                   noneInlineFields="['select', 'delete', 'move', 'isChildResource']">
+            <!--ticket 19130-->
+                <aura:set attribute="template">
+                    <c:InlineEditColumnHeader label="" headerStyle="min-width:200px;"/>
+                    <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:75px;"/>
+                    <c:InlineEditColumnHeader label="Resource" headerStyle="min-width:300px;"/>
+                    <c:InlineEditColumnHeader label="Billing Description" headerStyle="width:100%;"/>
+                    <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:200px;"/>
+                    <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                    <!-- Ticket#19917 Hide Contract Line on T&M
+                    <c:InlineEditColumnHeader label="Contract Line" headerStyle="min-width:60px;"/>
+                    -->
+                    <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:100"/>
+                    <c:InlineEditColumnHeader label="Invoiced" headerStyle="min-width:65px;"/>
+                    <!--ticket 19130-->
+                    <!--
+                    <c:InlineEditColumnHeader label="Parent Line #" headerStyle="min-width:75px;"/>
+                    -->
+                    <c:InlineEditColumnHeader label="Child Resource" headerStyle="min-width:60px;"/>
+                    <!--ticket 19130-->
+                    <!--ticket 19693-->
+                    <c:InlineEditColumnHeader label="Worksheet Line" headerStyle="min-width:125px;"/>
+                    <!--ticket 19693-->
+                </aura:set>
+            </c:InlineEditDataTable>
+        </aura:if>
+    </c:CollapsibleSection>
+</aura:component>

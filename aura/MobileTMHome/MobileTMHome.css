@@ -1,0 +1,18 @@
+.THIS .radio-group .slds-form-element__control .slds-radio{
+    display : inline-block !important;
+}
+
+.THIS .scrollable-container {
+    height: calc(100vh - 160px);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.THIS .line-style {
+    line-height: 40px !important;
+}
+
+.THIS .date-style {
+    min-width: fit-content;
+    white-space: nowrap;
+}

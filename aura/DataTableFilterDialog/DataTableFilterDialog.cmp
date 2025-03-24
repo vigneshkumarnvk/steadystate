@@ -1,0 +1,36 @@
+<aura:component description="DataFilter">
+    <!--attributes-->
+    <aura:attribute name="columnIndex" type="Integer" required="true" access="public"/>
+    <aura:attribute name="value" type="Object" access="public"/>
+    <aura:attribute name="type" type="String" access="public"/>
+    <aura:attribute name="xValue" type="Object" access="private"/>
+    <aura:attribute name="lostFocusTime" type="DateTime" access="private" description="control dropdown showtime"/>
+
+    <!--events-->
+    <aura:registerEvent name="onfilter" type="c:DataTableFilterEvent"/>
+
+    <!--methods-->
+    <aura:method name="showDialog" action="{!c.showDialog}" access="public"/>
+    <aura:method name="hideDialog" action="{!c.hideDialog}" access="public"/>
+
+    <!--body-->
+    <span aura:id="dialog" onmouseleave="{!c.handleMouseLeave}" onmouseenter="{!c.handleMouseEnter}" class="slds-lookup slds-is-close" style="width: 300px">
+        <lightning:buttonIcon iconName="{!if(v.value, 'utility:filter', 'utility:filterList')}" size="x-small" onclick="{!c.showDialog}"/>
+        <div class="slds slds-dropdown slds-dropdown_fluid slds-lookup__menu slds-p-around--x-small">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.type == 'date'}">
+                    <span onkeypress="{!c.handleKeyPress}">
+                        <lightning:input aura:id="input" type="{!v.type}" variant="label-hidden" value="{!v.xValue}" autocomplete="off"/>
+                    </span>
+                    <aura:set attribute="else">
+                        <span onkeypress="{!c.handleKeyPress}">
+                            <lightning:input aura:id="input" type="{!v.type}" variant="label-hidden" value="{!v.xValue}" autocomplete="off"/>
+                        </span>
+                    </aura:set>
+                </aura:if>
+                <lightning:buttonIcon iconName="utility:filterList" title="apply filter" onclick="{!c.applyFilter}"/>
+                <lightning:buttonIcon iconName="utility:clear" title="remove filter" onclick="{!c.removeFilter}"/>
+            </lightning:buttonGroup>
+        </div>
+    </span>
+</aura:component>

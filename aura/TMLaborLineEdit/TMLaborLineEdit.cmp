@@ -1,0 +1,123 @@
+<aura:component extends="c:TMLineEditBase">
+    <td>
+        <span style="display: block;">
+            <c:LookupInput variant="label-hidden" value="{!v.tmLine.Resource_Type__r}" SObjectName="Resource_Type__c"
+                           columns="[{label: 'Name', fieldName: 'Name', style: 'width:250px;'}]"
+                           queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Description__c', 'Unit_of_Measure__r.Hours_UOM__c']"
+                           filter="{!'Category__c=\'' + v.tmLine.Category__c + '\' AND Blocked__c!=TRUE'}"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleResourceTypeChange}"
+                           disabled="{!v.tmLine.Billing_Worksheet_Line__c != null || (v.tm.Status__c == 'Confirmed' &amp;&amp; v.tmLine.Service_Center__r &amp;&amp; v.tmLine.Service_Center__r.Temporary__c != true)}"/>
+        </span>
+        <aura:if isTrue="{!v.tmLine.errorText}">
+            <span class="boxed-error-message">
+                {!v.tmLine.errorText}
+            </span>
+        </aura:if>
+    </td>
+    <td>
+        <c:LookupInput variant="label-hidden" value="{!v.tmLine.Service_Center__r}" SObjectName="Service_Center__c"
+                       columns="[{label: 'Name', fieldName: 'Name', style: 'width:100px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;'}]"
+                       queryFields="['Temporary__c']"
+                       filter="{!if(v.tm.Status__c=='Confirmed', 'Temporary__c=TRUE', '')}"
+                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                       onchange="{!c.handleServiceCenterChange}"
+                       disabled="{!v.tmLine.Billing_Worksheet_Line__c != null || (v.tm.Status__c == 'Confirmed' &amp;&amp; v.tmLine.Service_Center__r &amp;&amp; v.tmLine.Service_Center__r.Temporary__c != true)}"
+                       pageName="TMLine"
+                       relatedRecordId="{!v.tmLine.TM__c}"/>
+    </td>
+    <td>
+        <c:LookupInput variant="label-hidden" value="{!v.tmLine.Resource__r}" SObjectName="Resource__c"
+                       columns="[{label: 'Name', fieldName: 'Name', style: 'width:150px;'}, {label: 'Description', fieldName: 'Description__c', style: 'width:200px;'}, {label: 'Service Center', fieldName: 'Service_Center__r.Name', style: 'width:100px;'}]"
+                       queryFields="['Service_Center__c', 'Service_Center__r.Temporary__c', 'Resource_Type__c', 'Resource_Type__r.Name', 'Resource_Type__r.Description__c', 'Resource_Type__r.Unit_of_Measure__c', 'Resource_Type__r.Unit_of_Measure__r.Name', 'Resource_Type__r.Unit_of_Measure__r.Hours_UOM__c', 'Unit_of_Measure__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                       initialFilter="{!'(Blocked__c!=TRUE OR (End_Date__c != null AND ' + 'End_Date__c >= ' + v.tm.Scheduled_Date__c + ')) AND Category__c=\'' + v.tmLine.Category__c + '\'' +
+                                    if(v.tmLine.Resource_Type__c != null, ' AND Resource_Type__c=\'' + v.tmLine.Resource_Type__c + '\'', '') +
+                                   if(v.tm.Status__c == 'Confirmed', ' AND Service_Center__r.Temporary__c=true', ' AND (Service_Center__c=\'' + v.tmLine.Service_Center__c + '\' OR  Service_Center__r.Name = \'99 - Temp\')')}"
+                       filter="{!'(Blocked__c!=TRUE OR (End_Date__c != null AND ' + 'End_Date__c >= ' + v.tm.Scheduled_Date__c + ')) AND Category__c=\'' + v.tmLine.Category__c + '\'' +
+                                   if(v.tm.Status__c == 'Confirmed', ' AND Service_Center__r.Temporary__c=true', '')}"
+                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                       onchange="{!c.handleResourceChange}"
+                       disabled="{!v.tmLine.Billing_Worksheet_Line__c != null || (v.tm.Status__c == 'Confirmed' &amp;&amp; v.tmLine.Service_Center__r &amp;&amp; v.tmLine.Service_Center__r.Temporary__c != true)}"
+                       pageName="TMLine"
+                       relatedRecordId="{!v.tmLine.TM__c}"/>
+    </td>
+    <td>
+        <lightning:input name="resource-name" variant="label-hidden" value="{!v.tmLine.Resource_Name__c}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null || (v.tm.Status__c == 'Confirmed' &amp;&amp; v.tmLine.Service_Center__r &amp;&amp; v.tmLine.Service_Center__r.Temporary__c != true)}"/>
+    </td>
+    <td>
+        <lightning:input name="description" variant="label-hidden" value="{!v.tmLine.Description__c}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.tm.Sales_Order__r != null &amp;&amp; v.tm.Sales_Order__r.Distance_to_Job_Site__c != null}">
+            <lightning:input type="checkbox" variant="label-hidden" checked="{!v.tmLine.Eligible_Dispatch_from_Home_Pay__c}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+        </aura:if>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Job_Start_Time__c}" onchange="{!c.handleJobTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Site_Start_Time__c}" defaultTime="{!v.tmLine.Job_Start_Time__c}" onchange="{!c.handleSiteTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Site_End_Time__c}" defaultTime="{!v.tmLine.Site_Start_Time__c}" onchange="{!c.handleSiteTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Job_End_Time__c}" defaultTime="{!v.tmLine.Site_End_Time__c}" onchange="{!c.handleJobTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Lunch_Start_Time__c}" defaultTime="12:00:00.000Z" onchange="{!c.handleLunchTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <c:MilitaryTimeInput name="time-field" variant="label-hidden" value="{!v.tmLine.Lunch_End_Time__c}" defaultTime="{!v.tmLine.Lunch_Start_Time__c}" onchange="{!c.handleLunchTimeChange}" datatable="true" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.tmLine.Total_Job_Hours__c}" minimumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:formattedNumber value="{!v.tmLine.Total_Site_Hours__c}" minimumFractionDigits="2"/>
+    </td>
+    <td>
+        <lightning:input type="number" name="quantity" variant="label-hidden" value="{!v.tmLine.Quantity__c}" step="0.01" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+    </td>
+    <td>
+        <aura:if isTrue="{!v.tmLine.Resource_Type__c != null}">
+            <c:LookupInput variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="ResourceTypeUOMAssociation__c"
+                           columns="[{label: 'Name', fieldName: 'Unit_of_Measure__r.Name'}]" queryFields="['Unit_of_Measure__r.Hours_UOM__c']"
+                           filter="{!'Resource_Type__c=\'' + v.tmLine.Resource_Type__c + '\''}"
+                           pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                           onchange="{!c.handleUnitOfMeasure1Change}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.v.tmLine.Resource__c != null}">
+                    <c:LookupInput variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="ResourceUOMAssociation__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}]"
+                                   queryFields="['Facility__c', 'Unit_of_Measure__r.Name', 'Unit_of_Measure__r.Hours_UOM__c']"
+                                   filter="{!'Resource__c=\'' + v.tmLine.Resource__c + '\''}"
+                                   pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                                   onchange="{!c.handleUnitOfMeasure1Change}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+                    <aura:set attribute="else">
+                        <c:LookupInput variant="label-hidden" value="{!v.tmLine.Unit_of_Measure__r}" SObjectName="Unit_of_Measure__c"
+                                       columns="[{label: 'Name', fieldName: 'Name'}]"
+                                       queryFields="['Hours_UOM__c']" filter="Blocked__c!=TRUE"
+                                       pill="{fieldName: 'Name'}" hideLookupGlass="true" datatable="true"
+                                       onchange="{!c.handleUnitOfMeasure3Change}" disabled="{!v.tmLine.Billing_Worksheet_Line__c != null}"/>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </td>
+    <!-- Ticket#19917 Hide Contract Line on T&M
+    <td>
+        <aura:if isTrue="{!v.tmLine.Contract_Line__c}">
+            <lightning:formattedUrl label="{#v.tmLine.Contract_Line__r.Name}" value="{#'/' + v.tmLine.Contract_Line__c}" target="_blank"/>
+        </aura:if>
+    </td>
+    -->
+    <!--
+    <td>
+        <lightning:input type="checkbox" checked="{!v.tmLine.Invoiced__c}" disabled="true"/>
+    </td>
+    <td>
+        {!v.tmLine.Parent_Line__r.Line_No__c}
+    </td>
+    -->
+</aura:component>

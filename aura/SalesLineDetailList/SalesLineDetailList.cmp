@@ -1,0 +1,109 @@
+<aura:component controller="ACVSalesLineController" extends="c:SalesOrderBase">
+    <!--attributes-->
+    <aura:attribute name="salesLine" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="calculateSalesLineEvent" event="c:CalculateSalesLineEvent" action="{!c.recalculate}"/>
+    <aura:handler name="salesDetailLineCopyTimeEvent" event="c:CopyTimeEvent" action="{!c.copyTimes}" />
+
+    <!--body-->
+    <lightning:card title="Schedules" class="slds-card_boundary" iconName="standard:poll">
+        <aura:set attribute="actions">
+            <!--
+            <lightning:button label="Explode" onclick="{!c.explode}"/>
+            <lightning:button label="Recalculate" onclick="{!c.recalculate}"/>
+			-->
+        </aura:set>
+
+        <p class="slds-p-horizontal_small" style="overflow-x: scroll;">
+            <aura:if isTrue="{!v.salesLine != null}">
+                <lightning:layout >
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Actions" />
+                    </lightning:layoutItem>
+                    <!--equipment schedule lines-->
+                    <aura:if isTrue="{!v.salesLine.Category__c == 'Labor'}">
+                    <!--equipment schedule lines-->
+                    <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-15': 'width-11'}"><!--ticket 77603-->
+                        <lightning:formattedText value="Scheduled Date"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+                        <lightning:formattedText value="Start Time"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+                        <lightning:formattedText value="End Time"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Quantity"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="UOM Qty."/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Unit of Measure"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Regular Hours"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Overtime Hours"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Double Time Hours"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Line Amount"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" size="1">
+                        <lightning:formattedText value="Line Cost"/>
+                    </lightning:layoutItem>
+                    <!--equipment schedule lines-->
+                    </aura:if>
+                    <aura:if isTrue="{!v.salesLine.Category__c == 'Equipment'}">
+                        <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-15': 'width-11'}"><!--ticket 77603-->
+                            <lightning:formattedText value="Scheduled Date"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+                            <lightning:formattedText value="Start Time"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1" class="{!v.salesLine.Sales_Child_Lines__r &amp;&amp; v.salesLine.Sales_Child_Lines__r.records? 'width-11': 'width-9'}"><!--ticket 77603-->
+                            <lightning:formattedText value="End Time"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <lightning:formattedText value="Quantity"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <lightning:formattedText value="UOM Qty."/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <lightning:formattedText value="Unit of Measure"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <lightning:formattedText value="Line Amount"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <lightning:formattedText value="Line Cost"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="2">
+                        </lightning:layoutItem>
+                    </aura:if> 
+                    <!--equipment schedule lines-->
+
+                </lightning:layout>
+
+                <!--fix.null.fields-->
+                <!--
+                <aura:iteration items="{!v.salesLine.Sales_Line_Details__r}" var="salesLineDetail" indexVar="index">
+                -->
+                <!--fix.null.fields-->
+                <aura:iteration items="{!v.salesLine.Sales_Line_Details__r.records}" var="salesLineDetail" indexVar="index">
+                    <!--equipment schedule line-->
+                    <!--<c:SalesLineDetailLine salesLineDetail="{!salesLineDetail}" disabled="{!v.salesOrder.Document_Status__c == 'Closed'}"/>-->
+                    <c:SalesLineDetailLine rowIndex="{!index}" salesLine="{!v.salesLine}" salesLineDetail="{!salesLineDetail}" disabled="{!v.salesOrder.Document_Status__c == 'Closed' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || (v.salesOrder.Allow_Edit__c != true &amp;&amp; v.salesOrder.Id != null)}"/>
+                    <!--equipment schedule line-->
+                </aura:iteration>
+            </aura:if>
+        </p>
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="BillingWorksheetLineDeleteEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+</aura:event>

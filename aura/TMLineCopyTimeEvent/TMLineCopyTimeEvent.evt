@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="TMLineCopyTimeEvent">
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="tmLine" type="Object" access="public"/>
+</aura:event>

@@ -1,0 +1,104 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+-->
+<aura:component extends="c:SalesOrderBase" implements="lightning:hasPageReference,force:hasRecordId,flexipage:availableForAllPageTypes,lightning:actionOverride,force:lightningQuickAction" access="global">
+    <!--attributes-->
+    <aura:attribute name="valid" type="Boolean" default="true" access="private"/>
+    <!--ticket 19130-->
+    <aura:attribute name="selectedTabId" type="String" default="tab0" access="private"/>
+    <!--ticket 19130-->
+    <aura:attribute name="modelPromise" type="Aura.Component"/>
+    <!--<aura:attribute name="modelCreatePromise" type="Aura.Component"/>
+    <lightning:overlayLibrary aura:id="overlayLibCreateSalesOrder" />-->
+    
+    <aura:attribute name="soType" type="Object" default="" access="public"/>	<!--US114833-->
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.handlePageChange}"/>
+
+    <!--overlayLibrary-->
+    <lightning:overlayLibrary aura:id="overlayLib" />
+    <lightning:messageChannel aura:id="messageChannel" type="GeneratorMessageChannel__c" scope="APPLICATION" onMessage="{!c.handleMessage}" />
+    <lightning:messageChannel aura:id="messageChannel" type="BillingProjectLookupMessageChannel__c" scope="APPLICATION" onMessage="{!c.handleBillingProjectLookupMessage2}" />
+    <!--  this tag sets modal width -->
+    <aura:html tag="style">
+        .slds-modal__container { min-width: 70vw; }
+    </aura:html>   
+    <!--body--> 
+    <lightning:card title="{!if(v.salesOrder.Name != null, v.salesOrder.Name + ' - ' + v.salesOrder.Bill_to_Customer_No__r.Name, 'New ' + v.salesOrder.Document_Type__c)}">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <lightning:button label="Cancel" variant="neutral" onclick="{!c.doCancel}"/>
+                <aura:if isTrue="{!v.salesOrder.Document_Status__c == 'Open'}">
+                    <!--before-save calculation-->
+                    <lightning:button label="Calculate" variant="neutral" onclick="{!c.calculateAll}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}"/>
+                    <lightning:button label="Save" variant="brand" onclick="{!c.doSave}" disabled="{!v.salesOrder.Document_Status__c != 'Open' || v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true}"/>
+                    <!--before-save calculation-->
+                </aura:if>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <p class="slds-p-horizontal_small">
+            <!--pending approval quote-->
+            <aura:if isTrue="{!v.salesOrder.Approval_Status__c == 'Pending_Approval' || v.salesOrder.Expired__c == true || v.salesOrder.Blocked__c == true}">
+                <div class="slds-align_absolute-center"> 
+                <lightning:icon iconName="utility:warning" size="medium" class="slds-p-right_x-small icon-color"/>
+                <span class="slds-text-heading_medium slds-text-color_error" style="font-weight: bold;">
+                    <aura:if isTrue="{!v.salesOrder.Approval_Status__c == 'Pending_Approval'}">
+                        Pending Approval
+                    </aura:if>
+                    <aura:if isTrue="{!v.salesOrder.Expired__c == true}">
+                        Quote Expired
+                    </aura:if>
+                    <aura:if isTrue="{!v.salesOrder.Blocked__c == true}">
+                        This Sales Quote has been blocked. Please create a new Sales Quote and submit for approval
+                    </aura:if>
+                </span>
+                </div>
+            </aura:if>
+            <!--pending approval quote-->
+            <!-- Ticket#20977 -->
+            <aura:if isTrue="{!v.salesOrder.Service_Center__r.Subsidiary_Company__c != v.salesOrder.Bill_to_Customer_No__r.Subsidiary_Company__c}">
+                <div class="slds-align_absolute-center">
+                    <lightning:icon iconName="utility:warning" size="medium" class="slds-p-right_x-small icon-color" />
+                    <span class="slds-text-heading_medium slds-text-color_error" style="font-weight: bold;">
+                        Service Center subsidiary company does not match to Bill-to Customer subsidiary!
+                    </span>
+                </div>
+            </aura:if>
+            <!-- Ticket#20977 -->
+            <!--ticket 19130-->
+            <!--<c:Tabset aura:id="tabset" selectedTabId="tab0">-->
+            <c:Tabset aura:id="tabset" selectedTabId="{!v.selectedTabId}" onchange="{!c.handleTabChange}">
+            <!--ticket 19130-->
+                <c:Tab id="tab0" label="Order Information" iconName="standard:survey">
+                    <c:SalesOrderOrderInformation aura:id="step" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}" accountExecutiveIds="{!v.accountExecutiveIds}" soType="{!v.soType}"/>
+                </c:Tab>
+                <c:Tab id="tab1" label="Assumptions &amp; Contingencies" iconName="standard:entitlement">
+                    <c:SalesOrderAssumptions aura:id="step" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </c:Tab>
+                <c:Tab id="tab2" label="Billing Address" iconName="standard:address">
+                    <c:SalesOrderBillingInformation aura:id="step" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}" billToContacts="{!v.billToContacts}" billingProjectName="{!v.billingProjectName}" isBillingProjectVisible ="{!v.isBillingProjectVisible}"/>
+                </c:Tab>
+                <c:Tab id="tab3" label="Site Information" iconName="standard:store_group">
+                    <c:SalesOrderSiteInformation aura:id="step" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </c:Tab>
+                <c:Tab id="tab4" label="Instructions" iconName="standard:work_order_item">
+                    <c:SalesOrderInstructions aura:id="step" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" setupData="{!v.setupData}"/>
+                </c:Tab>
+
+                <c:Tab id="tab5" label="Sales Lines" iconName="utility:rows">
+                    <lightning:layout multipleRows="true">
+                        <aura:if isTrue="{!v.salesOrder.Id != null}">
+                            <lightning:layoutItem size="12" padding="around-small">
+                                <c:SalesLineList aura:id="sales-lines" title="Labor" salesOrder="{!v.salesOrder}" jobTaskWrappers="{!v.jobTaskWrappers}" nextJobTaskLineNo="{!v.nextJobTaskLineNo}" nextSalesLineNo="{!v.nextSalesLineNo}" setupData="{!v.setupData}" unsavedChanges="{!v.unsavedChanges}"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+                    </lightning:layout>
+                </c:Tab>
+            </c:Tabset>
+        </p>
+    </lightning:card>
+    <div style="height:15px;"/>
+</aura:component>

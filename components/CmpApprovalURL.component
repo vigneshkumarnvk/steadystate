@@ -1,0 +1,8 @@
+<!--
+ - Created by Steven on 5/2/2018.
+ -->
+
+<apex:component id="CmpApprovalURL" controller="CmpApprovalURL" access="global">
+    <apex:attribute name="objId" description="Object Id" type="Id" assignTo="{!recId}" />
+    <a href="{!urlStr}">Click here to approve or reject request.</a>
+</apex:component>

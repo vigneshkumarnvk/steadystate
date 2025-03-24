@@ -1,0 +1,15 @@
+<aura:component controller="ACVSalesInvoiceLineController" extensible="true" extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="index" type="Integer" access="public" description="needed for calling datatable.refreshTable"/>
+    <aura:attribute name="salesInvoiceLine" type="Object" access="public"/>
+    <aura:attribute name="salesInvoice" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapperIndex" type="Integer" access="public"/>
+    <aura:attribute name="setupData" type="Object" access="public"/>
+
+    <!--events-->
+    <aura:registerEvent name="salesInvoiceLineDeleteEvent" type="c:SalesInvoiceLineDeleteEvent"/>
+
+    <!--body-->
+    {!v.body}
+</aura:component>

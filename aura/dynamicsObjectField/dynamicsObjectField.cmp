@@ -1,0 +1,12 @@
+<aura:component>
+    <!--attribute-->
+	<aura:attribute name="oRecord" type="sObject" />
+    <aura:attribute name="fieldName" type="String"/>
+    <aura:attribute name="fieldValue" type="String"/>
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+                  
+    <!--body-->
+    <div class="slds-truncate" title="{!v.fieldName}">{!v.fieldValue}</div>
+</aura:component>

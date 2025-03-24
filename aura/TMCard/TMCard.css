@@ -1,0 +1,12 @@
+.THIS textarea {
+    height: 110px;
+}
+.THIS .container {
+    height: calc(100vh - 125px);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.THIS .scroller-size {
+    height: 100%;
+}

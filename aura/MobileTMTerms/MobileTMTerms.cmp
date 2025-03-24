@@ -1,0 +1,139 @@
+<aura:component extends="c:MobileTMBase">
+    <!--attributes-->
+    <aura:attribute name="salesOrderId" type="Id" required="true" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--ticket 24171-->
+    <aura:if isTrue="{!v.salesOrderId}">
+        <!--ticket 24171-->
+        <lightning:card>
+            <p class="slds-p-horizontal--small">
+            <ul class="slds-list--dotted">
+                <aura:if isTrue="{!v.salesOrder.Any_Deviations__c == true}">
+                    <!--
+                    <li>This quoted estimate is provided based upon information provided by or gathered at customer’s location. Any deviations from this quotation will be invoiced based upon actual labor, materials, and/or disposal services provided by Republic Services and will be billed at a time and materials basis.</li>
+                    -->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt1__c == null ? 'This quoted estimate is provided based upon information provided by or gathered at customer’s location. Services provided will be charged at no less than the estimate. Charges incurred that exceed the cost estimate will be invoiced based upon actual labor, materials, and/or disposal services provided by Republic Services and will be billed at a time and materials basis.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt1__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Shippable_Containers__c == true}">
+                    <!--
+                    <li>This quotation is contingent upon customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers.</li>
+                    -->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt2__c == null ? 'This Quote is contingent upon Customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt2__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.First_Hour_Of_Loading__c == true}">
+                    <!-- <li>The first hour of loading/unloading is at no charge; thereafter, demurrage rates apply at $126.00 / hr.</li> -->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c == null ? 'The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt3__c}</li>
+                </aura:if>
+                <!-- Ticket#24559
+                <aura:if isTrue="{!v.salesOrder.Overtime_Rate_Description__c == true}">
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c == null ? 'An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, President\'s Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c}</li>
+                </aura:if>
+                -->
+                <aura:if isTrue="{!AND(v.salesOrder.Overtime_Rate_Description__c == true, v.salesOrder.Default_Billing_Rule_To_Display__c == 'PortalBasisAdv')}">
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c == null ? 'An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, President\'s Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!AND(v.salesOrder.Overtime_Rate_Description__c == true, v.salesOrder.Default_Billing_Rule_To_Display__c == '')}">
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c == null ? 'An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, Birthday of Martin Luther King, Jr., President\'s Day, Memorial Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving Day, The day after Thanksgiving, Christmas Eve, and Christmas Day.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt4__c}</li>
+                </aura:if>
+                <!-- Ticket#24559 -->
+                <aura:if isTrue="{!v.salesOrder.Rate_Time_Definitions__c == true}">
+                    <!--<li>Rate Time Definitions a. The day rate, where applicable, is defined as twelve hours. b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in theRate sheet for an item, it will be calculated as the Day Rate divided by 12.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt5__c == null ? 'Rate Time Definitions a. The day rate, where applicable, is defined as twelve hours. b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in the Rate sheet for an item, it will be calculated as the Day Rate divided by 12.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt5__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Charges_For_Labor__c == true}">
+                    <!--<li>Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job, for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment. This includes onsite and offsite labor and equipment.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt6__c == null ? 'Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job, for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment. This includes onsite and offsite labor and equipment.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt6__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Term_Conditions_Opt20__c == true}">
+                    <!--<li>Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job, for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment. This includes onsite and offsite labor and equipment.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt20__c == null ? 'Bundled rate is based upon our best estimate of project duration inclusive of labor, equipment, and materials. Charges incurred that exceed the cost estimate will be billed to the Client in half day increments.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt20__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Waste_Disposal_And_Ancillary__c == true}">
+                    <!--<li>Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste); Ancillary supplies required and used will be billed in accordance with Republic Services standard rates sheet.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt7__c == null ? 'Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste); Ancillary supplies required and used will be billed in accordance with Republic Services standard rates sheet.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt7__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Characterization_Of_Waste__c == true}">
+                    <!--<li>This quotation is based on the generator’s characterization of the waste and the Republic Services assigned Process Code. Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt8__c == null ? 'This Quoteis based on the generator’s characterization of the waste and the Republic Services assigned Process Code. Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt8__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Generate_Before_Final__c == true}">
+                    <!--<li>The invoice for work referenced above may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt9__c == null ? 'The invoice for work referenced above may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt9__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Lab_Packs_Rate__c == true}">
+                    <!--<li>Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material; Republic Services may furnish a separate quotation for any high-hazard work, if requested. Republic Services reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt10__c == null ? 'Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material; Republic Services may furnish a separate quotation for any high-hazard work, if requested. Republic Services reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt10__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Cylinders_Require_Evaluation__c == true}">
+                    <!--<li>Cylinders require evaluation and approval by an authorized Republic Services representative prior to shipment. Cylinders must be in DOT shippable condition, be marked with original stenciling, labels and/or tags, and valves must be operational. Cylinders not meeting Republic Services approval and the aforementioned conditions may be subject to additional charges.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt11__c == null ? 'Cylinders require evaluation and approval by an authorized Republic Services representative prior to shipment. Cylinders must be in DOT shippable condition, be marked with original stenciling, labels and/or tags, and valves must be operational. Cylinders not meeting Republic Services approval and the aforementioned conditions may be subject to additional charges.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt11__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Manifest_And_Profile__c == true}">
+                    <!--<li>Manifest and Profile preparation require a $25.00 dollar fee for the first waste product. An additional $5.00 dollar will be incurred for each additional waste product up to four total waste products per manifest or Bill of Lading. In addition, profile fees from disposal facilities are charged at invoice cost plus 30%.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c == null ? 'A manifest fee of $20.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt12__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Net_Due_Day__c == true}">
+                    <!--<li>Net due ' + so.Payment_Term__r.Name + ' days with prior credit approval unless modified by executed purchase order or contract. Finance charges of one and one half (1.5) percent per month will be due on payments past due after thirty days from date of invoice.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt13__c == null ? 'Net due ' + v.salesOrder.Payment_Term__r.Name + ' days with prior credit approval unless modified by executed purchase order or contract. Finance charges of one and one half (1.5) percent per month will be due on payments past due after thirty days from date of invoice.' : 'Net due ' + v.salesOrder.Payment_Term__r.Name + ' ' + v.salesOrder.Service_Center__r.Term_Conditions_Opt13__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Applicable_Taxes_Quote__c == true}">
+                    <!--<li>Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt14__c == null ? 'Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt14__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Client_Is_Responsible__c == true}">
+                    <!--<li>Client is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary. Said charges will be at Republic Services standard T&amp;M rates and disposal cost plus 30%.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt15__c == null ? 'Client is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary. Said charges will be at Republic Services standard T&amp;M rates and disposal cost plus 30%.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt15__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.In_The_Event__c == true}">
+                    <!--<li>In the event legal or other action is required to collect unpaid invoice balances, Customer agrees to pay all costs of collection, including reasonable attorneys\' fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt16__c == null ? 'In the event legal or other action is required to collect unpaid invoice balances, Customer agrees to pay all costs of collection, including reasonable attorneys\' fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt16__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Quote_Valid_30__c == true}">
+                    <!--<li>This Quotation is valid for 30 days. Pricing is based on the current market capacity, conditions, and Government regulations. If a significant market-wide pricing, capacity or regulatory change affects our pricing, this quotation is subject to change.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt17__c == null ? 'This Quote is valid for 30 days. Pricing is based on the current market capacity, conditions, and Government regulations. If a significant market-wide pricing, capacity or regulatory change affects our pricing, this quote is subject to change.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt17__c}</li>
+                </aura:if>
+                <aura:if isTrue="{!v.salesOrder.Unless_Superseded__c == true}">
+                    <!--<li>Unless superseded by a fully executed agreement with terms that conflict, additional terms &amp; conditions located at https://www.acvenviro.com/terms-and-conditions/ are hereby incorporated by reference and are agreed to and acknowledged by customer.</li>-->
+                    <li>{!v.salesOrder.Service_Center__r.Term_Conditions_Opt18__c == null ? 'Unless superseded by a fully executed agreement with terms that conflict, additional terms &amp; conditions located at https://www.republicservices.com/cms/documents/Environmental-Solutions/Environmental-Services-Terms-Conditions.pdf are hereby incorporated by reference and are agreed to and acknowledged by customer.' : v.salesOrder.Service_Center__r.Term_Conditions_Opt18__c}</li>
+                </aura:if>
+            </ul>
+            </p>
+        </lightning:card>
+        <!--ticket 24171-->
+        <aura:set attribute="else">
+            <lightning:card title="Terms &amp; Conditions">
+                <p class="slds-p-horizontal_small">
+                <ul class="slds-list--dotted">
+                    <li>This quoted estimate is provided based upon information provided by or gathered at customer’s location. Services provided will be charged at no less than the estimate. Charges incurred that exceed the cost estimate will be invoiced based upon actual labor, materials, and/or disposal services provided by Republic Services and will be billed at a time and materials basis.</li>
+                    <li>This Quote is contingent upon Customer providing free and easy access to the work area. Drums/containers must be in DOT shippable containers.</li>
+                    <li>The first 15 minutes of loading/unloading is at no charge; thereafter, demurrage rates apply at $195.00 / hr.</li>
+                    <!-- Ticket#24559 -->
+                    <!-- <li>An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:30pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year's Day, President's Day, Memorial Day, Independence Day, Labor Day, Thanksgiving Day, The day after Thanksgiving, and Christmas Day.</li> -->
+                    <li>An overtime rate of 1.5 times the listed rate will be charged for hours worked over 8 hours in a day, all hours before 7:00 am, after 3:00pm, on weekdays and all day Saturday. Double time will apply to all hours worked on Sunday and Republic Services Holidays. Republic Services Holidays include: New Year\'s Day, Birthday of Martin Luther King, Jr., President\'s Day, Memorial Day, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving Day, The day after Thanksgiving, Christmas Eve, and Christmas Day.</li>
+                    <!-- Ticket#24559 -->
+                    <li>Rate Time Definitions <br/>a. The day rate, where applicable, is defined as twelve hours. <br/>b. After 12 hours and up to 24 hours, the Hourly Rate will apply. If no Hourly Rate is stated in the Rate sheet for an item, it will be calculated as the Day Rate divided by 12.</li>
+                    <li>Charges for labor and equipment will be invoiced on a portal to portal basis from start to completion of the job, for loading and unloading and mobilization and demobilization of equipment and materials. Minimum call out time is four hours per person and per piece of equipment. This includes onsite and offsite labor and equipment.</li>
+                    <li>Bundled rate is based upon our best estimate of project duration inclusive of labor, equipment, and materials. Charges incurred that exceed the cost estimate will be billed to the Client in half day increments.</li>
+                    <li>Waste disposal and/or ancillary supplies not listed on this quote will be quoted after a representative sample is obtained and an approved TSDF is located (for waste); Ancillary supplies required and used will be billed in accordance with Republic Services standard rates sheet.</li>
+                    <li>This Quote is based on the generator’s characterization of the waste and the Republic Services assigned Process Code. Waste materials that are received and do not conform to the assigned Process Code may be subject to re-coding and correction of charges.</li>
+                    <li>The invoice for work referenced above may be generated before final disposal information has been received. If your waste is classified as off-specification upon receipt, you will be notified, and an additional invoice will be generated for any unexpected costs.</li>
+                    <li>Lab packs rates do not include explosives, potentially explosive, radioactive, temperature sensitive or infectious material; Republic Services may furnish a separate quotation for any high-hazard work, if requested. Republic Services reserves the right to decline receipt of any material that cannot be disposed of in a lawful manner or if no legal disposal options exist.</li>
+                    <li>Cylinders require evaluation and approval by an authorized Republic Services representative prior to shipment. Cylinders must be in DOT shippable condition, be marked with original stenciling, labels and/or tags, and valves must be operational. Cylinders not meeting Republic Services approval and the aforementioned conditions may be subject to additional charges.</li>
+                    <li>A manifest fee of $25.00 per manifest will be added to each invoice. Any additional fees from disposal facilities are charged at invoice cost plus 30%.</li>
+                    <li>Applicable Taxes, including local, state and federal taxes and/ or fees are not included in the quoted rates and will be applied to each invoice as applicable.</li>
+                    <li>Client is responsible for time, material, and disposal charges to decontaminate utilized equipment if necessary. Said charges will be at Republic Services' standard T&amp;M rates and disposal cost plus 30%.</li>
+                    <li>In the event legal or other action is required to collect unpaid invoice balances, Customer agrees to pay all costs of collection, including reasonable attorneys' fees and agrees to the laws, jurisdiction, and venue of the state of New Jersey.</li>
+                    <li>This Quote is valid for 30 days. Pricing is based on the current market capacity, conditions, and Government regulations. If a significant market-wide pricing, capacity or regulatory change affects our pricing, this quote is subject to change.</li>
+                    <li>Unless superseded by a fully executed agreement with terms that conflict, additional terms &amp; conditions located at https://www.republicservices.com/cms/documents/Environmental-Solutions/Environmental-Services-Terms-Conditions.pdf are hereby incorporated by reference and are agreed to and acknowledged by customer.</li>
+                    <li>Decon performed on-site at rates listed, special rates may apply under listed conditions. Decon performed off-site will be charged a $200.00 Rinse Out Fee. This fee will be added to each job per use for each piece of vacuum equipment and all non-lined waste storage equipment (Frac Tanks, Vac Boxes, Filter Boxes, Roll Off Containers, Etc.) coming into contact with light oils or other contaminates. Charges for the removal of heavy oils, solids or equipment cleaning requiring a confined space entry will be quoted on a case by case basis.</li>
+                </ul>
+                </p>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+    <!--ticket 24171-->
+</aura:component>

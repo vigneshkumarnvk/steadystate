@@ -1,0 +1,73 @@
+<aura:component>
+	<!-- attributes -->
+    <aura:attribute name="title" type="String" access="private"/>
+    <aura:attribute name="message" type="String" access="private"/>
+    <aura:attribute name="componentName" type="String" access="private"/>
+    <aura:attribute name="buttons" type="List" access="private"/>
+    <aura:attribute name="size" type="String" default="medium" access="private"/>
+    <aura:attribute name="xButton" type="Boolean" access="private"/>
+    <aura:attribute name="closeCallback" type="Object" access="private"/>
+    <aura:attribute name="shiftY" type="String" access="private" default="shift y axis"/>
+
+    <!-- methods -->
+   	<aura:method name="open" action="{!c.openModal}">
+    	<aura:attribute name="title" type="String"/>
+        <aura:attribute name="message" type="String"/>
+		<aura:attribute name="buttons" type="List"/>
+    	<aura:attribute name="componentName" type="String"/>
+        <aura:attribute name="params" type="Object"/>
+        <aura:attribute name="size" type="String"/>
+        <aura:attribute name="xButton" type="Boolean"/>
+        <aura:attribute name="closeCallback" type="Object"/>
+        <aura:attribute name="shiftY" type="String"/>
+    </aura:method>
+    <aura:method name="close" action="{!c.closeModal}"/>
+    <aura:method name="clear" action="{!c.clearModal}"/>
+
+    <!-- instead of using display property of css, use aria-hidden from HTML5 -->
+    <!--body-->
+
+    <div aura:id="modal" aria-hidden="false" aria-modal="true" role="dialog" class="modal slds-modal slds-fade-in-close" style="display: flex;justify-content: center;">
+        <div aura:id="modal-container" class="slds-modal__container slds-modal--prompt" style="{!if(v.shiftY != null, 'padding-top: ' + v.shiftY, '')}">
+            <header class="slds-modal__header">
+                <aura:if isTrue="{!v.xButton == true}">
+                    <button class="slds-button slds-button_icon slds-modal__close" style="display:block !important;  transform: translateX(-10px);" title="Close" onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="medium" variant="inverse"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </aura:if>
+                <h2 id="modal-heading-01" class="slds-text-heading_small slds-hyphenate">{!v.title}</h2>
+         	</header>
+
+            <div aura:id="content" class="slds-modal__content">
+                <!--message-->
+                <aura:if isTrue="{!v.message != null}">
+                    <div class="slds-m-around_small" style="text-align:center;">
+                        <aura:unescapedHtml value="{!v.message}"/>
+                    </div>   
+                </aura:if>
+                <!--dynamic component here-->
+                <aura:if isTrue="{!v.componentName != null}">
+                    <!--<div aura:id="container" style="height:100%;"/>-->
+                    <div aura:id="container" style=""/>
+                </aura:if>
+            </div>
+
+            <aura:if isTrue="{!v.buttons != null}">
+                <div class="slds-modal__footer">
+                    <lightning:layout horizontalAlign="space">
+                        <aura:iteration items="{!v.buttons}" var="button">
+                            <lightning:layoutItem>
+                                <div aura:id="buttonContainer">
+                                	<lightning:button label="{!button.label}" variant="{!button.variant}" value="{!button.action}" onclick="{!c.handleButtonClick}"/>
+                                </div>
+                            </lightning:layoutItem>
+                        </aura:iteration>
+                    </lightning:layout>
+                </div>
+            </aura:if>
+        </div> 
+    </div>
+    
+    <div aura:id="backdrop" class="slds-backdrop slds-backdrop--close"></div>
+</aura:component>

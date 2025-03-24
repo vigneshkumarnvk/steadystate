@@ -1,0 +1,11 @@
+<aura:component description="FormattedDate">
+    <aura:attribute name="value" type="Time" access="public"/>
+    <aura:attribute name="format" type="String" access="public"/>
+    <aura:attribute name="displayValue" type="String" default="" access="private"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.doInit}"/>
+
+    {!v.displayValue}
+</aura:component>

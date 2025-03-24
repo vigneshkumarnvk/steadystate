@@ -1,0 +1,68 @@
+<aura:component controller="StagingContactController" extends="c:CustomerPortalBase" access="global">
+    <aura:attribute name="recordId" type="Id" access="public"/>
+    <aura:attribute name="contact" type="Object" default="{}" access="public"/>
+    <aura:attribute name="message" type="String" access="public"/>
+    <aura:attribute name="changesPending" type="Boolean" access="private"/>
+    <aura:attribute name="lastUpdateInfo" type="String" access="private"/> 
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.contact}" action="{!c.handleDataChange}"/>
+    
+    <!--body-->
+    <lightning:card title="Your Contact Information" class="slds-card_boundary">
+        <aura:set attribute="actions">
+            <span style="font-size:20px;color:darkred;margin:10px;">{!v.message}</span>
+            <lightning:buttonGroup>
+                <lightning:button label="Confirm" variant="brand" onclick="{!c.saveContact}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+        
+        <p class="slds-p-horizontal_small">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input aura:id="verify-information" type="checkbox" label="I verify this information is correct." checked="{!v.contact.Verify_Information__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <aura:if isTrue="{!v.lastUpdateInfo != null}">
+                        <lightning:badge label="{!v.lastUpdateInfo}"/>
+                    </aura:if>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input aura:id="first-name" label="First Name" value="{!v.contact.First_Name__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input label="Middle Name" value="{!v.contact.Middle_Name__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input aura:id="last-name" label="Last Name" value="{!v.contact.Last_Name__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:textarea aura:id="street" label="Street" value="{!v.contact.Street__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input aura:id="city" label="City" value="{!v.contact.City__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <c:PicklistInput aura:id="state" label="State" value="{!v.contact.State__c}" SObjectName="Staging_Contact__c" fieldName="State__c" controllingValue="{!v.contact.Country__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <c:PicklistInput aura:id="country" label="Country" value="{!v.contact.Country__c}" SObjectName="Staging_Contact__c" fieldName="Country__c" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input aura:id="postal-code" label="Postal Code" value="{!v.contact.Postal_Code__c}" required="true" messageWhenValueMissing="This field is mandatory"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input label="Phone" value="{!v.contact.Phone__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:input label="Email" value="{!v.contact.Email__c}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:textarea label="Customer Notes" value="{!v.contact.Notes__c}" placeholder="Please enter your comment here."/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </p>
+    </lightning:card>
+</aura:component>

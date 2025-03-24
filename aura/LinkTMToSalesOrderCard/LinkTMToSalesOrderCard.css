@@ -1,0 +1,11 @@
+.THIS .label-hidden > label {
+    display: none;
+}
+.THIS .header {
+    background-color: #FAFAF9;
+    border-top: 1px solid rgb(221, 219, 218);
+    border-bottom: 1px solid rgb(221, 219, 218);
+    color: #514F4D;
+    font-weight: var(--lwc-fontWeightBold,700);
+    padding: 4px;
+}

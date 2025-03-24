@@ -1,0 +1,68 @@
+<aura:component description="TMFlatPayCard" extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="flatPay" type="Object" default="{}" access="public"/>
+    <aura:attribute name="laborLines" type="List" default="[]" access="public"/>
+
+    <aura:attribute name="isVisible" type="Boolean" default="true" access="private" description="use to control validation error message clear"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="create">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card title="">
+        <p class="slds-p-horizontal--small">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <aura:if isTrue="{!v.isVisible}">
+                        <c:LookupInput aura:id="rate-type" label="Flat Rate Type" value="{!v.flatPay.Flat_Rate_Type__r}"
+                                       SObjectName="Flat_Rate_Type__c"
+                                       columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Rate', fieldName: 'Rate__c'}]"
+                                       queryFields="['Misc_Charge_Resource__c', 'Misc_Charge_Resource__r.Name', 'Misc_Charge_Resource__r.Description__c', 'Misc_Charge_Resource__r.Unit_of_Measure__c', 'Misc_Charge_Resource__r.Unit_of_Measure__r.Name']"
+                                       pill="{iconName: 'utility:picklist_type', fieldName: 'Name'}" onchange="{!c.handleFlatRateTypeChange}" required="true"/>
+                    </aura:if>
+                </lightning:layoutItem>
+                <!-- disabled. this is for phase 2-->
+                <!--
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <c:LookupInput label="Misc. Charge Item" value="{!v.flatPay.Misc_Charge_Resource__r}"
+                                   SObjectName="Resource__c"
+                                   columns="[{label: 'Name', fieldName: 'Name'}]" pill="{iconName: 'custom:custom6', fieldName: 'Name'}"
+                                   queryFields="[Unit_of_Measure__c', 'Unit_of_Measure__r.Name']"
+                                   filter="Category__c='Misc. Charges And Taxes' AND Blocked__c != TRUE"
+                                   onchange="{!c.handleMiscChargeResourceChange}" disabled="true"/>
+                </lightning:layoutItem>
+                -->
+                <lightning:layoutItem size="6" padding="horizontal-small">
+                    <lightning:input aura:id="rate" type="number" label="Rate" value="{!v.flatPay.Rate__c}" step="0.01" required="true"/>
+                </lightning:layoutItem>
+                <!-- disabled. this is for phase 2-->
+                <lightning:layoutItem size="12" padding="horizontal-small">
+                    <p class="slds-p-top--medium">
+                        <c:DataTable items="{!v.laborLines}" var="labor">
+                            <aura:set attribute="template">
+                                <c:DataColumn label="Labor Type">
+                                    {!labor.Resource_Type__r.Name}
+                                </c:DataColumn>
+                                <c:DataColumn label="Service Center">
+                                    {!labor.Service_Center__r.Name}
+                                </c:DataColumn>
+                                <c:DataColumn label="Labor">
+                                    {!labor.Resource__r.Name}
+                                </c:DataColumn>
+                                <c:DataColumn label="Labor Name">
+                                    {!labor.Resource_Name__c}
+                                </c:DataColumn>
+                            </aura:set>
+                        </c:DataTable>
+                    </p>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+        </p>
+    </lightning:card>
+</aura:component>

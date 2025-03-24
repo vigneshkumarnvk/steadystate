@@ -1,0 +1,27 @@
+<aura:component>
+    <aura:attribute name="name" type="String" default="" description="" access="public"/>
+    <aura:attribute name="label" type="String" default="" description="" access="public"/>
+    <aura:attribute name="value" type="String" default="" description="" access="public"/>
+    <aura:attribute name="xValue" type="String" default="" description="" access="public"/>
+    <aura:attribute name="required" type="Boolean" default="false" access="public"/>
+    <!--<aura:attribute name="onchange" type="Aura.Action" access="public"/>-->
+    <aura:attribute name="onfocus" type="Aura.Action" access="public"/>
+    <aura:attribute name="options" type="Object" default="" description="" access="private"/>
+
+    <!--events-->
+    <aura:registerEvent name="onchange" type="c:InputTimeChangeEvent"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+
+    <!--methods-->
+    <aura:method name="focus" action="{!c.focus}"/>
+
+    <lightning:select aura:id="input" label="{!v.label}" value="{!v.xValue}" onchange="{!c.handleTimeChange}" onfocus="{!v.onfocus}" required="{!v.required}" class="slds-dropdown-length-150">
+        <option></option>
+        <aura:iteration items="{!v.options}" var="option">
+            <option value="{!option.value}" selected="{!option == v.xValue}">{!option.label}</option>
+        </aura:iteration>
+    </lightning:select>
+</aura:component>

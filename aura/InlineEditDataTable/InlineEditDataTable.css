@@ -1,0 +1,86 @@
+.THIS {
+}
+
+
+.THIS .table-border-collapse {
+    border-collapse: collapse !important;
+}
+
+.THIS tbody {
+    transform: none;
+}
+
+.THIS td {
+    position: initial;
+}
+
+.THIS .inline-edit {
+    background-color: aliceblue;
+}
+
+.THIS.horizontal-scroll {
+    overflow-x: auto;
+}
+
+.THIS.vertical-scroll {
+    overflow-y: auto;
+}
+
+.THIS.fixed-header table thead tr th {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    /*z-index: 1;*/
+    z-index: 500;
+}
+
+.THIS .fixed-column {
+    position: sticky;
+    position: -webkit-sticky; /*Safari*/
+    background-color: white;/*rgb(250, 250, 249);*/
+    border-color: rgb(221, 219, 218);
+    /*z-index: 1;*/
+    z-index: 500;
+    white-space: normal;
+    text-overflow: ellipsis;
+}
+
+.THIS .fixed-column-0 {
+    position: sticky;
+    position: -webkit-sticky; /*Safari*/
+    background-color: white;
+    border-color: rgb(221, 219, 218);
+    /*z-index: 1;*/
+    z-index: 500;
+    left: 0;
+}
+
+.THIS .fixed-column-1 {
+    position: sticky;
+    position: -webkit-sticky; /*Safari*/
+    background-color: white;
+    border-color: rgb(221, 219, 218);
+    /*z-index: 1;*/
+    z-index: 500;
+    left: 35px;
+}
+
+.THIS .fixed-column-right-border {
+    border-right: 1px solid rgb(221, 219, 218);
+}
+
+/*.THIS .slds-checkbox-checked div > span > label > span:first-child {*/
+.THIS .slds-checkbox-checked {
+    display: block;
+    content: '';
+    height: .25rem;
+    width: var(--lwc-squareIconXSmallContent,0.5rem);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0) rotate(
+            -45deg
+    );
+    border-bottom: var(--lwc-borderWidthThick,2px) solid var(--sds-c-checkbox-mark-color-foreground, var(--lwc-brandAccessible,rgb(0, 112, 210)));
+    border-left: var(--lwc-borderWidthThick,2px) solid var(--sds-c-checkbox-mark-color-foreground, var(--lwc-brandAccessible,rgb(0, 112, 210)));
+}

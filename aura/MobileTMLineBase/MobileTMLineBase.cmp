@@ -1,0 +1,14 @@
+<aura:component extends="c:BaseComponent" controller="MobileTMController" extensible="true" description="MobileTMLineBase">
+    <!--attributes-->
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="tmLine" type="Object" access="public"/>
+    <aura:attribute name="rowIndex" type="Integer" access="public"/>
+    <aura:attribute name="expanded" type="Boolean" default="false" access="public"/>
+  
+    <!--events-->
+    <aura:registerEvent name="tmLineDeleteEvent" type="c:TMLineDeleteEvent"/>
+    <aura:registerEvent name="tmLineUpdateEvent" type="c:TMLineUpdateEvent"/>
+
+    <!--body-->
+    {!v.body} 
+</aura:component>

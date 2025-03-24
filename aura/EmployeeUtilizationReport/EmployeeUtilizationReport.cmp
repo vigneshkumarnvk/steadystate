@@ -1,0 +1,117 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="EmployeeUtilizationController">
+    <ltng:require styles="{!$Resource.DatePicker}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="spinner" type="Boolean" default="false" />
+    <aura:attribute name="employees" type="List" />
+    <aura:attribute name="serviceCenters" type="List" />
+    
+    <!-- PAGE HEADER INFORMATION AND TITLE -->
+    <div class="slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Employee Utilization Report">Employee Utilization Report</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-grid slds-gutters slds-box slds-m-top--x-small slds-modal__content slds-align_absolute-center">
+        <div class="slds-col">
+        	<span>
+                <ui:inputSelect aura:id="serviceCenterFilter" label="Service Center" change="{!c.onFiltersChange}" >
+                	<!--<aura:iteration items="{!v.serviceCenters}" var="sc">
+                 		<ui:inputSelectOption text="{!sc.Id}" label="{!sc.Description}" value="{!sc.isDefault}" />
+                    </aura:iteration>-->
+                </ui:inputSelect>
+        	</span>
+        </div>
+        <div class="slds-col">
+            <span><ui:inputDate label="Start Date" displayDatePicker="true" change="{!c.onFiltersChange}" aura:id="startDateFilter" /></span>
+        </div>
+        <div class="slds-col">
+            <span><ui:inputDate label="End Date" displayDatePicker="true" change="{!c.onFiltersChange}" aura:id="endDateFilter" /></span>
+        </div>
+        <div class="slds-col">
+            <span><ui:inputCheckbox text="Include Weekend" label="Include Weekend" aura:id="includeWeekendFilter" change="{!c.onFiltersChange}"/></span>
+        </div>
+        <div style="margin-top: 20px;">
+            <span><lightning:button variant="brand" label="Print PDF" onclick="{!c.sendToUrl}" /></span>
+        </div>
+        <div style="margin-top: 20px; margin-left: 20px">
+            <span><lightning:button variant="brand" label="Export to Excel" onclick="{!c.sendToUrlExcel}" /></span>
+        </div>        
+    </div>
+
+    <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout" aura:id="tableResult">
+        <thead>
+            <tr class="slds-text-heading--label">
+                <th scope="col">
+                    <div class="slds-truncate" title="No">No.</div>
+                </th>              
+                <th scope="col">
+                    <div class="slds-truncate" title="Resource_Type">Service Center</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Employee_Name">Employee Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Resource_Type">Resource Type</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate slds-text-align_right" title="Assigned_SC_Hours">Assigned SC Hours</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate slds-text-align_right" title="IC_Hours">I/C Hours</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate slds-text-align_right" title="Job_Total_Hours">Job Total Hours</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate slds-text-align_right" title="Utilization">% Utilization</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Use the Apex model and controller to fetch server side data -->
+            <aura:iteration items="{!v.employees}" var="emp">
+                <tr>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!emp.ResourceNo}">{!emp.ResourceNo}</div>
+                    </th>                 
+                    <td>
+                        <div class="slds-truncate" title="{!emp.ServiceCenter}">{!emp.ServiceCenter}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!emp.Description}">{!emp.Description}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate" title="{!emp.ResourceType}">{!emp.ResourceType}</div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate slds-text-align_right" title="{!emp.SC_Hours}"><ui:outputNumber value="{!emp.SC_Hours}" format=".0" /></div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate slds-text-align_right" title="{!emp.IC_Hours}"><ui:outputNumber value="{!emp.IC_Hours}" format=".0" /></div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate slds-text-align_right" title="{!emp.Total_Hours}"><ui:outputNumber value="{!emp.Total_Hours}" format=".0" /></div>
+                	</td>
+                	<td>
+                        <div class="slds-truncate slds-text-align_right" title=""><ui:outputNumber value="{!emp.Utilization}" format=".0%" /></div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+
+    <aura:if isTrue="{!v.spinner}">
+        <div class="demo-only demo--inverse" style="height: 6rem;">
+            <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

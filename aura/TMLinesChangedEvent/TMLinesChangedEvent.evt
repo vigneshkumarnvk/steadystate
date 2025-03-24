@@ -1,0 +1,6 @@
+<aura:event type="COMPONENT" description="TMLinesChangedEvent">
+    <aura:attribute name="category" type="String" access="public"/>
+    <aura:attribute name="tmLines" type="List" access="public"/>
+    <aura:attribute name="causedByRowIndex" type="Integer" access="public"/>
+    <aura:attribute name="causedByField" type="String" access="public"/>
+</aura:event>

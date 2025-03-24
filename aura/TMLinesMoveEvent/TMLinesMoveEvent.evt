@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="TMLinesMoveEvent">
+    <aura:attribute name="tmLines" type="List" access="public"/>
+    <aura:attribute name="fromJobTask" type="Object" access="public"/>
+    <aura:attribute name="toJobTask" type="Object" access="public"/>
+</aura:event>

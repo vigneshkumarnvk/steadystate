@@ -1,0 +1,9 @@
+.THIS .tab {
+    height: calc(100vh - 60px);
+    border: 1px solid #CCC;
+    overscroll-behavior-y: contain;
+}
+.THIS .slds-card__body {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+}

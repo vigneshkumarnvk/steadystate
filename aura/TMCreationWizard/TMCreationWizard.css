@@ -1,0 +1,7 @@
+.THIS {
+    height: 100% !important;
+}
+
+.THIS .icon-color svg {
+    fill: darkorange !important;
+}

@@ -1,0 +1,76 @@
+<aura:component extends="c:TMLinesBase">
+    <aura:dependency resource="c:TMLaborLine"/>
+    <aura:dependency resource="c:TMLaborLineEdit"/>
+
+    <!--attributes-->
+
+    <!--handlers-->
+
+    <!--body-->
+    <c:CollapsibleSection label="{!v.title}" collapsed="false">
+        <aura:set attribute="actions">
+            <lightning:buttonGroup>
+                <aura:if isTrue="{!v.tm.Status__c == 'Open' || v.tm.Status__c == 'Scheduled' || v.tm.Status__c == 'Mobile Review' || v.tm.Status__c == 'Confirmed'}">
+                    <lightning:button label="Create Flat Pay" variant="neutral" onclick="{!c.createFlatPay}"/>
+                </aura:if>
+                <lightning:button iconName="utility:delete" label="Delete Lines" variant="neutral" onclick="{!c.deleteLines}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+                <lightning:button iconName="utility:add" label="Add Labor" variant="neutral" onclick="{!c.addLine}" disabled="{!v.tm.Status__c == 'Fully Invoiced' || v.tm.Status__c == 'Void' || v.tm.Status__c == 'Sent to EQAI'}"/>
+            </lightning:buttonGroup>
+        </aura:set>
+
+        <aura:if isTrue="{!v.rowComponentParams &amp;&amp; v.inlineEditComponentParams}"> <!--ensure params are initialized before the table is rendered-->
+            <!--ticket 19130-->
+            <!--
+            <c:InlineEditDataTable aura:id="datatable" name="Labor" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                   rowComponentName="c:TMLaborLine" rowComponentParams="{!v.rowComponentParams}"
+                                   inlineEditComponentName="c:TMLaborLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                   noneInlineFields="['select', 'delete', 'copy', 'view', 'move']"
+                                   horizontalScroll="true">
+           -->
+            <c:InlineEditDataTable aura:id="datatable" name="Labor" items="{!v.tmLines}" var="tmLine" indexVar="index" showRowNumbers="false"
+                                   onRowAction="{!c.handleRowAction}" onInlineEditClose="{!c.handleInlineEditClose}"
+                                   rowComponentName="c:TMLaborLine" rowComponentParams="{!v.rowComponentParams}"
+                                   inlineEditComponentName="c:TMLaborLineEdit" inlineEditComponentParams="{!v.inlineEditComponentParams}"
+                                   noneInlineFields="['select', 'delete', 'copy', 'view', 'move', 'isChildResource']"
+                                   horizontalScroll="true">
+            <!--ticket 19130-->
+                <aura:set attribute="template">
+                    <c:InlineEditColumnHeader label="" headerStyle="min-width:200px;"/>
+                    <c:InlineEditColumnHeader label="Line #" headerStyle="min-width:60px;"/>
+                    <c:InlineEditColumnHeader label="Labor Type" headerStyle="min-width:150px;"/>
+                    <c:InlineEditColumnHeader label="Service Center" headerStyle="min-width:80px;"/>
+                    <c:InlineEditColumnHeader label="Labor" headerStyle="min-width:125px;"/>
+                    <c:InlineEditColumnHeader label="Labor Name" headerStyle="min-width:150px;"/>
+                    <c:InlineEditColumnHeader label="Billing Description" headerStyle="width:200px;"/>
+                    <c:InlineEditColumnHeader label="Dispatch from Home" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Job Start Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Site Start Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Site End Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Job End Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Lunch Start Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Lunch End Time" headerStyle="min-width:100px;"/>
+                    <c:InlineEditColumnHeader label="Job Hours" headerStyle="min-width:60px;"/>
+                    <c:InlineEditColumnHeader label="Site Hours" headerStyle="min-width:60px;"/>
+                    <c:InlineEditColumnHeader label="Quantity" headerStyle="min-width:80px;"/>
+                    <c:InlineEditColumnHeader label="UOM" headerStyle="min-width:100px;"/>
+                    <!-- Ticket#19917 Hide Contract Line on T&M
+                    <c:InlineEditColumnHeader label="Contract Line" headerStyle="min-width:60px;"/>
+                    -->
+                    <c:InlineEditColumnHeader label="Non-Billable" headerStyle="min-width:100"/>
+                    <c:InlineEditColumnHeader label="Invoiced" headerStyle="min-width:65px;"/>
+                    <!--ticket 19130-->
+                    <!--
+                    <c:InlineEditColumnHeader label="Parent Line #" headerStyle="min-width:60px;"/>
+                    -->
+                    <c:InlineEditColumnHeader label="Child Resource" headerStyle="min-width:60px;"/>
+                    <!--ticket 19130-->
+
+                    <!--ticket 19693-->
+                    <c:InlineEditColumnHeader label="Worksheet Line" headerStyle="min-width:125px;"/>
+                    <!--ticket 19693-->
+                </aura:set>
+            </c:InlineEditDataTable>
+        </aura:if>
+    </c:CollapsibleSection>
+</aura:component>

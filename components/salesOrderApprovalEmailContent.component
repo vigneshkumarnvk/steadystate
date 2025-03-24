@@ -1,0 +1,263 @@
+<apex:component id="salesOrderApprovalEmailContent" controller="ApprovalEmailContent" access="global">
+    <apex:attribute name="objectId" description="Invoice Id" type="Id" assignTo="{!recordId}" />
+    <style type="text/css">
+        .alignleft{
+            text-align: left;
+        }
+        .alignRight{
+            text-align: right;
+        }
+        .wd30{
+            width: 30px;
+        }
+        .wd200{
+            width: 250px;
+        }
+        .wd100{
+            width: 100px;
+        }
+        .b{
+            font-weight: bold;
+        }
+    </style>
+    <table>
+        <tbody>
+        <tr>
+            <td>{!emailContentWrapper.docType}</td>
+            <td>{!emailContentWrapper.invoiceNo}</td>
+        </tr>
+        <tr>
+            <td>Total Invoice Amount Incl. Tax</td>
+            <td>
+                <apex:outputText value="{0, Number, $#,##0.00}" >
+                    <apex:param value="{!emailContentWrapper.invoiceTotalInclTax}"/>
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td>Total Profit %</td>
+            <td>{!emailContentWrapper.newProfitMargin}</td>
+        </tr>
+        <tr>
+            <td>Original Profit Margin %</td>
+            <td>{!emailContentWrapper.approvedProfitMargin}</td>
+        </tr>
+        <tr>
+            <td>Customer Name</td>
+            <td>{!emailContentWrapper.billToCustomer}</td>
+        </tr>
+        <tr>
+            <td>Service Center</td>
+            <td>{!emailContentWrapper.serviceCenter}</td>
+        </tr>
+        <tr>
+            <td>Pay Rule</td>
+            <td>{!emailContentWrapper.payRule}</td>
+        </tr>
+        <tr>
+            <td>Entered By</td>
+            <td>{!emailContentWrapper.createdBy}</td>
+        </tr>
+        <tr>
+            <td>Owner</td>
+            <td>{!emailContentWrapper.salesOrderOwner}</td>
+        </tr>
+        <tr>
+            <td>Scope of Work</td>
+            <td>{!emailContentWrapper.scopeOfWork}</td>
+        </tr>
+        <!--
+        <tr>
+            <td>Duration</td>
+            <td>
+                {!emailContentWrapper.duration}{!IF(emailContentWrapper.duration > 1, ' Days', ' Day')}
+            </td>
+        </tr>
+        -->
+        </tbody>
+    </table>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th class="alignleft wd30 b">Sales Line #</th>
+                <th class="alignleft wd100 b">Category</th>
+                <th class="alignRight wd30 b">Days Needed</th>
+                <th class="alignleft wd30 b">Quantity</th>
+                <th class="alignleft wd200 b">Resource Type/Name</th>
+                <td class="alignleft wd30" style="font-weight: bold">UOM Qty.</td>
+                <th class="alignleft wd30 b">UOM</th>
+                <th class="alignRight wd30 b">Unit Price</th>
+                <!--
+                <th class="alignRight wd30">OT Rate</th>
+                <th class="alignRight wd30">DT Rate</th>
+                -->
+                <th class="alignRight wd30 b">Unit Cost</th>
+                <th class="alignRight wd30 b">Line Cost</th>
+                <th class="alignRight wd30 b">Line Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        <apex:repeat value="{!emailContentWrapper.lineContentsByJobTasks}" var="key">
+                <tr>
+                    <td class="alignleft" colspan="10"><b>{!key}</b></td>
+                </tr>
+            <apex:repeat value="{!emailContentWrapper.lineContentsByJobTasks[key]}" var="line">
+                <tr style="padding-left: 30px">
+                    <td class="alignleft" style="width: 35px;">{!line.lineNo}</td>
+                    <td class="alignleft" style="width: 180px;">{!line.category}</td>
+                    <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                        <apex:outputText value="{0, number, 0}">
+                            <apex:param value="{!line.daysNeeded}" />
+                        </apex:outputText>
+                    </td>
+                    <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                        <apex:outputText value="{0, number, 0.00}">
+                            <apex:param value="{!line.quantity}" />
+                        </apex:outputText>
+                    </td>
+                    <td class="alignleft" style="width: 250px;">{!IF(line.resType == null, line.resName, line.resType)}</td>
+                    <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                        <apex:outputText value="{0, number, 0.00}">
+                            <apex:param value="{!line.uomQty}" />
+                        </apex:outputText>
+                    </td>
+                    <td class="alignleft" style="width: 70px; border-right: 1px solid black;">
+                        {!line.unitOfMeasure}
+                    </td>
+                    <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.unitPrice}" />
+                        </apex:outputText>
+                    </td>
+
+                    <!--
+                    <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.overtimeRate}" />
+                        </apex:outputText>
+                    </td>
+
+                    <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.doubleTimeRate}" />
+                        </apex:outputText>
+                    </td>
+                    -->
+
+                    <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.unitCost}" />
+                        </apex:outputText>
+                    </td>
+
+                    <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.lineCost}" />
+                        </apex:outputText>
+                    </td>
+
+                    <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                        <apex:outputText value="{0, number, $0.00}">
+                            <apex:param value="{!line.lineAmount}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <apex:outputPanel rendered="{!line.relatedLines.size != null}">
+                    <apex:repeat value="{!line.relatedLines}" var="relatedLine">
+                        <tr style="padding-left: 60px">
+                            <td class="alignleft" style="width: 35px;">{!relatedLine.lineNo}</td>
+                            <td class="alignleft" style="width: 180px;">{!relatedLine.category}</td>
+                            <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                                <apex:outputText value="{0, number, 0}">
+                                    <apex:param value="{!relatedLine.daysNeeded}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!relatedLine.quantity}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="alignleft" style="width: 250px;">{!IF(relatedLine.resType == null, relatedLine.resName, relatedLine.resType)}</td>
+                            <td class="alignleft" style="width: 80px; border-right: 1px solid black;">
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!relatedLine.uomQty}" />
+                                </apex:outputText>
+                            </td>
+                            <td class="alignleft" style="width: 70px; border-right: 1px solid black;">
+                                {!relatedLine.unitOfMeasure}
+                            </td>
+                            <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.unitPrice}" />
+                                </apex:outputText>
+                            </td>
+                            <!--
+                            <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.overtimeRate}" />
+                                </apex:outputText>
+                            </td>
+
+                            <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.doubleTimeRate}" />
+                                </apex:outputText>
+                            </td>
+                            -->
+                            <td class="alignRight" style="width: 100px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.unitCost}" />
+                                </apex:outputText>
+                            </td>
+
+                            <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.lineCost}" />
+                                </apex:outputText>
+                            </td>
+
+                            <td class="alignRight" style="width: 110px; border-right: 1px solid black; margin-right: 2px;">
+                                <apex:outputText value="{0, number, $0.00}">
+                                    <apex:param value="{!relatedLine.lineAmount}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                </apex:outputPanel>
+            </apex:repeat>
+        </apex:repeat>
+        </tbody>
+    </table>
+    <table>
+        <tr style="width:100%;">
+            <th colspan="2" class="alignleft">Approval Steps</th>
+        </tr>
+        <tr>
+            <td style="border-bottom: black solid 1px">#</td>
+            <td style="border-bottom: black solid 1px">User</td>
+        </tr>
+        <apex:repeat value="{!emailContentWrapper.approverByLevels}" var="level">
+            <tr>
+                <td class="wd100">{!level}</td>
+                <td class="wd200">{!emailContentWrapper.approverByLevels[level]}</td>
+            </tr>
+        </apex:repeat>
+    </table>
+    <apex:outputPanel rendered="{!emailContentWrapper.approvalComments.size > 0}">
+        <table>
+            <tr>
+                <th colspan="3" class="alignleft">Approval Comments</th>
+            </tr>
+            <tr>
+                <td style="width: 150px; border-bottom: black solid 1px;">By</td>
+                <td style="width: 300px; border-bottom: black solid 1px;">Comment</td>
+                <td style="width: 200px; border-bottom: black solid 1px;">Date/Time</td>
+            </tr>
+            <apex:repeat value="{!emailContentWrapper.approvalComments}" var="comment">
+                <tr>
+                    <apex:outputText value="{!comment}" escape="false" />
+                </tr>
+            </apex:repeat>
+        </table>
+    </apex:outputPanel>
+</apex:component>

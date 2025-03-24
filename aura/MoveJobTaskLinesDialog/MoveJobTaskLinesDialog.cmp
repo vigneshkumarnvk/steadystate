@@ -1,0 +1,38 @@
+<aura:component>
+    <!--attributes-->
+    <aura:attribute name="jobTaskOptions" type="List" default="[]" access="public"/>
+    <aura:attribute name="fromJobTask" type="Object" access="public"/>
+    <aura:attribute name="toJobTask" type="Object" access="public"/>
+    <aura:attribute name="callback" type="Object" access="public"/>
+
+    <!--handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--methods-->
+    <aura:method name="move" action="{!c.move}" access="public">
+        <aura:attribute name="callback" type="Function" access="public"/>
+    </aura:method>
+
+    <!--body-->
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:select label="From Job Task" value="{!v.fromJobTask.Line_No__c}" disabled="true">
+                    <aura:iteration items="{!v.jobTaskOptions}" var="jobTaskOption">
+                        <option label="{!jobTaskOption.label}" value="{!jobTaskOption.value}" selected="{!jobTaskOption.value == v.fromJobTask.Line_No__c}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="horizontal-small">
+                <lightning:select aura:id="to-job-task" label="To Job Task" value="{!v.toJobTask.Line_No__c}" required="true">
+                    <option label=""></option>
+                    <aura:iteration items="{!v.jobTaskOptions}" var="jobTaskOption">
+                        <aura:if isTrue="{!jobTaskOption.value != v.fromJobTask.Line_No__c}">
+                            <option label="{!jobTaskOption.label}" value="{!jobTaskOption.value}"/>
+                        </aura:if>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

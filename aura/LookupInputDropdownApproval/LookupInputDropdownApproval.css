@@ -1,0 +1,26 @@
+.THIS .dropdown {
+    min-height:40px;
+    height: fit-content;
+    margin-top: 0px !important;
+    overscroll-behavior-y: contain;
+    width:25rem;
+    top: auto; /*pop the dropdown under the controller*/
+    left: auto;  /*pop the dropdown under the controller*/
+    max-height: 250px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+.THIS.slds-lookup__menu {
+    padding: 0px;
+    width: fit-content !important;
+}
+
+.THIS .sticky-header th {
+    position: sticky;
+    top: 0;    
+    z-index: 1; /* Ensures the header stays on top */ 
+    padding: 8px;
+
+    
+}

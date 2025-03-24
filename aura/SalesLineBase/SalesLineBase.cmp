@@ -1,0 +1,48 @@
+<!--
+    Ticket#21908 - prevent record from editing after blocked.
+-->
+<aura:component extensible="true" extends="c:SalesOrderBase" controller="ACVSalesLineController" description="SalesLineBase">
+    <!--attributes-->
+    <aura:attribute name="index" type="Integer" access="public"/>
+    <aura:attribute name="salesOrder" type="Object" access="public"/>
+    <aura:attribute name="salesLine" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapperIndex" type="Integer" access="public"/>
+    <aura:attribute name="setupData" type="Object" access="public"/>
+
+    <!--events-->
+    <aura:registerEvent name="salesLineUpdateEvent" type="c:SalesLineUpdateEvent"/>
+    <aura:registerEvent name="salesLineDeleteEvent" type="c:SalesLineDeleteEvent"/>
+    <aura:registerEvent name="salesLineViewEvent" type="c:SalesLineViewEvent"/>
+
+    <!--body-->
+    <td>
+        <aura:if isTrue="{!v.salesOrder.Document_Status__c == 'Open' &amp;&amp; v.salesOrder.Approval_Status__c != 'Pending_Approval' &amp;&amp; v.salesOrder.Expired__c != true &amp;&amp; v.salesOrder.Blocked__c != true}">
+                <span name="select" style="display: inline-block;">
+					<!--ticket 19130-->
+                    <lightning:input type="checkbox" checked="{!v.salesLine.Selected}" onchange="{!c.handleLineSelect}" disabled="{!v.salesLine.Bundle_Line__r != null || v.salesLine.Is_Child_Resource__c == true || v.salesLine.System_Calculated_Line__c == true || v.salesOrder.Blocked__c == true}"/>
+                    <!--ticket 19130-->
+                </span>
+            <span name="delete" style="display: inline-block;">
+                <!--ticket 19130-->
+                    <lightning:button name="delete" label="Del" variant="base"
+                                      value="{!rowIndex}"
+                                      onclick="{!c.deleteSalesLine}"
+                                      disabled="{!v.salesLine.Bill_as_Lump_Sum__c == true || v.salesLine.System_Calculated_Line__c == true || (v.salesLine.Is_Child_Resource__c == true &amp;&amp; v.salesLine.Dereferenced_Child_Resource__c != true) || v.salesLine.Parent_Labor_Line__r != null || v.salesOrder.Blocked__c == true}"/>
+                <!--ticket 19130-->
+                </span>
+            <span style="display: inline-block;" class="slds-p-horizontal--xx-small">|</span>
+        </aura:if>
+        <span name="edit" style="display: inline-block;">
+            <!--ticket 19130-->
+                <lightning:button name="edit" label="Edit" variant="base" value="{!rowIndex}" onclick="{!c.viewSalesLine}"
+                                  disabled="{!(v.salesLine.System_Calculated_Line__c == true &amp;&amp; v.salesLine.Category__c != 'Waste Disposal'
+                                            &amp;&amp; v.salesLine.Resource__c != v.setupData.CompanySetting.Rinse_Out_Fee_Resource_Id__c) || v.salesOrder.Blocked__c == true}"/>
+            <!--ticket 19130-->
+            </span>
+    </td>
+    <td>
+        {!v.salesLine.Line_No__c}
+    </td>
+    {!v.body}
+</aura:component>

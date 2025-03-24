@@ -1,0 +1,97 @@
+<aura:component extends="c:BaseComponent">
+    <!--attributes-->
+    <aura:attribute name="tmLine" type="Object" access="public"/>
+
+    <!--ticket 19130-->
+    <!--<aura:attribute name="jobTasks" type="List" default="[]" access="public"/>-->
+    <aura:attribute name="tm" type="Object" access="public"/>
+    <aura:attribute name="jobTaskWrapper" type="Object" access="public"/>
+    <aura:attribute name="xFields" type="Object" default="{}" access="private"/>
+    <!--ticket 19130-->
+
+    <!--ticket 19130-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--ticket 19130-->
+
+    <!--methods-->
+    <aura:method name="save" action="{!c.save}" access="public">
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+
+    <!--body-->
+    <!--temporary disable flat pay function-->
+    <!--
+    <lightning:card title="{!'Resource Name: ' + v.tmLine.Resource_Name__c}" class="slds-card-position slds-m-around-   small">
+        <aura:set attribute="actions">
+            <lightning:button label="Add Flat Pay" onclick="{!c.addFlatPayLine}" disabled="{!v.tmLine.Invoiced__c == true}"/>
+        </aura:set>
+
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12" padding="around-small">
+                <aura:if isTrue="{!v.tmLine.Resource_Flat_Pays1__r != null}">
+                    <c:FlexDataTable items="{!v.tmLine.Resource_Flat_Pays1__r.records}" var="flatPayLine" indexVar="index" onrowaction="{!c.handleRowAction}"
+                            param1="{!v.tmLine}">
+                        <aura:set attribute="template">
+                            <c:FlexDataTableColumn label="Action" style="width:100px;">
+                                <span name="delete">
+                                    <lightning:button label="Del" value="{!index}" variant="bare" disabled="{!v.param1.Invoiced__c == true}"/>
+                                </span>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Rate Type">
+                                <c:LookupInput name="rate-type" label="" variant="label-hidden" value="{!flatPayLine.Flat_Rate_Type__r}" SObjectName="Flat_Rate_Type__c"
+                                               columns="[{label: 'Name', fieldName: 'Name'}, {label: 'Rate', fieldName: 'Rate__c'}]"
+                                               queryFields="['Misc_Charge_Resource__c', 'Misc_Charge_Resource__r.Name', 'Misc_Charge_Resource__r.Unit_of_Measure__c', 'Misc_Charge_Resource__r.Unit_of_Measure__r.Name', 'Misc_Charge_Resource__r.Description__c']"
+                                               pill="{iconName: 'utility:picklist_type', fieldName: 'Name'}"
+                                               hideLookupGlass="true" datatable="true" disabled="{!v.param1.Invoiced__c == true}"/>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Rate">
+                                <lightning:input name="rate" type="number" variant="label-hidden" value="{!flatPayLine.Rate__c}" step="0.01" disabled="{!v.param1.Invoiced__c == true}"/>
+                            </c:FlexDataTableColumn>
+                            <c:FlexDataTableColumn label="Misc. Charge Item">
+                                <c:LookupInput name="misc-charge-resource" label="" variant="label-hidden" value="{!flatPayLine.Misc_Charge_Resource__r}" SObjectName="Resource__c" columns="[{label: 'Name', fieldName: 'Name'}]" pill="{iconName: 'custom:custom6', fieldName: 'Name'}" queryFields="['Unit_of_Measure__c', 'Unit_of_Measure__r.Name']" filter="Category__c='Misc. Charges And Taxes' AND Blocked__c != TRUE" disabled="true"/>
+                            </c:FlexDataTableColumn>
+                        </aura:set>
+                    </c:FlexDataTable>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    -->
+    <!--temporary disable flat pay function-->
+
+
+    <!--ticket 19130-->
+    <lightning:card>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12" padding="horizontal-small" class="slds-p-bottom--x-small">
+                <lightning:button label="Add Child Resource" variant="brand" onclick="{!c.addChildResource}" />
+            </lightning:layoutItem>
+
+            <aura:if isTrue="{!v.tmLine.TM_Child_Lines__r}">
+                <aura:iteration items="{!v.tmLine.TM_Child_Lines__r.records}" var="relation" indexVar="rowIndex">
+                    <lightning:layoutItem flexibility="auto, no-grow" padding="around-small" class="slds-p-bottom--x-small">
+                        <lightning:select aura:id="child-resource" variant="label-hidden" class="label-hidden" label="{!rowIndex}" value="{!relation.Child_Line__r.Line_No__c}" onchange="{!c.handleRelationChange}" disabled="{!v.xFields.ChildResource.disabled}" required="{!v.xFields.ChildResource.required}">
+                            <option value="" label=""/>
+                            <aura:iteration items="{!v.jobTaskWrapper.TMLines}" var="xTMLine">
+                                <!--ticket 19130 fix 08.31.22 -->
+                                <!--
+                                <aura:if isTrue="{!((!xTMLine.TM_Child_Lines__r &amp;&amp; !xTMLine.TM_Child_Lines__r.records) || (xTMLine.TM_Child_Lines__r &amp;&amp; xTMLine.TM_Child_Lines__r.records &amp;&amp; xTMLine.TM_Child_Lines__r.records.length == 0))
+                                        &amp;&amp; xTMLine.Line_No__c != v.tmLine.Line_No__c &amp;&amp; xTMLine.System_Calculated_Line__c != true}">
+                                    <option value="{!xTMLine.Line_No__c}" label="{!'Line #' + xTMLine.Line_No__c + ' - ' + xTMLine.Description__c}"/>
+                                -->
+                                <aura:if isTrue="{!xTMLine.Line_No__c != v.tmLine.Line_No__c &amp;&amp; xTMLine.System_Calculated_Line__c != true}">
+                                    <option value="{!xTMLine.Line_No__c}" label="{!'Line #' + xTMLine.Line_No__c + ' - ' + xTMLine.Description__c}"/>
+                                <!--ticket 19130 fix 08.31.22 -->
+                                </aura:if>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto, no-grow" class="slds-p-top--small slds-p-bottom--small slds-p-right--small">
+                        <lightning:buttonIcon value="{!rowIndex}" iconName="utility:delete" onclick="{!c.removeParentChildRelation}" disabled="{!v.xFields.ChildResource.disabled}"/>
+                    </lightning:layoutItem>
+                </aura:iteration>
+            </aura:if>
+        </lightning:layout>
+    </lightning:card>
+    <!--ticket 19130-->
+</aura:component>
