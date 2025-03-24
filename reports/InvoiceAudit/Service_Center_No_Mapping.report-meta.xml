@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Service_Center__c$Name</field>
+    </columns>
+    <columns>
+        <field>Service_Center__c$Description__c</field>
+    </columns>
+    <columns>
+        <field>Service_Center__c$SO_Prefix__c</field>
+    </columns>
+    <columns>
+        <field>Service_Center__c$Subsidiary_Company__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Service_Center__c$Name</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>vendor labor</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Service Center No. Mapping</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Service_Centers__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Service_Center__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>text</bucketType>
+        <developerName>BucketField_43406674</developerName>
+        <masterLabel>Service Center</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>Resource_Type__c.Resources__r$Service_Center__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>01</sourceValue>
+            </sourceValues>
+            <value>Elizabeth, NJ</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>02</sourceValue>
+            </sourceValues>
+            <value>Clayton, NJ</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>31</sourceValue>
+            </sourceValues>
+            <value>Rahway, NJ</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>32</sourceValue>
+            </sourceValues>
+            <value>Brooklyn, NY</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>03</sourceValue>
+            </sourceValues>
+            <value>Bayonne, NJ IMTT</value>
+        </values>
+        <values>
+            <value>Norfolk, MA</value>
+        </values>
+        <values>
+            <value>Maine</value>
+        </values>
+        <values>
+            <value>Nashua, NH</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>Resource_Type__c.Resources__r$Name</field>
+    </columns>
+    <columns>
+        <field>Resource_Type__c$Description__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Resource_Type__c.Resources__r$Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Available</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource_Type__c$Category__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Equipment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource_Type__c$Description__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>Roll,Dump,Loader,con</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource_Type__c.Resources__r$Service_Center__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notContain</operator>
+            <value>,08,09</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Resource_Type__c.Resources__r$SC_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Resource_Type__c$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Resources- RO, Box, Loaders</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Resource_with_Resource_Type__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Resource_Type__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

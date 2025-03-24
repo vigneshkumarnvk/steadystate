@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Material_Type_Category__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Category__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.CSID__c</field>
+    </columns>
+    <description>Blocked Material Resources</description>
+    <filter>
+        <criteriaItems>
+            <column>Resource__c.Category__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Labor,Waste Disposal,Equipment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource__c.Blocked__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Blocked Resources</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Resource__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Resource__c.Comdata_Card_Acknowledgement_Form__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

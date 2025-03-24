@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Email_to_AE</fullName>
+        <description>Email to AE</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Account_Owner_Email__c</field>
+            <type>email</type>
+        </recipients>
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/ER_Sales_Order_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>Notification_Email_SPO_Blank</fullName>
+        <description>Notification Email SPO Blank</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>SO_Approval_Rejection</fullName>
+        <description>SO Approval Rejection</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/ACV_SO_SQ_Approval_Rejection_Email</template>
+    </alerts>
+    <alerts>
+        <fullName>SPO_Blank</fullName>
+        <description>SPO Blank 5 Days</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>SPO_Blank_Four_Days</fullName>
+        <description>SPO Blank Four Days</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>SPO_Blank_Six_Day</fullName>
+        <description>SPO Blank Six Day</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>SPO_Blank_Three_Days</fullName>
+        <description>SPO Blank Three Days</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>SPO_Notification</fullName>
+        <description>SPO Notification</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SPO_Blank_Reminder</template>
+    </alerts>
+    <alerts>
+        <fullName>Sales_Order_Credit_Hold</fullName>
+        <description>Sales Order Credit Hold</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Sales_Order_Credit_Hold</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>GetNextApprover</fullName>
+        <field>Get_Next_Approver__c</field>
+        <literalValue>1</literalValue>
+        <name>GetNextApprover</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Mark_Approval_Step_Completed</fullName>
+        <field>Approval_Step_Completed__c</field>
+        <literalValue>1</literalValue>
+        <name>Mark Approval Step Completed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedAmount</fullName>
+        <field>Approved_Amount__c</field>
+        <name>ResetApprovedAmount</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedLevel</fullName>
+        <field>Approved_Level__c</field>
+        <name>ResetApprovedLevel</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedMargin</fullName>
+        <field>Approved_Profit_Margin__c</field>
+        <name>ResetApprovedMargin</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetPendingApprovalFrom</fullName>
+        <field>Pending_Approval_From__c</field>
+        <name>ResetPendingApprovalFrom</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetPendingApprovalLevel</fullName>
+        <field>Pending_Approval_Level__c</field>
+        <name>ResetPendingApprovalLevel</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SPOTriggerDate</fullName>
+        <field>SPOTriggerDate__c</field>
+        <formula>today()</formula>
+        <name>SpotriggerDate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovalStatusToDraft</fullName>
+        <field>Approval_Status__c</field>
+        <literalValue>Draft</literalValue>
+        <name>SetApprovalStatusToDraft</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovalStatusToRejected</fullName>
+        <field>Approval_Status__c</field>
+        <literalValue>Rejected</literalValue>
+        <name>SetApprovalStatusToRejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovedToFalse</fullName>
+        <field>Approved__c</field>
+        <literalValue>0</literalValue>
+        <name>SetApprovedToFalse</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetAutoGetNextToTrue</fullName>
+        <field>Auto_Get_Next_Approver__c</field>
+        <literalValue>1</literalValue>
+        <name>SetAutoGetNextToTrue</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetQuoteOrderOwnerToHOU</fullName>
+        <field>OwnerId</field>
+        <lookupValue>mdn@acvenviro.com</lookupValue>
+        <lookupValueType>User</lookupValueType>
+        <name>SetQuoteOrderOwnerToHOU</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetSubmitForApprovalAt</fullName>
+        <field>Submit_for_Approval_At__c</field>
+        <formula>NOW()</formula>
+        <name>SetSubmitForApprovalAt</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Auto_Get_Next_Approval_To_False</fullName>
+        <field>Auto_Get_Next_Approver__c</field>
+        <literalValue>0</literalValue>
+        <name>Set-Auto-Get-Next-Approval-To-False</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Date_Field</fullName>
+        <field>Status_Change_Date__c</field>
+        <formula>TODAY()</formula>
+        <name>Update Date Field</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>ER Sales Order Created</fullName>
+        <actions>
+            <name>Email_to_AE</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Order__c.Emergency_Sales_Order__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>SO-GetNextApprover-2</fullName>
+        <actions>
+            <name>SetSubmitForApprovalAt</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Order__c.Approval_Status__c</field>
+            <operation>equals</operation>
+            <value>Pending_Approval</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Sales_Order__c.Auto_Get_Next_Approver__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>GetNextApprover</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <actions>
+                <name>Set_Auto_Get_Next_Approval_To_False</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.Submit_for_Approval_At__c</offsetFromField>
+            <timeLength>24</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>SO-GetNextApproverx</fullName>
+        <actions>
+            <name>SetSubmitForApprovalAt</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Order__c.Approval_Status__c</field>
+            <operation>equals</operation>
+            <value>Pending_Approval</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Sales_Order__c.Auto_Get_Next_Approver__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>GetNextApprover</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <actions>
+                <name>SetAutoGetNextToTrue</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.Submit_for_Approval_At__c</offsetFromField>
+            <timeLength>24</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>SPO Blank Age Days Email</fullName>
+        <active>false</active>
+        <formula>Bill_to_Customer_No__r.Parent.Id = '001f400000DS2R2'
+&amp;&amp;
+ISBLANK( Customer_PO_No__c )</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>SPO_Blank</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>24</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <actions>
+                <name>SPO_Blank_Three_Days</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>72</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <actions>
+                <name>SPO_Blank_Four_Days</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>96</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <actions>
+                <name>SPO_Blank</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>120</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <offsetFromField>Sales_Order__c.CreatedDate</offsetFromField>
+            <timeLength>144</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>SPO Blank Age Days EmailV2</fullName>
+        <actions>
+            <name>SPO_Notification</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <formula>Bill_to_Customer_No__r.Parent.Id = '001f400000DS2R2'
+&amp;&amp;
+ISBLANK( Customer_PO_No__c )</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>SPO_Notification</name>
+                <type>Alert</type>
+            </actions>
+            <actions>
+                <name>SPOTriggerDate</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.SPOTriggerDate__c</offsetFromField>
+            <timeLength>33</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>Sales Order Credit Hold</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Order__c.Credit_Hold__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Sales_Order_Credit_Hold</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Order__c.Trigger_Time__c</offsetFromField>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>SetQuoteOrderOwnerToHOU</fullName>
+        <actions>
+            <name>SetQuoteOrderOwnerToHOU</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Sales_Order__c.No__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Update Status Change Date</fullName>
+        <actions>
+            <name>Update_Date_Field</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>ISCHANGED( Quote_Status__c )</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>TM__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>TM__c.Sales_Order__c</field>
+    </columns>
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>TM__c.Sales_Order_Type__c</field>
+    </columns>
+    <columns>
+        <field>TM__c.Created_Date__c</field>
+    </columns>
+    <description>T&amp;Ms assigned to retail G&amp;W pumpouts</description>
+    <filter>
+        <criteriaItems>
+            <column>TM__c.Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,Open,Scheduled</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>TM__c.Sales_Order_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>retail petroleum pump out</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>FK_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,cumberland farms,sunoco lp,global partners lp,crossamerica partners lp,vixxo,jf petroleum group,cpd energy</value>
+        </criteriaItems>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Month</dateGranularity>
+        <field>TM__c.Desired_Scheduled_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>TM__c.Service_Center__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Retail G&amp;W Open/Unscheduled T&amp;Ms</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$TM__c@TM__c.Bill_to_Customer__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>TM__c.Desired_Scheduled_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

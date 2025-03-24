@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Sales_Order__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Name</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Bill_to_Customer_No__c</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$From_Sales_Quote__c</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Sales_Order_Type__c</field>
+    </columns>
+    <crossFilters>
+        <criteriaItems>
+            <column>CreatedDate</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>LAST_90_DAYS</value>
+        </criteriaItems>
+        <operation>without</operation>
+        <primaryTableColumn>Sales_Order__c$Id</primaryTableColumn>
+        <relatedTable>TM__c</relatedTable>
+        <relatedTableJoinColumn>Sales_Order__c</relatedTableJoinColumn>
+    </crossFilters>
+    <filter>
+        <criteriaItems>
+            <column>Sales_Order__c$CreatedDate</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>12/16/2021 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Order__c$Document_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Sales Order</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>SO created  &gt; 12/16/2021 w/o TM</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Sales_Order_w_o_TM__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Sales_Order__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Approval_Request_Rejection</fullName>
+        <description>Approval Request Rejection</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/ACV_SI_CR_Approval_Rejection_Email</template>
+    </alerts>
+    <alerts>
+        <fullName>Credit_Memo_Notification</fullName>
+        <description>Credit Memo Notification</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Credit_Memo_Notification</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Mark_Approval_Step_Completed</fullName>
+        <field>Approval_Step_Completed__c</field>
+        <literalValue>1</literalValue>
+        <name>Mark Approval Step Completed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedAmount</fullName>
+        <field>Approved_Amount__c</field>
+        <name>ResetApprovedAmount</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedLevel</fullName>
+        <field>Approved_Level__c</field>
+        <name>ResetApprovedLevel</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetApprovedMargin</fullName>
+        <field>Approved_Profit_Margin__c</field>
+        <name>ResetApprovedMargin</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetPendingApprovalFrom</fullName>
+        <field>Pending_Approval_From__c</field>
+        <name>ResetPendingApprovalFrom</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ResetPendingApprovalLevel</fullName>
+        <field>Pending_Approval_Level__c</field>
+        <name>ResetPendingApprovalLevel</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Null</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Sales_Invoice_Sys_Posted_Date</fullName>
+        <field>SysPostedDate__c</field>
+        <formula>today()</formula>
+        <name>Sales Invoice Sys Posted Date</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovalStatusToDraft</fullName>
+        <field>Approval_Status__c</field>
+        <literalValue>Draft</literalValue>
+        <name>SetApprovalStatusToDraft</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovalStatusToRejected</fullName>
+        <field>Approval_Status__c</field>
+        <literalValue>Rejected</literalValue>
+        <name>SetApprovalStatusToRejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>SetApprovedToFalse</fullName>
+        <field>Approved__c</field>
+        <literalValue>0</literalValue>
+        <name>SetApprovedToFalse</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>UpdateInvoiceApprovalDate</fullName>
+        <field>Approval_Date__c</field>
+        <formula>TODAY()</formula>
+        <name>UpdateInvoiceApprovalDate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Credit Memo Notification</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>Sales_Invoice__c.Credit_Memo__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Credit_Memo_Notification</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Sales_Invoice__c.Trigger_Time__c</offsetFromField>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>Update SysPostedDate</fullName>
+        <actions>
+            <name>Sales_Invoice_Sys_Posted_Date</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Invoice__c.Document_Status__c</field>
+            <operation>equals</operation>
+            <value>Posted</value>
+        </criteriaItems>
+        <description>This is moved to SalesInvoiceTrigger to avoid Query 101 issue</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>UpdateApprovalDateWhenInvoiceIsApproved</fullName>
+        <actions>
+            <name>UpdateInvoiceApprovalDate</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Sales_Invoice__c.Approval_Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Sales_Order__c$CreatedDate</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Name</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Bill_to_Customer_No__c</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$Site_Name__c</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c.Sales_Order_Job_Tasks__r$Name</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Sales_Order__c.Sales_Order_Job_Tasks__r$Task_No__c</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c$ClonedFromRecordId__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Sales_Order__c$CreatedBy</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Tyler Munson</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Order__c$Bill_to_Customer_No__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>INNOVATIVE CONSULTING AND MANAGEMENT SERVICES LLC</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Quotes/Orders with Task By Customer</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Quotes_Orders_with__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Sales_Order__c$Contract_End_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

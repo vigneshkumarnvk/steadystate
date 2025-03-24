@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Customer_Activation_Email</fullName>
+        <ccEmails>ACV-SF-NAV-Customer-Request@acvenviro.com</ccEmails>
+        <description>Customer Activation Email</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>NAV_Accounting_Users</recipient>
+            <type>group</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Customer_Activation_Email</template>
+    </alerts>
+    <alerts>
+        <fullName>Customer_Deactivation_Email</fullName>
+        <ccEmails>ACV-SF-NAV-Customer-Request@acvenviro.com</ccEmails>
+        <description>Customer Deactivation Email</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>NAV_Accounting_Users</recipient>
+            <type>group</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Customer_Deactivation_Email</template>
+    </alerts>
+    <alerts>
+        <fullName>Email_Alert_Credit_Hold</fullName>
+        <description>Email Alert Credit Hold</description>
+        <protected>false</protected>
+        <recipients>
+            <type>accountOwner</type>
+        </recipients>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        
+        
+        
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Credit_Hold_Notification</template>
+    </alerts>
+    <alerts>
+        <fullName>New_Customer_Email</fullName>
+        <ccEmails>credits@acvenviro.com,ESCreditApp@republicservices.com,dscerbo@republicservices.com,auto.test3@eqonline.onmicrosoft.com</ccEmails>
+        <description>New Customer Email</description>
+        <protected>false</protected>
+        <senderAddress>no-reply-salesforce@republicservices.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/New_Customer_Notification</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>API_Call</fullName>
+        <field>API_Call__c</field>
+        <literalValue>1</literalValue>
+        <name>API Call</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Date</fullName>
+        <field>ER_Contract_Date__c</field>
+        <formula>TODAY()</formula>
+        <name>Update Date</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Sent_Flag</fullName>
+        <field>New_Customer_Email_Sent__c</field>
+        <literalValue>1</literalValue>
+        <name>Update Sent Flag</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Account on Credit Hold</fullName>
+        <actions>
+            <name>Email_Alert_Credit_Hold</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Account.Credit_Hold__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <description>Workflow rule notifies AR Team and AE that an account has been put on credit hold.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Available CL%3ECredit Limit</fullName>
+        <actions>
+            <name>Credit_Limit_Email</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <formula>Available_Credit_Limit__c &gt;  0</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Customer Activation Email</fullName>
+        <actions>
+            <name>Customer_Activation_Email</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <formula>TEXT(Type) == 'Customer' &amp;&amp;  TEXT(Customer_Status__c) = 'Active' &amp;&amp; ISCHANGED(Customer_Status__c) &amp;&amp; In_Sync__c != true</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Customer Deactivation Email</fullName>
+        <actions>
+            <name>Customer_Deactivation_Email</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <formula>TEXT(Type) == 'Customer' &amp;&amp;  TEXT(Customer_Status__c) = 'Inactive' &amp;&amp; ISCHANGED(Customer_Status__c) &amp;&amp; In_Sync__c != true</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Customer Email</fullName>
+        <actions>
+            <name>New_Customer_Email</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Update_Sent_Flag</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Account.Type</field>
+            <operation>equals</operation>
+            <value>Customer</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.New_Customer_Email_Sent__c</field>
+            <operation>notEqual</operation>
+            <value>True</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Account.Disabled_New_Cust_Email_Notification__c</field>
+            <operation>notEqual</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Update ER Date</fullName>
+        <actions>
+            <name>API_Call</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <actions>
+            <name>Update_Date</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Account.ER_Contract__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>2022 Leads</fullName>
+        <default>false</default>
+        <label>2022 Leads</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Baltimore Cross Sell Pilot</fullName>
+        <default>false</default>
+        <label>Baltimore Cross Sell Pilot</label>
+    </standardValue>
+    <standardValue>
+        <fullName>CIS- Construction Information Systems, Inc</fullName>
+        <default>false</default>
+        <label>CIS- Construction Information Systems, Inc</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Contractor</fullName>
+        <default>false</default>
+        <label>Contractor</label>
+    </standardValue>
+    <standardValue>
+        <fullName>e-Manifest</fullName>
+        <default>false</default>
+        <label>e-Manifest</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Full Family</fullName>
+        <default>false</default>
+        <label>Full Family</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Greensboro Cross Sell Pilot</fullName>
+        <default>false</default>
+        <label>Greensboro Cross Sell Pilot</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Inbound Calls</fullName>
+        <default>false</default>
+        <label>Inbound Calls</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Knowsy</fullName>
+        <default>false</default>
+        <label>Knowsy</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Networking Event</fullName>
+        <default>false</default>
+        <label>Networking Event</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Republic Services Referral</fullName>
+        <default>false</default>
+        <label>Cross Sell</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSG Cross Sell Pilot</fullName>
+        <default>false</default>
+        <label>RSG Cross Sell Pilot</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sales Specialist Research</fullName>
+        <default>false</default>
+        <label>Sales Specialist Research</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Trade Show</fullName>
+        <default>false</default>
+        <label>Trade Show</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Uproar Media Research</fullName>
+        <default>false</default>
+        <label>Uproar Media Research</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Uproar Research</fullName>
+        <default>false</default>
+        <label>Uproar Research</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Website</fullName>
+        <default>false</default>
+        <label>Website</label>
+    </standardValue>
+</StandardValueSet>

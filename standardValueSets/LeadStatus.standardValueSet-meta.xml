@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>New</fullName>
+        <default>true</default>
+        <label>New</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Contacted</fullName>
+        <default>false</default>
+        <label>Contacted</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - No Budget</fullName>
+        <default>false</default>
+        <label>Disqualified - No Budget</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - Out of Service Area</fullName>
+        <default>false</default>
+        <label>Disqualified - Out of Service Area</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - No Contact from Lead</fullName>
+        <default>false</default>
+        <label>Disqualified - No Contact from Lead</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - Current Customer</fullName>
+        <default>false</default>
+        <label>Disqualified - Current Customer</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - Project Cancelled</fullName>
+        <default>false</default>
+        <label>Disqualified - Project Cancelled</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Disqualified - Awarded to Competitor</fullName>
+        <default>false</default>
+        <label>Disqualified - Awarded to Competitor</label>
+        <converted>false</converted>
+    </standardValue>
+    <standardValue>
+        <fullName>Converted</fullName>
+        <default>false</default>
+        <label>Converted</label>
+        <converted>true</converted>
+    </standardValue>
+</StandardValueSet>

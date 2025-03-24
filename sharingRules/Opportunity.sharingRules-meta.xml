@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>Contract_Manager</fullName>
+        <accessLevel>Edit</accessLevel>
+        <description>Edit Bid Opportunity</description>
+        <label>Contract Manager</label>
+        <sharedTo>
+            <group>Contracts_Manager</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Bid</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>false</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingCriteriaRules>
+        <fullName>Edit_Opportunties</fullName>
+        <accessLevel>Edit</accessLevel>
+        <description>Allow cross sell tam to edit opportunities.</description>
+        <label>Edit Opportunties</label>
+        <sharedTo>
+            <group>Cross_Sell_Team</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Bid,Sales,Internalizing Republic Spend</value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>true</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+</SharingRules>

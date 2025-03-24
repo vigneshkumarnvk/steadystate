@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ProcessInstance.Nodes$LastActor</field>
+    </columns>
+    <columns>
+        <field>ProcessInstance.Nodes$ProcessNode.Name</field>
+    </columns>
+    <columns>
+        <field>ProcessInstance$ProcessDefinition</field>
+    </columns>
+    <columns>
+        <field>ProcessInstance$TableEnumOrId</field>
+    </columns>
+    <columns>
+        <field>ProcessInstance$Status</field>
+    </columns>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ProcessInstance$TargetName</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Approval History</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Sales_Invoice_Approval__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>ProcessInstance$CompletedDate</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

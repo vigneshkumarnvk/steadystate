@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Billing_Rule_Line__c$Billing_Rule__c</field>
+    </columns>
+    <columns>
+        <field>Billing_Rule_Line__c$Billing_Rule__c.Holidays_Bill_in_OT_Rate__c</field>
+    </columns>
+    <columns>
+        <field>Billing_Rule_Line__c$Billing_Rule__c.Holidays_Bill_in_DT_Rate__c</field>
+    </columns>
+    <columns>
+        <field>Billing_Rule_Line__c$Id</field>
+    </columns>
+    <columns>
+        <field>Billing_Rule_Line__c$Name</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Billing Rule Lines Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Billing_Rule_LInes__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Billing_Rule_Line__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>TM__c.TM_Lines__r$Resource__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>TM__c.TM_Lines__r$Total_Job_Hours__c</field>
+    </columns>
+    <description>All Labor T&amp;M entries for a date range - excludes Voided T&amp;Ms</description>
+    <filter>
+        <criteriaItems>
+            <column>TM__c.TM_Lines__r$Category__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Labor</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>TM__c$Service_Center__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>04</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>TM__c$Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Confirmed,Fully Invoiced,Closed</value>
+        </criteriaItems>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <field>TM__c$Scheduled_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>TM__c.TM_Lines__r$Resource_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Test SC Payroll Report</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>T_Ms_With_Line__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>TM__c$Scheduled_Date__c</dateColumn>
+        <endDate>2021-08-15</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2021-08-09</startDate>
+    </timeFrameFilter>
+</Report>

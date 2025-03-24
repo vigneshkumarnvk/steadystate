@@ -1,0 +1,301 @@
+html * {
+  font-size: 9pt;
+  font-family: "Trebuchet MS", Verdana, sans-serif !important;
+}
+
+@page {
+	margin-top: 5cm;
+    margin-bottom: 2cm;                
+    @top-left {
+    content: element(header);
+  }
+    @bottom-center {
+    content: element(footer);
+  }
+}
+
+.pagenumber:before {
+  content: counter(page);
+}
+
+.pagecount:before {
+  content: counter(pages);
+}
+
+div.header {
+  position: running(header);
+  padding: 0px;
+  width: 300%;
+  display: inline-block;
+  opacity: 0.7;
+}
+
+div.footer {
+  position: running(footer);
+  display: block;
+}
+
+div.content {
+  float: left;
+  width: 100%;
+  display: inline-block;
+}
+
+table {
+  -fs-table-paginate: paginate;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table, th {
+  border-left: none;
+  border-right: none;
+}
+
+.tableStyle {
+  border-collapse: collapse;
+  width: 100%;
+  border-top: thin solid rgb(54,95,145);
+  font-size: 7.5pt;
+}
+
+.tableStyle th {
+  font-size: 7.5pt;
+  background: rgb(219,229,241);
+}
+
+.border {
+  border: thin solid rgb(54,95,145);
+}
+
+.lalign {
+  text-align: left;
+}
+
+.ralign {
+  text-align: right;
+}
+
+.calign{
+	text-align:center;
+}
+
+.specialCol {
+  padding-right: 10px;
+}
+
+.total_td {
+  font-size: 8.5pt;
+}
+
+.companyName {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#cmpnyDetails {
+  width: 40%;
+  float: left;
+}
+
+#cmpnyDetails table:first-child>tr>td, #orderNoDetails table:first-child>tr>td {
+  padding: 3px 1px;
+}
+
+#orderNoDetails {
+  width: 55%;
+  float: right;
+}
+
+.docTitle {
+  font-size: 20.0pt;
+  color: #001a66;
+  text-align: right;
+  font-weight: bold;
+}
+
+.orderno td {
+  padding: 1px !important;
+}
+
+.companyTitle div {
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+    margin-top: -17px;
+    /*padding-top: -40px;*/
+    margin-bottom: 5px;
+}
+
+.companyAddress div {
+    margin-bottom: 3px;
+    margin-top: -10px;
+}
+
+#BillTo {
+  width: 45%;
+  float: left;
+}
+
+#ShipTo {
+  width: 45%;
+  float: right;
+}
+
+.margin-b-20 {
+  margin-bottom: 20px;
+}
+
+.b{
+	font-weight: bold;
+}
+
+.fl{
+	float: left;
+}
+
+.fr{
+	float:right;
+}
+.cb{
+	clear:both;
+}
+
+.mt30{
+	margin-top: 30px;
+}
+
+#divLeft{
+	width:55%
+}
+
+#divRight{
+	width:35%
+}
+
+#divMain{
+	width:100%;
+}
+#productDescription{
+	width: 50%;
+	
+}
+
+.box{
+	border: 1px solid black;
+}
+
+.box td{
+	border: 0;                
+}
+
+.allBorders{
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+.allBorders td, .allBorders th{
+	border: 0.5px solid black;
+}
+
+#tblPhyiscoChemicalPrimary th, #tblMicrobiologicalTest th{
+	font-weight: bold;                
+}
+
+#tblPhyiscoChemicalPrimary th, #tblMicrobiologicalTest th, #tblPhyiscoChemicalSec th{
+	text-align:center;              
+}
+
+#tblPhyiscoChemicalSec th{
+	font-weight: normal;
+	border-top:none;
+}
+
+#tblPhyiscoChemicalSec{
+	border-top:none;
+} 
+
+.insideBorders {
+	border-collapse: collapse;
+}
+.insideBorders td, insideBorders th {
+	border: 1px solid black;
+	border-top: none;
+}
+.insideBorders tr:first-child th {
+	border-top: 0;
+}
+.insideBorders tr:last-child td {
+	border-bottom: 0;
+}
+.insideBorders tr td:first-child,
+.insideBorders tr th:first-child {
+	border-left: 0;
+	border-right:0;
+}
+
+.insideBorders tr td:last-child,
+.insideBorders tr th:last-child {
+	border-right: 0;                
+}
+
+.signature{
+	border-top:2px solid black; 
+	width: 90px;
+}
+
+.noBottomBorder{                
+	border-bottom:none !important;
+}
+
+.borderRight {
+	 border: thin solid rgb(54,95,145); 
+	 text-align: right;
+}
+
+.rightBorder{
+    border-right: thin solid rgb(54,95,145);
+}
+
+.topBorder{
+    border-top: thin solid rgb(54,95,145);
+}
+
+.leftBorder{
+    border-left: thin solid rgb(54,95,145);
+}
+
+.bottomBorder{
+    border-bottom: thin solid rgb(54,95,145);
+}
+
+.leftMargin-5{
+    margin-left: -5px;
+}
+
+.topMargin-10{
+    margin-top: -10px;
+}
+
+.rightMargin-5{
+    margin-right: -5px;
+}
+
+.margin-5{
+    margin: -5px;
+}
+
+.margin-3{
+    margin: -3px;
+}
+
+.spanLabel{
+    width: 110px;
+    display: inline-block;
+}
+
+table tr {
+    border-bottom: 0.5pt solid rgb(54,95,145);
+}​

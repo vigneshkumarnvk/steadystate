@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>number</bucketType>
+        <developerName>BucketField_83578033</developerName>
+        <masterLabel>Fiscal Quarter</masterLabel>
+        <nullTreatment>z</nullTreatment>
+        <sourceColumnName>Account.Customer_Revenues__r$Fiscal_Period__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <to>3</to>
+            </sourceValues>
+            <value>First Quarter</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>3</from>
+                <to>6</to>
+            </sourceValues>
+            <value>Second Quarter</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>6</from>
+                <to>9</to>
+            </sourceValues>
+            <value>Third Quarter</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>9</from>
+            </sourceValues>
+            <value>Fourth Quarter</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>Account$Owner</field>
+    </columns>
+    <columns>
+        <field>BucketField_83578033</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Revenues__r$Customer_Name__c</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Revenues__r$Id</field>
+    </columns>
+    <columns>
+        <field>Account.Customer_Revenues__r$Sales_Order__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.Customer_Revenues__r$Amount__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Account$Owner</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Kim Neville,Bill Tuttle,Josh Jackson</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Customer_Revenues__r$Fiscal_Year__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>2023</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Customer_Revenues__r$Fiscal_Period__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>9</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>Ryan&apos;s Team 2023 Revenue</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>Customer_Revenue__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Account$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

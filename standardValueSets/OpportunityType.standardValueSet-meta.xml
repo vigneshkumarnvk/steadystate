@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Existing Customer - One Time Project</fullName>
+        <default>false</default>
+        <label>Existing Customer - One Time Project</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Existing Customer - New Repetitive Business</fullName>
+        <default>false</default>
+        <label>Existing Customer - New Repetitive Business</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Existing Customer - Existing Repetitive Business</fullName>
+        <default>false</default>
+        <label>Existing Customer - Existing Repetitive Business</label>
+    </standardValue>
+    <standardValue>
+        <fullName>New Customer - One Time Project</fullName>
+        <default>false</default>
+        <label>New Customer - One Time Project</label>
+    </standardValue>
+    <standardValue>
+        <fullName>New Customer - New Repetitive Business</fullName>
+        <default>false</default>
+        <label>New Customer - New Repetitive Business</label>
+    </standardValue>
+</StandardValueSet>

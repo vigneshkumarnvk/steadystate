@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <aggregates>
+        <calculatedFormula>(Sales_Invoice__c.Invoice_Amount__c:SUM-Sales_Invoice__c.Invoice_Cost__c:SUM)/Sales_Invoice__c.Invoice_Amount__c:SUM</calculatedFormula>
+        <datatype>percent</datatype>
+        <description>Contract Profit Margin</description>
+        <developerName>FORMULA1</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Contract Profit Margin</masterLabel>
+        <reportType>Contract_with_Sales_Invoices__c</reportType>
+        <scale>2</scale>
+    </aggregates>
+    <block>
+        <blockInfo>
+            <aggregateReferences>
+                <aggregate>FORMULA1</aggregate>
+            </aggregateReferences>
+            <blockId>B0</blockId>
+            <joinTable>Contract</joinTable>
+        </blockInfo>
+        <columns>
+            <field>Contract$StartDate</field>
+        </columns>
+        <columns>
+            <field>Contract$EndDate</field>
+        </columns>
+        <columns>
+            <field>Contract$Name</field>
+        </columns>
+        <columns>
+            <field>Contract.Sales_Invoices__r$Name</field>
+        </columns>
+        <columns>
+            <field>Contract.Sales_Invoices__r$Invoice_Date__c</field>
+        </columns>
+        <columns>
+            <aggregateTypes>Sum</aggregateTypes>
+            <field>Contract.Sales_Invoices__r$Invoice_Amount__c</field>
+        </columns>
+        <columns>
+            <aggregateTypes>Sum</aggregateTypes>
+            <field>Contract.Sales_Invoices__r$Invoice_Tax__c</field>
+        </columns>
+        <columns>
+            <aggregateTypes>Sum</aggregateTypes>
+            <field>Contract.Sales_Invoices__r$Invoice_Amt_Incl_Tax__c</field>
+        </columns>
+        <columns>
+            <aggregateTypes>Sum</aggregateTypes>
+            <field>Contract.Sales_Invoices__r$Invoice_Cost__c</field>
+        </columns>
+        <columns>
+            <field>Contract.Sales_Invoices__r$Invoice_Profit_prct__c</field>
+        </columns>
+        <filter>
+            <criteriaItems>
+                <column>Contract$Status</column>
+                <columnToColumn>false</columnToColumn>
+                <isUnlocked>true</isUnlocked>
+                <operator>notEqual</operator>
+                <value>Draft,In Approval Process,Template Creation,Upload Complete,Inactive</value>
+            </criteriaItems>
+            <criteriaItems>
+                <column>Contract.Sales_Invoices__r$Name</column>
+                <columnToColumn>false</columnToColumn>
+                <isUnlocked>true</isUnlocked>
+                <operator>notContain</operator>
+                <value>VOID</value>
+            </criteriaItems>
+        </filter>
+        <format>Summary</format>
+        <name>Contract with Sales Invoices &amp; Margin</name>
+        <params>
+            <name>co</name>
+            <value>1</value>
+        </params>
+        <reportType>Contract_with_Sales_Invoices__c</reportType>
+        <scope>organization</scope>
+        <showGrandTotal>true</showGrandTotal>
+        <showSubTotals>true</showSubTotals>
+        <timeFrameFilter>
+            <dateColumn>Contract$CreatedDate</dateColumn>
+            <interval>INTERVAL_CUSTOM</interval>
+        </timeFrameFilter>
+    </block>
+    <blockInfo>
+        <blockId xsi:nil="true"/>
+        <joinTable>Contract</joinTable>
+    </blockInfo>
+    <format>MultiBlock</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Contract$ContractNumber</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Brajer - Contract with Invoices &amp; Margin</name>
+    <reportType>Contract_with_Sales_Invoices__c</reportType>
+    <showDetails>true</showDetails>
+</Report>

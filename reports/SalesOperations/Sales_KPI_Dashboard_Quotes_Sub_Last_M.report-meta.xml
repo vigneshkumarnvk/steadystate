@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Sales_Order__c.Bill_to_Customer_No__c</field>
+    </columns>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems>
+            <column>Sales_Order__c.Document_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Sales Quote</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Order__c.Approved_Date__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>N_MONTHS_AGO:2</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Order__c.Approval_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Order__c.Account_Owner__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Bill Tuttle,Brittney Hutchinson,Chris Hutts,Eric Boyd,Glenn Burke,Glenn Kays,Jeff Peleg,Jeffrey Small,Jim Sergey,Jodi Gentzlinger,Josh Jackson,Kami Labell,Kara Minskey,Kelly Menzel,Kim Anderson,Kim Neville,Leo Ryan,Marco Sapone,Mark Aldrich,Matt Gemmell,Michael Cantelmo,Michael Stuart,Michael Restivo,Mike Wedge,Nick Foote,Patrick Kearney,Richard Foxx,Stephane Lortie,Steve Dominick,Tal Johnson</value>
+        </criteriaItems>
+    </filter>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Month</dateGranularity>
+        <field>Sales_Order__c.Approved_Date__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Sales_Order__c.Account_Owner__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Sales KPI Dashboard: Quotes Sub Last M</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Sales_Order__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Sales_Order__c.Contract_End_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

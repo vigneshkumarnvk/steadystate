@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>USERS.NAME</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_NUMBER</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_LINE1</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_CITY</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_STATE_CODE</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_ZIP</field>
+    </columns>
+    <columns>
+        <field>Account.Account_Executive__c</field>
+    </columns>
+    <columns>
+        <field>CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>Account.Subsidiary_Company__c</field>
+    </columns>
+    <filter>
+        <booleanFilter>(1 OR 2) AND 3 AND (4 OR 5 OR 6)</booleanFilter>
+        <criteriaItems>
+            <column>USERS.NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Nicholas Marrone</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Account_Executive__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Nicholas Marrone</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ADDRESS1_STATE_CODE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>NJ,NY</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ADDRESS1_CITY</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,Allamuchy,Allendale,Alpine,Andover,Arden,Augusta,Barryville,Bear Mountain,Bellvale,Belvidere,Bergenfield,Bethel,Blairstown,Blauvelt,Blooming Grove,Bloomingburg,Bloomingdale,Bogota,Boonton,Branchville,Broadway,Brookside,Budd Lake,Bullville,Burlingham,Butler,Buttzville,Callicoon,Callicoon Center,Campbell Hall,Carlstadt,Cedar Knolls,Central Valley,Changewater,Chatham,Chester,Circleville,Claryville,Cliffside Park,Clifton,Closter,Cochecton,Cochecton Center,Columbia,Congers,Convent Station,Cornwall,Cornwall On Hudson,Cresskill,Cuddebackville,Delaware,Demarest,Denning,Denville,Dover,Dumont,East Hanover,East Rutherford,Edgewater,Eldred,Ellenville,Elmwood Park,Emerson,Englewood,Englewood Cliffs,Esopus,Fair Lawn,Fairview,Fallsburg,Ferndale,Flanders,Florham Park,Florida,Forestburgh,Fort Lee,Fort Montgomery,Franklin,Franklin Lakes,Fremont Center,Gardiner,Garfield,Garnerville,Gillette,Glasser,Glen Rock,Glen Spey,Glen Wild,Glenwood,Goshen,Grahamsville,Great Meadows,Green Village,Greendell,Greenwood Lake,Hackensack,Hackettstown,Haledon,Hamburg,Hankins,Hardenburg,Harriman,Harrington Park,Harris,Hasbrouck Heights,Haskell,Haverstraw,Haworth,Hawthorne,Hewitt,Hibernia,Highland Falls,Highland Lake,Highland Lakes,Highland Mills,Hillburn,Hillsdale,Ho Ho Kus,Hopatcong,Hope,Hortonville,Howells,Huguenot,Hurley,Hurleyville,Ironia</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ADDRESS1_CITY</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,Jeffersonville,Johnson,Johnsonburg,Kauneonga Lake,Kenoza Lake,Kenvil,Kiamesha Lake,Kingston,Lafayette,Lake Hiawatha,Lake Hopatcong,Lake Huntington,Landing,Layton,Ledgewood,Leonia,Liberty,Lincoln Park,Little Falls,Little Ferry,Livingston Manor,Lloyd,Loch Sheldrake,Lodi,Long Eddy,Long Valley,Lyndhurst,Madison,Mahwah,Marbletown,Marlborough,Maybrook,Maywood,Mc Afee,Mendham,Middletown,Middleville,Midland Park,Millington,Mine Hill,Mongaup Valley,Monroe,Monsey,Montague,Montgomery,Monticello,Montvale,Montville,Moonachie,Morris Plains,Morristown,Mount Arlington,Mount Freedom,Mount Tabor,Mountain Dale,Mountain Lakes,Mountainville,Nanuet,Narrowsburg,Netcong,Neversink,New City,New Hampton,New Milford,New Paltz,New Vernon,New Windsor,Newburgh,Newfoundland,Newton,North Arlington,North Branch,Northvale,Norwood,Nyack,Oak Ridge,Oakland,Obernburg,Ogdensburg,Olive,Oradell,Orangeburg,Otisville,Oxford,Palisades,Palisades Park,Paramus,Park Ridge,Parksville,Parsippany,Passaic,Paterson,Pearl River,Pequannock,Phillipsburg,Phillipsport,Picatinny Arsenal,Piermont,Pine Brook,Pine Bush,Pine Island,Plattekill,Pomona,Pompton Lakes,Pompton Plains,Pond Eddy,Port Jervis,Port Murray,Ramsey,Randolph,Ridgefield,Ridgefield Park,Ridgewood,Ringwood,River Edge,Riverdale,Rochelle Park,Rochester,Rock Hill,Rock Tavern</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ADDRESS1_CITY</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Rockaway,Roscoe,Rosendale,Rutherford,Saddle Brook,Saddle River,Salisbury Mills,Saugerties,Schooleys Mountain,Shandaken,Shawangunk,Slate Hill,Sloatsburg,Smallwood,South Fallsburg,South Hackensack,Southfields,Sparkill,Sparrow Bush,Sparta,Spring Valley,Stanhope,Sterling Forest,Stewartsville,Stillwater,Stirling,Stockholm,Stony Point,Succasunna,Suffern,Sugar Loaf,Summitville,Sussex,Swan Lake,Swartswood,Tallman,Tappan,Teaneck,Tenafly,Teterboro,Thiells,Thompson Ridge,Thompsonville,Tomkins Cove,Totowa,Towaco,Township of Washington,Tranquility,Tuxedo Park,Ulster,Unionville,Vails Gate,Valley Cottage,Vernon,Vienna,Walden,Waldwick,Wallington,Wallpack Center,Wanaque,Warwick,Washington,Washingtonville,Wawarsing,Wayne,West Haverstraw,West Milford,West Nyack,West Point,Westbrookville,Westtown,Westwood,Wharton,Whippany,White Lake,White Sulphur Springs,Wood Ridge,Woodbourne,Woodcliff Lake,Woodridge,Woodstock,Wurtsboro,Wyckoff,Youngsville,Yulan</value>
+        </criteriaItems>
+    </filter>
+    <format>Tabular</format>
+    <name>ACCOUNTS - Nick Marrone (Territory A9)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>ACCOUNT.NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

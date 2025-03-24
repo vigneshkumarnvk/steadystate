@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Id</field>
+    </columns>
+    <columns>
+        <field>Resource__c$CSID__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Child_Resource__c.CSID__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Child_Resource_Type__c.Formual__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Child_Resource__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Child_Resource_Type__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c$Name</field>
+    </columns>
+    <columns>
+        <field>Resource__c.Parent_Resources__r$Name</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Resources with Child Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Parent_Resource_Types_Resources__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Resource__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

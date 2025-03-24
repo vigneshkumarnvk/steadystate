@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_80381876</developerName>
+        <masterLabel>Job Type</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <sourceColumnName>Opportunity.Job_Type__c</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>Disposal - Haz Bulk</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Disposal - Haz Drum</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Disposal - NonHaz Bulk</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Disposal - NonHaz Drum</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>T&amp;D - Nested</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Transportation</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Waste Minimization</sourceValue>
+            </sourceValues>
+            <value>T&amp;D</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Virus Decon</sourceValue>
+            </sourceValues>
+            <value>Virus Decon</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Other</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Backhauls</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Marine Services</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Product Sales</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Rent Revenue</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Training; Safety Services</sourceValue>
+            </sourceValues>
+            <value>Other</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Emergency Response</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Major Event</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Stand-by ER Agreement</sourceValue>
+            </sourceValues>
+            <value>ER</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Field Services</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Industrial - Nested</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Industrial - Shutdown/Turnaround</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Industrial Cleaning</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Soil Remediation</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Hydroexcavation</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Dewatering &amp; Treatment</sourceValue>
+            </sourceValues>
+            <value>FS &amp; IS</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Lab Pack</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Household Hazardous Waste</sourceValue>
+            </sourceValues>
+            <value>LPs &amp; HHW</value>
+        </values>
+    </buckets>
+    <buckets>
+        <bucketType>number</bucketType>
+        <developerName>BucketField_96809889</developerName>
+        <masterLabel>Value Bucket</masterLabel>
+        <nullTreatment>z</nullTreatment>
+        <sourceColumnName>AMOUNT</sourceColumnName>
+        <useOther>false</useOther>
+        <values>
+            <sourceValues>
+                <to>25,000</to>
+            </sourceValues>
+            <value>&lt; $25k</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>25,000</from>
+                <to>100,000</to>
+            </sourceValues>
+            <value>$25k - $100k</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>100,000</from>
+                <to>250,000</to>
+            </sourceValues>
+            <value>$100k - $250k</value>
+        </values>
+        <values>
+            <sourceValues>
+                <from>250,000</from>
+            </sourceValues>
+            <value>$250k</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>ACCOUNT_NAME</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>AMOUNT</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Opportunity.Bid_Opportunity</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed Lost,Closed Won</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Job_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Dewatering &amp; Treatment,Field Services,Hydroexcavation,Industrial - Nested,Industrial - Shutdown/Turnaround,Industrial Cleaning,Soil Remediation</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_96809889</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>STAGE_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Field Service Bids - Closed by Value</name>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CLOSE_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

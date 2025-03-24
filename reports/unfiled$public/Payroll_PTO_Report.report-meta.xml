@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>Timesheet__c.Timesheet_Lines__r$Scheduled_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Timesheet__c.Timesheet_Lines__r$Net_Hours__c</field>
+    </columns>
+    <columns>
+        <field>Timesheet__c.Timesheet_Lines__r.Payroll_Lines1__r$Pay_Code__c</field>
+    </columns>
+    <description>My Service Center Filter
+Payroll Report</description>
+    <filter>
+        <criteriaItems>
+            <column>Timesheet__c$Service_Center__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>23</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Timesheet__c.Timesheet_Lines__r.Payroll_Lines1__r$Pay_Code__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>PTO</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Timesheet__c$Service_Center__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Timesheet__c$Resource_Name__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Payroll- PTO Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Payroll_Report_2__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Timesheet__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

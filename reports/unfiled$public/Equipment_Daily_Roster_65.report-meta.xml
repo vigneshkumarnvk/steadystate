@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>TM_Line__c.Total_Job_Hours__c:SUM</calculatedFormula>
+        <datatype>number</datatype>
+        <description>T&amp;M Hours</description>
+        <developerName>FORMULA3</developerName>
+        <isActive>false</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Total T&amp;M Hours</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <field>Resource__c$Resource_Type__c</field>
+    </columns>
+    <columns>
+        <field>Resource__c$Status__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Resource__c$Category__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Equipment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource__c$Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Inactive,Available,Out of Service,OOS-Pending</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Resource__c$Service_Center__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>contains</operator>
+            <value>65</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Resource__c$Name</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Resource__c$Description__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Equipment Daily Roster- 65</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Resource_with_TM__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>false</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <sortColumn>Resource__c$Status__c</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>Resource__c.TM_Lines__r$Scheduled_Date__c</dateColumn>
+        <interval>INTERVAL_TODAY</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Account__c</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Contract__c</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Contract_Request_Reason__c</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Contract_Type__c</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Status__c</field>
+    </columns>
+    <columns>
+        <field>CUST_CREATED_DATE</field>
+    </columns>
+    <columns>
+        <field>Contract_Request__c.Contract_Start_Date__c</field>
+    </columns>
+    <format>Tabular</format>
+    <name>Contract Request (All List View)</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntity$Contract_Request__c</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Contract_Request__c.Contract_End_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

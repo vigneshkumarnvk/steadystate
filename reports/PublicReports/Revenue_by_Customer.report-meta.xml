@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>CUST_NAME</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Sales_Invoice__c.Amount_Paid__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Sales_Invoice__c.Sales_Order_type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>I/C-Equipment Rental,I/C Sub Contractor Billing to Allstate,I/C Sub Contractor Billing to Clean Venture,I/C Sub Contractor Billing to Cycle Chem</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Sales_Invoice__c.Amount_Paid__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>FK_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Month</dateGranularity>
+        <field>Sales_Invoice__c.Date_of_Last_Payment__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Revenue by Customer</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>CustomEntity$Sales_Invoice__c@Sales_Invoice__c.Bill_to_Customer__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Sales_Invoice__c.Approval_Date__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Timesheet__c.Timesheet_Lines__r$Net_Hours__c</field>
+    </columns>
+    <description>My Service Center Filter
+Payroll Report</description>
+    <filter>
+        <criteriaItems>
+            <column>Timesheet__c$Service_Center__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>contains</operator>
+            <value>01,31,32,62</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Timesheet__c.Timesheet_Lines__r.Payroll_Lines1__r$Pay_Code__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>PTO</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <aggregateType>Sum</aggregateType>
+        <dateGranularity>Day</dateGranularity>
+        <field>Timesheet__c$Resource_Name__c</field>
+        <sortByName>Timesheet__c.Timesheet_Lines__r$Net_Hours__c</sortByName>
+        <sortOrder>Desc</sortOrder>
+        <sortType>Aggregate</sortType>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Timesheet__c$Service_Center__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>PTO Report_YTD_Metro</name>
+    <params>
+        <name>co</name>
+        <value>0</value>
+    </params>
+    <reportType>Payroll_Report_2__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Timesheet__c$CreatedDate</dateColumn>
+        <interval>INTERVAL_CURY</interval>
+    </timeFrameFilter>
+</Report>

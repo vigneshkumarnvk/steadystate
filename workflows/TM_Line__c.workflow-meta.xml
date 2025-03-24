@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Update_WD_Unit_Cost</fullName>
+        <description>Update T&amp;M Line unit cost</description>
+        <field>Unit_Cost__c</field>
+        <formula>IF(Unit_Cost__c = 0.00, Unit_Price__c, Unit_Cost__c )</formula>
+        <name>Update WD Unit Cost</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>WD Unit Cost Update</fullName>
+        <actions>
+            <name>Update_WD_Unit_Cost</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>false</active>
+        <formula>Unit_Cost__c = 0.00  &amp;&amp; 
+ ISPICKVAL( Category__c , "Waste Disposal")</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

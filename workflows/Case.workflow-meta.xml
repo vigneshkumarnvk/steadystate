@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?><Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>AP_Inquiries_Alert_Case_Created</fullName>
+        <description>AP Inquiries Alert Case Created</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        
+        
+        
+        
+        <senderAddress>apinquiries@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/AP_Inquiries_Support_Side</template>
+    </alerts>
+    <alerts>
+        <fullName>AP_Inquiries_Case_Closed</fullName>
+        <description>AP Inquiries Case Closed</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>apinquiries@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/AP_Inquiries_Case_Closed</template>
+    </alerts>
+    <alerts>
+        <fullName>AP_Inquiries_Case_Created_External</fullName>
+        <description>AP Inquiries Case Created-External</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>apinquiries@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/AP_Inquiries_Case_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>AP_Inquirires_External_Created</fullName>
+        <description>AP Inquirires External Created</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>apinquiries@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/AP_Inquiries_Case_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>Account_Apporved</fullName>
+        <description>Account Apporved</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-reply@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Case_Approved</template>
+    </alerts>
+    <alerts>
+        <fullName>Account_Rejected</fullName>
+        <description>Account Rejected</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderAddress>no-reply@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Case_Rejected</template>
+    </alerts>
+    <alerts>
+        <fullName>Labpack_Additional_Info</fullName>
+        <description>Labpack Additional Info</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactId</field>
+            <type>contactLookup</type>
+        </recipients>
+        <senderAddress>labpackquote@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Lab_Pack_Requires_Additional_Information</template>
+    </alerts>
+    <alerts>
+        <fullName>New_IT_Support_Case_Closed</fullName>
+        <description>New IT Support Case Closed</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactId</field>
+            <type>contactLookup</type>
+        </recipients>
+        <senderAddress>support@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/IT_Support_Case_Closed</template>
+    </alerts>
+    <alerts>
+        <fullName>New_IT_Support_Case_Created</fullName>
+        <description>New IT Support Case Created</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderAddress>support@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/IT_Support_Case_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>Payroll_Case_Created</fullName>
+        <description>Payroll Case Created</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>Payroll_Support_Cases</recipient>
+            <type>group</type>
+        </recipients>
+        <senderAddress>no-reply@acvenviro.com</senderAddress>
+        <senderType>OrgWideEmailAddress</senderType>
+        <template>unfiled$public/Payroll_Support_Case_Created</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>AD_Approved</fullName>
+        <field>Status</field>
+        <literalValue>AP Approved</literalValue>
+        <name>AD Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Purchasing_Approved</fullName>
+        <field>Status</field>
+        <literalValue>Pending AP Approval</literalValue>
+        <name>Purchasing Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Reset_Status</fullName>
+        <field>Status</field>
+        <literalValue>On Hold</literalValue>
+        <name>Reset Status</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Support_Re_Open_Closed_Case</fullName>
+        <field>Status</field>
+        <literalValue>Open</literalValue>
+        <name>Support Re-Open Closed Case</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>purchasing_approval</fullName>
+        <field>Status</field>
+        <literalValue>Pending Purchasing Approval</literalValue>
+        <name>purchasing approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>AP Inquiries Case Closed</fullName>
+        <actions>
+            <name>AP_Inquiries_Case_Closed</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>AP Inquiries</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>AP Inquiries Case Created</fullName>
+        <actions>
+            <name>AP_Inquiries_Case_Created_External</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>AP Inquiries</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Case Assigned</fullName>
+        <actions>
+            <name>New_Case_Assigned</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>NOT(ISBLANK(CreatedDate))
+&amp;&amp;
+ RecordTypeId = "012f4000000Ej5d"
+&amp;&amp;
+ ISPICKVAL(Origin, "Email-SF")</formula>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>IT Admin Case Created</fullName>
+        <actions>
+            <name>IT_Email_Alert_Case_Created</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>IT Support</value>
+        </criteriaItems>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>IT Support Case Closed</fullName>
+        <actions>
+            <name>New_IT_Support_Case_Closed</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>IT Support</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>IT Support Case Created1</fullName>
+        <actions>
+            <name>New_IT_Support_Case_Created</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>IT Support</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Labpack Case Opened</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Labpack</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Labpack Requires Additional Info</fullName>
+        <actions>
+            <name>Labpack_Additional_Info</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Requires Additional Info,Labpack</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.LabpackQuote__c</field>
+            <operation>equals</operation>
+            <value>Requires Additional Info</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Payroll Support Case Created</fullName>
+        <actions>
+            <name>Payroll_Case_Created</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Payroll Support</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

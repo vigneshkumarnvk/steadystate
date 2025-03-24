@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <buckets>
+        <bucketType>picklist</bucketType>
+        <developerName>BucketField_40952810</developerName>
+        <masterLabel>Job Type</masterLabel>
+        <nullTreatment>n</nullTreatment>
+        <otherBucketLabel>Other</otherBucketLabel>
+        <sourceColumnName>Opportunity.Job_Type__c</sourceColumnName>
+        <useOther>true</useOther>
+        <values>
+            <sourceValues>
+                <sourceValue>Disposal - Haz Drum</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Disposal - NonHaz Drum</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>T&amp;D - Nested</sourceValue>
+            </sourceValues>
+            <value>Disposal - Drum</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Disposal - Haz Bulk</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Disposal - NonHaz Bulk</sourceValue>
+            </sourceValues>
+            <value>Disposal - Bulk</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Emergency Response</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Major Event</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Stand-by ER Agreement</sourceValue>
+            </sourceValues>
+            <value>Emergency Response</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Lab Pack</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Waste Minimization</sourceValue>
+            </sourceValues>
+            <value>Lab Pack</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Household Hazardous Waste</sourceValue>
+            </sourceValues>
+            <value>HHW</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Industrial - Nested</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Industrial - Shutdown/Turnaround</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Industrial Cleaning</sourceValue>
+            </sourceValues>
+            <value>Industrial Services</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Field Services</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Soil Remediation</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Retail Petroleum Service</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Dewatering &amp; Treatment</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Hydroexcavation</sourceValue>
+            </sourceValues>
+            <value>Field Services</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Backhauls</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Transportation</sourceValue>
+            </sourceValues>
+            <value>Transportation</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Tank Cleaning</sourceValue>
+            </sourceValues>
+            <sourceValues>
+                <sourceValue>Tank Removal</sourceValue>
+            </sourceValues>
+            <value>Tank Projects</value>
+        </values>
+        <values>
+            <sourceValues>
+                <sourceValue>Virus Decon</sourceValue>
+            </sourceValues>
+            <value>Virus Decon</value>
+        </values>
+    </buckets>
+    <columns>
+        <field>ACCOUNT_NAME</field>
+    </columns>
+    <columns>
+        <field>OPPORTUNITY_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Bid_Number_Title__c</field>
+    </columns>
+    <columns>
+        <field>FULL_NAME</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Service_Center__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>AMOUNT</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Bid_Due_Date__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.Lead_Type__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>RECORDTYPE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Opportunity.Bid_Opportunity</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed Won</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Bid_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>RSES Atlantic Bid</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>BucketField_40952810</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Won Bids - Last 30 Days by Type</name>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>false</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>LAST_STAGE_CHANGE_DATE</dateColumn>
+        <interval>INTERVAL_LAST30</interval>
+    </timeFrameFilter>
+</Report>

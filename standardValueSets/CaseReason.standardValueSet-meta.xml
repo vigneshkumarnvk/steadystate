@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Create User</fullName>
+        <default>false</default>
+        <label>Create User</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Update/Create Data</fullName>
+        <default>false</default>
+        <label>Update/Create Data</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Login Issues</fullName>
+        <default>false</default>
+        <label>Login Issues</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Report/Dashboard</fullName>
+        <default>false</default>
+        <label>Report/Dashboard</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Sync Error</fullName>
+        <default>false</default>
+        <label>Sync Error</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Training</fullName>
+        <default>false</default>
+        <label>Training</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>User Error</fullName>
+        <default>false</default>
+        <label>User Error</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Change Workflow Request</fullName>
+        <default>false</default>
+        <label>Change Workflow Request</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>MDN</fullName>
+        <default>false</default>
+        <label>MDN</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Missing/Late T&amp;M</fullName>
+        <default>false</default>
+        <label>Missing/Late T&amp;M</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Start/End Time Variance</fullName>
+        <default>false</default>
+        <label>Start/End Time Variance</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Lunch Variance</fullName>
+        <default>false</default>
+        <label>Lunch Variance</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Missing/Late PTO</fullName>
+        <default>false</default>
+        <label>Missing/Late PTO</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Missing/Inaccurate Flat Pay</fullName>
+        <default>false</default>
+        <label>Missing/Inaccurate Flat Pay</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Missing/Inaccurate PW/Union Pay Rule</fullName>
+        <default>false</default>
+        <label>Missing/Inaccurate PW/Union Pay Rule</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Inaccurate Hours Captured - Over-Payment</fullName>
+        <default>false</default>
+        <label>Inaccurate Hours Captured - Over-Payment</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Inaccurate Hours Captured - Under-Payment</fullName>
+        <default>false</default>
+        <label>Inaccurate Hours Captured - Under-Payment</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>Missing/Late Shop Time</fullName>
+        <default>false</default>
+        <label>Missing/Late Shop Time</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>EQAI-WO Error</fullName>
+        <default>false</default>
+        <label>EQAI-WO Error</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>EQAI-WOQ Error</fullName>
+        <default>false</default>
+        <label>EQAI-WOQ Error</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+    <standardValue>
+        <fullName>EQAI-JOB Billing Error</fullName>
+        <default>false</default>
+        <label>EQAI-JOB Billing Error</label>
+        <cssExposed>false</cssExposed>
+    </standardValue>
+</StandardValueSet>
