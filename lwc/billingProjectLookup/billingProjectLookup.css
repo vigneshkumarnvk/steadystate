@@ -1,0 +1,95 @@
+.left-column {
+    height: 80%;
+    background-color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.right-column {
+    height: 100%;
+    background-color: #ffffff;
+    padding: 0px 20px 20px 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.datatable-section {
+    background-color: #ffffff;
+    border: 1px solid #999;
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.error-message {
+    background-color: #ffd2df;
+    color: #0c0707;
+    padding: 20px;  
+    width: 100%;
+    border-radius: 25px;
+    box-sizing: border-box;
+    border: 1px solid #999;
+}
+
+.spinner-background {
+    position: relative;
+    height: 80px;
+}
+
+.textbox-container {
+    margin-bottom: 10px;
+}
+
+.textbox-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.textbox-item lightning-input {
+    width: 200px;
+}
+
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination-container lightning-button-icon {
+    margin: 0 5px;
+}
+
+.pagination-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.slds-table .slds-table_header {
+    background-color: #f2f2f2;
+}
+
+.slds-table .slds-cell-header {
+    font-weight: bold;
+}
+
+.slds-table table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.slds-table table tr:hover {
+    background-color: #e6f7ff;
+}
+
+.slds-table .custom-column {
+    text-align: center;
+    font-style: italic;
+}
+.slds-table_header-fixed-container {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}

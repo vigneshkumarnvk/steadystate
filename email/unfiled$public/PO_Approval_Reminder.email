@@ -1,0 +1,16 @@
+You have a Purchase Order that is pending approval. 
+Please visit the link below and either approve or reject it.
+
+{!ApprovalRequest.Internal_URL}
+
+Total Amount: {!Purchase_Order__c.Order_Cost_Incl_Tax__c}
+Vendor Name: {!Purchase_Order__c.Buy_from_Vendor__c}
+Service Center: {!Purchase_Order__c.Service_Center__c}
+Notes: {!Purchase_Order__c.Note__c}
+Type: {!Purchase_Order__c.Order_Type__c}
+Markup: {!IF(Purchase_Order__c.Markup__c, "Yes", "No")}
+Cost Replace: {!IF(Purchase_Order__c.Cost_Replace__c, "Yes", "No")}
+Requested by: {!Purchase_Order__c.PO_Requestor__c}
+Entered by: {!Purchase_Order__c.OwnerFullName}
+
+Thanks!

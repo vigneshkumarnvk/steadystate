@@ -1,0 +1,10 @@
+No. {!Purchase_Order__c.Name}
+Created By: {!Purchase_Order__c.CreatedBy}
+Service Center: {!Purchase_Order__c.Service_Center__c}
+{!Purchase_Order__c.Link}
+
+{!Purchase_Order__c.Note__c}
+
+Item
+
+{!Purchase_Line__c.Description__c}

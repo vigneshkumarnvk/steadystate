@@ -1,0 +1,68 @@
+<!--US135128-->
+<template>
+    <div class="slds-border_left slds-border_right slds-border_bottom">
+        <article class="slds-card slds-p-left_medium">
+
+            <!-- Header -->
+            <div class="slds-theme_shade slds-border_top slds-border_bottom slds-card__header">
+                <div class="slds-p-around_small flex-between">
+                    <div>
+                        <lightning-icon icon-name="utility:file" alternative-text="" title="" size="small">
+                        </lightning-icon>
+                        <span class="slds-text-heading_small  slds-p-left_small slds-text-title_bold">Level of Authority ({filesCount})</span>
+                    </div>
+
+                    <div>
+                        <lightning-file-upload label="" name="fileUploader" record-id={recordId} onclick={handleFile}
+                            onuploadfinished={handleUploadFinished} multiple file-field-name={fileFieldName}
+                            file-field-value={fileNamePrefix} class="customStyleFileUpload file-position">
+                        </lightning-file-upload>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <template lwc:if={files}>
+                <div class="slds-grid slds-wrap">
+
+                    <template for:each={displayFiles} for:item="file" for:index="index">
+                        <div key={file.Id}
+                            class="slds-col slds-p-horizontal_medium slds-p-bottom_xx-small slds-size_1-of-2 slds-text-body_regular">
+                            <a onclick={previewHandler} data-id={file.ContentDocumentId}>
+                                <lightning-icon icon-name={file.dynamicIconName} data-id={file.ContentDocumentId}
+                                    alternative-text="Preview">
+                                </lightning-icon>
+                                {file.Title}
+                            </a><br/>
+                            {file.formatedDate} •
+                            {file.formattedSize}  •
+                            {file.FileExtension}
+                        </div>
+                    </template>
+
+                </div>
+            </template>
+            <template lwc:else>
+                <div>
+                    <div class="slds-align_absolute-center" style="height:5rem">
+                        <lightning-file-upload label="" name="fileUploader" record-id={recordId}
+                            onuploadfinished={handleUploadFinished} multiple file-field-name={fileFieldName}
+                            file-field-value={fileNamePrefix} class="styleFileUpload">
+                        </lightning-file-upload>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Footer -->
+            <footer class="slds-card__footer">
+                <lightning-button variant="base" label="View All" title="View All" onclick={handleViewAll}>
+                </lightning-button>
+            </footer>
+
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+            </template>
+
+        </article>
+    </div>
+</template>

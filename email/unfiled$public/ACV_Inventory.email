@@ -1,0 +1,108 @@
+<messaging:emailTemplate recipientType="User" 
+    relatedToType="Purchase_Order__c"
+    subject="New PO# {!relatedTo.Name} Requires Approval">
+    <messaging:htmlEmailBody >
+        <html>
+            <head>
+                    <style type="text/css">
+                        th {font-size: 14px; font-face: arial;background: #CCCCCC; border-width: 1;  text-align: center } 
+                        td  {font-size: 14px; font-face: verdana } 
+                        table {border: solid #CCCCCC; border-width: 1}
+                        tr {border: solid #CCCCCC; border-width: 1}
+                        .emailBody p {margin:0; padding: 0;}
+                    </style>
+            </head>
+            <body class="emailBody">
+                    <p>A new purchase order has been submitted for your approval. Please visit the link below and either approve or reject it.</p>
+                    <p>
+                        <c:CmpApprovalURL objId="{!relatedTo.Id}" />
+                    </p>
+                    <p>Total Amount: {!relatedTo.Order_Cost_Incl_Tax__c}</p>
+                    <p>Vendor Name: {!relatedTo.Buy_from_Vendor__r.Name} </p>
+                    <p>Service Center: {!relatedTo.Service_Center__r.Name} - {!relatedTo.Service_Center__r.Description__c} </p>
+                    <p>Notes: {!relatedTo.Note__c} </p>
+                    <p>Type: {!relatedTo.Order_Type__c} </p>
+                    <p>Requested by: {!relatedTo.PO_Requestor__r.Name} </p>
+                    <p>Entered by: {!relatedTo.Owner.Name}</p>
+                <table>
+                    <tr>
+                        <th>Product</th>
+                        <th>Vendor Description</th>
+                        <th>Quantity</th>
+                        <th>Unit Cost</th>
+                        <th>Line Cost</th>
+                        <th>Tax Amount</th>
+                        <th>Line Cost Incl. Tax</th>                        
+                        <th>Note</th>                        
+                        <!-- 
+                        <th>Vendor SKU</th>
+                        <th>Unit of Measure</th>
+                        <th>Tax %</th>                                                
+                        <th>Service Center</th>
+                        <th>Sales Order</th>                        
+                        <th>G/L Account</th>                        
+                        -->
+                    </tr>
+                    <apex:repeat var="pl" value="{!relatedTo.Purchase_Lines__r}">
+                        <tr>
+                            <td>{!pl.Item__r.Name}</td>
+                            <td>{!pl.Vendor_Description__c}</td>
+                            <td>
+                                <apex:outputText value="{0, number, ###,##0.00}" styleClass="output-numeric">
+                                    <apex:param value="{!pl.Quantity__c}" />
+                                </apex:outputText>
+                            </td>
+                            <td>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                    <apex:param value="{!pl.Unit_Cost__c}" />
+                                </apex:outputText>                                                                                    
+                            </td>
+                            <td>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                    <apex:param value="{!pl.Line_Cost__c}" />
+                                </apex:outputText>
+                            </td>  
+                            <td> 
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                    <apex:param value="{!pl.Tax__c}" />
+                                </apex:outputText>                                
+                            </td> 
+                            <td> 
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                    <apex:param value="{!pl.Line_Cost_Incl_Tax__c}" />
+                                </apex:outputText>                                
+                            </td>                             
+                            <td>{!pl.Note__c}</td>                             
+                            <!--
+                            <td>{!pl.Vendor_SKU__c}</td>                            
+                            <td>{!pl.Unit_of_Measure__r.Name}</td>                            
+                            <td>{!pl.Service_Center__r.Name}</td>
+                            <td>{!pl.Sales_Order__r.Name}</td>
+                            <td>{!pl.G_L_Account__c}</td>                            
+                            <td>{!pl.Tax__c}</td>                            
+                            -->                                                     
+                        </tr>
+                    </apex:repeat>
+                        <tr>
+                            <td colspan="4" style="text-align: right">Total:</td>
+                            <td>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                     <apex:param value="{!relatedTo.Order_Cost__c}" />
+                                </apex:outputText>
+                            </td>  
+                            <td>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                     <apex:param value="{!relatedTo.Order_Tax_Amount__c}" />
+                                </apex:outputText>
+                            </td>                                                                       
+                            <td>
+                                <apex:outputText value="{0, number, $###,##0.00}" styleClass="output-numeric">
+                                     <apex:param value="{!relatedTo.Order_Cost_Incl_Tax__c}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                </table>
+            </body>        
+        </html>        
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>

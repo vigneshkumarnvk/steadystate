@@ -1,0 +1,61 @@
+<messaging:emailTemplate subject="New Customer Created! - {!relatedTo.Name}" recipientType="User" relatedToType="Account">
+<messaging:htmlEmailBody >
+<html>
+<body>
+<p>Hi,</p>
+<p>An account has been converted to customer in Salesforce.</p>
+<br/>
+<p><b><u>CUSTOMER INFORMATION</u></b></p>
+<table border="0">
+<tr><td><b>Subsidiary Company:</b></td><td>{!relatedTo.Subsidiary_Company__r.Name}</td></tr>
+<tr><td><b>Corporate No.:</b></td><td>{!relatedTo.Parent_Account_Number__c}</td></tr>
+<tr><td><b>Corporate Name:</b></td><td>{!relatedTo.Parent}</td></tr>
+<tr><td><b>Name:</b></td><td>{!relatedTo.Name}</td></tr>
+<tr><td><b>Estimated Amount:</b></td><td>{!relatedTo.Estimated_Amount__c}</td></tr>
+<tr><td><b>Address:</b></td><td>{!relatedTo.BillingStreet}</td></tr>
+<tr><td><b>City:</b></td><td>{!relatedTo.BillingCity}</td></tr>
+<tr><td><b>State:</b></td><td>{!relatedTo.BillingState}</td></tr>
+<tr><td><b>Post Code:</b></td><td>{!relatedTo.BillingPostalCode}</td></tr>
+<tr><td><b>Country:</b></td><td>{!relatedTo.BillingCountryCode}</td></tr>
+<tr><td><b>Customer Type:</b></td><td>{!relatedTo.Customer_Type__c}</td></tr>
+<tr><td><b>Account Executive:</b></td><td>{!relatedTo.Account_Executive__r.Name}</td></tr>
+<tr><td><b>Additional Account Executive:</b></td><td><apex:outputText value="{!relatedTo.Account_Executives__c}" escape="false"/></td></tr>
+<tr><td><b>Phone:</b></td><td>{!relatedTo.Phone}</td></tr>
+<tr><td><b>Fax:</b></td><td>{!relatedTo.Fax}</td></tr>
+<tr><td><b>Email:</b></td><td>{!relatedTo.E_Mail__c}</td></tr>
+<tr><td><b>Terms:</b></td><td>{!relatedTo.Payment_Term__r.Name}</td></tr>
+<tr><td><b>Web Site:</b></td><td>{!relatedTo.Website}</td></tr>
+<tr><td><b>Customer Billing Instructions:</b></td><td> {!relatedTo.Customer_Billing_Instructions__c}</td></tr>
+</table>
+
+<br/>
+<p><b><u>BILLING CONTACTS</u></b></p>
+<table cellspacing="0">
+<tr>
+<th style="width:150px;text-align:left;">First Name</th>
+<th style="width:150px;text-align:left;">Last Name</th>
+<th style="width:150px;text-align:left;">Phone</th>
+<th style="width:250px;text-align:left;">Email</th>
+</tr>
+<apex:repeat var="contact" value="{!relatedTo.Contacts}">
+<apex:outputPanel rendered="{!CONTAINS(contact.Contact_Type__c, 'Billing')}">
+<tr style="border-top:1px solid #000">
+<td style="border-top:1px solid #000">{!contact.FirstName}</td>
+<td style="border-top:1px solid #000">{!contact.LastName}</td>
+<td style="border-top:1px solid #000">{!contact.Phone}</td>
+<td style="border-top:1px solid #000">{!contact.Email}</td>
+</tr>
+</apex:outputPanel>
+</apex:repeat>
+</table>
+
+<br/>
+<br/>
+<p>Please copy and paste the following Salesforce Account Identifier as follows: <br/> 
+In the Account Identifier field in Navision to link the Navision customer with Salesforce account. <br/>
+In the D365 Crosswalk in D365 to link the D365 customer with the Salesforce account.</p>
+<p><b>Account Identifier: {!relatedTo.Id}</b></p>
+</body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

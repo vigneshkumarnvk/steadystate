@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Customer Address Update Request</name>
+    <style>none</style>
+    <subject>Address Update Request from ACV Enviro</subject>
+    <textOnly>Hi,
+
+Please help us keep your company information updated in our database. Click the link below to login into our customer portal and review your company&apos;s billing information. Please note, your login will expire in 5 days.
+
+Customer portal
+
+Url: https://acvenviro.secure.force.com/customerportal
+
+Username: {!Portal_Login__c.Username__c}
+
+Password: {PortalLogin.Password}
+
+Thank you
+
+ACV Enviro
+
+f/k/a Allstate Power Vac Inc.</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

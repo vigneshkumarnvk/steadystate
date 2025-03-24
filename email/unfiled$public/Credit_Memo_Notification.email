@@ -1,0 +1,16 @@
+Credit Memo created for  {!Sales_Invoice__c.Bill_to_Customer__c}. 
+
+No.: {!Sales_Invoice__c.Name}
+Sales Order No.: {!Sales_Invoice__c.Sales_Order__c}
+Sales Invoice No.: {!Sales_Invoice__c.Reversed_from_SI__c}
+Amount: {!Sales_Invoice__c.Invoice_Amt_Incl_Tax__c}
+
+Credit Memo Reason: {!Sales_Invoice__c.Credit_Memo_Reason_Code__c}
+
+
+{!Sales_Invoice__c.Internal_Comments__c}
+
+
+
+Service Center: {!Sales_Invoice__c.Service_Center__c}
+Created By: {!Sales_Invoice__c.CreatedBy}

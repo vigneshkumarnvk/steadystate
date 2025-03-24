@@ -1,0 +1,33 @@
+<div class="setupTab" style="background-color:#FFFFFF; bEditID:b1st1; bLabel:body;"> 
+ <center> 
+  <table cellpadding="0" cellspacing="0" height="450" id="topTable" width="500"> 
+   <tbody> 
+    <tr valign="top"> 
+     <td style="background-color:#FFFFFF; bEditID:r1st1; bLabel:header; vertical-align:top; height:100; text-align:right;"><img border="0" id="r1sp1" src="https://acvenviro.my.salesforce.com/servlet/servlet.ImageServer?id=015f4000001gvL7&amp;oid=00Df40000000Ns9" /></td> 
+    </tr> 
+    <tr style="display:none;" valign="top"> 
+     <td style="background-color:#AAAAFF; bEditID:r2st1; bLabel:accent1; height:0;">&nbsp;</td> 
+    </tr> 
+    <tr valign="top"> 
+     <td height="300" style="background-color:#FFFFFF; bEditID:r3st1; color:#000000; bLabel:main; font-size:12pt; font-family:arial;"> 
+      <table border="0" cellpadding="5" cellspacing="5" height="400" width="550"> 
+       <tbody> 
+        <tr height="400" valign="top"> 
+         <td contenteditable="true" style="background-color:#FFFFFF; bEditID:r3st1; color:#000000; bLabel:main; font-size:12pt; font-family:arial;"> <p align="center" class="MsoNormal" style="text-align: center;"><font face="Book Antiqua, serif"><span style="font-size: 14.6667px;"><b>Notice of Payment - Account is 60 Days Past Due</b></span></font></p> <p align="center" class="MsoNormal" style="text-align: left;"><b style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</b></p> <p align="center" class="MsoNormal" style="text-align: left;"><b style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">FEDEX GROUND<br /> 350 RUBY ROAD<br /> WILLINGTON, Connecticut</b></p> <p align="center" class="MsoNormal" style="text-align: left;">&nbsp;</p> <p align="center" class="MsoNormal" style="text-align: left;"><font face="Book Antiqua, serif"><span style="font-size: 14.6667px;"><b>Ref: 00-0002975, $28,971.18</b></span></font></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Dear </span>{{{Recipient.FirstName}}}<span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">:</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Despite numerous attempts to contact you unsuccessfully, our records indicate your accounts remains past due for $ $28,971.18).&nbsp;</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">As a valued customer, we would like to prevent taking further action against your account.</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Please remit payment within five days from the date of this letter or contact our office to secure payment arrangements.</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">For your convenience, we accept checks, MasterCard, Visa, ACH and bank wires.</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">If your payment is already on its way, we thank you and please disregard this notice.</span></p> <p align="center" class="MsoNormal" style="text-align: left;"><span style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Thank you for your prompt attention in resolving this matter.</span></p> <p align="center" class="MsoNormal" style="text-align: left;">&nbsp;</p> <p align="center" class="MsoNormal" style="text-align: left;"><b style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Sincerely,</b></p> <p align="center" class="MsoNormal" style="text-align: left;"><b style="font-size: 14.6667px; font-family: &quot;Book Antiqua&quot;, serif;">Reecha Vandra<br /> Collections Specialist<br /> ACV Enviro</b></p> <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 12pt;"><span style="font-size:11.0pt;font-family:&quot;Book Antiqua&quot;,serif">&nbsp;</span></p> <p class="MsoNormal" style="color: rgb(0, 0, 0); font-family: arial; font-size: 12pt;"><span style="font-size:11.0pt;font-family:&quot;Book Antiqua&quot;,serif">&nbsp;</span></p> </td> 
+        </tr> 
+       </tbody> 
+      </table> </td> 
+    </tr> 
+    <tr style="display:none;" valign="top"> 
+     <td style="background-color:#AAAAFF; bEditID:r4st1; bLabel:accent2; height:0;">&nbsp;</td> 
+    </tr> 
+    <tr valign="top"> 
+     <td style="background-color:#FFFFFF; bEditID:r5st1; bLabel:footer; vertical-align:top; height:100; text-align:right;">&nbsp;</td> 
+    </tr> 
+    <tr style="display:none;" valign="top"> 
+     <td style="background-color:#AAAAFF; bEditID:r6st1; bLabel:accent3; height:0;">&nbsp;</td> 
+    </tr> 
+   </tbody> 
+  </table> 
+ </center> 
+</div>

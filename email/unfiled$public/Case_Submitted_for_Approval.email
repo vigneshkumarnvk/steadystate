@@ -1,0 +1,3 @@
+A case has been assigned to you for approval. Click the link below to view the record in Salesforce.com 
+
+{!Case.Link}

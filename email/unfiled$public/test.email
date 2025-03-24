@@ -1,0 +1,9 @@
+{!Account.BillingStreet}
+{!Account.BillingCity}
+{!Account.BillingCountry}
+
+
+this is a test.
+
+
+Account Balance: {!Account.Balance_Due_LCY_60_Days__c}

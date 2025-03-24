@@ -1,0 +1,5 @@
+PO# {!Purchase_Order__c.Name} Rejected 
+Vendor: {!Purchase_Order__c.Buy_from_Vendor__c} 
+Amount: ${!Purchase_Order__c.Order_Cost_Incl_Tax__c}
+
+PO Link: {!Purchase_Order__c.Link}

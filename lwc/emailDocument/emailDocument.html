@@ -1,0 +1,95 @@
+<!-- Email Quote -->
+<template>
+    
+    <div class="slds-grid slds-gutters" >
+        <template if:true={actionInProgress}>
+            <lightning-spinner variant="brand" size="large"></lightning-spinner>
+            <div class="slds-size_full slds-text-align_center">Working on it, please wait.</div>
+        </template>
+        <template if:false={actionInProgress}>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-card title="Email" icon-name="utility:send">
+                    <template if:true={enableTestMode}>
+                        <lightning-input name="isTest" type="checkbox" label="Send a test email to myself" value={_emailMessage.isTest} onchange={handle_emailMessageChange}></lightning-input>
+                    </template>
+
+                    <lightning-button label="Send Email" slot="actions" variant="neutral" onclick={confirmSendEmail}></lightning-button>
+
+                    <lightning-input class="validate-field" name="mailTo" value={_emailMessage.mailTo} disabled label="To:" required="true"></lightning-input>
+                    <lightning-input name="mailCc" label="Cc:" value={_emailMessage.mailCc} type="text"
+                                     onchange={handle_emailMessageChange}
+                                     message-when-pattern-mismatch="Please enter a valid email or valid emails separated by a semi-colon"
+                                     pattern="^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*;\s*|\s*$))*$">
+                    </lightning-input>
+                    <lightning-input class="validate-field" name="mailSubject" label="Subject:"
+                                     onchange={handle_emailMessageChange}
+                                     value={_emailMessage.mailSubject} type="text" required="true"></lightning-input>
+
+                    <label class="slds-form-element__label slds-no-flex" for="attachments">Attachments:</label>
+                    <div id="attachments">
+                        <template for:each={attachments} for:item="attachment">
+                            <span key={attachment.ContentDocumentId} class="slds-p-around_xxx-small" style="display: inline-block;">
+                                <span class="slds-badge">
+                                    <span style="cursor:pointer;" data-id={attachment.ContentDocumentId} onclick={previewAttachment}>{attachment.Title}</span>
+                                    <span class="slds-p-left_xxx-small">
+                                    <lightning-button-icon icon-name="utility:close" size="small" variant="bare" icon-class="slds-align-middle slds-text-color_error" value={attachment.ContentDocumentId} onclick={removeEmailAttachment}></lightning-button-icon>
+                                    </span>
+                                </span>
+                            </span>
+                        </template>
+                    </div>
+                    <lightning-input-rich-text class="validate-field" name="mailBody" label="Body:" label-visible="true" value={_emailMessage.mailBody} onchange={handle_emailMessageChange} required="true"></lightning-input-rich-text>
+                    <template if:true={isMailBodyEmpty}>
+                        <div class="slds-form-element__help slds-text-color_error" data-help-message="" role="alert">Complete this field.</div>
+                    </template>
+                </lightning-card>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-card title="Related Files" icon-name="standard:file">
+                    <lightning-button-group slot="actions">
+                        <lightning-button label="Attach to Email" variant="neutral" onclick={attachToEmail} disabled={pendingSave}></lightning-button>
+                        <template if:true={reportName}>
+                            <lightning-button label="Generate PDF" variant="neutral" onclick={showPrintDialog} disabled={pendingSave}></lightning-button>
+                        </template>
+                        <lightning-button label="Merge Documents" variant="neutral" onclick={mergeDocuments} disabled={pendingSave}></lightning-button>
+                    </lightning-button-group>
+
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="12">
+                            <lightning-file-upload label="" name="fileUpload" accept={acceptedFilesFormat}
+                                                   record-id={recordId} multiple="true" onuploadfinished={handleUploadFinished} disabled={pendingSave}></lightning-file-upload>
+                        </lightning-layout-item>
+                        <template if:true={files}>
+                            <lightning-layout-item size="12" class="slds-wrap">
+                                <lightning-datatable
+                                        data-id="files"
+                                        data={files}
+                                        columns={columns}
+                                        key-field="Id"
+                                        draft-values={draftValues}
+                                        oncellchange={handleCellChange}
+                                        onsave={handleRowSave}
+                                        oncancel={handleRowCancel}
+                                        onrowselection={handleRowSelection}
+                                        onrowaction={handleRowAction}
+                                >
+                                </lightning-datatable>
+                            </lightning-layout-item>
+                        </template>
+                    </lightning-layout>
+
+
+                    <c-lwc-modal class="print-dialog" header="Generate PDF">
+                        <slot name="print-dialog"></slot>
+                        <div slot="footer">
+                            <lightning-button-group>
+                                <lightning-button label="Cancel" variant="neutral" onclick={hidePrintDialog}></lightning-button>
+                                <lightning-button label="Generate" variant="neutral" onclick={handlePrint}></lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </c-lwc-modal>
+                </lightning-card>
+            </div>
+        </template>
+    </div>
+</template>

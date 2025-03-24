@@ -1,0 +1,34 @@
+<!-- Email Invoice -->
+<template>
+    <div class="slds-grid slds-gutters slds-m-around_small">
+        <template if:true={actionInProgress}>
+            Retrieving data, please wait...
+        </template>
+
+        <template if:false={actionInProgress}>
+            <template if:false={isEmailMessageInitialized}>
+                {errorMessage}
+            </template>
+
+            <template if:true={isEmailMessageInitialized}>
+                <c-email-document record-id={recordId} email-message={emailMessage} report-name="NewSalesInvoicePDF" report-output-filename={getFilename} report-parameters-callback={reportParameterCallback} enable-test-mode>
+                    <p slot="print-dialog">
+                        <template if:true={jobTasks}>
+                            <template for:each={jobTasks} for:item="jobTask">
+                                <lightning-combobox name={jobTask.Id}
+                                                    key={jobTask.Id}
+                                                    label={jobTask.label}
+                                                    value={jobTask.Invoice_Format__c}
+                                                    options={printTypeOptions}
+                                                    onchange={handleInvoiceFormatChange}
+                                                    required=true
+                                >
+                                </lightning-combobox>
+                            </template>
+                        </template>
+                    </p>
+                </c-email-document>
+            </template>
+        </template>
+    </div>
+</template>

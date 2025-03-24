@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <decisions>
+        <description>Update AE Last Activity Field</description>
+        <name>Update_AE_Last_Activity_Field</name>
+        <label>Update AE Last Activity Field</label>
+        <locationX>182</locationX>
+        <locationY>335</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Update_AE_Last_Activity_Fields</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Role__c</leftValueReference>
+                <operator>StartsWith</operator>
+                <rightValue>
+                    <stringValue>AE</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_AE_Last_ACtivity_Date</targetReference>
+            </connector>
+            <label>Update AE Last Activity Field</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Update AE Last Activity Date {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Update AE Last Activity Date</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_AE_Last_ACtivity_Date</name>
+        <label>Update AE Last ACtivity Date</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WhatId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>AE_LastActivityDate__c</field>
+            <value>
+                <elementReference>$Record.ActivityDate</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_AE_Last_Activity_Field</targetReference>
+        </connector>
+        <object>Event</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

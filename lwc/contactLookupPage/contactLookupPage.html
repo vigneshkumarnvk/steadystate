@@ -1,0 +1,114 @@
+<!--
+@description       : 
+@author            : Sanjana Ravichandran
+@group             : 
+Modifications Log 
+Ver   Date         Author         Modification
+1.0   07-05-2024   Sanjana R     US116101: [Continued] Salesforce - Add "Contact Lookup" function to lookup contacts currently in EQAI
+-->
+<template>
+<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open custom-modal">
+    <div class="slds-modal__container">
+        <!-- Modal/Popup Header -->
+        <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium">Contact Lookup</h2>
+        </header>
+
+        <!-- Modal/Popup Body -->
+        <div class="slds-modal__content slds-p-around_medium">
+            <div class="slds-text-align_center slds-p-around_medium">
+                Enter the contact information in the fields below and click "Look Up" to search for an existing contact in EQAI. 
+                If no matching contact is found, click "Create Contact" to open the Create Contact screen.                
+            </div>
+            <template if:true={showSpinner}>
+                <div class="slds-grid slds-grid_align-center spinner-background">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={showError}>
+                <div class="error-message slds-m-top_medium">
+                    <p class="slds-text-heading_small">{errorMessage}</p>
+                </div>
+            </template>
+
+            <div class="slds-scope">
+                <div class="slds-grid slds-wrap slds-p-around_medium">
+                    <!-- Left Fields Section -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-record-edit-form object-api-name="Contact">
+                            <template for:each={leftFields} for:item="field">
+                                <template if:true={field.isLookup}>
+                                    <lightning-input-field
+                                        key={field.id}
+                                        field-name="AccountId"
+                                        class="custom-width"
+                                        data-id="customer"
+                                        onchange={handleInputChange}>
+                                    </lightning-input-field>
+                                </template>
+                                <template if:false={field.isLookup}>
+                                    <lightning-input
+                                        type="search"
+                                        key={field.id}
+                                        label={field.label}
+                                        value={field.value}
+                                        data-field-id={field.id}
+                                        class="custom-width"
+                                        onchange={handleInputChange}
+                                        required={field.required}>
+                                    </lightning-input>
+                                </template>
+                            </template>
+                        </lightning-record-edit-form>                                                        
+                    </div>
+
+                    <!-- Right Fields Section -->
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <template for:each={rightFields} for:item="field">
+                            <lightning-input
+                                type="search"
+                                key={field.id}
+                                label={field.label}
+                                value={field.value}
+                                data-field-id={field.id}
+                                class="custom-width"
+                                onchange={handleInputChange}
+                                required={field.required}>
+                            </lightning-input>
+                        </template>
+                    </div>
+
+                    <!-- Action Buttons Section -->
+                    <div class="slds-col slds-size_1-of-1 slds-p-around_small slds-text-align_center">
+                        <lightning-button label="Close" onclick={closeModal} class="slds-m-right_small"></lightning-button>
+                        <lightning-button label="Clear All" onclick={handleClear} class="slds-m-right_small"></lightning-button>
+                        <lightning-button label="Look up" variant="brand" onclick={handleLookup} class="slds-m-right_small"></lightning-button>
+                        <template if:true={showNoResultsButton}>
+                            <lightning-button label="Create Contact" variant="brand" onclick={handleCreateNew} class="slds-m-right_small"></lightning-button>
+                        </template>
+                    </div>
+
+                    <!-- Datatable Section -->
+                    <template if:true={showDatatable}>
+                        <div class="slds-col slds-size_1-of-1 slds-p-around_small datatable-section">
+                            <lightning-datatable key-field="Id" data={searchResults} columns={columns} max-row-selection="1" onrowselection={handleRowSelection}></lightning-datatable>
+                        </div>
+                    </template>
+
+                    <!-- Next Button -->
+                    <template if:true={showNextButton}>
+                        <div class="slds-col slds-size_1-of-1 slds-text-align_center slds-p-around_small">
+                            <lightning-button label="Create Contact" variant="brand" onclick={handleNext} class="slds-m-top_small"></lightning-button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</template>

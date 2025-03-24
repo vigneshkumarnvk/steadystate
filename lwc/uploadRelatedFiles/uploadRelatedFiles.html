@@ -1,0 +1,46 @@
+<template>
+    <lightning-quick-action-panel header="Upload Related Files">
+        <div if:false={isLoaded}>
+            <lightning-spinner variant="brand" size="large"></lightning-spinner>
+        </div>
+        <lightning-card title="Related Files" icon-name="standard:file">
+
+            <lightning-layout multiple-rows="true">
+                
+            <lightning-layout-item size="6" padding="around-medium">
+                <template if:true={typePicklistValues.data}>
+
+                    <lightning-combobox name="progress"
+                    label="Document Type"
+                    value={documentType}
+                    options={documentTypeCategories}
+                    onchange={handleDocumentTypeChange} >
+</lightning-combobox>
+                </template>
+   
+            </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-medium">
+                    <lightning-file-upload label="" name="fileUpload" accept={acceptedFilesFormat}  file-field-name="Document_Type_fileupload__c"  file-field-value={documentType}
+                                           record-id={recordId} multiple="true" onuploadfinished={handleUploadFinished} disabled={isDocumentDisabled}></lightning-file-upload>
+                </lightning-layout-item>
+                <template if:true={files}>
+                    <lightning-layout-item size="12" class="slds-wrap">
+                        <lightning-datatable
+                                data-id="files"
+                                data={files}
+                                columns={columns}
+                                key-field="Id"
+                                draft-values={draftValues}
+                                onsave={handleRowSave}
+                                oncancel={handleRowCancel}
+                                onrowaction={handleRowAction}
+                                hide-checkbox-column
+                        >
+                        </lightning-datatable>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+
+        </lightning-card>
+    </lightning-quick-action-panel>
+</template>

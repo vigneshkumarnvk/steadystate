@@ -1,0 +1,5 @@
+The task you have assigned, {!Task.Subject},  has been completed.
+
+Task Comments: {!Task.Description}
+
+{!Task.Link}

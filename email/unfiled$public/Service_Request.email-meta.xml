@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Service Request</name>
+    <style>none</style>
+    <subject>{!Case.CaseNumber} Received</subject>
+    <textOnly>Thanks for your email. Your Service Request has been received and a Support Rep will be following up shortly.  
+
+
+Your Ticket # is {!Case.CaseNumber}                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ {!Case.Thread_Id}</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Customer Past Due Notice- 60 Days</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>60 Days Past Due Notice</name>
+    <style>freeForm</style>
+    <subject>60 Days Past Due Notice</subject>
+    <textOnly>Notice of Payment - Account is 60 Days Past Due
+
+{!Account.Date__c}
+
+{!Account.Name}
+{!Account.BillingAddress}
+
+Ref: {!Account.AccountNumber}, {!Account.Balance_Due_LCY_60_Days__c}
+
+Dear {!Contact.FirstName},
+
+Despite numerous attempts to contact you unsuccessfully, our records indicate your accounts remain past due for {!Account.Balance_Due_LCY_60_Days__c}.
+
+As a valued customer, we would like to prevent taking further action against your account.
+
+Please remit payments within five days from the date of this letter or contact our office to secure payment arrangements.
+
+For your convenience we accept checks, MasterCard, Visa, ACH and bank wires.
+
+If your payment has already been mailed, we thank you and please disregard this notice.
+
+Thank you for your prompt attention in resolving this matter.
+
+Sincerely,
+{!User.Name}
+Collections Specialist
+ACV Enviro</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

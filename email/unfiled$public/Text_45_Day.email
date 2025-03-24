@@ -1,0 +1,24 @@
+45 Days Past Due Notice 
+
+{!Account.Date__c}
+
+{!Account.Name}
+{!Account.BillingAddress}
+
+Ref: {!Account.AccountNumber}, {!Account.Balance_Due_LCY_30_Days__c}
+
+Dear {!Contact.FirstName}, 
+
+This is a friendly reminder that the balance on your account for {!Account.Balance_Due_LCY_30_Days__c} is past due for payment.
+
+For your convenience, we accept checks, MasterCard, Visa, ACH, and bank wires.
+If your payment has already been mailed, we thank you and please disregard this notice. 
+
+If you wish to further discuss the details of your account, please don't hesitate to contact our Accounts Receivable department at (732)375-9988.
+
+Thanks, and thank you for being a valued customer of ACV Enviro.
+
+Sincerely,
+{!User.Name}
+Collections Specialist 
+ACV Enviro

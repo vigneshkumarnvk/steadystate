@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Labor</fullName>
+        <default>false</default>
+        <label>Labor</label>
+    </customValue>
+    <customValue>
+        <fullName>Equipment</fullName>
+        <default>false</default>
+        <label>Equipment</label>
+    </customValue>
+    <customValue>
+        <fullName>Materials</fullName>
+        <default>false</default>
+        <label>Materials</label>
+    </customValue>
+    <customValue>
+        <fullName>Subcontractors</fullName>
+        <default>false</default>
+        <label>Cost Plus Materials, Equipment and Services</label>
+    </customValue>
+    <customValue>
+        <fullName>Waste Disposal</fullName>
+        <default>false</default>
+        <label>Waste Disposal</label>
+    </customValue>
+    <customValue>
+        <fullName>Demurrage</fullName>
+        <default>false</default>
+        <label>Transportation, Demurrage and Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Lump Sum</fullName>
+        <default>false</default>
+        <label>Lump Sum</label>
+    </customValue>
+    <customValue>
+        <fullName>Bundled</fullName>
+        <default>false</default>
+        <label>Bundled</label>
+    </customValue>
+    <customValue>
+        <fullName>Misc. Charges And Taxes</fullName>
+        <default>false</default>
+        <label>Misc. Charges And Taxes</label>
+    </customValue>
+    <customValue>
+        <fullName>Field Remediation</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Field Remediation</label>
+    </customValue>
+    <masterLabel>ResourceCategory</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

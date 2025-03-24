@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Customer Activation Email</name>
+    <style>none</style>
+    <subject>Customer Activated! - {!Account.Name}</subject>
+    <textOnly>Hi,  
+
+An Inactive Customer has been moved to Active status in Salesforce and the NAV Customer Status has been changed to Active. Please review the Customer record to make sure all information is accurate.
+
+Subsidiary: {!Account.Subsidiary_Company__c}
+Corporate No.: {!Account.Parent_Account_Number__c}
+Corporate Name: {!Account.Parent}
+Name: {!Account.Name} 
+AccountNumber: {!Account.AccountNumber}
+Address: {!Account.BillingStreet} 
+City: {!Account.BillingCity} 
+State: {!Account.BillingState} 
+Post Code: {!Account.BillingPostalCode} 
+Country: {!Account.Country} 
+Customer Type: {!Account.Customer_Type__c} 
+Account Executive: {!Account.Account_Executive__c}
+Salesperson: {!Account.Salesperon__c}
+Phone: {!Account.Phone} 
+Fax: {!Account.Fax} 
+Web Site: {!Account.Website}</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

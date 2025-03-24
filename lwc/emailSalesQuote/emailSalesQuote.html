@@ -1,0 +1,22 @@
+<!-- Email Quote -->
+<template>
+    <div class="slds-grid slds-gutters slds-m-around_small">
+        <template if:true={actionInProgress}>
+            Retrieving data, please wait...
+        </template>
+        <template if:false={actionInProgress}>
+            <template if:false={isEmailMessageInitialized}>
+                {errorMessage}
+            </template>
+
+            <template if:true={isEmailMessageInitialized}>
+                <c-email-document record-id={recordId} email-message={emailMessage} report-name="SalesQuotePDF" report-output-filename={getFilename} report-parameters-callback={reportParameterCallback} before-send-email-action={beforeSendEmailActionCallback} after-send-email-action={afterSendEmailActionCallback} enable-test-mode>
+                    <p slot="print-dialog">
+                        <lightning-combobox name="printType" label="Print Type" value={printType} options={printTypeOptions} onchange={handleFieldChange} required="true"></lightning-combobox>
+                        <lightning-input name="printEstimatedJobDuration" type="checkbox" variant="label-stacked" label="Print Estimated Job Duration" checked={printEstimatedJobDuration} onclick={handleFieldChange}></lightning-input>
+                    </p>
+                </c-email-document>
+            </template>
+        </template>
+    </div>
+</template>

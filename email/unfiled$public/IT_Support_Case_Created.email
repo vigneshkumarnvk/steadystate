@@ -1,0 +1,12 @@
+Thanks for your email.
+Your Service Request has been received and a Support Rep will be following up shortly.
+
+Your Ticket # is: {!Case.CaseNumber}
+You can view/update your Ticket here:  {!Case.Link}
+
+
+Your ACV IT Team
+
+Email: support@acvenviro.com
+Tel: 908-312-5873
+Ext: 5873

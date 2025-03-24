@@ -1,0 +1,9 @@
+Please update Sales Order {!Sales_Order__c.Name} with a SPO #. 
+
+Customer: {!Sales_Order__c.Bill_to_Customer_No__c}
+Created By: {!Sales_Order__c.CreatedBy}
+Created Date: {!Sales_Order__c.CreatedDate}
+
+Click on the link below to open Sales Order in Salesforce.
+
+{!Sales_Order__c.Link}

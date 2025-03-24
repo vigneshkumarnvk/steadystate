@@ -1,0 +1,8 @@
+<p>Dear Customer,</p>
+
+<p>Thank you for your signature. Attached please find the sales quote for the services requested. If you would like to schedule the project or, have any questions, please contact us at your earliest convenience.</p>
+
+</p></p></p>
+<p>Regards,</p>
+
+<p>{!Sales_Order__c.Display_Company_Name__c}</p>

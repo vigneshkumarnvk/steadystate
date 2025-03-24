@@ -1,0 +1,12 @@
+<html><head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">At this time, we will now consider ticket number&nbsp;{{Case.CaseNumber}} closed.&nbsp;<br />
+<br />
+Please ONLY reply to this ticket if you require additional assistance and/or if the problem persists.&nbsp;<br />
+<br />
+<br />
+<br />
+Your ACV IT Team<br />
+Tel: 908-312-5873<br />
+Ext: 5873&nbsp;</body></html>

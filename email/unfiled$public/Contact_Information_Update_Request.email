@@ -1,0 +1,22 @@
+<html style="overflow-y: hidden;">
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+<p>Hi,</p>
+
+<p>Please help us keep your contact information updated in our database. Please click the link below to login into our customer portal and review your contact information. Please note your login will expire in 5 days.</p>
+
+<p>Customer portal</p>
+
+<p>Url: <a href="https://acvenviro.force.com/customerportal">https://acvenviro.force.com/customerportal</a></p>
+
+<p>Username: {!Portal_Login__c.Username__c}</p>
+
+<p>Password: {PortalLogin.Password}</p>
+
+<p>Thank you</p>
+
+<p>ACV Enviro</p>
+</body>
+</html>

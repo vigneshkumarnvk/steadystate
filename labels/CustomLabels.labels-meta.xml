@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Account_Max_Lookup_Rows</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Account Max Lookup Rows</shortDescription>
+        <value>500</value>
+    </labels>
+    <labels>
+        <fullName>Account_Number_Validation</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Account_Number_Validation</shortDescription>
+        <value>true</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Sync</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Contact Sync</shortDescription>
+        <value>False</value>
+    </labels>
+    <labels>
+        <fullName>ExcludedCategory</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ExcludedCategory</shortDescription>
+        <value>Subcontractors</value>
+    </labels>
+    <labels>
+        <fullName>GroupCServiceCenters</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>GroupCServiceCenters</shortDescription>
+        <value>6615, 6614, 6613, 6612, 6611, 6590, 6589, 6588, 6587, 6585, 2000</value>
+    </labels>
+    <labels>
+        <fullName>Item_Max_Lookup_Rows</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Item Max Lookup Rows</shortDescription>
+        <value>250</value>
+    </labels>
+    <labels>
+        <fullName>LineBreak</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Line Break</shortDescription>
+        <value>-
+-</value>
+    </labels>
+    <labels>
+        <fullName>Max_Lookup_Rows</fullName>
+        <categories>QTC</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Max Lookup Rows</shortDescription>
+        <value>1000</value>
+    </labels>
+    <labels>
+        <fullName>Process_TM_CutOff_Days</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Last 365 days</shortDescription>
+        <value>LAST_N_DAYS:300</value>
+    </labels>
+    <labels>
+        <fullName>Process_TM_PageSize</fullName>
+        <categories>Integer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Integer value for page size</shortDescription>
+        <value>40</value>
+    </labels>
+    <labels>
+        <fullName>Product_Catalog_Max_Lookup_Rows</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Product Catalog Max Lookup Rows</shortDescription>
+        <value>500</value>
+    </labels>
+    <labels>
+        <fullName>Release_Flag</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Release_Flag</shortDescription>
+        <value>true</value>
+    </labels>
+    <labels>
+        <fullName>SI1MBFILEUPLOADVALIDATION</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SI1MBFILEUPLOADVALIDATION</shortDescription>
+        <value>985000</value>
+    </labels>
+    <labels>
+        <fullName>SI20MBFILEUPLOADVALIDATION</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SI20MBFILEUPLOADVALIDATION</shortDescription>
+        <value>20000000</value>
+    </labels>
+    <labels>
+        <fullName>SI50MBFILEUPLOADVALIDATION</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SI50MBFILEUPLOADVALIDATION</shortDescription>
+        <value>50000000</value>
+    </labels>
+    <labels>
+        <fullName>SO_3rd_Party_Facility_Check</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SO_3rd_Party_Facility_Check</shortDescription>
+        <value>2022-05-31</value>
+    </labels>
+    <labels>
+        <fullName>SalesQuotePDFAddressFormatExceptions</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SalesQuotePDFAddressFormatExceptions</shortDescription>
+        <value>po</value>
+    </labels>
+    <labels>
+        <fullName>UploadContractLineEmail</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>UploadContractLineEmail</shortDescription>
+        <value>salesforce@republicservices.com.invalid</value>
+    </labels>
+    <labels>
+        <fullName>ValidateGroupC</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ValidateGroupC</shortDescription>
+        <value>True</value>
+    </labels>
+    <labels>
+        <fullName>ValidateUOM</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ValidateUOM</shortDescription>
+        <value>True</value>
+    </labels>
+    <labels>
+        <fullName>deleteApplicationlog</fullName>
+        <categories>Integer</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>delete Appication log records based on this value</shortDescription>
+        <value>15</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_crossobject_fieldsets_not_allowed_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error when selecting a cross-object fieldsset is not allowed and attempted.</shortDescription>
+        <value>Cross-object fields not allowed and field "{0}" is a cross-object field.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_fieldset_wrong_sobject_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error when selecting a field set for a different sobject type.</shortDescription>
+        <value>Field set "{0}" is not for SObject type "{1}"</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_recursive_subquery_error</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Presented when attempting to nest subqueries.</shortDescription>
+        <value>Invalid call to subselectQuery.  You may not add a subselect query to a subselect query.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_QueryFactory_subquery_invalid_relationship</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Presented when attempting to create a subquery from an invalid relationship.</shortDescription>
+        <value>Invalid call to subselectQuery.  Invalid relationship for table.</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_insertable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_insertable</shortDescription>
+        <value>You do not have permission to insert field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_readable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_readable</shortDescription>
+        <value>You do not have permission to read the field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_field_not_updateable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_field_not_updateable</shortDescription>
+        <value>You do not have permission to update the field {1} on {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_deletable</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_deletable</shortDescription>
+        <value>You do not have permission to delete {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_insertable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_insertable</shortDescription>
+        <value>You do not have permission to insert {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_readable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_readable</shortDescription>
+        <value>You do not have permission to read {0}</value>
+    </labels>
+    <labels>
+        <fullName>fflib_security_error_object_not_updateable</fullName>
+        <categories>security,error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>fflib_security_error_object_not_updateable</shortDescription>
+        <value>You do not have permission to update {0}</value>
+    </labels>
+    <labels>
+        <fullName>source_system</fullName>
+        <categories>WorkOrderAddAttachment</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>source_system</shortDescription>
+        <value>Salesforce</value>
+    </labels>
+</CustomLabels>

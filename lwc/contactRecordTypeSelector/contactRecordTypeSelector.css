@@ -1,0 +1,42 @@
+/* Scoped CSS for the component */
+
+/* Main modal container */
+.slds-modal__container {
+    width: 70%;
+    max-width: 80%;
+    margin: auto; /* Center the modal horizontally */
+}
+
+/* Contact Lookup Modal */
+.slds-modal__container_contact {
+    max-width: 80%;
+    width: 80%;
+    max-height: 80%;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    z-index: 1002; /* Adjust z-index as needed */
+    background-color: #ffffff; /* Ensure the modal background is white */
+    padding: 1rem; /* Add padding as needed */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+}
+
+.slds-modal_large {
+    max-width: 80%;
+    width: 80%;
+    max-height: 80%;
+    height: auto;
+}
+
+/* Ensure modal content is not scrollable */
+.slds-modal__content {
+    max-height: calc(100vh - 2rem); /* Adjust according to your modal's content */
+    overflow-y: auto;
+}
+
+/* Ensure backdrop does not interfere with modal visibility */
+.slds-backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black backdrop */
+}

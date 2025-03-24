@@ -1,0 +1,11 @@
+Customer: {!TM__c.Bill_to_Customer__c}
+Account #: {!TM__c.Account_Number__c}
+
+Available Credit: {!TM__c.Available_Credit__c}
+Credit Limit: {!TM__c.Credit_Limit__c}
+Balance Due: {!TM__c.Account_Balance__c}
+
+Sales Order #: {!TM__c.Sales_Order__c}
+T&M #: {!TM__c.Name}
+Total: {!TM__c.Total_Amount_Incl_Tax__c}
+Created By: {!TM__c.CreatedBy}

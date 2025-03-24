@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>MM Blast</name>
+    <style>promotionLeft</style>
+    <subject>Meeting with Mike ACV Enviro. (Cycle Chem, Clean Venture, Allstate Power Vac)</subject>
+    <textOnly>Hope all is well. I would like to make an appointment with you. I am interested in your chemical disposal and field service work. My name is Michael. I work for ACV enviro. We can offer great service and better pricing. Your location is in our back yard. ACV Enviro is a fully integrated environmental services and waste management organization with offices throughout the Northeast and Midwest. We manage permitted part B treatment, disposal and recycling facilities; supported by an extensive line of remediation, transportation, industrial cleaning, emergency response and field services.
+
+Do you have time on Wed/Thursday of next week?
+
+I am looking forward to hearing from you.
+
+Our Website is www.acvenviro.com
+
+
+Michae
+
+
+Cantelmo
+
+/
+
+Account Executive
+
+201 South First Street
+
+,
+
+Elizabeth
+
+,
+
+NJ
+
+
+07206
+
+t:
+
+973-757-8586
+
+
+c:
+
+973-757-8586
+
+
+e:
+
+mcantelmo@acvenviro.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

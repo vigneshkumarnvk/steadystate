@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Administrative</fullName>
+        <default>false</default>
+        <label>Administrative</label>
+    </customValue>
+    <customValue>
+        <fullName>Inside Decon</fullName>
+        <default>false</default>
+        <label>Inside Decon</label>
+    </customValue>
+    <customValue>
+        <fullName>Inside Labor</fullName>
+        <default>false</default>
+        <label>Inside Labor</label>
+    </customValue>
+    <customValue>
+        <fullName>Light Duty</fullName>
+        <default>false</default>
+        <label>Light Duty</label>
+    </customValue>
+    <customValue>
+        <fullName>Maintenance</fullName>
+        <default>false</default>
+        <label>Maintenance</label>
+    </customValue>
+    <customValue>
+        <fullName>Physical</fullName>
+        <default>false</default>
+        <label>Physical</label>
+    </customValue>
+    <customValue>
+        <fullName>Training _ACV-U</fullName>
+        <default>false</default>
+        <label>Training - ACV-U</label>
+    </customValue>
+    <customValue>
+        <fullName>Training_Customer</fullName>
+        <default>false</default>
+        <label>Training - Customer</label>
+    </customValue>
+    <customValue>
+        <fullName>Training - General</fullName>
+        <default>false</default>
+        <label>Training - General</label>
+    </customValue>
+    <customValue>
+        <fullName>Training</fullName>
+        <default>false</default>
+        <label>Training - New Hire</label>
+    </customValue>
+    <customValue>
+        <fullName>Training_Refresher</fullName>
+        <default>false</default>
+        <label>Training - Refresher</label>
+    </customValue>
+    <customValue>
+        <fullName>Training - Tech to Driver Program</fullName>
+        <default>false</default>
+        <label>*Training - Tech to Driver Program*</label>
+    </customValue>
+    <customValue>
+        <fullName>Training_LMS</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Training - LMS</label>
+    </customValue>
+    <customValue>
+        <fullName>New hire</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>New hire</label>
+    </customValue>
+    <masterLabel>Shop Time Category</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

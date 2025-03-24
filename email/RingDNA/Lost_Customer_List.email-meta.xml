@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Lost Customer List</name>
+    <style>freeForm</style>
+    <subject>ACV Enviro-here to help!</subject>
+    <textOnly>Hello {!Lead.FirstName},
+
+Looks like we have done some business together in the past, although not recently.  The purpose of my email is to re-introduce you to ACV and schedule some time for us to share all the exciting services we can provide at a competitive level to save you money and keep you in compliance.
+
+ACV Enviro is a fully integrated environmental services and waste management organization with offices throughout the Northeast and Midwest.  We own and operate permitted part B treatment, disposal, and recycling facilities; supported by an extensive line of remediation, transportation, industrial cleaning, waste disposal/recycling, emergency response and field services.  Our combined locations enhance our ability to respond to your needs 24/7, and deliver great, safe service, which you should expect.
+
+Please let me know a day and time that works best for you.
+Check out our website www.acvenviro.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

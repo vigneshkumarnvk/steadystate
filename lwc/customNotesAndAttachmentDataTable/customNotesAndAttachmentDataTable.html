@@ -1,0 +1,61 @@
+<!--US135128-->
+<template>
+    <div class="slds-card slds-theme_shade">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <div>
+                        <a href="" onclick={navigateToRecentListView}>{objectPluralName}</a> >
+                        <a href={recordUrl}>{recordName}</a> 
+                    </div>
+
+                    <h2 class="slds-card__header-title slds-text-heading_medium">
+                        <span>Level of Authority</span>
+                    </h2><br/>
+                    <span>{filesCount} items • Sorted by {sortedByLabel}</span>
+                </div>
+                <div class="slds-no-flex">
+
+                    <lightning-file-upload label="" name="fileUploader" record-id={recordId}
+                        onuploadfinished={handleUploadFinished} multiple file-field-name={fileFieldName}
+                        file-field-value={fileNamePrefix} class="customStyleFileUpload">
+                    </lightning-file-upload>
+
+                    <lightning-button-icon icon-name="utility:refresh" variant="border-filled"
+                        alternative-text="Refresh" title="Refresh" onclick={handleRefresh} class="refreshButton">
+                    </lightning-button-icon>
+
+                </div>
+            </header>
+        </div>
+
+        <div class="slds-border_top" style="height: 300px;">
+            <lightning-datatable key-field="id" data={data} columns={columns} onrowaction={handleRowAction}
+                hide-checkbox-column show-row-number-column sorted-by={sortedBy} sorted-direction={sortedDirection}
+                onsort={handleColumnSorting}>
+            </lightning-datatable>
+        </div>
+    </div>
+
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>
+
+    <c-lwc-modal header={header}>
+        <div class="slds-text-align_center">
+            <p>{content}</p>
+            <template lwc:if={isUploadNewVersion}>
+                <lightning-file-upload label="" name="fileUploadNewVersion" record-id={recordId}
+                    onuploadfinished={handleUploadFinished} file-field-name={fileFieldName}
+                    file-field-value={fileNamePrefix} class="styleFileUpload">
+                </lightning-file-upload>
+            </template>
+        </div>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel} class="slds-p-around_xx-small">
+            </lightning-button>
+            <lightning-button variant="brand" label={buttonLabel} onclick={handleDelete} class={buttonHide}>
+            </lightning-button>
+        </div>
+    </c-lwc-modal>
+</template>

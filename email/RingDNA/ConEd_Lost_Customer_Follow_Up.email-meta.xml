@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>RING DNA Template Con ED Follow Up</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>ConEd Lost Customer Follow Up</name>
+    <style>freeForm</style>
+    <subject>ACV Enviro – checking in</subject>
+    <textOnly>Hello {!Lead.FirstName},
+
+I’m writing to follow up on my previous email to you regarding our past service.  I do not mean to pry, but I would sincerely appreciate any feedback you may have.
+
+Please let me know if you may have a moment to catch up today.
+
+Thank You,</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

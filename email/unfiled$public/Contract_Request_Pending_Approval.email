@@ -1,0 +1,7 @@
+Contract Request is now pending approval entry. 
+
+Account: {!Contract_Request__c.Account__c}
+Reason: {!Contract_Request__c.Contract_Request_Reason__c}
+Created By: {!Contract_Request__c.CreatedBy}
+
+{!Contract_Request__c.Link}

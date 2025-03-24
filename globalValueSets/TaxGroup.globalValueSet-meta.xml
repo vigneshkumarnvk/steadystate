@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>NT</fullName>
+        <default>false</default>
+        <label>NT</label>
+    </customValue>
+    <customValue>
+        <fullName>TX</fullName>
+        <default>true</default>
+        <label>TX</label>
+    </customValue>
+    <masterLabel>TaxGroup</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

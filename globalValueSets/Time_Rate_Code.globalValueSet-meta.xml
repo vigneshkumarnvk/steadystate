@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>BER</fullName>
+        <default>false</default>
+        <label>Bereavement</label>
+    </customValue>
+    <customValue>
+        <fullName>BP</fullName>
+        <default>false</default>
+        <label>Boom Pay</label>
+    </customValue>
+    <customValue>
+        <fullName>DBT</fullName>
+        <default>false</default>
+        <label>Double Time</label>
+    </customValue>
+    <customValue>
+        <fullName>O/T</fullName>
+        <default>false</default>
+        <label>Overtime</label>
+    </customValue>
+    <customValue>
+        <fullName>HOL</fullName>
+        <default>false</default>
+        <label>Holiday</label>
+    </customValue>
+    <customValue>
+        <fullName>JUR</fullName>
+        <default>false</default>
+        <label>Jury Duty</label>
+    </customValue>
+    <customValue>
+        <fullName>MLS</fullName>
+        <default>false</default>
+        <label>Mileage</label>
+    </customValue>
+    <customValue>
+        <fullName>OP</fullName>
+        <default>false</default>
+        <label>Prevailing Wage OT</label>
+    </customValue>
+    <customValue>
+        <fullName>OW</fullName>
+        <default>false</default>
+        <label>Prevailing Wage OW</label>
+    </customValue>
+    <customValue>
+        <fullName>PD</fullName>
+        <default>false</default>
+        <label>Prevailing Wage DT</label>
+    </customValue>
+    <customValue>
+        <fullName>PDL</fullName>
+        <default>false</default>
+        <label>Per Diem Layover</label>
+    </customValue>
+    <customValue>
+        <fullName>PTO</fullName>
+        <default>false</default>
+        <label>Paid Time Off</label>
+    </customValue>
+    <customValue>
+        <fullName>REG</fullName>
+        <default>false</default>
+        <label>Regular</label>
+    </customValue>
+    <customValue>
+        <fullName>SHP</fullName>
+        <default>false</default>
+        <label>Shop Time</label>
+    </customValue>
+    <customValue>
+        <fullName>SPA</fullName>
+        <default>false</default>
+        <label>Spill Pay</label>
+    </customValue>
+    <customValue>
+        <fullName>STB</fullName>
+        <default>false</default>
+        <label>Stand By</label>
+    </customValue>
+    <customValue>
+        <fullName>TRP</fullName>
+        <default>false</default>
+        <label>Truck Pay</label>
+    </customValue>
+    <customValue>
+        <fullName>TRV</fullName>
+        <default>false</default>
+        <label>Travel Time</label>
+    </customValue>
+    <customValue>
+        <fullName>UNP</fullName>
+        <default>false</default>
+        <label>Unpaid Time</label>
+    </customValue>
+    <customValue>
+        <fullName>TVO</fullName>
+        <default>false</default>
+        <label>Travel OT</label>
+    </customValue>
+    <customValue>
+        <fullName>TVD</fullName>
+        <default>false</default>
+        <label>Travel DT</label>
+    </customValue>
+    <customValue>
+        <fullName>UTRV</fullName>
+        <default>false</default>
+        <label>Union Travel</label>
+    </customValue>
+    <customValue>
+        <fullName>ADV</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Advance</label>
+    </customValue>
+    <customValue>
+        <fullName>BON</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Bonus</label>
+    </customValue>
+    <customValue>
+        <fullName>COM</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Commission</label>
+    </customValue>
+    <customValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other</label>
+    </customValue>
+    <customValue>
+        <fullName>VAC</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Vacation</label>
+    </customValue>
+    <customValue>
+        <fullName>DRV</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Drive Time</label>
+    </customValue>
+    <masterLabel>Time_Rate_Code</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

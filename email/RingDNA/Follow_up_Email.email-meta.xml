@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Follow up Email</name>
+    <style>freeForm</style>
+    <subject>ACV Enviro-Still hoping to connect</subject>
+    <textOnly>Hello {!Lead.Name},
+
+I’m writing to follow up on my previous correspondence about providing information about services for your company, as I am confident you will find value in working with myself and ACV.
+
+Please let me know how your calendar looks as I look forward to speaking with you soon.
+
+Thanks</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

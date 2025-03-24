@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>RING DNA Template Con ED</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>ConEd Lost Customer</name>
+    <style>freeForm</style>
+    <subject>ACV Enviro – 2020 business review</subject>
+    <textOnly>Hello {!Lead.FirstName},
+
+ACV Environmental is proud to be a partner of yours and we value the business we have done in the past.  In reviewing my records, it appears we did some business together in 2019, but we haven’t had the privilege of providing you any services this year.  I would like to set up a call with you to understand if there was something we did to affect this change or if you may have changed rolls within ConEd and no longer require our service.  We currently still do provide your organization with a high level of service on daily basis and would appreciate any insight you may have for us.
+
+I sincerely value your feedback – Please let me know if there is a preferred day and time I may reach out to you.
+
+Thank You,</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

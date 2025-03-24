@@ -1,0 +1,10 @@
+Customer: {!Sales_Order__c.Bill_to_Customer_No__c}
+Account #: {!Sales_Order__c.Customer_Number__c}
+
+Available Credit: {!Sales_Order__c.Available_Credit__c}
+Credit Limit:{!Sales_Order__c.Credit_Limit__c}
+Balance Due: {!Sales_Order__c.Balance_Due__c}
+
+Sales Order #: {!Sales_Order__c.Name}
+Total: {!Sales_Order__c.Total_Amount_Incl_Tax__c}
+Created By: {!Sales_Order__c.CreatedBy}

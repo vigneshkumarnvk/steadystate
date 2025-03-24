@@ -1,0 +1,11 @@
+<p>Dear {!Signature__c.Print_Name__c},</p>
+
+<p>We need your signature for our service performed on {!Signature__c.TM_Scheduled_Date__c}. Please review the attached T&M {!Signature__c.TM_No__c} and use the link below to sign the T&M. We will send you the final copy after signature is received. Please note the link will expire in 48 hours.</p> 
+
+Please click the button below to sign the T&M.
+<p><a href="https://acvenviro.secure.force.com/tm?token={!Signature__c.Site_Access_Token__c}" style="text-decoration:none"><span style="display:block;background:green;color:white;font-family:sans-serif;font-weight:normal;text-align:center;text-decoration:none;border:2px solid darkgreen;"><span style="display:block;border:6px solid green;">Sign T&M</span></span></a></p>
+
+<br/>
+<p>Regards,</p>
+
+<p>ACV Enviro</p>

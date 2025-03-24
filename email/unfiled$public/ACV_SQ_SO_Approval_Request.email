@@ -1,0 +1,10 @@
+<messaging:emailTemplate subject="New {!relatedTo.Document_Type__c}# {!relatedTo.Name} Requires Approval" 
+    recipientType="User" 
+    relatedToType="Sales_Order__c">
+<messaging:htmlEmailBody >
+
+<p><c:CmpApprovalURL objId="{!relatedTo.Id}"/></p>
+<c:salesOrderApprovalEmailContent objectId="{!relatedTo.Id}"/>
+
+   </messaging:htmlEmailBody>
+</messaging:emailTemplate>

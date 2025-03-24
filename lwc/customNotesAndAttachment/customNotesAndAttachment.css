@@ -1,0 +1,14 @@
+.slds-file-selector__dropzone .slds-file-selector__text {
+	display: none;
+}
+
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.file-position {
+	position: relative;
+    top: -7px;
+}

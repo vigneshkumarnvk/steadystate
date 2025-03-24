@@ -1,0 +1,10 @@
+Contract for {!Contract.Account} is now active in Salesforce. 
+
+Contract Name: {!Contract.Name}
+Start Date: {!Contract.StartDate}
+End Date: {!Contract.EndDate}
+Created By: {!Contract.CreatedBy}
+
+
+
+{!Contract.Link}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Payroll Approved</name>
+    <style>none</style>
+    <subject>{!Payroll__c.Name} for {!Payroll__c.Week_Number__c}  is Approved</subject>
+    <type>text</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

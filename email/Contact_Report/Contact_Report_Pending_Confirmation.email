@@ -1,0 +1,8 @@
+Contact Report pending confirmation. Please click on the link below to accept or reject the task. 
+
+{!Task.Link}
+
+Assigned By: {!Task.CreatedBy}
+Subject: {!Task.Subject}
+Due Date:  {!Task.ActivityDate}
+Scope of Work: {!Task.Scope_of_Work__c}

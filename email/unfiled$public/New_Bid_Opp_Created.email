@@ -1,0 +1,25 @@
+A new {!Opportunity.Bid_Type__c} Opportunity has been created.
+
+Created By: {!Opportunity.CreatedBy}
+
+Link: {!Opportunity.Link}
+
+Opportunity Name: {!Opportunity.Name}
+Service Center: {!Opportunity.Service_Center__c}
+Contract Manager: {!Opportunity.Contract_Manager__c}
+Bid Number/Title: {!Opportunity.Bid_Number_Title__c}
+Value Guestimate: {!Opportunity.Amount}
+
+Bid Due Date: {!Opportunity.Bid_Due_Date__c}
+Questions Due: {!Opportunity.Questions_Due__c}
+Bid Site Walk: {!Opportunity.Bid_Site_Walk__c}
+
+Bid Bond: {!Opportunity.Bid_Bond__c}
+Bid Bond Special Form:{!Opportunity.Bid_Bond_Special_forms_provided_by_cli__c}
+Consent of Surety: {!Opportunity.Consent_of_Surety__c}
+MBE/ WBE Requirements: {!Opportunity.Requirements__c}
+Insurance Requirements: {!Opportunity.Special_Insurance_Requirements__c}
+Length of Contract: {!Opportunity.Lenght_of_Contract__c}
+
+
+Project Scope: {!Opportunity.Scope_of_Work__c}

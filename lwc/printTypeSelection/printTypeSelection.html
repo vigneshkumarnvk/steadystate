@@ -1,0 +1,52 @@
+<!-- Print Type Selection -->
+<template>
+    <!--ticket 19127-->
+    <!--
+    <lightning-combobox name="invoice_type"
+                        label="Invoice Type"
+                        value={printType}
+                        options={printTypeOptions}
+                        onchange={handleChange}>
+    </lightning-combobox>
+    -->
+    <template if:true={jobTasks}>
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item padding="around-small" flexibility="no-flex" size="4">
+                    <lightning-formatted-text value="Job Task"></lightning-formatted-text>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" flexibility="no-flex" size="2">
+                    <lightning-formatted-text value="Print Order"></lightning-formatted-text>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small" flexibility="no-flex" size="3">
+                    <lightning-formatted-text value="Invoice Format"></lightning-formatted-text>
+                </lightning-layout-item>
+            </lightning-layout>
+            <template for:each={jobTasks} for:item="jobTask">
+                <lightning-layout key={jobTask.Id}>
+                    <lightning-layout-item padding="around-small" key={jobTask.Id} flexibility="no-flex" size="4">
+                        <lightning-formatted-text key={jobTask.Id} value={jobTask.Name}></lightning-formatted-text>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" key={jobTask.Id} flexibility="no-flex" size="2">
+                        <lightning-input name={jobTask.Id}
+                                         key={jobTask.Id}
+                                         value={jobTask.Print_Order__c}
+                                         onchange={handlePrintOrderChange}
+                                         variant="label-hidden">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" key={jobTask.Id} flexibility="no-flex" size="3">
+                        <lightning-combobox name={jobTask.Id}
+                                            key={jobTask.Id}
+                                            value={jobTask.Invoice_Format__c}
+                                            options={printTypeOptions}
+                                            onchange={handleInvoiceFormatChange}
+                                            variant="label-hidden">
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+        </div>
+    </template>
+    <!--ticket 19127-->
+</template>

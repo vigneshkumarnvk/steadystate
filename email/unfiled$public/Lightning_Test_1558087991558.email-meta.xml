@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Lightning Test</name>
+    <relatedEntityType>Account</relatedEntityType>
+    <style>none</style>
+    <subject>Notice of Payment - Account is 60 Days Past Due</subject>
+    <type>custom</type>
+    <uiType>SFX</uiType>
+</EmailTemplate>

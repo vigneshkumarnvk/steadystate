@@ -1,0 +1,9 @@
+The customer has been placed on credit hold. 
+
+Customer Name: {!Account.Name}
+Account Number: {!Account.AccountNumber}
+
+
+Available Credit: {!Account.Available_Credit_Limit__c} 
+Current Balance: {!Account.Balance_Due_LCY_Current__c}
+Balance Due: {!Account.Balance_Due_LCY__c}

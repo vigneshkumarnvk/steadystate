@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>12090</fullName>
+        <default>false</default>
+        <label>12090 CTR Purchase Price Adjustment - 12090</label>
+    </customValue>
+    <customValue>
+        <fullName>14000</fullName>
+        <default>false</default>
+        <label>14000 - Prepaid Insurance</label>
+    </customValue>
+    <customValue>
+        <fullName>14570</fullName>
+        <default>false</default>
+        <label>14570 - Corporate Inventory</label>
+    </customValue>
+    <customValue>
+        <fullName>14571</fullName>
+        <default>false</default>
+        <label>14571- Inventory Vehicle Parts &amp; Supplies</label>
+    </customValue>
+    <customValue>
+        <fullName>14572</fullName>
+        <default>false</default>
+        <label>14572 - Inventory in Other Branches</label>
+    </customValue>
+    <customValue>
+        <fullName>14580</fullName>
+        <default>false</default>
+        <label>14580 - Fuel Inventory</label>
+    </customValue>
+    <customValue>
+        <fullName>15400</fullName>
+        <default>false</default>
+        <label>15400 - Building &amp; Improvements</label>
+    </customValue>
+    <customValue>
+        <fullName>16400</fullName>
+        <default>false</default>
+        <label>16400 - Capitalized Vehicle Expense</label>
+    </customValue>
+    <customValue>
+        <fullName>18000</fullName>
+        <default>false</default>
+        <label>18000	Security Deposits - 18000</label>
+    </customValue>
+    <customValue>
+        <fullName>20510</fullName>
+        <default>false</default>
+        <label>20510 - Accrued Insurance Reserve</label>
+    </customValue>
+    <customValue>
+        <fullName>20520</fullName>
+        <default>false</default>
+        <label>20520 - Accrued Workers Comp Reserve</label>
+    </customValue>
+    <customValue>
+        <fullName>20810</fullName>
+        <default>false</default>
+        <label>20810 - Rahway Reconstruction</label>
+    </customValue>
+    <customValue>
+        <fullName>22120</fullName>
+        <default>false</default>
+        <label>22120 - RI Haz Waste Fee</label>
+    </customValue>
+    <customValue>
+        <fullName>22220 - Canadian Use Tax – 22220</fullName>
+        <default>false</default>
+        <label>22220 - Canadian Use Tax – 22220</label>
+    </customValue>
+    <customValue>
+        <fullName>22220</fullName>
+        <default>false</default>
+        <label>22220 - Liability</label>
+    </customValue>
+    <customValue>
+        <fullName>23520</fullName>
+        <default>false</default>
+        <label>23520 - Maine Haz Waste Fee</label>
+    </customValue>
+    <customValue>
+        <fullName>52100</fullName>
+        <default>false</default>
+        <label>52100	Uniforms  - 52100</label>
+    </customValue>
+    <customValue>
+        <fullName>52250</fullName>
+        <default>false</default>
+        <label>52250	Direct - Per Diem - 52250</label>
+    </customValue>
+    <customValue>
+        <fullName>52360</fullName>
+        <default>false</default>
+        <label>52360	Direct - Job Travel/Lodging - 52360</label>
+    </customValue>
+    <customValue>
+        <fullName>52960</fullName>
+        <default>false</default>
+        <label>52960	Direct - Materials &amp; Supplies - 52960</label>
+    </customValue>
+    <customValue>
+        <fullName>52970</fullName>
+        <default>false</default>
+        <label>52970	Direct - Safety Supplies - 52970</label>
+    </customValue>
+    <customValue>
+        <fullName>52980</fullName>
+        <default>false</default>
+        <label>52980	Direct - Traffic Control - 52980</label>
+    </customValue>
+    <customValue>
+        <fullName>53000</fullName>
+        <default>false</default>
+        <label>53000	Direct - Materials-Sorbents - 53000</label>
+    </customValue>
+    <customValue>
+        <fullName>53100</fullName>
+        <default>false</default>
+        <label>53100	Direct - Containers/Drums - 53100</label>
+    </customValue>
+    <customValue>
+        <fullName>53150</fullName>
+        <default>false</default>
+        <label>53150	Direct - Plan &amp; Specs - 53150</label>
+    </customValue>
+    <customValue>
+        <fullName>53200</fullName>
+        <default>false</default>
+        <label>53200	Direct - Plastics - 53200</label>
+    </customValue>
+    <customValue>
+        <fullName>53300</fullName>
+        <default>false</default>
+        <label>53300	Direct - Backfill - 53300</label>
+    </customValue>
+    <customValue>
+        <fullName>54100</fullName>
+        <default>false</default>
+        <label>54100 Direct Materials-Tools</label>
+    </customValue>
+    <customValue>
+        <fullName>54105</fullName>
+        <default>false</default>
+        <label>54105	Direct - Other Job Expense - 54105</label>
+    </customValue>
+    <customValue>
+        <fullName>54110</fullName>
+        <default>false</default>
+        <label>54110	Direct - Supplies - 54110</label>
+    </customValue>
+    <customValue>
+        <fullName>54200</fullName>
+        <default>false</default>
+        <label>54200	Indirect Job Supplies  - 54200</label>
+    </customValue>
+    <customValue>
+        <fullName>55000</fullName>
+        <default>false</default>
+        <label>55000	Direct - Waste Disposal - 55000</label>
+    </customValue>
+    <customValue>
+        <fullName>55005</fullName>
+        <default>false</default>
+        <label>55005	Waste Disposal/Rain Water  - 55005</label>
+    </customValue>
+    <customValue>
+        <fullName>55066</fullName>
+        <default>false</default>
+        <label>55066 - Direct - Waste Oil Expense - 55066</label>
+    </customValue>
+    <customValue>
+        <fullName>55200</fullName>
+        <default>false</default>
+        <label>55200	Indirect Waste  - 55200</label>
+    </customValue>
+    <customValue>
+        <fullName>55210</fullName>
+        <default>false</default>
+        <label>55210	Rubbish Removal  - 55210</label>
+    </customValue>
+    <customValue>
+        <fullName>55500</fullName>
+        <default>false</default>
+        <label>55500	Direct - Subcontractors-General - 55500</label>
+    </customValue>
+    <customValue>
+        <fullName>55510</fullName>
+        <default>false</default>
+        <label>55510 Subcontracted Analysis Cost</label>
+    </customValue>
+    <customValue>
+        <fullName>55520</fullName>
+        <default>false</default>
+        <label>55520	Direct - Subcontracted Trans - 55520</label>
+    </customValue>
+    <customValue>
+        <fullName>55530</fullName>
+        <default>false</default>
+        <label>55530	Direct - Subcontract-Temp Help - 55530</label>
+    </customValue>
+    <customValue>
+        <fullName>55570</fullName>
+        <default>false</default>
+        <label>55570- Direct - Subcontractors - Disposal - 55570</label>
+    </customValue>
+    <customValue>
+        <fullName>55580</fullName>
+        <default>false</default>
+        <label>55580 - Direct - Subcontracted Consulting - 55580</label>
+    </customValue>
+    <customValue>
+        <fullName>55620</fullName>
+        <default>false</default>
+        <label>55620	Plant Repair &amp; Maintenance  - 55620</label>
+    </customValue>
+    <customValue>
+        <fullName>55700</fullName>
+        <default>false</default>
+        <label>55700 Direct - Freight</label>
+    </customValue>
+    <customValue>
+        <fullName>58250</fullName>
+        <default>false</default>
+        <label>58250 Lab Expense</label>
+    </customValue>
+    <customValue>
+        <fullName>58260</fullName>
+        <default>false</default>
+        <label>58260- Direct - Manifest Fees - 58260</label>
+    </customValue>
+    <customValue>
+        <fullName>59500</fullName>
+        <default>false</default>
+        <label>59500	Fuel Indirect - 59500</label>
+    </customValue>
+    <customValue>
+        <fullName>59600</fullName>
+        <default>false</default>
+        <label>59600	Direct - Fuel Direct - 59600</label>
+    </customValue>
+    <customValue>
+        <fullName>60000</fullName>
+        <default>false</default>
+        <label>60000	Tolls &amp; Mileage Indirect  - 60000</label>
+    </customValue>
+    <customValue>
+        <fullName>60500</fullName>
+        <default>false</default>
+        <label>60500	Direct - Vehicle Rental - 60500</label>
+    </customValue>
+    <customValue>
+        <fullName>60600</fullName>
+        <default>false</default>
+        <label>60600	Vehicle &amp; Equip Lease Indirect  - 60600</label>
+    </customValue>
+    <customValue>
+        <fullName>61000</fullName>
+        <default>false</default>
+        <label>61000	Direct - Equipment Rental - 61000</label>
+    </customValue>
+    <customValue>
+        <fullName>61500</fullName>
+        <default>false</default>
+        <label>61500- Direct - Other Rentals - 61500</label>
+    </customValue>
+    <customValue>
+        <fullName>61750</fullName>
+        <default>false</default>
+        <label>61750	Small Tools &amp; Equipment  - 61750</label>
+    </customValue>
+    <customValue>
+        <fullName>62000</fullName>
+        <default>false</default>
+        <label>62000	R&amp;M Vehicle Parts/Supplies  - 62000</label>
+    </customValue>
+    <customValue>
+        <fullName>62010</fullName>
+        <default>false</default>
+        <label>62010	R&amp;M  -  Bldg Grounds  - 62010</label>
+    </customValue>
+    <customValue>
+        <fullName>62500</fullName>
+        <default>false</default>
+        <label>62500	R&amp;M  -  Vehicles &amp; Equip  - 62500</label>
+    </customValue>
+    <customValue>
+        <fullName>62501</fullName>
+        <default>false</default>
+        <label>62501	Accident Repairs  - 62501</label>
+    </customValue>
+    <customValue>
+        <fullName>62505</fullName>
+        <default>false</default>
+        <label>62505	R&amp;M  -  Tires  - 62505</label>
+    </customValue>
+    <customValue>
+        <fullName>63000</fullName>
+        <default>false</default>
+        <label>63000	R&amp;M  -  Boats  - 63000</label>
+    </customValue>
+    <customValue>
+        <fullName>63100</fullName>
+        <default>false</default>
+        <label>63100</label>
+    </customValue>
+    <customValue>
+        <fullName>63250</fullName>
+        <default>false</default>
+        <label>63250	Safety Clothing/Equipment  - 63250</label>
+    </customValue>
+    <customValue>
+        <fullName>63300</fullName>
+        <default>false</default>
+        <label>63300	Safety Supplies Indirect  - 63300</label>
+    </customValue>
+    <customValue>
+        <fullName>63500</fullName>
+        <default>false</default>
+        <label>63500	Hazmat Training / Awards  - 63500</label>
+    </customValue>
+    <customValue>
+        <fullName>63510</fullName>
+        <default>false</default>
+        <label>63510	Anti Drug &amp; Alcohol Expense - 63510</label>
+    </customValue>
+    <customValue>
+        <fullName>64000</fullName>
+        <default>false</default>
+        <label>64000	Direct - Bonding/Permits - 64000</label>
+    </customValue>
+    <customValue>
+        <fullName>68000</fullName>
+        <default>false</default>
+        <label>68000	Insurance - Prepaid - 68000</label>
+    </customValue>
+    <customValue>
+        <fullName>68050</fullName>
+        <default>false</default>
+        <label>68050 Insurance-Direct</label>
+    </customValue>
+    <customValue>
+        <fullName>69000</fullName>
+        <default>false</default>
+        <label>69000	Utilities - 69000</label>
+    </customValue>
+    <customValue>
+        <fullName>69010</fullName>
+        <default>false</default>
+        <label>69010 - Security Services - 69010</label>
+    </customValue>
+    <customValue>
+        <fullName>70000</fullName>
+        <default>false</default>
+        <label>70000	Repairs &amp; Maint - Building  - 70000</label>
+    </customValue>
+    <customValue>
+        <fullName>71500</fullName>
+        <default>false</default>
+        <label>71500	Fixed Phones, Calls &amp; Equip  - 71500</label>
+    </customValue>
+    <customValue>
+        <fullName>72010</fullName>
+        <default>false</default>
+        <label>72010	Mobile Phones  - 72010</label>
+    </customValue>
+    <customValue>
+        <fullName>72500</fullName>
+        <default>false</default>
+        <label>72500	Answering Service  - 72500</label>
+    </customValue>
+    <customValue>
+        <fullName>73500</fullName>
+        <default>false</default>
+        <label>73500	Office Expense  - 73500</label>
+    </customValue>
+    <customValue>
+        <fullName>73550</fullName>
+        <default>false</default>
+        <label>7355 - Training</label>
+    </customValue>
+    <customValue>
+        <fullName>74000</fullName>
+        <default>false</default>
+        <label>74000	Paper,Stationary,Publications  - 74000</label>
+    </customValue>
+    <customValue>
+        <fullName>74500</fullName>
+        <default>false</default>
+        <label>74500	Postage  - 74500</label>
+    </customValue>
+    <customValue>
+        <fullName>74550</fullName>
+        <default>false</default>
+        <label>74550	Express Mail  - 74550</label>
+    </customValue>
+    <customValue>
+        <fullName>75000</fullName>
+        <default>false</default>
+        <label>75000	Office Equip Rent &amp; Maint  - 75000</label>
+    </customValue>
+    <customValue>
+        <fullName>75100</fullName>
+        <default>false</default>
+        <label>75100	Computer Fees/Charges  - 75100</label>
+    </customValue>
+    <customValue>
+        <fullName>75120</fullName>
+        <default>false</default>
+        <label>75120	Alarms  - 75120</label>
+    </customValue>
+    <customValue>
+        <fullName>75400</fullName>
+        <default>false</default>
+        <label>75400	Classified  - 75400</label>
+    </customValue>
+    <customValue>
+        <fullName>75500</fullName>
+        <default>false</default>
+        <label>75500	Bank Charges - 75500</label>
+    </customValue>
+    <customValue>
+        <fullName>75510</fullName>
+        <default>false</default>
+        <label>75510	Dues &amp; Subscriptions  - 75510</label>
+    </customValue>
+    <customValue>
+        <fullName>76000</fullName>
+        <default>false</default>
+        <label>76000	Dues &amp; Subscription - Sales - 76000</label>
+    </customValue>
+    <customValue>
+        <fullName>76110</fullName>
+        <default>false</default>
+        <label>76110	Travel - Meals SGA - 76110</label>
+    </customValue>
+    <customValue>
+        <fullName>76140</fullName>
+        <default>false</default>
+        <label>76140	Travel - Vehicle Expense SGA  - 76140</label>
+    </customValue>
+    <customValue>
+        <fullName>76150</fullName>
+        <default>false</default>
+        <label>76150	Travel - Hotel Air SGA - 76150</label>
+    </customValue>
+    <customValue>
+        <fullName>76160</fullName>
+        <default>false</default>
+        <label>76160	Entertainment  - 76160</label>
+    </customValue>
+    <customValue>
+        <fullName>76170</fullName>
+        <default>false</default>
+        <label>76170 - Seminars</label>
+    </customValue>
+    <customValue>
+        <fullName>76180</fullName>
+        <default>false</default>
+        <label>76180	Sales Promotion  - 76180</label>
+    </customValue>
+    <customValue>
+        <fullName>76190</fullName>
+        <default>false</default>
+        <label>76190	Trade Shows  - 76190</label>
+    </customValue>
+    <customValue>
+        <fullName>76200</fullName>
+        <default>false</default>
+        <label>76200	Advertising  - 76200</label>
+    </customValue>
+    <customValue>
+        <fullName>76210</fullName>
+        <default>false</default>
+        <label>76210	Donations  - 76210</label>
+    </customValue>
+    <customValue>
+        <fullName>76220</fullName>
+        <default>false</default>
+        <label>76220	Other - 76220</label>
+    </customValue>
+    <customValue>
+        <fullName>76500</fullName>
+        <default>false</default>
+        <label>76500	Licenses &amp; Registration  - 76500</label>
+    </customValue>
+    <customValue>
+        <fullName>77000</fullName>
+        <default>false</default>
+        <label>77000	Fees &amp; Permits  - 77000</label>
+    </customValue>
+    <customValue>
+        <fullName>77010</fullName>
+        <default>false</default>
+        <label>77010	Bonding Expense Indirect  - 77010</label>
+    </customValue>
+    <customValue>
+        <fullName>77100</fullName>
+        <default>false</default>
+        <label>77100	Penalties &amp; Fines  - 77100</label>
+    </customValue>
+    <customValue>
+        <fullName>77200</fullName>
+        <default>false</default>
+        <label>77200	Violations  - 77200</label>
+    </customValue>
+    <customValue>
+        <fullName>79000</fullName>
+        <default>false</default>
+        <label>79000	Legal - 79000</label>
+    </customValue>
+    <customValue>
+        <fullName>79200</fullName>
+        <default>false</default>
+        <label>79200	Collection Expense  - 79200</label>
+    </customValue>
+    <customValue>
+        <fullName>79500</fullName>
+        <default>false</default>
+        <label>79500	External Accounting/Auditors - 79500</label>
+    </customValue>
+    <customValue>
+        <fullName>81000</fullName>
+        <default>false</default>
+        <label>81000	Professional Fees  - 81000</label>
+    </customValue>
+    <customValue>
+        <fullName>81005</fullName>
+        <default>false</default>
+        <label>81005	Consulting Fees  - 81005</label>
+    </customValue>
+    <customValue>
+        <fullName>81010</fullName>
+        <default>false</default>
+        <label>81010	Temp Help  - 81010</label>
+    </customValue>
+    <customValue>
+        <fullName>81200</fullName>
+        <default>false</default>
+        <label>81200	Employee Haz Mat Physicals  - 81200</label>
+    </customValue>
+    <customValue>
+        <fullName>96000</fullName>
+        <default>false</default>
+        <label>96000 One Time Costs - 96000</label>
+    </customValue>
+    <customValue>
+        <fullName>96100</fullName>
+        <default>false</default>
+        <label>96100	Travel - Acquisitions - 96100</label>
+    </customValue>
+    <customValue>
+        <fullName>96650</fullName>
+        <default>false</default>
+        <label>96650 - Transaction Cost</label>
+    </customValue>
+    <customValue>
+        <fullName>54300</fullName>
+        <default>false</default>
+        <label>54300	Supplies Mechanics/Welders  - 54300</label>
+    </customValue>
+    <customValue>
+        <fullName>16600</fullName>
+        <default>false</default>
+        <label>16600 Office Equipment</label>
+    </customValue>
+    <customValue>
+        <fullName>15300</fullName>
+        <default>false</default>
+        <label>15300 Capitalized Construction in Progress - 15300</label>
+    </customValue>
+    <customValue>
+        <fullName>16420</fullName>
+        <default>false</default>
+        <label>16420 - Capitalized  Rebranding</label>
+    </customValue>
+    <customValue>
+        <fullName>20650</fullName>
+        <default>false</default>
+        <label>20650 - Elizabeth Remediation</label>
+    </customValue>
+    <customValue>
+        <fullName>94940</fullName>
+        <default>false</default>
+        <label>94940 - Occupancy Maint</label>
+    </customValue>
+    <customValue>
+        <fullName>16820</fullName>
+        <default>false</default>
+        <label>16820 - CapEx – Computers</label>
+    </customValue>
+    <customValue>
+        <fullName>75200</fullName>
+        <default>false</default>
+        <label>75200 Payroll Processing Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>67530</fullName>
+        <default>false</default>
+        <label>67530 Reimbursed Medical Benefits</label>
+    </customValue>
+    <customValue>
+        <fullName>14050</fullName>
+        <default>false</default>
+        <label>14050	Prepaid - 14050</label>
+    </customValue>
+    <customValue>
+        <fullName>16820 - Computers</fullName>
+        <default>false</default>
+        <label>16820 - Computers</label>
+    </customValue>
+    <customValue>
+        <fullName>16920</fullName>
+        <default>false</default>
+        <label>16920 - Computer Software</label>
+    </customValue>
+    <customValue>
+        <fullName>68500</fullName>
+        <default>false</default>
+        <label>68500 - Rent</label>
+    </customValue>
+    <customValue>
+        <fullName>10050</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>10050	*AP USE ONLY - 10050</label>
+    </customValue>
+    <masterLabel>GLAccount</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

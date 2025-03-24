@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>Contact Information Update Request</name>
+    <style>none</style>
+    <subject>Please update your contact information</subject>
+    <textOnly>Hi,
+
+Please help us keep your contact information updated in our database. Please click the link below to login into our customer portal and review your contact information. Please note your login will expire in 5 days.
+
+Customer portal
+
+Url: https://uat2-customer-portal.cs19.force.com/customerportal/
+
+Username: {!Portal_Login__c.Username__c}
+
+Password: {PortalLogin.Password}
+
+Thank you
+
+ACV Enviro</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

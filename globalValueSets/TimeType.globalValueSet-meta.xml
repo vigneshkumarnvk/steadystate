@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Job Time</fullName>
+        <default>false</default>
+        <label>Job Time</label>
+    </customValue>
+    <customValue>
+        <fullName>Prevailing Wage</fullName>
+        <default>false</default>
+        <label>Prevailing Wage</label>
+    </customValue>
+    <customValue>
+        <fullName>PTO</fullName>
+        <default>false</default>
+        <label>PTO</label>
+    </customValue>
+    <customValue>
+        <fullName>Shop Time</fullName>
+        <default>false</default>
+        <label>Shop Time</label>
+    </customValue>
+    <customValue>
+        <fullName>Flat Pay</fullName>
+        <default>false</default>
+        <label>Flat Pay</label>
+    </customValue>
+    <customValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
+    </customValue>
+    <customValue>
+        <fullName>Travel Time</fullName>
+        <default>false</default>
+        <label>Travel Time</label>
+    </customValue>
+    <customValue>
+        <fullName>Site Time</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Site Time</label>
+    </customValue>
+    <customValue>
+        <fullName>Non-PTO</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Non-PTO</label>
+    </customValue>
+    <customValue>
+        <fullName>PTO FMLA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>PTO FMLA</label>
+    </customValue>
+    <customValue>
+        <fullName>PTO Vacation</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>PTO Vacation</label>
+    </customValue>
+    <customValue>
+        <fullName>Lunch Time</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Lunch Time</label>
+    </customValue>
+    <masterLabel>Time Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

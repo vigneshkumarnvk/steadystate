@@ -1,0 +1,16 @@
+<!--
+      - T&M page action that allow to clone a T&M and assign a new schedule date.
+ -->
+
+<template>
+    <lightning-quick-action-panel header="Clone and Schedule T&M">
+        <div if:false={isLoaded}>
+            <lightning-spinner variant="brand" size="large"></lightning-spinner>
+        </div>
+        <lightning-input type="date" name="scheduleDate" value={scheduleDate} date-style="short" required label="Schedule Date" onchange={handleScheduleDateChange}></lightning-input>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+            <lightning-button class="slds-m-left_x-small" variant="brand" label="Clone T&M" onclick={handleCloneAndSchedule} ></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

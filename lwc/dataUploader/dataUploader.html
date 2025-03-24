@@ -1,0 +1,18 @@
+<template>
+    <lightning-quick-action-panel header={header}>
+        <div class="slds-align_absolute-center slds-p-vertical_medium">
+            <template lwc:if={isPermissionEnabled}>
+
+                <template if:false={isFileUploaded}>
+                    <lightning-file-upload label="" name="fileUploader" accept={acceptedFormats} record-id={recordId}
+                        onuploadfinished={handleUploadfinished}>
+                    </lightning-file-upload>
+                </template>
+               
+            </template>
+        </div>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

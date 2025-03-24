@@ -1,0 +1,22 @@
+Hi,</br></br>
+
+An Active Customer has been moved to Inactive status in Salesforce and the NAV Customer Status has been changed to Inactive. Please review the Customer record to make sure all information is accurate.</br></br>
+
+<table border="0">
+<tr><td><b>Subsidiary Company:</b></td><td>{!Account.Subsidiary_Company__c}</td></tr>
+<tr><td><b>Corporate No.:<b></td><td>{!Account.Parent_Account_Number__c}</td></tr>
+<tr><td><b>Corporate Name:<b></td><td>{!Account.Parent}</td></tr>
+<tr><td><b>Name:</b></td><td>{!Account.Name}</td></tr>
+<tr><td><b>Account Number</b></td><td>{!Account.AccountNumber}</td></tr>
+<tr><td><b>Address:</b></td><td>{!Account.BillingStreet}</td></tr>
+<tr><td><b>City:</b></td><td>{!Account.BillingCity}</td></tr>
+<tr><td><b>State:</b></td><td>{!Account.BillingState}</td></tr>
+<tr><td><b>Post Code:</b></td><td>{!Account.BillingPostalCode}</td></tr>
+<tr><td><b>Country:</b></td><td>{!Account.Country}</td></tr>
+<tr><td><b>Customer Type:</b></td><td>{!Account.Customer_Type__c}</td></tr>
+<tr><td><b>Account Executive:</b></td><td>{!Account.Account_Executive__c}</td></tr>
+<tr><td><b>Salesperson:</b></td><td>{!Account.Salesperson__c}</td></tr>
+<tr><td><b>Phone:</b></td><td>{!Account.Phone}</td></tr>
+<tr><td><b>Fax:</b></td><td>{!Account.Fax}</td></tr>
+<tr><td><b>Web Site:</b></td><td>{!Account.Website}</td></tr>
+</table>

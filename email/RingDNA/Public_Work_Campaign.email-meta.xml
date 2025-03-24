@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Public Work Campaign</name>
+    <style>freeForm</style>
+    <subject>ACV Enviro- hoping to connect</subject>
+    <textOnly>Hello {!Contact.FirstName},
+
+I work with the team from ACV Environmental that provides environmental services to the State of Connecticut. ACV has a DAS contract # 10PSX0294 that you can utilize. This contract covers Emergency spill response, disposal services, tank cleanings, catch basins, oil water separators to name a few. Please let me know if we can provide any of our services for you, or if you would like to meet to review a project. If I don’t hear back in the next few days, I will give you a call.
+
+
+
+Thank You,</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

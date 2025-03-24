@@ -1,0 +1,11 @@
+<messaging:emailTemplate subject="Your approval request for {!IF(relatedTo.Worksheet__c == true, 'Creadit Memo Worksheet', 'Sales Invoice')}# {!relatedTo.Name} is rejected!"
+    recipientType="User" 
+    relatedToType="Sales_Invoice__c">
+    
+    <messaging:htmlEmailBody >
+        <p>Your approval request for {!IF(relatedTo.Worksheet__c == true, 'Creadit Memo Worksheet', 'Sales Invoice')}# {!relatedTo.Name} is rejected!</p>
+        <c:approvalComment objectId="{!relatedTo.Id}" />
+
+    </messaging:htmlEmailBody>
+    
+</messaging:emailTemplate>

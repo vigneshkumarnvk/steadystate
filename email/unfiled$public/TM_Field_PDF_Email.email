@@ -1,0 +1,8 @@
+<p>Dear Customer,</p>
+
+<p>Thank you for your signature. Attached is the fully executed T&M describing services performed by {!TM__c.Display_Company_Name__c} on {!TM__c.Scheduled_Date__c}.</p>
+
+</p></p></p>
+<p>Regards,</p>
+
+<p>{!TM__c.Display_Company_Name__c}</p>

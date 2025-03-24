@@ -1,0 +1,8 @@
+An ER Sales Order has been created for {!Sales_Order__c.Bill_to_Customer_No__c}. 
+
+Sales Order No: {!Sales_Order__c.Name}
+Account Executive: {!Sales_Order__c.Account_Executives__c}
+Project Coordinator: {!Sales_Order__c.Project_Coordinator__c}
+Created By: {!Sales_Order__c.CreatedBy}
+Service Center: {!Sales_Order__c.Service_Center__c}
+{!Sales_Order__c.Link}

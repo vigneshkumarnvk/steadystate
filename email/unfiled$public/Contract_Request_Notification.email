@@ -1,0 +1,8 @@
+Account Name: {!Contract_Request__c.Account__c}
+Contract Request Reason: {!Contract_Request__c.Contract_Request_Reason__c}
+Contract Type: {!Contract_Request__c.Contract_Type__c}
+Created By: {!Contract_Request__c.CreatedBy}
+
+
+
+{!Contract_Request__c.Link}

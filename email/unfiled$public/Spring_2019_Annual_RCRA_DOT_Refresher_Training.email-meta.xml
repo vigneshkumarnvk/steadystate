@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Fall 2019 Annual RCRA/DOT Refresher Training</name>
+    <style>formalLetter</style>
+    <subject>Reserve your seat at the Fall 2019 RCRA/DOT Refresher Training</subject>
+    <textOnly>FALL 2019 ANNUAL RCRA/REFRESHER TRAINING
+OCTOBER 17, 2019 | 8AM TO 5PM
+
+Having trouble viewing this email? View in browser
+
+Regulatory agencies have placed a focus on employee training when conducting facility inspections. In an effort to provide our clients with the opportunity to maintain compliance, ACV Enviro will be conducting an open enrollment training class covering the applicable State and Federal regulations in these two important areas:
+
+
+
+The US Environmental Protection Agency (EPA) and all state environmental agencies (i.e., MA DEP, RI DEM, NH DES, etc.) have regulations requiring the training of personnel who manage hazardous waste. RCRA training will cover requirements specific to each New England State. Before an employee may work in a waste management job, initial RCRA training is required, and all such employees must receive annual refresher training.
+
+
+
+The US Department of Transportation (DOT) requires training for everyone who may be considered a “hazmat employee”. This term is broadly defined to apply to anyone whose job function could affect the safe transportation of hazardous materials and wastes. Training is thus required for employees who select or fill hazardous materials packages, write or apply labels, complete or sign shipping papers, load or unload vehicles, or operate vehicles to transport hazardous materials. DOT requires this training within three months for new employees and every three years thereafter.
+
+
+
+ACV Enviro’s training itinerary is designed to provide initial training for new employees who are involved in the management and shipment of hazardous waste, as well as refresher training for established workers. This important training event is detailed below
+
+
+
+General Information
+
+Date:             Thursday, October 17, 2019
+
+Time:             8:00 AM – 5:00 PM
+
+Address:        ACV Enviro 6 Shire Drive Norfolk, MA 02056
+
+Schedule:
+
+8:00 AM to 8:30 AM   Bagels, Muffins, &amp; Coffee
+
+8:30 AM to 12:00 PM  RCRA Annual Training
+
+12:00 PM to 1:00 PM   Lunch
+
+1:00 PM to 5:00 PM     DOT Training
+
+Pricing:
+
+$325.00*   for both sessions
+
+$185.00*   for the annual RCRA Training AM session only
+
+
+
+
+Pricing includes the cost of lunch
+Those in need of a DOT training certificate must attend the full day training session.
+Registered attendees who cancel less than ten days prior to the event, or those that fail to show up to the event without notification will be charged a cancellation fee.
+
+To sign up for this class, please visit this Link.
+
+If you would like to be notified of upcoming training sessions in your area, please email us at marketing@acvenviro.com.
+
+Thank you,
+ACV Enviro</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,65 @@
+<template>
+    <template if:true={showDisabledModal}>
+        <lightning-quick-action-panel header="Disabled">
+                <p style="text-align: center">{disabledMsg}</p>
+                <div slot="footer"> 
+                    <lightning-button label="OK"
+                    variant="neutral"
+                    onclick={handleDisabledModal}>
+                    </lightning-button>
+                </div>
+        </lightning-quick-action-panel>
+        
+    </template>
+    <template if:true={isAdmin}>
+        <lightning-quick-action-panel header="Process Kronos Time Punch">
+            <div if:false={isLoaded}>
+                <lightning-spinner variant="brand" size="large"></lightning-spinner>
+            </div>
+            <lightning-combobox
+                    name="actionType"
+                    label="Action Type"
+                    class="validate"
+                    value={actionType}
+                    required="true"
+                    placeholder="Select Action Type"
+                    options={actionTypeOptions}
+                    onchange={handleChange}>
+            </lightning-combobox>
+            <lightning-input
+                    type="date"
+                    name="startDate"
+                    label="Start Date"
+                    class="validate"
+                    required="true"
+                    onchange={handleChange}>
+            </lightning-input>
+            <lightning-input
+                    type="date"
+                    name="endDate"
+                    label="End Date"
+                    class="validate"
+                    required="true"
+                    onchange={handleChange}>
+            </lightning-input>
+            <div slot="footer">
+                <lightning-button name="cancelButton" value="destructive" label="Cancel" onclick={handleClick}></lightning-button>
+                <lightning-button name="okButton" variant="brand" label="OK" onclick={handleShowModal}></lightning-button>
+            </div>
+            <c-lwc-modal header="Manually Process Kronos Time Punch">
+                <p>{confirmationMsg}</p>
+                <div slot="footer">
+                    <lightning-button label="Cancel"
+                                    variant="neutral"
+                                    onclick={handleCancelModal}>
+                    </lightning-button>
+                    <lightning-button label="Proceed"
+                                    variant="brand"
+                                    type="submit"
+                                    onclick={processKronosTimePunch}>
+                    </lightning-button>
+                </div>
+            </c-lwc-modal>
+        </lightning-quick-action-panel>
+    </template>
+</template>

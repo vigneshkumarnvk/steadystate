@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>T&amp;M Signature Request Email</name>
+    <style>none</style>
+    <subject>Signature Request for ACV Enviro Service - T&amp;M # {!Signature__c.TM_No__c}</subject>
+    <textOnly>Dear {!Signature__c.Print_Name__c},
+
+We need your signature for our service performed on {!Signature__c.TM_Scheduled_Date__c}. Please review the attached T&amp;M {!Signature__c.TM_No__c} and use the link below to sign the T&amp;M. We will send you the final copy after signature is received. Please note the link will expire in 48 hours.
+
+Please click the link below to sign the T&amp;M.
+
+https://acvenviro.secure.force.com/tm?token={!Signature__c.Site_Access_Token__c}
+
+
+
+
+Regards,
+
+ACV Enviro</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Generator Lookup</masterLabel>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
+          <property name="name" type="String" default="Generate Lookup" label="Component Name" />
+          <property name="epaId" type="String" label="EPA Id" />
+          <property name="siteName" type="String" label="Site Name" />
+          <property name="siteStreet" type="String" label="Site Street" />
+          <property name="siteCity" type="String" label="Site City" />
+          <property name="siteState" type="String" label="Site State" />
+          <property name="sitePostalCode" type="String" label="Site PostalCode" />
+          <property name="mode" type="String" label="mode" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

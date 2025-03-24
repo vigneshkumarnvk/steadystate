@@ -1,0 +1,7 @@
+.modal-hidden {
+    display: none;
+}
+.slds-modal__content{
+    min-height: 200px !important;
+    overflow: initial; /*do not allow wrap so the combobox drop down can pop on the top of the modal container*/
+}

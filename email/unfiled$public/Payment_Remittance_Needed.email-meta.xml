@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Payment Remittance</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Payment Remittance Needed</name>
+    <style>freeForm</style>
+    <subject>Payment Remittance Needed</subject>
+    <textOnly>Payment Remittance Needed
+
+{!Account.Date__c}
+
+{!Account.Name}
+{!Account.BillingAddress}
+
+Re: Payment Remittance
+
+Dear {!Contact.FirstName},
+
+Thank you for your payment which we received on ( date ) in the amount of $(amount). It is your ( insert payment method) dated ( insert date).
+
+Please provide the remittance details, so we can apply your payment accordingly.
+
+If you have any questions or concerns, please do not hesitate to contact us at
+ACV-Corp-ar@acvenviro.com.
+
+We value your business and thank you in advance for your prompt attention to this matter.
+
+Sincerely,
+
+
+Accounts Receivable
+ACV Enviro
+732-375-9988</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

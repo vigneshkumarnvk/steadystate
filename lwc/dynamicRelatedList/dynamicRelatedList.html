@@ -1,0 +1,125 @@
+<!--US140407-->
+<template>
+    <!-- Displays datatable with all records -->
+    <template lwc:if={isViewAll}>
+        <div class="slds-page-header slds-page-header_related-list">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <nav role="navigation" aria-label="Breadcrumbs">
+                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
+                            <li class="slds-p-right_xx-small">
+                                <lightning-icon class="slds-p-left_xxx-small" icon-name={iconName} alternative-text=""
+                                    title="" size="small"></lightning-icon>
+                            </li>
+                            <li class="slds-p-right_x-small">
+                                <a href="" onclick={navigateToRecentListView}>{labelPlural}</a>
+                            </li>
+                            <li class="slds-breadcrumb__item">
+                                <a href={recordUrl}>{name}</a>
+                            </li>
+                        </ol>
+                    </nav>
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title slds-p-left_x-large">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate" title={title}>{title}</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <!-- Action comes here (New, Delete, ...)-->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-meta">
+                    <p class="slds-page-header__meta-text slds-p-bottom_small slds-text-body_small">
+                        {recordCount} items • Sorted by {sortedByLabel}
+                    </p>
+                </div>
+                <div class="slds-page-header__col-controls">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <!-- Button comes here (Refresh, Filters, ...)-->
+                            </div>
+                        </div>
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <!-- Button Group comes here-->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-border_top">
+                <lightning-datatable key-field="Id" data={records} columns={columns} onrowaction={handleRowAction}
+                    hide-checkbox-column sorted-by={sortedBy} sorted-direction={sortedDirection}
+                    onsort={handleColumnSorting}>
+                </lightning-datatable>
+            </div>
+        </div>
+    </template>
+
+    <!-- Displays records in the related list with 3 records as default-->
+    <template lwc:else>
+        <div class="slds-border_left slds-border_right">
+            <article class="slds-card slds-p-left_medium">
+                <!-- Header -->
+                <div class="slds-theme_shade slds-border_top">
+                    <div class="slds-p-around_x-small flex-between slds-border_bottom">
+                        <div>
+                            <lightning-icon class="slds-p-left_xxx-small" icon-name={iconName} alternative-text=""
+                                title="" size="small">
+                            </lightning-icon>
+                            <span class="slds-text-heading_small slds-p-left_small slds-text-title_bold">{title} ({recordCount})</span>
+                        </div>
+                    </div>
+                    <!-- Body -->
+                    <template lwc:if={hasRelatedRecords}>
+                        <lightning-datatable key-field="Id" data={records} columns={columns}
+                            onrowaction={handleRowAction} hide-checkbox-column resize-column-disabled>
+                        </lightning-datatable>
+                    </template>
+                </div>
+                <!-- Footer -->
+                <template lwc:if={hasRelatedRecords}>
+                    <div class="slds-p-around_none slds-border_bottom slds-text-align_center">
+                        <lightning-button variant="base" label="View All" title="View All" onclick={handleViewAll}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <template lwc:if={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="medium" variant="brand">
+                    </lightning-spinner>
+                </template>
+            </article>
+        </div>
+    </template>
+    <c-lwc-modal header={header}>
+        <div class="slds-text-align_center">
+            <p>{content}</p>
+        </div>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel" onclick={handleCancel} class="slds-p-around_xx-small">
+            </lightning-button>
+            <lightning-button variant="brand" label="Delete" onclick={handleDelete}>
+            </lightning-button>
+        </div>
+    </c-lwc-modal>
+</template>

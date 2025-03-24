@@ -1,0 +1,8 @@
+Account Name: {!Contract.Account}
+ Contract Name: {!Contract.Name}
+Contract Start Date: {!Contract.StartDate}
+Contract End Date:  {!Contract.EndDate}
+
+Internal Comments: {!Contract.Internal_Comments__c}
+
+{!Contract.Link}

@@ -1,0 +1,5 @@
+Your vendor request has been approved. 
+
+Vendor: {!Vendor_Request__c.Link}
+
+{!Vendor_Request__c.Link}

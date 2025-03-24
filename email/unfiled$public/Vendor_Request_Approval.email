@@ -1,0 +1,6 @@
+You have a new vendor request. Please use the link below to approve or reject new vendor. 
+
+Requester: {!Vendor_Request__c.CreatedBy}
+Vendor Name: {!Vendor_Request__c.Name}
+
+{!Vendor_Request__c.Link}

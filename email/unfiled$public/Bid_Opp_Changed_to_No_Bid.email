@@ -1,0 +1,15 @@
+{!Opportunity.Name} stage changed to "No Bid"
+
+Link: {!Opportunity.Link}
+
+
+No Bid Reason: {!Opportunity.No_Bid_Reason__c}
+
+Opportunity Name: {!Opportunity.Name}
+Service Center: {!Opportunity.Service_Center__c}
+Bid Number/Title: {!Opportunity.Bid_Number_Title__c}
+Value Guestimate: {!Opportunity.Value_Guestimate__c}
+
+
+Project Scope: {!Opportunity.Scope_of_Work__c}
+Created By: {!Opportunity.CreatedBy}

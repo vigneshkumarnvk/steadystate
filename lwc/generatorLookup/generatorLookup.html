@@ -1,0 +1,65 @@
+<template>
+    <template if:true={showSpinner}>
+        <div class="spinner-background">
+            <lightning-spinner alternative-text="loading" variant="brand"></lightning-spinner>
+        </div>
+    </template>
+    <div class="left-column">
+        <template if:true={showError}>
+            <div class="error-message">{errorMessage}</div>
+        </template>
+       
+        <template if:true={helpTextDisplay}>
+            <div class="slds-m-around_medium">
+                <p>Please enter EPA ID or City and State when entering a Site Generator search.</p>
+            </div>
+        </template>
+   
+        <div class="slds-m-around_medium">
+            <lightning-layout horizontal-align="spread" class="textbox-container">
+                <lightning-layout-item size="4">
+                    <template for:each={searchRightFields} for:item="field">
+                        <div key={field.id} class="textbox-item">
+                            <lightning-input type="search" label={field.label} value={field.value}
+                                data-field-id={field.id} onchange={handleInputChange}
+                                max-length="100"></lightning-input>
+                        </div>
+                    </template>
+                </lightning-layout-item>
+                <lightning-layout-item size="4">
+                    <template for:each={searchLeftFields} for:item="field">
+                        <div key={field.id} class="textbox-item">
+                            <lightning-input type="search" label={field.label} value={field.value}
+                                data-field-id={field.id} onchange={handleInputChange} required={field.required}></lightning-input>
+                        </div>
+                    </template>
+                </lightning-layout-item>
+            </lightning-layout>
+            <div class="slds-align_absolute-center slds-m-around_medium">
+                <div if:true={showCloseButton}>
+                    <lightning-button label="Close" variant="netural" onclick={handleClose}
+                    class="slds-m-right_small"></lightning-button>
+                </div>
+                <lightning-button label="Clear All" variant="netural" onclick={handleClear}
+                    class="slds-m-right_small"></lightning-button>
+                <lightning-button label="Look up" variant="brand" onclick={handleSearchResult}></lightning-button>
+            </div>
+        </div>
+   
+    <div if:true={showDatatable} class="right-column">
+        <div class="datatable-section">
+            <template if:true={showDatatable}>
+                <div class="container">
+                    <lightning-datatable key-field="id" data={searchResults} selected-key="selected"
+                        columns={searchResultColumns}  onrowselection={handleRowSelection} max-row-selection="1">
+                    </lightning-datatable>
+                </div>
+            </template>
+        </div>
+        <div if:true={showDatatable} class="slds-align_absolute-center slds-m-around_medium">
+            <lightning-button label="Ok" variant="brand" onclick={handleSelect}
+                disabled={disabledSelect}></lightning-button>
+        </div>
+    </div>
+     </div>
+</template>

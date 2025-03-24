@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Final Notice of Payment</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Final Notice of Payment</name>
+    <style>freeForm</style>
+    <subject>Notice of Credit Hold</subject>
+    <textOnly>Final Notice for Payment
+
+{!Account.Date__c}
+
+{!Account.Name}
+{!Account.BillingAddress}
+
+Ref: {!Account.AccountNumber}, {!Account.Balance_Due_LCY__c}
+
+Dear {!Contact.FirstName},
+
+Regarding the delinquency of your account in the amount of {!Account.Balance_Due_LCY__c}, we have requested payment several times without success.
+
+Please be advised that unless we receive payment in full on this account within ten days from the date of this letter, ACV Enviro reserves the right to commence legal proceedings to recover the debt without further notice to you and this letter may be tendered in court as evidence of your failure to pay.
+
+Legal action may result in you have to pay legal cost, interest, and could impact your credit history.
+
+If you wish to further discuss the details of your account, please don&apos;t hesitate to contact me directly.
+
+Sincerely,
+Christopher Novak
+Legal Counsel
+ACV Enviro
+Office: (732) 375-9988
+Email: cnovak@acvenviro.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

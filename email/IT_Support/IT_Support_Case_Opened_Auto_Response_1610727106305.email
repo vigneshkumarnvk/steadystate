@@ -1,0 +1,15 @@
+<html><head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;"><p>Thanks for your email.</p>
+Your Service Request has been received and a Support Rep will be following up shortly.<br />
+<br />
+Your Ticket # is: {{Case.CaseNumber}}<br />
+You can view/update your Ticket here:&nbsp; {{Case.Link}}<br />
+<br />
+<br />
+<br />
+Your ACV IT Team<br />
+Tel: 908-312-5873<br />
+Ext: 5873&nbsp;<br />
+&nbsp;</body></html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Payment Reminder</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Lead_Intro_mail</letterhead>
+    <name>Payment Reminder</name>
+    <style>freeForm</style>
+    <subject>Payment Reminder</subject>
+    <textOnly>Notice of Credit Hold
+
+{!Account.Date__c}
+
+{!Account.Name}
+{!Account.BillingAddress}
+
+Ref: {!Account.AccountNumber}, {!Account.Balance_Due_LCY__c}
+
+Dear {!Contact.FirstName},
+
+Numerous unsuccessful attempts have been made to resolve the past due for {!Account.Balance_Due_LCY__c} on your account.
+
+Your account has been placed on credit hold until payment has been rectified to bring your account back into good standing. Please be advised that if payment in full or arrangements are not secured within ten days from the date of this letter, your account will be submitted to our legal department fro further action.
+
+We value your business and would like to resolve this matter with you amicably.
+
+If you wish to further discuss the details of your account, please dont hesitate to contact me directly at (732) 375-9988.
+
+Sincerely,
+{!User.Name}
+Accounts Receivable Manager
+ACV Enviro</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

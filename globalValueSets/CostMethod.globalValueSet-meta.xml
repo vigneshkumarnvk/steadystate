@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Unit_Weight_Vol</fullName>
+        <default>false</default>
+        <label>Unit Wt/Vol</label>
+    </customValue>
+    <customValue>
+        <fullName>Container</fullName>
+        <default>false</default>
+        <label>Container</label>
+    </customValue>
+    <masterLabel>CostMethod</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

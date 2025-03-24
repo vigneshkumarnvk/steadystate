@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>T&amp;M Field PDF Email</name>
+    <style>none</style>
+    <subject>{!TM__c.Name}</subject>
+    <textOnly>Dear Customer,
+
+Thank you for your signature. Attached is the fully executed T&amp;M describing services performed by {!TM__c.Display_Company_Name__c} on {!TM__c.Scheduled_Date__c}.
+
+
+
+
+Regards,
+
+{!TM__c.Display_Company_Name__c}</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

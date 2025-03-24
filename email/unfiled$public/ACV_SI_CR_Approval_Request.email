@@ -1,0 +1,15 @@
+<messaging:emailTemplate recipientType="User" 
+    relatedToType="Sales_Invoice__c"
+    subject="New {!IF(relatedTo.Worksheet__c == true, 'Creadit Memo Worksheet', 'Sales Invoice')}# {!relatedTo.Name} Requires Approval">
+<messaging:htmlEmailBody >
+
+<p>A new {!IF(relatedTo.Worksheet__c == true, 'credit memo worksheet', 'sales invoice')} has been submitted for your approval. Please visit the link below and either approve or reject it.</p>
+
+<p>
+    <c:CmpApprovalURL objId="{!relatedTo.Id}" />
+</p>
+
+<c:invoiceApprovalNotificationContent objectId="{!relatedTo.Id}" />
+
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

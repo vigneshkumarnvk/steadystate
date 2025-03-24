@@ -1,0 +1,6 @@
+Payroll for Service Center {!Payroll__c.Service_Center__c} is approved and ready for export. Please click on the link below to export Payroll. 
+
+https://acvenviro.lightning.force.com/lightning/o/Payroll__c/list?filterName=00Bf4000007HNjSEAW. 
+
+Payroll No. {!Payroll__c.Name} 
+Created By: {!Payroll__c.CreatedBy}

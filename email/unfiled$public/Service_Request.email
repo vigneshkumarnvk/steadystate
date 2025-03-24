@@ -1,0 +1,31 @@
+Thanks for your email.
+Your Service Request has been received and a Support Rep will be following up shortly.
+
+
+
+
+Your Ticket # is {!Case.CaseNumber}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{!Case.Thread_Id}

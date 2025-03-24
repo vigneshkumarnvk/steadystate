@@ -1,0 +1,10 @@
+Hello,
+
+Contract is now activated for invoicing. Please make sure you are using it to invoice. If you need any edits to the billing lines, please submit via Contract Request function in Salesforce.
+
+Account Name: {!Contract.Account}
+ Contract Name: {!Contract.Name}
+Contract Start Date: {!Contract.StartDate}
+Contract End Date:  {!Contract.EndDate}
+
+{!Contract.Link}

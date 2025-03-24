@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>SPO Blank Reminder</name>
+    <style>none</style>
+    <subject>Action Required: SPO Blank for {!Sales_Order__c.SPO_Blank_Age_c_formula__c} Days: {!Sales_Order__c.Name}</subject>
+    <type>text</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,7 @@
+Error Description:<br/>
+
+{!INTG__INT_Change_Tracking_Record__c.Error_Message__c}
+
+<br/><br/>
+Change tracking record link:<br/>
+{!INTG__INT_Change_Tracking_Record__c.Link}
